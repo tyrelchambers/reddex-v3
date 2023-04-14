@@ -4,7 +4,7 @@
 
 @layer components {
   .button {
-    @apply rounded-md px-5 py-2 text-white transition-all  hover:shadow-lg;
+    @apply h-10 rounded-md px-5 py-2 text-white  transition-all hover:shadow-lg;
   }
 
   .button.main {
@@ -21,9 +21,5 @@
 
   .h1 {
     @apply text-5xl font-black text-gray-800;
-  }
-
-  p {
-    @apply text-gray-600;
   }
 }

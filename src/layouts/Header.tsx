@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@mantine/core";
 import { routes } from "~/routes";
+import { useSession } from "next-auth/react";
+import UserChip from "./UserChip";
+import UserMenu from "./UserMenu";
 
 const _routes = [
   {
@@ -21,6 +24,8 @@ const _routes = [
 ];
 
 const Header = () => {
+  const session = useSession();
+
   return (
     <header className="mx-auto flex max-w-screen-2xl items-center justify-between py-4">
       <div className="flex items-center">
@@ -37,9 +42,13 @@ const Header = () => {
       </div>
 
       <div className="flex">
-        <Link href={routes.LOGIN} className="button main">
-          Get Started
-        </Link>
+        {session.status === "authenticated" ? (
+          <UserMenu />
+        ) : (
+          <Link href={routes.LOGIN} className="button main">
+            Get Started
+          </Link>
+        )}
       </div>
     </header>
   );

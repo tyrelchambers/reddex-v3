@@ -22,7 +22,7 @@ const Home: NextPage = () => {
       <main className="mx-auto max-w-screen-2xl">
         <Header />
 
-        <div className="flex flex-col gap-36">
+        <div className="mt-20 flex flex-col gap-36">
           <Hero />
           <UsedBy />
           <Stats />

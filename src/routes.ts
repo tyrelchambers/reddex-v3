@@ -3,5 +3,5 @@ export const routes = {
   ABOUT: "/about",
   PRICING: "/pricing",
   LOGIN: "/login",
-  SIGNUP: "/signup",
+  AUTH_REDDIT: "/auth/callback/reddit",
 };

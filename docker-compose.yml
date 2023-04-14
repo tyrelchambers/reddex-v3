@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  db:
+    container_name: reddex_db
+    image: postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+networks:
+  default:
+    name: reddex_v3
+volumes:
+  postgres_data:

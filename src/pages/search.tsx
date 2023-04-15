@@ -1,5 +1,4 @@
 import {
-  Divider,
   Modal,
   NativeSelect,
   NumberInput,
@@ -7,7 +6,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import Head from "next/head";
-import React, { useReducer } from "react";
+import React, { FormEvent, useReducer } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
 import { useDisclosure } from "@mantine/hooks";
@@ -16,13 +15,22 @@ import {
   type FilterState,
   filterReducer,
 } from "~/reducers/filterReducer";
+import { api } from "~/utils/api";
+import SubredditSearchItem from "~/components/SubredditSearchItem";
 
 interface FilterSelectionProps {
   filters: FilterState;
   dispatch: (data: FilterAction) => void;
 }
 
+interface SearchHandlerProps {
+  subreddit: string;
+  category: string;
+}
+
 const Search = () => {
+  const subredditSearch = api.subredditSearch.search.useMutation();
+
   const [opened, { open, close }] = useDisclosure(false);
   const [filters, dispatch] = useReducer(filterReducer, {
     upvotes: {
@@ -38,7 +46,9 @@ const Search = () => {
     excludeSeries: false,
   } as FilterState);
 
-  console.log(filters);
+  const searchHandler = (data: SearchHandlerProps) => {
+    subredditSearch.mutate(data);
+  };
 
   return (
     <>
@@ -48,12 +58,20 @@ const Search = () => {
       <main>
         <Header />
 
-        <div className="my-4 flex">
-          <div className="mx-auto flex w-full max-w-screen-md items-end gap-3 rounded-xl bg-gray-50 p-4">
-            <SubredditSearchForm open={open} />
+        <div className=" flex flex-col p-4">
+          <div className="mx-auto w-full max-w-screen-lg gap-3 rounded-xl bg-white px-4 py-2">
+            <SubredditSearchForm
+              open={open}
+              searchHandler={searchHandler}
+              disableSearch={subredditSearch.isLoading}
+            />
           </div>
 
-          {/* all posts */}
+          <div className="mt-6 grid grid-cols-3 gap-6">
+            {subredditSearch.data?.map((item) => (
+              <SubredditSearchItem key={item.data.id} post={item.data} />
+            )) || null}
+          </div>
         </div>
 
         <Modal

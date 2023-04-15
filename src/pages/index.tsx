@@ -118,7 +118,7 @@ const Stats = () => {
 const Hero = () => (
   <section className="hero flex items-center gap-10">
     <div className="flex w-1/2 flex-col gap-8">
-      <Badge className="w-fit" color="indigo">
+      <Badge className="w-fit" color="rose">
         Thousands of stories read
       </Badge>
       <h1 className="h1">

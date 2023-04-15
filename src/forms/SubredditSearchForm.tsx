@@ -1,29 +1,71 @@
+import { faSpinnerThird } from "@fortawesome/pro-duotone-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NativeSelect, TextInput } from "@mantine/core";
-import React, { FormEvent } from "react";
+import React, { useState } from "react";
 
 const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
 interface Props {
   open: () => void;
+  searchHandler: (state: { subreddit: string; category: string }) => void;
+  disableSearch: boolean;
 }
 
-const SubredditSearchForm = ({ open }: Props) => {
-  const searchHandler = (e: FormEvent) => {
-    e.preventDefault();
-  };
+const SubredditSearchForm = ({ open, searchHandler, disableSearch }: Props) => {
+  const [state, setState] = useState({
+    subreddit: "",
+    category: "Hot",
+  });
+
   return (
-    <form className="flex w-full items-end gap-3" onSubmit={searchHandler}>
-      <TextInput label="Subreddit" placeholder="subreddit" icon="r/" />
-      <NativeSelect label="Category" data={categories} />
+    <form
+      className="flex w-full items-end gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        searchHandler(state);
+      }}
+    >
+      <TextInput
+        label="Subreddit"
+        placeholder="subreddit"
+        icon="r/"
+        className="flex-1"
+        onChange={(e) =>
+          setState({ ...state, subreddit: e.currentTarget.value })
+        }
+        value={state.subreddit}
+      />
+      <NativeSelect
+        label="Category"
+        data={categories}
+        onChange={(e) =>
+          setState({ ...state, category: e.currentTarget.value })
+        }
+      />
       <button
         type="button"
-        className="button third  flex-1 whitespace-nowrap"
+        className="button third  whitespace-nowrap"
         onClick={open}
       >
         Add filters
       </button>
-      <button type="submit" className="button main  flex-1 whitespace-nowrap">
-        Search
+      <button
+        type="submit"
+        className="button main  whitespace-nowrap"
+        disabled={disableSearch}
+      >
+        {disableSearch ? (
+          <FontAwesomeIcon
+            icon={faSpinnerThird}
+            spin
+            style={{
+              "--fa-primary-color": "#fff",
+              "--fa-secondary-color": "#1b3055",
+            }}
+          />
+        ) : (
+          "Search"
+        )}
       </button>
     </form>
   );

@@ -9,9 +9,9 @@ const UserChip = () => {
   const user = userQuery.data;
 
   return (
-    <div className="flex items-center gap-6 rounded-full border-[1px] border-indigo-300 px-3 py-2 hover:bg-indigo-50">
-      <p className="text-indigo-700">{user?.name}</p>
-      <FontAwesomeIcon icon={faChevronDown} className="text-indigo-500" />
+    <div className="flex items-center gap-6 rounded-full border-[1px] border-rose-300 px-3 py-2 hover:bg-rose-50">
+      <p className="text-rose-700">{user?.name}</p>
+      <FontAwesomeIcon icon={faChevronDown} className="text-rose-500" />
     </div>
   );
 };

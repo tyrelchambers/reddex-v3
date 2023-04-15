@@ -10,6 +10,10 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    restart: unless-stopped
 networks:
   default:
     name: reddex_v3

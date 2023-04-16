@@ -4,7 +4,7 @@
 
 @layer components {
   .button {
-    @apply max-h-10 rounded-md px-5 py-2 text-white  transition-all hover:shadow-lg;
+    @apply max-h-8 rounded-md px-5 py-2 text-xs  font-bold text-white transition-all hover:shadow-lg;
   }
 
   .button.main {
@@ -20,6 +20,14 @@
   }
   .button.main:disabled {
     @apply cursor-not-allowed bg-rose-300 text-rose-500 shadow-none;
+  }
+
+  .button.alt {
+    @apply h-8 bg-gray-100 p-2 text-xs font-bold text-gray-500 shadow-none hover:bg-gray-200;
+  }
+
+  .button.simple {
+    @apply p-0 text-sm text-rose-500 underline;
   }
 
   .h1 {

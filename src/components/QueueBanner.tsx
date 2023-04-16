@@ -4,6 +4,8 @@ import { useQueueStore } from "~/stores/queueStore";
 const QueueBanner = () => {
   const queueStore = useQueueStore();
 
+  if (queueStore.queue.length === 0) return null;
+
   return (
     <div className="mt-6 flex items-center justify-center gap-4 rounded-xl bg-indigo-500 p-2 text-white shadow-xl">
       <p className="text-lg">

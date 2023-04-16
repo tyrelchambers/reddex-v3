@@ -20,9 +20,15 @@ interface Props {
 const SubredditSearchItem = ({ post }: Props) => {
   const queueStore = useQueueStore();
 
+  const isInQueue = queueStore.exists(post);
+
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
-      <header className="mb-2 flex items-center justify-between gap-3 bg-gradient-to-b from-gray-300 to-transparent p-3 py-5">
+      <header
+        className={`mb-2 flex items-center justify-between gap-3 bg-gradient-to-b ${
+          isInQueue ? "from-green-300" : "from-gray-300"
+        } to-transparent p-3 py-5`}
+      >
         <div className="flex items-center rounded-full  font-black text-orange-500">
           <FontAwesomeIcon icon={faUp} className="mr-2" />
           {post.ups}
@@ -63,10 +69,14 @@ const SubredditSearchItem = ({ post }: Props) => {
           </div>
         </div>
 
-        {queueStore.exists(post) ? (
-          <div className="button secondary h-8 !bg-green-100 p-2 text-xs font-bold !text-green-500 !shadow-none">
-            In queue
-          </div>
+        {isInQueue ? (
+          <button
+            type="button"
+            className="button secondary h-8 !bg-gray-100 p-2 text-xs font-bold !text-gray-500 !shadow-none"
+            onClick={() => queueStore.remove(post)}
+          >
+            Remove from queue
+          </button>
         ) : (
           <button
             type="button"

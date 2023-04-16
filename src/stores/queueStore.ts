@@ -5,6 +5,7 @@ interface QueueState {
   queue: RedditStory[];
   add: (item: RedditStory) => void;
   exists: (item: RedditStory) => boolean;
+  remove: (item: RedditStory) => void;
 }
 
 export const useQueueStore = create<QueueState>((set, get) => ({
@@ -20,4 +21,14 @@ export const useQueueStore = create<QueueState>((set, get) => ({
 
     return queue.includes(item);
   },
+  remove: (item) =>
+    set((state) => {
+      const queueWithoutItem = state.queue.filter(
+        (stateItem) => stateItem !== item
+      );
+
+      return {
+        queue: queueWithoutItem,
+      };
+    }),
 }));

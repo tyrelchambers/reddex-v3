@@ -11,12 +11,15 @@ import { type RedditStory } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
+import { useQueueStore } from "~/stores/queueStore";
 
 interface Props {
-  post: Partial<RedditStory>;
+  post: RedditStory;
 }
 
 const SubredditSearchItem = ({ post }: Props) => {
+  const queueStore = useQueueStore();
+
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
       <header className="mb-2 flex items-center justify-between gap-3 bg-gradient-to-b from-gray-300 to-transparent p-3 py-5">
@@ -33,13 +36,13 @@ const SubredditSearchItem = ({ post }: Props) => {
 
           <div className="flex items-center rounded-full text-sm text-gray-500">
             <FontAwesomeIcon icon={faThumbsUp} className="mr-2" />
-            {((post.upvote_ratio as number) * 100).toFixed(0)}%
+            {(post.upvote_ratio * 100).toFixed(0)}%
           </div>
         </div>
       </header>
       <Link
         className="  p-3 font-bold text-gray-800 underline hover:text-rose-500"
-        href={post.url as string}
+        href={post.url}
         target="_blank"
       >
         {post.title}
@@ -55,21 +58,25 @@ const SubredditSearchItem = ({ post }: Props) => {
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <FontAwesomeIcon icon={faCalendar} />
             <p>
-              {formatDistanceToNowStrict(
-                new Date((post.created as number) * 1000)
-              )}{" "}
-              ago
+              {formatDistanceToNowStrict(new Date(post.created * 1000))} ago
             </p>
           </div>
         </div>
 
-        <button
-          type="button"
-          className="button secondary h-8 p-2 text-xs font-bold"
-        >
-          <FontAwesomeIcon icon={faAdd} className="mr-2" />
-          Add to Queue
-        </button>
+        {queueStore.exists(post) ? (
+          <div className="button secondary h-8 !bg-green-100 p-2 text-xs font-bold !text-green-500 !shadow-none">
+            In queue
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="button secondary h-8 p-2 text-xs font-bold"
+            onClick={() => queueStore.add(post)}
+          >
+            <FontAwesomeIcon icon={faAdd} className="mr-2" />
+            Add to Queue
+          </button>
+        )}
       </footer>
     </div>
   );

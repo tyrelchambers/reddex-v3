@@ -18,6 +18,7 @@ import {
 } from "~/reducers/filterReducer";
 import { api } from "~/utils/api";
 import SubredditSearchItem from "~/components/SubredditSearchItem";
+import QueueBanner from "~/components/QueueBanner";
 
 interface FilterSelectionProps {
   filters: FilterState;
@@ -60,13 +61,15 @@ const Search = () => {
         <Header />
 
         <div className=" flex flex-col p-4">
-          <div className="mx-auto w-full max-w-screen-lg gap-3 rounded-xl bg-white p-2 shadow-lg">
+          <div className="mx-auto w-full max-w-screen-lg gap-3 rounded-xl bg-white p-2">
             <SubredditSearchForm
               open={open}
               searchHandler={searchHandler}
               disableSearch={subredditSearch.isLoading}
             />
           </div>
+
+          <QueueBanner />
 
           <div className="mt-6 grid grid-cols-3 gap-6">
             {subredditSearch.data?.map((item) => (

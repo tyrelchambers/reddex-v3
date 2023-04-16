@@ -1,11 +1,11 @@
-import { RedditStory } from "@prisma/client";
 import { create } from "zustand";
+import { PostFromReddit } from "~/types";
 
 interface QueueState {
-  queue: RedditStory[];
-  add: (item: RedditStory) => void;
-  exists: (item: RedditStory) => boolean;
-  remove: (item: RedditStory) => void;
+  queue: PostFromReddit[];
+  add: (item: PostFromReddit) => void;
+  exists: (item: PostFromReddit) => boolean;
+  remove: (item: PostFromReddit) => void;
 }
 
 export const useQueueStore = create<QueueState>((set, get) => ({

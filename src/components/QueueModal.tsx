@@ -1,10 +1,12 @@
 import { Textarea } from "@mantine/core";
-import { RedditStory } from "@prisma/client";
+import { RedditPost } from "@prisma/client";
 import React from "react";
 import { useQueueStore } from "~/stores/queueStore";
+import { PostFromReddit, RedditPostWithText } from "~/types";
+import { api } from "~/utils/api";
 
 interface ActiveQueueItemProps {
-  post: RedditStory;
+  post: PostFromReddit;
 }
 
 interface Props {
@@ -12,11 +14,21 @@ interface Props {
 }
 
 const QueueModal = ({ close }: Props) => {
+  const redditPost = api.post.save.useMutation();
   const queueStore = useQueueStore();
   const currentPost = queueStore.queue[0];
 
   const sendHandler = () => {
     // send message ->
+    if (!currentPost) return;
+
+    redditPost.mutate({
+      ...currentPost,
+      story_length: currentPost.selftext.length,
+      flair: currentPost.link_flair_text,
+      post_id: currentPost.id,
+      reading_time: Math.round(currentPost.selftext.length / 200),
+    } as unknown as RedditPostWithText);
     queueStore.remove(currentPost);
   };
 

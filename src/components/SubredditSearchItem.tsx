@@ -7,14 +7,14 @@ import {
   faUp,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type RedditStory } from "@prisma/client";
+import { type RedditPost } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useQueueStore } from "~/stores/queueStore";
 
 interface Props {
-  post: RedditStory;
+  post: RedditPost;
 }
 
 const SubredditSearchItem = ({ post }: Props) => {

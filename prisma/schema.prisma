@@ -60,7 +60,7 @@ model User {
     ContactedWriters            ContactedWriters[]
     Profile                     Profile[]
     PreviouslySearchedSubreddit PreviouslySearchedSubreddit[]
-    RedditStory                 RedditStory[]
+    RedditPost                  RedditPost[]
     Tag                         Tag[]
     SubmittedStory              SubmittedStory[]
     Website                     Website[]
@@ -89,7 +89,7 @@ model ContactedWriters {
     userId String
 }
 
-model Post {
+model SearchResults {
     id        String @id @default(cuid())
     owner     String
     posts     Json[]
@@ -113,7 +113,7 @@ model PreviouslySearchedSubreddit {
     userId    String
 }
 
-model RedditStory {
+model RedditPost {
     id            String          @id @default(cuid())
     author        String
     flair         String
@@ -135,12 +135,12 @@ model RedditStory {
 }
 
 model TagsOnStories {
-    redditStory   RedditStory @relation(fields: [redditStoryId], references: [id])
-    redditStoryId String
-    tag           Tag         @relation(fields: [tagId], references: [id])
-    tagId         String
+    RedditPost   RedditPost @relation(fields: [RedditPostId], references: [id])
+    RedditPostId String
+    tag          Tag        @relation(fields: [tagId], references: [id])
+    tagId        String
 
-    @@id([redditStoryId, tagId])
+    @@id([RedditPostId, tagId])
 }
 
 model Tag {

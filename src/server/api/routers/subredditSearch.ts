@@ -1,7 +1,7 @@
 import { searchSchema } from "~/server/schemas";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import axios from "axios";
-import { RedditStory } from "@prisma/client";
+import { PostFromReddit } from "~/types";
 
 interface SubredditResponse {
   data: {
@@ -9,7 +9,7 @@ interface SubredditResponse {
       after: string;
       children: {
         kind: string;
-        data: Partial<RedditStory>;
+        data: PostFromReddit;
       }[];
     };
   };
@@ -22,7 +22,7 @@ export const subredditSearchRouter = createTRPCRouter({
       const url = `https://www.reddit.com/r/${input.subreddit.toLowerCase()}/${input.category.toLowerCase()}.json?limit=100`;
       let posts = [] as {
         kind: string;
-        data: Partial<RedditStory>;
+        data: PostFromReddit;
       }[];
       let after = ``;
 

@@ -2,6 +2,7 @@ import {
   Modal,
   NativeSelect,
   NumberInput,
+  Pagination,
   Switch,
   TextInput,
 } from "@mantine/core";
@@ -59,7 +60,7 @@ const Search = () => {
         <Header />
 
         <div className=" flex flex-col p-4">
-          <div className="mx-auto w-full max-w-screen-lg gap-3 rounded-xl bg-white px-4 py-2">
+          <div className="mx-auto w-full max-w-screen-lg gap-3 rounded-xl bg-white p-2 shadow-lg">
             <SubredditSearchForm
               open={open}
               searchHandler={searchHandler}

@@ -26,16 +26,19 @@ export const subredditSearchRouter = createTRPCRouter({
       }[];
       let after = ``;
 
-      console.log(url);
-
-      for (let i = 0; i < 1 && after !== null; i++) {
-        await axios
-          .get(`${url}&after=${after}`)
-          .then((res: SubredditResponse) => {
-            after = res.data.data.after;
-            posts = posts.concat(res.data.data.children);
-          })
-          .catch((err: unknown) => err);
+      try {
+        for (let i = 0; i < 10 && after !== null; i++) {
+          await axios
+            .get(`${url}&after=${after}`)
+            .then((res: SubredditResponse) => {
+              after = res.data.data.after;
+              posts = posts.concat(res.data.data.children);
+            })
+            .catch((err: unknown) => err);
+        }
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to fetch posts from Reddit");
       }
 
       return posts;

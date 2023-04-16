@@ -19,14 +19,13 @@ const SubredditSearchForm = ({ open, searchHandler, disableSearch }: Props) => {
 
   return (
     <form
-      className="flex w-full items-end gap-3"
+      className="flex w-full max-w-screen-lg items-end gap-3"
       onSubmit={(e) => {
         e.preventDefault();
         searchHandler(state);
       }}
     >
       <TextInput
-        label="Subreddit"
         placeholder="subreddit"
         icon="r/"
         className="flex-1"
@@ -36,7 +35,6 @@ const SubredditSearchForm = ({ open, searchHandler, disableSearch }: Props) => {
         value={state.subreddit}
       />
       <NativeSelect
-        label="Category"
         data={categories}
         onChange={(e) =>
           setState({ ...state, category: e.currentTarget.value })

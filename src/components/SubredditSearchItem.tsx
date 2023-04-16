@@ -20,18 +20,18 @@ const SubredditSearchItem = ({ post }: Props) => {
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
       <header className="mb-2 flex items-center justify-between gap-3 bg-gradient-to-b from-gray-300 to-transparent p-3 py-5">
-        <div className="flex items-center rounded-full text-sm font-black text-gray-800">
+        <div className="flex items-center rounded-full  font-black text-orange-500">
           <FontAwesomeIcon icon={faUp} className="mr-2" />
           {post.ups}
         </div>
 
         <div className="flex gap-3">
-          <div className="flex items-center rounded-full text-sm text-gray-800">
+          <div className="flex items-center rounded-full text-sm text-gray-500">
             <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
             {post.author}
           </div>
 
-          <div className="flex items-center rounded-full text-sm text-gray-800">
+          <div className="flex items-center rounded-full text-sm text-gray-500">
             <FontAwesomeIcon icon={faThumbsUp} className="mr-2" />
             {((post.upvote_ratio as number) * 100).toFixed(0)}%
           </div>

@@ -27,6 +27,10 @@ const _routes = [
     label: "Inbox",
     slug: routes.INBOX,
   },
+  {
+    label: "Website",
+    slug: routes.WEBSITE,
+  },
 ];
 
 const DashNav = () => {

@@ -1,6 +1,6 @@
 import { Modal } from "@mantine/core";
 import Head from "next/head";
-import React, { useReducer } from "react";
+import React, { useCallback, useReducer } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
 import { useDisclosure } from "@mantine/hooks";
@@ -10,14 +10,23 @@ import SubredditSearchItem from "~/components/SubredditSearchItem";
 import QueueBanner from "~/components/QueueBanner";
 import FilterSelections from "~/components/FilterSelections";
 import QueueModal from "~/components/QueueModal";
-
+import { db } from "~/utils/dexie";
+import { PostFromReddit } from "~/types";
+import { useLiveQuery } from "dexie-react-hooks";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
 }
 
 const Search = () => {
-  const subredditSearch = api.subredditSearch.search.useMutation();
+  const savedPosts = useLiveQuery(() => db.posts.toArray());
+
+  const subredditSearch = api.subredditSearch.search.useMutation({
+    async onSuccess(data) {
+      await db.posts.clear();
+      await db.posts.bulkAdd(data);
+    },
+  });
 
   const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
@@ -61,8 +70,8 @@ const Search = () => {
           <QueueBanner openQueue={openQueue} />
 
           <div className="mt-6 grid grid-cols-3 gap-6">
-            {subredditSearch.data?.map((item) => (
-              <SubredditSearchItem key={item.data.id} post={item.data} />
+            {savedPosts?.map((item) => (
+              <SubredditSearchItem key={item.id} post={item} />
             )) || null}
           </div>
         </div>

@@ -10,4 +10,5 @@ export const routes = {
   TAGS: "/dashboard/tags",
   CONTACTS: "/dashboard/contacts",
   INBOX: "/dashboard/inbox",
+  WEBSITE: "/dashboard/website",
 };

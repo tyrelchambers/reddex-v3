@@ -25,8 +25,6 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
 
   const isInQueue = queueStore.exists(post);
 
-  console.log(hasBeenUsed);
-
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
       <header

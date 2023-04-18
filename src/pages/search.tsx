@@ -20,6 +20,10 @@ interface SearchHandlerProps {
 
 const Search = () => {
   const session = useSession();
+  const currentUser = api.user.me.useQuery(undefined, {
+    enabled: session.status === "authenticated",
+  });
+
   const subredditSearch = api.subredditSearch.search.useMutation({
     async onSuccess(data) {
       await db.posts.clear();
@@ -29,8 +33,6 @@ const Search = () => {
   const usedPostIdsQuery = api.post.getUsedPostIds.useQuery(undefined, {
     enabled: session.status === "authenticated",
   });
-
-  console.log(usedPostIdsQuery);
 
   const [loading, setLoading] = useState(false);
   // const savedPosts = useLiveQuery(() => db.posts.toArray());
@@ -67,7 +69,7 @@ const Search = () => {
     return () => {
       setLoading(false);
     };
-  }, []);
+  }, [subredditSearch.isSuccess]);
 
   const searchHandler = (data: SearchHandlerProps) => {
     subredditSearch.mutate(data);
@@ -87,6 +89,7 @@ const Search = () => {
               open={open}
               searchHandler={searchHandler}
               disableSearch={subredditSearch.isLoading}
+              searches={currentUser.data?.Profile?.searches}
             />
           </div>
 

@@ -48,22 +48,20 @@ model Session {
 }
 
 model User {
-    id                          String                        @id @default(cuid())
-    name                        String?
-    email                       String?                       @unique
-    emailVerified               DateTime?
-    image                       String?
-    username                    String
-    accounts                    Account[]
-    sessions                    Session[]
-    contact                     Contact[]
-    ContactedWriters            ContactedWriters[]
-    Profile                     Profile[]
-    PreviouslySearchedSubreddit PreviouslySearchedSubreddit[]
-    RedditPost                  RedditPost[]
-    Tag                         Tag[]
-    SubmittedStory              SubmittedStory[]
-    Website                     Website[]
+    id               String             @id @default(cuid())
+    name             String?
+    email            String?            @unique
+    emailVerified    DateTime?
+    image            String?
+    accounts         Account[]
+    sessions         Session[]
+    contact          Contact[]
+    ContactedWriters ContactedWriters[]
+    RedditPost       RedditPost[]
+    Tag              Tag[]
+    SubmittedStory   SubmittedStory[]
+    Website          Website[]
+    Profile          Profile?
 }
 
 model VerificationToken {
@@ -98,13 +96,13 @@ model SearchResults {
 }
 
 model Profile {
-    id               String @id @default(cuid())
-    greeting         String
-    recurring        String
-    words_per_minute Int
-    reddit_profile   Json
-    user             User   @relation(fields: [userId], references: [id])
-    userId           String
+    id               String   @id @default(cuid())
+    greeting         String?
+    recurring        String?
+    words_per_minute Int?
+    searches         String[]
+    user             User     @relation(fields: [userId], references: [id])
+    userId           String   @unique
 }
 
 model RedditPost {

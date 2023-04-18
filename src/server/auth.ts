@@ -47,6 +47,16 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   adapter: PrismaAdapter(prisma),
+  events: {
+    async createUser(message) {
+      const { user } = message;
+      await prisma.profile.create({
+        data: {
+          userId: user.id,
+        },
+      });
+    },
+  },
   providers: [
     RedditProvider({
       clientId: env.REDDIT_CLIENT_ID,
@@ -61,7 +71,6 @@ export const authOptions: NextAuthOptions = {
         name: string;
         email: string | null;
         snoovatar_img: string;
-        username: string;
       }) {
         return {
           id: profile.id,

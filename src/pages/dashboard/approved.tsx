@@ -4,7 +4,7 @@ import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 
-const list = () => {
+const Approved = () => {
   const approvedListQuery = api.post.getApprovedList.useQuery();
 
   return (
@@ -18,12 +18,14 @@ const list = () => {
           Your list of stories for which you have permission to read.
         </p>
 
-        {approvedListQuery.data?.map((item) => (
-          <StoryListItem key={item.id} />
-        )) || null}
+        <div className="mt-6 grid grid-cols-3">
+          {approvedListQuery.data?.map((item) => (
+            <StoryListItem key={item.id} story={item} list="approved" />
+          )) || null}
+        </div>
       </main>
     </div>
   );
 };
 
-export default list;
+export default Approved;

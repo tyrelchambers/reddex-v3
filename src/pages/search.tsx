@@ -1,6 +1,6 @@
-import { Modal } from "@mantine/core";
+import { Loader, Modal } from "@mantine/core";
 import Head from "next/head";
-import React, { useCallback, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
 import { useDisclosure } from "@mantine/hooks";
@@ -11,16 +11,14 @@ import QueueBanner from "~/components/QueueBanner";
 import FilterSelections from "~/components/FilterSelections";
 import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
-import { PostFromReddit } from "~/types";
 import { useLiveQuery } from "dexie-react-hooks";
+import { PostFromReddit } from "~/types";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
 }
 
 const Search = () => {
-  const savedPosts = useLiveQuery(() => db.posts.toArray());
-
   const subredditSearch = api.subredditSearch.search.useMutation({
     async onSuccess(data) {
       await db.posts.clear();
@@ -28,6 +26,9 @@ const Search = () => {
     },
   });
 
+  const [loading, setLoading] = useState(false);
+  // const savedPosts = useLiveQuery(() => db.posts.toArray());
+  const [savedPosts, setSavedPosts] = useState<PostFromReddit[]>([]);
   const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
@@ -45,6 +46,22 @@ const Search = () => {
     seriesOnly: false,
     excludeSeries: false,
   } as FilterState);
+
+  useEffect(() => {
+    const fn = async () => {
+      setLoading(true);
+
+      const posts = await db.posts.toArray();
+      setSavedPosts(posts);
+      setLoading(false);
+    };
+
+    fn();
+
+    return () => {
+      setLoading(false);
+    };
+  }, []);
 
   const searchHandler = (data: SearchHandlerProps) => {
     subredditSearch.mutate(data);
@@ -69,10 +86,18 @@ const Search = () => {
 
           <QueueBanner openQueue={openQueue} />
 
+          {loading && (
+            <div className="my-6 flex justify-center">
+              <Loader color="pink" />
+            </div>
+          )}
+
           <div className="mt-6 grid grid-cols-3 gap-6">
-            {savedPosts?.map((item) => (
-              <SubredditSearchItem key={item.id} post={item} />
-            )) || null}
+            {(!loading &&
+              savedPosts?.map((item) => (
+                <SubredditSearchItem key={item.id} post={item} />
+              ))) ||
+              null}
           </div>
         </div>
 

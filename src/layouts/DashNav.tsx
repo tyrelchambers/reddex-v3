@@ -31,6 +31,10 @@ const _routes = [
     label: "Website",
     slug: routes.WEBSITE,
   },
+  {
+    label: "Settings",
+    slug: routes.SETTINGS,
+  },
 ];
 
 const DashNav = () => {

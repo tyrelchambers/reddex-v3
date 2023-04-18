@@ -15,7 +15,7 @@ export const postRouter = createTRPCRouter({
     return await prisma.redditPost.findMany({
       where: {
         userId: ctx.session.user.id,
-        permission: false,
+        permission: true,
         read: true,
       },
     });
@@ -44,6 +44,7 @@ export const postRouter = createTRPCRouter({
         },
         data: {
           read: true,
+          permission: true,
         },
       });
     }),

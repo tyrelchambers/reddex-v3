@@ -11,4 +11,5 @@ export const routes = {
   CONTACTS: "/dashboard/contacts",
   INBOX: "/dashboard/inbox",
   WEBSITE: "/dashboard/website",
+  SETTINGS: "/dashboard/settings",
 };

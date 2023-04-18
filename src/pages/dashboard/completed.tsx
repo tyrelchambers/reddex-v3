@@ -18,7 +18,7 @@ const completed = () => {
           Your list of stories for which you have read.
         </p>
 
-        <div className="mt-6 grid grid-cols-3">
+        <div className="mt-6 grid grid-cols-3 gap-3">
           {completedListQuery.data?.map((item) => (
             <StoryListItem key={item.id} story={item} list="completed" />
           )) || null}

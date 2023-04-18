@@ -6,9 +6,8 @@ export const searchSchema = z.object({
 });
 
 export const postSchema = z.object({
-  id: z.string(),
   author: z.string(),
-  flair: z.string(),
+  flair: z.string().nullable(),
   num_comments: z.number(),
   post_id: z.string(),
   story_length: z.number(),

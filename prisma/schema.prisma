@@ -82,6 +82,7 @@ model Contact {
     userId String
 }
 
+// this is for selecting which message to greet them with
 model ContactedWriters {
     id     String @id @default(cuid())
     name   String
@@ -106,17 +107,10 @@ model Profile {
     userId           String
 }
 
-model PreviouslySearchedSubreddit {
-    id        String @id @default(cuid())
-    subreddit String
-    user      User   @relation(fields: [userId], references: [id])
-    userId    String
-}
-
 model RedditPost {
     id            String          @id @default(cuid())
     author        String
-    flair         String
+    flair         String?
     num_comments  Int
     post_id       String
     story_length  Int

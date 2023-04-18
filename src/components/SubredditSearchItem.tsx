@@ -5,6 +5,7 @@ import {
   faFolder,
   faThumbsUp,
   faUp,
+  faWarning,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -12,15 +13,19 @@ import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
+import { Tooltip } from "@mantine/core";
 
 interface Props {
   post: PostFromReddit;
+  hasBeenUsed: boolean;
 }
 
-const SubredditSearchItem = ({ post }: Props) => {
+const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
   const queueStore = useQueueStore();
 
   const isInQueue = queueStore.exists(post);
+
+  console.log(hasBeenUsed);
 
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
@@ -69,24 +74,34 @@ const SubredditSearchItem = ({ post }: Props) => {
           </div>
         </div>
 
-        {isInQueue ? (
-          <button
-            type="button"
-            className="button secondary h-8 !bg-gray-100 p-2 text-xs font-bold !text-gray-500 !shadow-none"
-            onClick={() => queueStore.remove(post)}
-          >
-            Remove from queue
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="button secondary h-8 p-2 text-xs font-bold"
-            onClick={() => queueStore.add(post)}
-          >
-            <FontAwesomeIcon icon={faAdd} className="mr-2" />
-            Add to Queue
-          </button>
-        )}
+        <div className="flex items-end gap-2">
+          {hasBeenUsed && (
+            <Tooltip label="Already used">
+              <FontAwesomeIcon
+                icon={faWarning}
+                className="flex items-center gap-2 rounded-full bg-yellow-100 p-2 text-xs text-yellow-800"
+              />
+            </Tooltip>
+          )}
+          {isInQueue ? (
+            <button
+              type="button"
+              className="button secondary h-8 !bg-gray-100 p-2 text-xs font-bold !text-gray-500 !shadow-none"
+              onClick={() => queueStore.remove(post)}
+            >
+              Remove from queue
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="button secondary h-8 p-2 text-xs font-bold"
+              onClick={() => queueStore.add(post)}
+            >
+              <FontAwesomeIcon icon={faAdd} className="mr-2" />
+              Add to Queue
+            </button>
+          )}
+        </div>
       </footer>
     </div>
   );

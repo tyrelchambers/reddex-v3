@@ -18,7 +18,7 @@ const Approved = () => {
           Your list of stories for which you have permission to read.
         </p>
 
-        <div className="mt-6 grid grid-cols-3">
+        <div className="mt-6 grid grid-cols-3 gap-3">
           {approvedListQuery.data?.map((item) => (
             <StoryListItem key={item.id} story={item} list="approved" />
           )) || null}

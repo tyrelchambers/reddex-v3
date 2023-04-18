@@ -1,5 +1,4 @@
-import { Textarea } from "@mantine/core";
-import { RedditPost } from "@prisma/client";
+import { Loader, Textarea } from "@mantine/core";
 import React from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit, RedditPostWithText } from "~/types";
@@ -14,9 +13,15 @@ interface Props {
 }
 
 const QueueModal = ({ close }: Props) => {
-  const redditPost = api.post.save.useMutation();
   const queueStore = useQueueStore();
   const currentPost = queueStore.queue[0];
+  const redditPost = api.post.save.useMutation({
+    onSuccess: () => {
+      if (currentPost) {
+        queueStore.remove(currentPost);
+      }
+    },
+  });
 
   const sendHandler = () => {
     // send message ->
@@ -29,7 +34,6 @@ const QueueModal = ({ close }: Props) => {
       post_id: currentPost.id,
       reading_time: Math.round(currentPost.selftext.length / 200),
     } as unknown as RedditPostWithText);
-    queueStore.remove(currentPost);
   };
 
   if (!currentPost) return close();
@@ -51,8 +55,13 @@ const QueueModal = ({ close }: Props) => {
       <footer className="mt-6 flex justify-between">
         <button className="button alt">Remove from queue</button>
 
-        <button type="button" className="button main" onClick={sendHandler}>
-          Send message
+        <button
+          type="button"
+          className="button main"
+          onClick={sendHandler}
+          disabled={redditPost.isLoading}
+        >
+          {redditPost.isLoading ? <Loader size="sm" /> : "Send message"}
         </button>
       </footer>
     </section>

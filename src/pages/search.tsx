@@ -11,20 +11,26 @@ import QueueBanner from "~/components/QueueBanner";
 import FilterSelections from "~/components/FilterSelections";
 import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
-import { useLiveQuery } from "dexie-react-hooks";
 import { PostFromReddit } from "~/types";
+import { useSession } from "next-auth/react";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
 }
 
 const Search = () => {
+  const session = useSession();
   const subredditSearch = api.subredditSearch.search.useMutation({
     async onSuccess(data) {
       await db.posts.clear();
       await db.posts.bulkAdd(data);
     },
   });
+  const usedPostIdsQuery = api.post.getUsedPostIds.useQuery(undefined, {
+    enabled: session.status === "authenticated",
+  });
+
+  console.log(usedPostIdsQuery);
 
   const [loading, setLoading] = useState(false);
   // const savedPosts = useLiveQuery(() => db.posts.toArray());
@@ -95,7 +101,15 @@ const Search = () => {
           <div className="mt-6 grid grid-cols-3 gap-6">
             {(!loading &&
               savedPosts?.map((item) => (
-                <SubredditSearchItem key={item.id} post={item} />
+                <SubredditSearchItem
+                  key={item.id}
+                  post={item}
+                  hasBeenUsed={
+                    !!usedPostIdsQuery.data?.find(
+                      (id) => id.post_id === item.id
+                    )
+                  }
+                />
               ))) ||
               null}
           </div>

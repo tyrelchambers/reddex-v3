@@ -8,8 +8,6 @@ export const postRouter = createTRPCRouter({
     return await prisma.redditPost.findMany({
       where: {
         userId: ctx.session.user.id,
-        permission: true,
-        read: false,
       },
     });
   }),
@@ -55,8 +53,19 @@ export const postRouter = createTRPCRouter({
       return await prisma.redditPost.create({
         data: {
           ...input,
+          flair: input.flair != null ? input.flair : undefined,
           userId: ctx.session.user.id,
         },
       });
     }),
+  getUsedPostIds: protectedProcedure.query(async ({ ctx }) => {
+    return await prisma.redditPost.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        post_id: true,
+      },
+    });
+  }),
 });

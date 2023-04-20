@@ -43,7 +43,7 @@ const DashNav = () => {
       <ul className="mx-auto flex max-w-screen-2xl gap-4 text-gray-500">
         {_routes.map((r) => (
           <li key={r.label}>
-            <Link href={r.slug} className="hover:text-rose-500">
+            <Link href={r.slug} className="hover:text-indigo-500">
               {r.label}
             </Link>
           </li>

@@ -42,7 +42,7 @@ const StoryListItem = ({ story, list }: Props) => {
         </div>
       </header>
       <Link
-        className="  p-3 font-bold text-gray-800 underline hover:text-rose-500"
+        className="  p-3 font-bold text-gray-800 underline hover:text-indigo-500"
         href={story.url}
         target="_blank"
       >

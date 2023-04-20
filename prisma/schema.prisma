@@ -97,8 +97,8 @@ model SearchResults {
 
 model Profile {
     id               String   @id @default(cuid())
-    greeting         String?
-    recurring        String?
+    greeting         String?  @db.Text
+    recurring        String?  @db.Text
     words_per_minute Int?
     searches         String[]
     user             User     @relation(fields: [userId], references: [id])

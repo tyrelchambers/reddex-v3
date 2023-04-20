@@ -18,7 +18,11 @@ const font = Poppins({
   subsets: ["latin"],
 });
 
-const MyApp: AppType<{ session: Session | null }> = ({
+type MyAppProps = {
+  session: Session | null;
+};
+
+const MyApp: AppType<MyAppProps> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {

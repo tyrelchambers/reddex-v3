@@ -27,7 +27,7 @@
   }
 
   .button.simple {
-    @apply p-0 text-sm text-rose-500 underline;
+    @apply p-0 text-sm text-rose-500 underline shadow-none;
   }
 
   .h1 {

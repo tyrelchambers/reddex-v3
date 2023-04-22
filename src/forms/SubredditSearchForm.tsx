@@ -9,7 +9,7 @@ interface Props {
   open: () => void;
   searchHandler: (state: { subreddit: string; category: string }) => void;
   disableSearch: boolean;
-  searches: string[];
+  searches: string[] | undefined;
 }
 
 const SubredditSearchForm = ({
@@ -73,19 +73,21 @@ const SubredditSearchForm = ({
           )}
         </button>
       </form>
-      <ul className="mt-1">
-        {searches.map((s) => (
-          <li key={s}>
-            <button
-              type="button"
-              className="text-sm text-gray-600 underline"
-              onClick={() => searchHandler({ ...state, subreddit: s })}
-            >
-              {s}
-            </button>
-          </li>
-        ))}
-      </ul>
+      {searches && (
+        <ul className="mt-1">
+          {searches.map((s) => (
+            <li key={s}>
+              <button
+                type="button"
+                className="text-sm text-gray-600 underline"
+                onClick={() => searchHandler({ ...state, subreddit: s })}
+              >
+                {s}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

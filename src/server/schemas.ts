@@ -21,3 +21,8 @@ export const postSchema = z.object({
   upvote_ratio: z.number(),
   created: z.number(),
 });
+
+export const contactSchema = z.object({
+  name: z.string(),
+  notes: z.string().optional(),
+});

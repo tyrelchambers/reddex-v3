@@ -20,7 +20,7 @@ interface Props {
 
 const StoryListItem = ({ story, list }: Props) => {
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
+    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white shadow-md">
       <header
         className={`flex items-center justify-between gap-3 bg-indigo-700 p-3`}
       >

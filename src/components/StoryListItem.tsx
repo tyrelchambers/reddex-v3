@@ -22,34 +22,34 @@ const StoryListItem = ({ story, list }: Props) => {
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
       <header
-        className={`flex items-center justify-between gap-3 bg-gradient-to-b from-gray-100 to-transparent p-3`}
+        className={`flex items-center justify-between gap-3 bg-indigo-700 p-3`}
       >
-        <div className="flex items-center rounded-full  font-black text-orange-500">
+        <div className="flex items-center rounded-full  font-black text-white">
           <FontAwesomeIcon icon={faUp} className="mr-2" />
           {story.ups}
         </div>
 
         <div className="flex gap-3">
-          <div className="flex items-center rounded-full text-sm text-gray-500">
+          <div className="flex items-center rounded-full text-sm text-white">
             <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
             {story.author}
           </div>
 
-          <div className="flex items-center rounded-full text-sm text-gray-500">
+          <div className="flex items-center rounded-full text-sm text-white">
             <FontAwesomeIcon icon={faThumbsUp} className="mr-2" />
             {(story.upvote_ratio * 100).toFixed(0)}%
           </div>
         </div>
       </header>
       <Link
-        className="  p-3 font-bold text-gray-800 underline hover:text-indigo-500"
+        className="  min-h-[100px] p-3 font-bold text-gray-800 underline hover:text-indigo-500"
         href={story.url}
         target="_blank"
       >
         {story.title}
       </Link>
 
-      <footer className="mt-auto flex items-end justify-between p-3">
+      <footer className="mt-auto flex items-center justify-between bg-gray-100 p-3">
         <div className="flex gap-3">
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <FontAwesomeIcon icon={faFolder} />

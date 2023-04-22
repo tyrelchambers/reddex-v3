@@ -17,7 +17,7 @@ const settings = (props) => {
       <main className="mx-auto my-6 max-w-screen-2xl">
         <h1 className="h1 text-3xl">Settings</h1>
 
-        <section className="my-10 flex max-w-lg flex-col gap-10 rounded-xl bg-white p-4">
+        <section className="my-10 flex max-w-lg flex-col gap-10 rounded-xl bg-white p-4 shadow-sm">
           <div className="flex flex-col">
             <h2 className="mb-4 text-xl font-semibold text-gray-800">
               Profile

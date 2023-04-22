@@ -15,6 +15,7 @@ const config = {
       rules: {
         "@typescript-eslint/no-misused-promises": "off",
         "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/consistent-type-imports": "off",
       },
     },
   ],

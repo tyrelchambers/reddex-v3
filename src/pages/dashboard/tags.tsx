@@ -1,0 +1,84 @@
+import { Modal, NativeSelect, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import React, { FormEvent } from "react";
+import DashNav from "~/layouts/DashNav";
+import Header from "~/layouts/Header";
+import { api } from "~/utils/api";
+import { useForm } from "@mantine/form";
+import TagListItem from "~/components/TagListItem";
+
+const Tags = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const approvedStories = api.post.getApprovedList.useQuery();
+  const tagMutation = api.tag.save.useMutation();
+  const tagQuery = api.tag.all.useQuery();
+
+  const form = useForm({
+    initialValues: {
+      tag: "",
+      storyId: "",
+    },
+  });
+
+  const formattedApprovedStories =
+    approvedStories.data?.map((s) => ({
+      label: s.title,
+      value: s.id,
+    })) || [];
+  const storiesList = [
+    { label: "Select a story", value: "" },
+    ...formattedApprovedStories,
+  ];
+
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+    tagMutation.mutate(form.values);
+  };
+
+  return (
+    <>
+      <Header />
+      <DashNav />
+      <main className="mx-auto my-6 max-w-screen-2xl">
+        <header className="flex justify-between">
+          <h1 className="h1 text-3xl">Tags</h1>
+          <button className="button main" onClick={open}>
+            Create tag
+          </button>
+        </header>
+
+        <section className="my-10 grid grid-cols-4 gap-4">
+          {tagQuery.data?.map((tag) => (
+            <TagListItem key={tag.id} tag={tag} />
+          )) || null}
+        </section>
+      </main>
+      <Modal opened={opened} onClose={close} title="Create tag" centered>
+        <form onSubmit={submitHandler}>
+          <TextInput
+            label="Name"
+            placeholder="A name for your tag"
+            {...form.getInputProps("tag")}
+          />
+
+          {formattedApprovedStories && (
+            <NativeSelect
+              data={storiesList}
+              label="Add to an approved story"
+              {...form.getInputProps("storyId")}
+            />
+          )}
+          <button
+            className="button main mt-4 w-full"
+            type="submit"
+            onClick={submitHandler}
+          >
+            Save tag
+          </button>
+        </form>
+      </Modal>
+    </>
+  );
+};
+
+export default Tags;

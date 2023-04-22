@@ -3,6 +3,7 @@ import { userRouter } from "./routers/user";
 import { subredditSearchRouter } from "./routers/subredditSearch";
 import { postRouter } from "./routers/post";
 import { contactRouter } from "./routers/contact";
+import { tagRouter } from "./routers/tag";
 /**
  * This is the primary router for your server.
  *
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   subredditSearch: subredditSearchRouter,
   post: postRouter,
   contact: contactRouter,
+  tag: tagRouter,
 });
 
 // export type definition of API

@@ -1,4 +1,4 @@
-import { listSearchSchema, postSchema } from "~/server/schemas";
+import { postSchema } from "~/server/schemas";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { prisma } from "~/server/db";

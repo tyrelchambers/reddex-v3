@@ -4,7 +4,7 @@ import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 
-const settings = (props) => {
+const settings = () => {
   const userQuery = api.user.me.useQuery();
   const currentUser = userQuery.data;
 

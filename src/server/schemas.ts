@@ -26,3 +26,12 @@ export const contactSchema = z.object({
   name: z.string(),
   notes: z.string().optional(),
 });
+
+export const tagOnPostSchema = z.object({
+  redditPostId: z.string(),
+  tagId: z.string(),
+});
+export const tagSaveSchema = z.object({
+  tag: z.string(),
+  storyId: z.string().optional(),
+});

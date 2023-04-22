@@ -1,5 +1,3 @@
-import { faUser, faUserCircle } from "@fortawesome/pro-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import ContactItem from "~/components/ContactItem";
 import DashNav from "~/layouts/DashNav";

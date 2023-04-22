@@ -1,6 +1,6 @@
 import { Badge, Loader, Textarea } from "@mantine/core";
 import { Contact } from "@prisma/client";
-import React, { useContext } from "react";
+import React from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit, RedditPostWithText } from "~/types";
 import { api } from "~/utils/api";

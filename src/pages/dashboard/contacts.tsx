@@ -14,7 +14,7 @@ const contacts = () => {
       <main className="mx-auto my-6 max-w-screen-2xl">
         <h1 className="h1 text-3xl">Contacts</h1>
 
-        <section className="my-10 grid grid-cols-4">
+        <section className="my-10 grid grid-cols-3">
           {contactsQuery.data?.map((ct) => (
             <ContactItem key={ct.id} contact={ct} />
           )) || null}

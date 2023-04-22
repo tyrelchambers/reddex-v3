@@ -6,6 +6,7 @@ import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import TagListItem from "~/components/TagListItem";
+import { getStorySelectList } from "~/utils/getStorySelectList";
 
 const Tags = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -20,15 +21,7 @@ const Tags = () => {
     },
   });
 
-  const formattedApprovedStories =
-    approvedStories.data?.map((s) => ({
-      label: s.title,
-      value: s.id,
-    })) || [];
-  const storiesList = [
-    { label: "Select a story", value: "" },
-    ...formattedApprovedStories,
-  ];
+  const storiesList = getStorySelectList(approvedStories.data);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -47,7 +40,7 @@ const Tags = () => {
           </button>
         </header>
 
-        <section className="my-10 grid grid-cols-4 gap-4">
+        <section className="my-10 grid grid-cols-3 gap-4">
           {tagQuery.data?.map((tag) => (
             <TagListItem key={tag.id} tag={tag} />
           )) || null}
@@ -61,7 +54,7 @@ const Tags = () => {
             {...form.getInputProps("tag")}
           />
 
-          {formattedApprovedStories && (
+          {storiesList && (
             <NativeSelect
               data={storiesList}
               label="Add to an approved story"

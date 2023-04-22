@@ -23,7 +23,7 @@ const ContactItem = ({ contact }: Props) => {
 
       <div>{contact.notes}</div>
 
-      <footer className="flex justify-end bg-gray-100 p-4">
+      <footer className="flex justify-end bg-gray-100 p-2 px-4">
         <button className="button secondary" onClick={open}>
           Edit
         </button>

@@ -32,7 +32,7 @@ export interface RedditInboxMessage {
   first_message_name: string | null;
   subreddit: string | null;
   likes: number | null;
-  replies: RedditInboxChildren;
+  replies: RedditInboxResponse;
   author_fullname: string;
   id: string;
   subject: string;
@@ -57,7 +57,7 @@ export interface RedditInboxMessage {
 
 export interface RedditInboxChildren {
   kind: string;
-  data: RedditInboxMessage[];
+  data: RedditInboxMessage;
 }
 export interface RedditInboxResponse {
   data: {
@@ -67,4 +67,12 @@ export interface RedditInboxResponse {
     geo_filter: string;
     children: RedditInboxChildren[];
   };
+}
+
+export interface FormattedMessagesList {
+  author: string;
+  body: string;
+  created: number;
+  dest: string;
+  isReply: boolean;
 }

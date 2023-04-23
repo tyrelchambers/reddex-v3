@@ -16,8 +16,6 @@ const Inbox = () => {
     [selectedMessageId]
   );
 
-  console.log(messages);
-
   return (
     <>
       <Header />

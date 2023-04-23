@@ -1,6 +1,10 @@
-import { faReply, faUserCircle } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faPaperPlaneTop,
+  faReply,
+  faUserCircle,
+} from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider } from "@mantine/core";
+import { Divider, Textarea } from "@mantine/core";
 import { fromUnixTime } from "date-fns";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -21,7 +25,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
     <div className="h-[calc(100vh-220px)] flex-1 overflow-auto">
       <header className="w-full">
         <p className="text-2xl font-bold text-gray-700">{message.subject}</p>
-        <footer className="mt-3 flex items-center gap-10 ">
+        <footer className="mt-6 flex items-center gap-10 ">
           <p className="flex items-center gap-2 text-gray-500">
             <FontAwesomeIcon icon={faUserCircle} />
             {message.dest}
@@ -45,6 +49,25 @@ const SelectedInboxMessage = ({ message }: Props) => {
           <InboxMessageReply message={msg} key={msg.created} />
         ))}
       </section>
+
+      <footer className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-indigo-500 p-2 shadow-lg">
+        <Textarea
+          placeholder="Send a reply..."
+          classNames={{
+            input:
+              "bg-indigo-400 border-0 text-white placeholder:text-white rounded-lg",
+          }}
+          className="min-h-10 flex-1"
+          autosize
+          maxRows={6}
+        />
+        <button className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-white">
+          <FontAwesomeIcon
+            icon={faPaperPlaneTop}
+            className="text-sm text-indigo-500 shadow-sm"
+          />
+        </button>
+      </footer>
     </div>
   );
 };

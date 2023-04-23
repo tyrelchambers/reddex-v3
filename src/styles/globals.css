@@ -23,7 +23,7 @@
   }
 
   .button.alt {
-    @apply h-8 bg-gray-100 p-2 text-xs font-bold text-gray-500 shadow-none hover:bg-gray-200;
+    @apply bg-gray-100 text-gray-500 shadow-none hover:bg-gray-200;
   }
 
   .button.simple {
@@ -32,5 +32,17 @@
 
   .h1 {
     @apply text-5xl font-black text-gray-800;
+  }
+  .inbox-message-list-item:hover {
+    @apply bg-indigo-500 shadow-md;
+  }
+  .inbox-message-list-item:hover * {
+    @apply text-white;
+  }
+  .inbox-message-list-item.active {
+    @apply bg-indigo-500 shadow-md;
+  }
+  .inbox-message-list-item.active * {
+    @apply text-white;
   }
 }

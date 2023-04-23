@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           duration: "permanent",
+          scope: "privatemessages identity",
         },
       },
       profile(profile: {

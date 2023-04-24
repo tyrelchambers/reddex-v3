@@ -17,9 +17,10 @@ const InboxMessageList = ({
     <div className="flex h-[calc(100vh-220px)] w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-gray-200 pr-6">
       {messages.map((m) => (
         <button
-          type="button"
           key={m.id}
-          onClick={() => setSelectedMessageId(m.id)}
+          onClick={() => {
+            setSelectedMessageId(m.id);
+          }}
         >
           <div
             className={`inbox-message-list-item rounded-2xl p-4 transition-all ${

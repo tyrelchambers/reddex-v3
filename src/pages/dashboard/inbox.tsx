@@ -1,5 +1,5 @@
 import { Loader } from "@mantine/core";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import DashNav from "~/layouts/DashNav";
@@ -24,7 +24,7 @@ const Inbox = () => {
       <main className="mx-auto my-6 max-w-screen-2xl">
         <h1 className="h1 text-3xl">Inbox</h1>
 
-        {inboxQuery.isFetching ? (
+        {inboxQuery.isLoading ? (
           <div className="my-20 flex w-full flex-col items-center">
             <Loader color="indigo" />
             <p className="mt-4 text-xl text-indigo-500">Loading inbox...</p>

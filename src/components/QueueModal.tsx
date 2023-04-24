@@ -19,8 +19,6 @@ const QueueModal = ({ close }: Props) => {
   const currentPost = queueStore.queue[0];
   const apiContext = api.useContext();
 
-  if (!currentPost) return null;
-
   const redditPost = api.post.save.useMutation({
     onSuccess: () => {
       if (currentPost) {
@@ -33,6 +31,9 @@ const QueueModal = ({ close }: Props) => {
       apiContext.contact.invalidate();
     },
   });
+
+  if (!currentPost) return null;
+
   const contactQuery = api.contact.getByName.useQuery(currentPost.author, {
     enabled: !!currentPost,
   });

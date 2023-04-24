@@ -33,7 +33,9 @@ const Header = () => {
           <ul className="flex gap-4">
             {_routes.map((r) => (
               <li key={r.label}>
-                <Link href={r.slug}>{r.label}</Link>
+                <Link href={r.slug} className="text-gray-500">
+                  {r.label}
+                </Link>
               </li>
             ))}
           </ul>

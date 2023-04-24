@@ -1,5 +1,6 @@
 import { Loader } from "@mantine/core";
-import React, { useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useMemo, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import DashNav from "~/layouts/DashNav";
@@ -7,15 +8,25 @@ import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 
 const Inbox = () => {
+  const router = useRouter();
   const inboxQuery = api.inbox.all.useQuery();
-  const messages = inboxQuery.data?.data.children.flatMap((d) => d.data) || [];
+  const messages = useMemo(
+    () => inboxQuery.data?.data.children.flatMap((d) => d.data) || [],
+    [inboxQuery.data?.data.children]
+  );
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null
   );
   const selectedMessage = useMemo(
     () => messages.find((m) => m.id === selectedMessageId),
-    [selectedMessageId]
+    [selectedMessageId, messages]
   );
+
+  useEffect(() => {
+    if (router.isReady && router.query["message"]) {
+      setSelectedMessageId(router.query["message"] as string);
+    }
+  }, [router.query, router.isReady]);
 
   return (
     <>
@@ -35,6 +46,7 @@ const Inbox = () => {
               messages={messages}
               selectedMessage={selectedMessage?.id}
               setSelectedMessageId={setSelectedMessageId}
+              router={router}
             />
             <SelectedInboxMessage message={selectedMessage} />
           </section>

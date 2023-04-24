@@ -1,17 +1,21 @@
 import { format, fromUnixTime } from "date-fns";
+import { NextRouter } from "next/router";
 import React from "react";
+import { routes } from "~/routes";
 import { RedditInboxMessage } from "~/types";
 
 interface Props {
   messages: RedditInboxMessage[];
   selectedMessage: RedditInboxMessage["id"] | undefined;
   setSelectedMessageId: (id: string) => void;
+  router: NextRouter;
 }
 
 const InboxMessageList = ({
   messages,
   setSelectedMessageId,
   selectedMessage,
+  router,
 }: Props) => {
   return (
     <div className="flex h-[calc(100vh-220px)] w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-gray-200 pr-6">
@@ -20,6 +24,9 @@ const InboxMessageList = ({
           key={m.id}
           onClick={() => {
             setSelectedMessageId(m.id);
+            router.push(routes.INBOX, {
+              search: `message=${m.id}`,
+            });
           }}
         >
           <div

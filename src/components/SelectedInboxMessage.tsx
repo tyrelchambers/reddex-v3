@@ -8,18 +8,35 @@ import { Divider, Textarea } from "@mantine/core";
 import { fromUnixTime } from "date-fns";
 import Link from "next/link";
 import { format } from "date-fns";
-import React from "react";
+import React, { FormEvent } from "react";
 import { FormattedMessagesList, RedditInboxMessage } from "~/types";
 import { formatInboxMessagesToList } from "~/utils/formatInboxMessagesToList";
+import { api } from "~/utils/api";
+import { useForm } from "@mantine/form";
 
 interface Props {
   message: RedditInboxMessage | undefined;
 }
 
 const SelectedInboxMessage = ({ message }: Props) => {
+  const messageMutation = api.inbox.send.useMutation();
+  const form = useForm({
+    initialValues: {
+      message: "",
+    },
+  });
   if (!message) return null;
 
   const formattedMessages = formatInboxMessagesToList(message);
+
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+
+    messageMutation.mutate({
+      thing_id: message.name,
+      message: form.values.message,
+    });
+  };
 
   return (
     <div className="h-[calc(100vh-220px)] flex-1 overflow-auto">
@@ -50,24 +67,31 @@ const SelectedInboxMessage = ({ message }: Props) => {
         ))}
       </section>
 
-      <footer className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-indigo-500 p-2 shadow-lg">
+      <form
+        className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-indigo-500 p-2 shadow-lg"
+        onSubmit={submitHandler}
+      >
         <Textarea
           placeholder="Send a reply..."
           classNames={{
             input:
-              "bg-indigo-400 border-0 text-white placeholder:text-white rounded-lg",
+              "border-indigo-400 bg-transparent border-1[px] text-white placeholder:text-white rounded-lg",
           }}
           className="min-h-10 flex-1"
           autosize
           maxRows={6}
+          {...form.getInputProps("message")}
         />
-        <button className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-white">
+        <button
+          className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-white"
+          type="submit"
+        >
           <FontAwesomeIcon
             icon={faPaperPlaneTop}
             className="text-sm text-indigo-500 shadow-sm"
           />
         </button>
-      </footer>
+      </form>
     </div>
   );
 };

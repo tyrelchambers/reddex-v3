@@ -11,17 +11,19 @@ export const formatInboxMessagesToList = (message: RedditInboxMessage) => {
     isReply: false,
   });
 
-  for (let index = 0; index < message.replies.data.children.length; index++) {
-    const element = message.replies.data.children[index];
+  if (message.replies) {
+    for (let index = 0; index < message.replies.data.children.length; index++) {
+      const element = message.replies.data.children[index];
 
-    if (element) {
-      messageList.push({
-        author: element.data.author,
-        body: element.data.body,
-        created: element.data.created,
-        dest: element.data.dest,
-        isReply: !!element.data.parent_id,
-      });
+      if (element) {
+        messageList.push({
+          author: element.data.author,
+          body: element.data.body,
+          created: element.data.created,
+          dest: element.data.dest,
+          isReply: !!element.data.parent_id,
+        });
+      }
     }
   }
 

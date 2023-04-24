@@ -35,3 +35,8 @@ export const tagSaveSchema = z.object({
   tag: z.string(),
   storyId: z.string().optional(),
 });
+
+export const sendMessageSchema = z.object({
+  message: z.string(),
+  thing_id: z.string(),
+});

@@ -47,7 +47,7 @@ const _routes = [
 const DashNav = () => {
   return (
     <nav className=" w-full bg-gray-100 p-3">
-      <ul className="mx-auto flex max-w-screen-2xl gap-8 text-gray-500">
+      <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
         {_routes.map((r) => (
           <li key={r.label}>
             <Link

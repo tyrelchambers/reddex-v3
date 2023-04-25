@@ -32,7 +32,7 @@ const Header = () => {
         <nav className="ml-4">
           <ul className="flex gap-4">
             {_routes.map((r) => (
-              <li key={r.label}>
+              <li key={r.label} className="text-sm">
                 <Link href={r.slug} className="text-gray-500">
                   {r.label}
                 </Link>

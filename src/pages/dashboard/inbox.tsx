@@ -1,4 +1,4 @@
-import { Loader } from "@mantine/core";
+import { Loader, TextInput } from "@mantine/core";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
@@ -33,23 +33,27 @@ const Inbox = () => {
       <Header />
       <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl">
-        <h1 className="h1 text-3xl">Inbox</h1>
-
         {inboxQuery.isLoading ? (
           <div className="my-20 flex w-full flex-col items-center">
             <Loader color="indigo" />
             <p className="mt-4 text-xl text-indigo-500">Loading inbox...</p>
           </div>
         ) : (
-          <section className="my-2 flex gap-4">
-            <InboxMessageList
-              messages={messages}
-              selectedMessage={selectedMessage?.id}
-              setSelectedMessageId={setSelectedMessageId}
-              router={router}
-            />
-            <SelectedInboxMessage message={selectedMessage} />
-          </section>
+          <div className="flex flex-col">
+            <header className="mb-6 flex items-center justify-between">
+              <h1 className="h1 text-3xl">Inbox</h1>
+              <TextInput placeholder="Search for a message" className="w-96" />
+            </header>
+            <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
+              <InboxMessageList
+                messages={messages}
+                selectedMessage={selectedMessage?.id}
+                setSelectedMessageId={setSelectedMessageId}
+                router={router}
+              />
+              <SelectedInboxMessage message={selectedMessage} />
+            </section>
+          </div>
         )}
       </main>
     </>

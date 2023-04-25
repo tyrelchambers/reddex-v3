@@ -39,7 +39,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
   };
 
   return (
-    <div className="h-[calc(100vh-220px)] flex-1 overflow-auto">
+    <div className="flex-1 overflow-auto">
       <header className="w-full">
         <p className="text-2xl font-bold text-gray-700">{message.subject}</p>
         <footer className="mt-6 flex items-center gap-10 ">

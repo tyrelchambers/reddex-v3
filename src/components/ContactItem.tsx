@@ -21,7 +21,7 @@ const ContactItem = ({ contact }: Props) => {
         </p>
       </header>
 
-      <div>{contact.notes}</div>
+      <p className="p-3 font-medium text-gray-700">{contact.notes}</p>
 
       <footer className="flex justify-end bg-gray-100 p-2 px-4">
         <button className="button secondary" onClick={open}>

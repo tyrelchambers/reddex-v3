@@ -1,3 +1,5 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { RedditPost } from "@prisma/client";
 
 export interface RedditPostWithText extends RedditPost {
@@ -75,4 +77,10 @@ export interface FormattedMessagesList {
   created: number;
   dest: string;
   isReply: boolean;
+}
+
+export interface Tab {
+  label: string;
+  slug: string;
+  icon: IconProp;
 }

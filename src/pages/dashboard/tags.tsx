@@ -46,7 +46,7 @@ const Tags = () => {
           )) || null}
         </section>
       </main>
-      <Modal opened={opened} onClose={close} title="Create tag" centered>
+      <Modal opened={opened} onClose={close} title="Create tag">
         <form onSubmit={submitHandler}>
           <TextInput
             label="Name"

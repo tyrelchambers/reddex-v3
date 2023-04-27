@@ -28,7 +28,7 @@ const TabsList = ({ tabs, query = "tab", route }: Props) => {
             aria-selected={item.slug === query ? true : false}
             aria-controls={`tabpanel-${idx + 1}`}
             className="flex items-center gap-x-2 rounded-lg px-2 py-2 font-medium duration-150 hover:bg-gray-50 hover:text-indigo-600 active:bg-gray-100"
-            href={`${route}/?tab=${item.slug}`}
+            href={`${route}/${item.slug}`}
           >
             <FontAwesomeIcon icon={item.icon} />
             {item.label}

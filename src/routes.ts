@@ -1,3 +1,10 @@
+import {
+  faBrowser,
+  faPalette,
+  faPenNib,
+  faPuzzlePiece,
+} from "@fortawesome/pro-light-svg-icons";
+
 export const routes = {
   HOME: "/home",
   ABOUT: "/about",
@@ -13,4 +20,27 @@ export const routes = {
   WEBSITE: "/dashboard/website",
   SETTINGS: "/dashboard/settings",
   STORIES: "/dashboard/stories",
+  WEBSITE_GENERAL: "/dashboard/website/general",
 };
+export const websiteTabItems = [
+  {
+    label: "General",
+    slug: "general",
+    icon: faBrowser,
+  },
+  {
+    label: "Theme",
+    slug: "theme",
+    icon: faPalette,
+  },
+  {
+    label: "Submission Form",
+    slug: "submission-form",
+    icon: faPenNib,
+  },
+  {
+    label: "Integrations",
+    slug: "integrations",
+    icon: faPuzzlePiece,
+  },
+];

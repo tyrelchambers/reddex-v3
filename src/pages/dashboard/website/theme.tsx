@@ -1,20 +1,32 @@
 import { ColorPicker, NativeSelect } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React from "react";
+import React, { FormEvent } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { routes, websiteTabItems } from "~/routes";
+import { api } from "~/utils/api";
 
 const themes = ["light", "dark"];
 
 const Theme = () => {
+  const saveTheme = api.website.saveTheme.useMutation();
   const form = useForm({
     initialValues: {
       mode: "light",
       colour: "rgba(0,0,0,0)",
     },
   });
+
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+
+    const { hasErrors } = form.validate();
+
+    if (hasErrors) return;
+
+    saveTheme.mutate(form.values);
+  };
 
   return (
     <>
@@ -28,7 +40,7 @@ const Theme = () => {
         <section className="flex w-full max-w-sm flex-col">
           <h1 className="h1 text-2xl">Theme</h1>
 
-          <form className="flex w-full flex-col gap-4">
+          <form className="flex w-full flex-col gap-4" onSubmit={submitHandler}>
             <NativeSelect
               label="Mode"
               data={themes}
@@ -58,7 +70,9 @@ const Theme = () => {
                 {...form.getInputProps("colour")}
               />
             </div>
-            <button className="button main mt-4 w-full">Save changes</button>
+            <button type="submit" className="button main mt-4 w-full">
+              Save changes
+            </button>
           </form>
         </section>
       </main>

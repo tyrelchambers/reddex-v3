@@ -1,13 +1,32 @@
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextInput } from "@mantine/core";
-import React from "react";
+import { useForm } from "@mantine/form";
+import React, { FormEvent } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { websiteTabItems, routes } from "~/routes";
+import { api } from "~/utils/api";
 
-const integrations = () => {
+const Integrations = () => {
+  const saveIntegrations = api.website.saveIntegrations.useMutation();
+  const form = useForm({
+    initialValues: {
+      youtube: "",
+    },
+  });
+
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+
+    const { hasErrors } = form.validate();
+
+    if (hasErrors) return;
+
+    saveIntegrations.mutate(form.values);
+  };
+
   return (
     <>
       <Header />
@@ -23,15 +42,18 @@ const integrations = () => {
             Any integration field that lacks a value will not show up on your
             website.
           </p>
-          <form action="" className="mt-10 w-full max-w-md">
+          <form onSubmit={submitHandler} className="mt-10 w-full max-w-md">
             <TextInput
               label="Youtube"
               description="Show the last 5 videos on your website."
               placeholder="Youtube channel ID"
               icon={<FontAwesomeIcon icon={faYoutube} />}
+              {...form.getInputProps("youtube")}
             />
 
-            <button className="button main mt-4 w-full">Save changes</button>
+            <button className="button main mt-4 w-full" type="submit">
+              Save changes
+            </button>
           </form>
         </section>
       </main>
@@ -39,4 +61,4 @@ const integrations = () => {
   );
 };
 
-export default integrations;
+export default Integrations;

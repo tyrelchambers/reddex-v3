@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { RedditPost } from "@prisma/client";
+import { RedditPost, SubmissionFormModule } from "@prisma/client";
 
 export interface RedditPostWithText extends RedditPost {
   selftext: string;
@@ -95,3 +95,5 @@ export interface GeneralSettings {
   podcast: string | null | undefined;
   youtube: string | null | undefined;
 }
+
+export type SubmissionFormModuleWithoutId = Omit<SubmissionFormModule, "id">;

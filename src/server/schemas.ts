@@ -64,7 +64,7 @@ export const websiteIntegrationsSchema = z.object({
 
 export const websiteSubmissionSchema = z.object({
   id: z.string().optional(),
-  title: z.string(),
+  name: z.string(),
   subtitle: z.string().optional(),
   description: z.string().optional(),
   submissionFormModules: z.array(

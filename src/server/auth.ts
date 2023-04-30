@@ -50,11 +50,26 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser(message) {
       const { user } = message;
-      await prisma.profile.create({
-        data: {
-          userId: user.id,
-        },
-      });
+      Promise.all([
+        await prisma.profile.create({
+          data: {
+            userId: user.id,
+          },
+        }),
+
+        await prisma.website.create({
+          data: {
+            user: {
+              connect: {
+                id: user.id,
+              },
+            },
+            submissionPage: {
+              create: {},
+            },
+          },
+        }),
+      ]);
     },
   },
   providers: [

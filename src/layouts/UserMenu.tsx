@@ -1,4 +1,4 @@
-import { Menu, Button } from "@mantine/core";
+import { Menu } from "@mantine/core";
 import React from "react";
 import UserChip from "./UserChip";
 import Link from "next/link";
@@ -15,7 +15,7 @@ const UserMenu = () => {
 
       <Menu.Dropdown>
         <Menu.Label>App</Menu.Label>
-        <Link href={routes.DASHBOARD}>
+        <Link href={routes.STORIES}>
           <Menu.Item>Dashboard</Menu.Item>
         </Link>
       </Menu.Dropdown>

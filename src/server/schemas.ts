@@ -40,3 +40,39 @@ export const sendMessageSchema = z.object({
   message: z.string(),
   thing_id: z.string(),
 });
+
+export const websiteThemeSchema = z.object({
+  theme: z.string().optional(),
+  colour: z.string().optional(),
+});
+
+export const websiteGeneralSchema = z.object({
+  subdomain: z.union([z.string(), z.undefined()]).nullable(),
+  name: z.union([z.string(), z.undefined()]).nullable(),
+  description: z.union([z.string(), z.undefined()]).nullable(),
+  twitter: z.union([z.string(), z.undefined()]).nullable(),
+  facebook: z.union([z.string(), z.undefined()]).nullable(),
+  instagram: z.union([z.string(), z.undefined()]).nullable(),
+  patreon: z.union([z.string(), z.undefined()]).nullable(),
+  podcast: z.union([z.string(), z.undefined()]).nullable(),
+  youtube: z.union([z.string(), z.undefined()]).nullable(),
+});
+
+export const websiteIntegrationsSchema = z.object({
+  youtube: z.string().optional(),
+});
+
+export const websiteSubmissionSchema = z.object({
+  id: z.string().optional(),
+  title: z.string(),
+  subtitle: z.string().optional(),
+  description: z.string().optional(),
+  submissionFormModules: z.array(
+    z.object({
+      id: z.string().optional(),
+      name: z.string(),
+      enabled: z.boolean(),
+      required: z.boolean(),
+    })
+  ),
+});

@@ -28,7 +28,35 @@ const MyApp: AppType<MyAppProps> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <MantineProvider withGlobalStyles withNormalizeCSS>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          fontFamily: font.style.fontFamily,
+          components: {
+            TextInput: {
+              classNames: {
+                label: "label",
+              },
+            },
+            NativeSelect: {
+              classNames: {
+                label: "label",
+              },
+            },
+            Textarea: {
+              classNames: {
+                label: "label",
+              },
+            },
+            Checkbox: {
+              classNames: {
+                label: "label",
+              },
+            },
+          },
+        }}
+      >
         <main className={font.className}>
           <Component {...pageProps} />
         </main>

@@ -6,7 +6,7 @@ const Index = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push(routes.DASHBOARD);
+    router.push(routes.STORIES);
   }, []);
 
   return null;

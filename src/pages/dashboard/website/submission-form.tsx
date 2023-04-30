@@ -20,10 +20,10 @@ const SubmissionForm = () => {
 
           <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-indigo-500 p-4 shadow-lg">
             <div className="flex flex-col">
-              <p className="text-white">Activate Submission Form</p>
+              <p className="text-white">Enable Submission Form</p>
               <p className="text-sm font-thin text-gray-200">
-                Activate this submission form to allow visitors to email you
-                their own stories.
+                Enable this submission form to allow visitors to email you their
+                own stories.
               </p>
             </div>
 
@@ -32,19 +32,21 @@ const SubmissionForm = () => {
             </button>
           </div>
 
-          <form action="" className="mt-10">
-            <TextInput label="Submission page title" />
-            <TextInput label="Submission page subtitle" />
+          <form action="" className="mt-10 flex flex-col gap-4">
+            <TextInput label="Page title" />
+            <TextInput label="Page subtitle" />
             <Textarea
               label="Description"
               description="List any rules for submissions or any information you want people to know"
             />
 
             <section className="mt-10 flex flex-col gap-4">
-              <p className="label">Customize modules</p>
+              <p className="text-grayy-800 text-xl font-semibold">
+                Customize modules
+              </p>
 
               <div className="flex flex-col rounded-xl bg-gray-50 p-4">
-                <p>Author</p>
+                <p className="label font-bold text-gray-700">Author</p>
 
                 <div className="mt-2 flex gap-4">
                   <Checkbox
@@ -59,7 +61,7 @@ const SubmissionForm = () => {
               </div>
 
               <div className="flex flex-col rounded-xl bg-gray-50 p-4">
-                <p>Title</p>
+                <p className="label font-bold text-gray-700">Title</p>
 
                 <div className="mt-2 flex gap-4">
                   <Checkbox
@@ -74,7 +76,7 @@ const SubmissionForm = () => {
               </div>
 
               <div className="flex flex-col rounded-xl bg-gray-50 p-4">
-                <p>Email</p>
+                <p className="label font-bold text-gray-700">Email</p>
 
                 <div className="mt-2 flex gap-4">
                   <Checkbox

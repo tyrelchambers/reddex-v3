@@ -1,5 +1,4 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import { RedditPost } from "@prisma/client";
 
 export interface RedditPostWithText extends RedditPost {
@@ -83,4 +82,16 @@ export interface Tab {
   label: string;
   slug: string;
   icon: IconProp;
+}
+
+export interface GeneralSettings {
+  subdomain: string | null | undefined;
+  name: string | null | undefined;
+  description: string | null | undefined;
+  twitter: string | null | undefined;
+  facebook: string | null | undefined;
+  instagram: string | null | undefined;
+  patreon: string | null | undefined;
+  podcast: string | null | undefined;
+  youtube: string | null | undefined;
 }

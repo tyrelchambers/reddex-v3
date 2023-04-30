@@ -28,7 +28,7 @@ const Theme = () => {
         <section className="flex w-full max-w-sm flex-col">
           <h1 className="h1 text-2xl">Theme</h1>
 
-          <form className="w-full">
+          <form className="flex w-full flex-col gap-4">
             <NativeSelect
               label="Mode"
               data={themes}
@@ -54,6 +54,7 @@ const Theme = () => {
                   "#fab005",
                   "#fd7e14",
                 ]}
+                className="w-full"
                 {...form.getInputProps("colour")}
               />
             </div>

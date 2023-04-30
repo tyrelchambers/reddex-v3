@@ -14,12 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -148,9 +142,40 @@ model SubmittedStory {
 }
 
 model Website {
-    id     String  @id @default(cuid())
-    config Json
-    hidden Boolean @default(false)
-    user   User    @relation(fields: [userId], references: [id])
-    userId String
+    id          String  @id @default(cuid())
+    hidden      Boolean @default(true)
+    subdomain   String?
+    name        String?
+    description String? @db.Text
+    twitter     String?
+    facebook    String?
+    instagram   String?
+    patreon     String?
+    youtube     String?
+    podcast     String?
+    theme       String  @default("light")
+    colour      String  @default("#000")
+
+    submissionPage   SubmissionPage @relation(fields: [submissionPageId], references: [id])
+    user             User           @relation(fields: [userId], references: [id])
+    userId           String         @unique
+    submissionPageId String
+}
+
+model SubmissionPage {
+    id          String  @id @default(cuid())
+    title       String?
+    subtitle    String?
+    description String? @db.Text
+
+    submissionFormModules SubmissionFormModule[]
+    Website               Website[]
+}
+
+model SubmissionFormModule {
+    id             String           @id @default(cuid())
+    name           String?
+    enabled        Boolean          @default(false)
+    required       Boolean          @default(false)
+    SubmissionPage SubmissionPage[]
 }

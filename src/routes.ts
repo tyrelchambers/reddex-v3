@@ -1,5 +1,6 @@
 import {
   faBrowser,
+  faCog,
   faPalette,
   faPenNib,
   faPuzzlePiece,
@@ -11,7 +12,6 @@ export const routes = {
   PRICING: "/pricing",
   LOGIN: "/login",
   AUTH_REDDIT: "/auth/callback/reddit",
-  DASHBOARD: "/dashboard/approved",
   COMPLETED: "/dashboard/completed",
   SUBMITTED: "/dasboard/submitted",
   TAGS: "/dashboard/tags",
@@ -42,5 +42,10 @@ export const websiteTabItems = [
     label: "Integrations",
     slug: "integrations",
     icon: faPuzzlePiece,
+  },
+  {
+    label: "Settings",
+    slug: "settings",
+    icon: faCog,
   },
 ];

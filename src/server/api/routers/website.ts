@@ -19,10 +19,21 @@ export const websiteRouter = createTRPCRouter({
       });
       return !!existingWebsiteWithName;
     }),
-  getSettings: protectedProcedure.query(async ({ ctx }) => {
+  settings: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.website.findUnique({
       where: {
         userId: ctx.session.user.id,
+      },
+    });
+  }),
+  // this route exists so we can toggle visibility without resetting form values
+  visibility: protectedProcedure.query(async ({ ctx }) => {
+    return await prisma.website.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        hidden: true,
       },
     });
   }),

@@ -25,7 +25,14 @@ const General = () => {
       apiContext.website.invalidate();
     },
   });
-  const websiteSettings = api.website.getSettings.useQuery();
+  const hideWebsite = api.website.hideWebsite.useMutation({
+    onSuccess: () => {
+      apiContext.website.visibility.invalidate();
+    },
+  });
+  const websiteSettings = api.website.settings.useQuery();
+  const websiteVisibility = api.website.visibility.useQuery();
+
   const form = useForm<GeneralSettings>({
     initialValues: {
       subdomain: "",
@@ -58,7 +65,10 @@ const General = () => {
     }
   }, [websiteSettings.data]);
 
-  const subdomainAvailable = !subdomainQuery.data;
+  const subdomainAvailable =
+    !subdomainQuery.data &&
+    (!form.values.subdomain ||
+      form.values.subdomain !== websiteSettings.data?.subdomain);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -68,6 +78,15 @@ const General = () => {
     if (hasErrors) return;
 
     websiteSave.mutate(form.values);
+  };
+
+  // handler to hide the website from public
+  const hideWebsiteHandler = () => {
+    hideWebsite.mutate(true);
+  };
+
+  const showWebsiteHandler = () => {
+    hideWebsite.mutate(false);
   };
 
   return (
@@ -82,16 +101,11 @@ const General = () => {
         <section className="flex w-full max-w-2xl flex-col">
           <h1 className="h1 text-2xl">General</h1>
 
-          <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-indigo-500 p-4 shadow-lg">
-            <div className="flex flex-col">
-              <p className="text-white">Enable Website</p>
-              <p className="text-sm font-thin text-gray-200">
-                Enable your website to be seen by the public.
-              </p>
-            </div>
-
-            <button className="button secondary">Make website public</button>
-          </div>
+          {websiteVisibility.data?.hidden ? (
+            <DisableBanner clickHandler={showWebsiteHandler} />
+          ) : (
+            <EnableBanner clickHandler={hideWebsiteHandler} />
+          )}
 
           <form className="my-10 flex flex-col gap-4" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
@@ -181,5 +195,35 @@ const General = () => {
     </>
   );
 };
+
+const EnableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
+  <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-indigo-500 p-4 shadow-lg">
+    <div className="flex flex-col">
+      <p className="text-white">Enable Website</p>
+      <p className="text-sm font-thin text-gray-200">
+        Enable your website to be seen by the public.
+      </p>
+    </div>
+
+    <button className="button secondary" onClick={clickHandler}>
+      Make website public
+    </button>
+  </div>
+);
+
+const DisableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
+  <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-gray-100 p-4">
+    <div className="flex flex-col">
+      <p className="text-gray-700">Hide Website</p>
+      <p className="text-sm font-thin text-gray-500">
+        Hide your website so others can&apos;t see it.
+      </p>
+    </div>
+
+    <button className="button secondary" onClick={clickHandler}>
+      Hide
+    </button>
+  </div>
+);
 
 export default General;

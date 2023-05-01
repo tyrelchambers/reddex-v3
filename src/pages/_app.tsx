@@ -12,6 +12,7 @@ import { Poppins } from "next/font/google";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import { GetServerSidePropsContext } from "next";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -37,16 +38,19 @@ const MyApp: AppType<MyAppProps> = ({
             TextInput: {
               classNames: {
                 label: "label",
+                input: "text-gray-800",
               },
             },
             NativeSelect: {
               classNames: {
                 label: "label",
+                input: "text-gray-800",
               },
             },
             Textarea: {
               classNames: {
                 label: "label",
+                input: "text-gray-800",
               },
             },
             Checkbox: {

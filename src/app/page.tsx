@@ -1,5 +1,5 @@
+"use client";
 import { type NextPage } from "next";
-import Head from "next/head";
 import Header from "~/layouts/Header";
 import computerImg from "../../public/images/computer.jpg";
 import Image from "next/image";
@@ -8,17 +8,15 @@ import Link from "next/link";
 import { routes } from "~/routes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/pro-regular-svg-icons";
+
+export const metadata = {
+  title: "Reddex",
+  description: "Helping YouTube narrators find the best stories.",
+};
+
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>Reddex</title>
-        <meta
-          name="description"
-          content="Helping YouTube narrators find the best stories."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <main className="mx-auto max-w-screen-2xl">
         <Header />
 

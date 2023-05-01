@@ -1,6 +1,7 @@
+"use client";
 import { Badge, Loader, Textarea } from "@mantine/core";
 import { Contact } from "@prisma/client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit, RedditPostWithText } from "~/types";
 import { api } from "~/utils/api";
@@ -32,6 +33,14 @@ const QueueModal = ({ close }: Props) => {
     },
   });
 
+  useEffect(() => {
+    if (!currentPost) return close();
+
+    return () => {
+      close();
+    };
+  }, [currentPost]);
+
   if (!currentPost) return null;
 
   const contactQuery = api.contact.getByName.useQuery(currentPost.author, {
@@ -50,8 +59,6 @@ const QueueModal = ({ close }: Props) => {
       reading_time: Math.round(currentPost.selftext.length / 200),
     } as unknown as RedditPostWithText);
   };
-
-  if (!currentPost) return close();
 
   const saveContactHandler = () => {
     if (!currentPost) return;

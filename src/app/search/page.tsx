@@ -1,3 +1,4 @@
+"use client";
 import { Loader, Modal } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useReducer, useState } from "react";

@@ -10,7 +10,7 @@ import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import React, { FormEvent, useEffect } from "react";
+import React, { FormEvent } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
@@ -59,11 +59,11 @@ const General = () => {
     }
   );
 
-  useEffect(() => {
-    if (websiteSettings.data) {
-      form.setValues({ ...websiteSettings.data });
-    }
-  }, [websiteSettings.data]);
+  // useEffect(() => {
+  //   if (websiteSettings.data) {
+  //     form.setValues({ ...websiteSettings.data });
+  //   }
+  // }, [websiteSettings.data]);
 
   const subdomainAvailable =
     !subdomainQuery.data &&

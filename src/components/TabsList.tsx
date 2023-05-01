@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { Tab } from "~/types";
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const TabsList = ({ tabs, query = "tab", route }: Props) => {
-  const router = useRouter();
+  const router = useSearchParams();
 
   return (
     <ul role="tablist" className="flex w-fit flex-col gap-4 text-sm">
@@ -19,7 +19,7 @@ const TabsList = ({ tabs, query = "tab", route }: Props) => {
         <li
           key={idx}
           className={`rounded-lg ${
-            item.slug === router.query[query]
+            item.slug === router?.get(query)
               ? "bg-gray-50 text-indigo-600"
               : " text-gray-500"
           }`}

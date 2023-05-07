@@ -144,7 +144,7 @@ model SubmittedStory {
 model Website {
     id          String  @id @default(cuid())
     hidden      Boolean @default(true)
-    subdomain   String?
+    subdomain   String? @unique
     name        String?
     description String? @db.Text
     twitter     String?

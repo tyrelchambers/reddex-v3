@@ -19,10 +19,13 @@ const server = z.object({
     process.env.VERCEL ? z.string().min(1) : z.string().url()
   ),
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
-  DISCORD_CLIENT_ID: z.string(),
-  DISCORD_CLIENT_SECRET: z.string(),
+
   REDDIT_CLIENT_ID: z.string(),
   REDDIT_CLIENT_SECRET: z.string(),
+  AWS_ACCESS_KEY: z.string(),
+  AWS_BUCKET: z.string(),
+  AWS_REGION: z.string(),
+  AWS_SECRET_KEY: z.string(),
 });
 
 /**
@@ -44,11 +47,12 @@ const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-  DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   REDDIT_CLIENT_ID: process.env.REDDIT_CLIENT_ID,
   REDDIT_CLIENT_SECRET: process.env.REDDIT_CLIENT_SECRET,
-
+  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  AWS_BUCKET: process.env.AWS_BUCKET,
+  AWS_REGION: process.env.AWS_REGION,
+  AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

@@ -10,13 +10,29 @@ import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import React, { FormEvent, useEffect } from "react";
+import React, { FormEvent, useEffect, useRef } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { routes, websiteTabItems } from "~/routes";
 import { GeneralSettings } from "~/types";
 import { api } from "~/utils/api";
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginImageResize from "filepond-plugin-image-resize";
+import FileUpload from "~/components/FileUpload";
+import axios from "axios";
+
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateSize,
+  FilePondPluginImageResize
+);
 
 const General = () => {
   const apiContext = api.useContext();
@@ -32,6 +48,8 @@ const General = () => {
   });
   const websiteSettings = api.website.settings.useQuery();
   const websiteVisibility = api.website.visibility.useQuery();
+  const thumbnailRef = useRef<FilePond | null>(null);
+  const bannerRef = useRef<FilePond | null>(null);
 
   const form = useForm<GeneralSettings>({
     initialValues: {
@@ -70,14 +88,20 @@ const General = () => {
     (!form.values.subdomain ||
       form.values.subdomain !== websiteSettings.data?.subdomain);
 
-  const submitHandler = (e: FormEvent) => {
+  const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
-
+    const thumbnail = thumbnailRef.current?.getFile();
+    const banner = bannerRef.current?.getFile();
+    const payload = {};
     const { hasErrors } = form.validate();
 
     if (hasErrors) return;
 
-    websiteSave.mutate(form.values);
+    if (thumbnail) {
+      const { serverId, file } = await thumbnailRef.current?.processFile();
+    }
+
+    // websiteSave.mutate(form.values);
   };
 
   // handler to hide the website from public
@@ -141,6 +165,17 @@ const General = () => {
               {...form.getInputProps("description")}
             />
 
+            <div className="flex flex-col">
+              <p className="label">Thumbnail</p>
+              <p className="sublabel">Optimal image size 200 x 200</p>
+              <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
+            </div>
+
+            <div className="flex flex-col">
+              <p className="label">Cover image</p>
+              <p className="sublabel">Optimal image size 1500 x 500</p>
+              <FileUpload uploadRef={bannerRef} type="thumbnail" />
+            </div>
             <Divider className="my-4" />
 
             <section className="flex flex-col">

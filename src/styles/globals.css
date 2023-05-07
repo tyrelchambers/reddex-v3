@@ -53,4 +53,7 @@
   .label {
     @apply text-sm font-medium text-gray-700;
   }
+  .sublabel {
+    @apply mb-2 text-xs text-gray-500;
+  }
 }

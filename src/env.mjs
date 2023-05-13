@@ -26,6 +26,7 @@ const server = z.object({
   AWS_BUCKET: z.string(),
   AWS_REGION: z.string(),
   AWS_SECRET_KEY: z.string(),
+  BUNNY_PASSWORD: z.string(),
 });
 
 /**
@@ -53,6 +54,7 @@ const processEnv = {
   AWS_BUCKET: process.env.AWS_BUCKET,
   AWS_REGION: process.env.AWS_REGION,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
+  BUNNY_PASSWORD: process.env.BUNNY_PASSWORD,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

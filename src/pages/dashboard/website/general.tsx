@@ -92,13 +92,26 @@ const General = () => {
     e.preventDefault();
     const thumbnail = thumbnailRef.current?.getFile();
     const banner = bannerRef.current?.getFile();
-    const payload = {};
+    const payload: {
+      thumbnail?: string;
+      banner?: string;
+    } = {};
     const { hasErrors } = form.validate();
 
     if (hasErrors) return;
 
     if (thumbnail) {
-      const { serverId, file } = await thumbnailRef.current?.processFile();
+      const url = await thumbnailRef.current?.processFile();
+      if (url?.serverId) {
+        payload["thumbnail"] = url.serverId;
+      }
+    }
+
+    if (banner) {
+      const url = await bannerRef.current?.processFile();
+      if (url?.serverId) {
+        payload["banner"] = url.serverId;
+      }
     }
 
     // websiteSave.mutate(form.values);
@@ -174,7 +187,7 @@ const General = () => {
             <div className="flex flex-col">
               <p className="label">Cover image</p>
               <p className="sublabel">Optimal image size 1500 x 500</p>
-              <FileUpload uploadRef={bannerRef} type="thumbnail" />
+              <FileUpload uploadRef={bannerRef} type="banner" />
             </div>
             <Divider className="my-4" />
 

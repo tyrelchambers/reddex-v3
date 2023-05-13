@@ -75,7 +75,6 @@ export const filterReducer = (
 
       return {
         ...state,
-        p,
       };
     }
     default:

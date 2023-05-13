@@ -8,7 +8,7 @@ import {
 import { faPodcast } from "@fortawesome/pro-light-svg-icons";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, TextInput, Textarea } from "@mantine/core";
+import { Divider, Image, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import React, { FormEvent, useEffect, useRef } from "react";
 import TabsList from "~/components/TabsList";
@@ -44,6 +44,11 @@ const General = () => {
   const hideWebsite = api.website.hideWebsite.useMutation({
     onSuccess: () => {
       apiContext.website.visibility.invalidate();
+    },
+  });
+  const removeImage = api.website.removeImage.useMutation({
+    onSuccess: () => {
+      apiContext.website.invalidate();
     },
   });
   const websiteSettings = api.website.settings.useQuery();
@@ -114,7 +119,10 @@ const General = () => {
       }
     }
 
-    // websiteSave.mutate(form.values);
+    websiteSave.mutate({
+      ...form.values,
+      ...payload,
+    });
   };
 
   // handler to hide the website from public
@@ -181,13 +189,53 @@ const General = () => {
             <div className="flex flex-col">
               <p className="label">Thumbnail</p>
               <p className="sublabel">Optimal image size 200 x 200</p>
-              <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
+              {!websiteSettings.data?.thumbnail ? (
+                <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
+              ) : (
+                <div className="flex flex-col">
+                  <div className="overflow-hidden rounded-xl">
+                    <Image src={websiteSettings.data.thumbnail} alt="" />
+                  </div>
+                  <button
+                    className="button alt mt-2"
+                    onClick={() =>
+                      websiteSettings.data?.thumbnail &&
+                      removeImage.mutate({
+                        type: "thumbnail",
+                        url: websiteSettings.data?.thumbnail,
+                      })
+                    }
+                  >
+                    Remove thumbnail
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col">
               <p className="label">Cover image</p>
               <p className="sublabel">Optimal image size 1500 x 500</p>
-              <FileUpload uploadRef={bannerRef} type="banner" />
+              {!websiteSettings.data?.banner ? (
+                <FileUpload uploadRef={bannerRef} type="banner" />
+              ) : (
+                <div className="flex flex-col">
+                  <div className="overflow-hidden rounded-xl">
+                    <Image src={websiteSettings.data.banner} alt="" />
+                  </div>
+                  <button
+                    className="button alt mt-2"
+                    onClick={() =>
+                      websiteSettings.data?.banner &&
+                      removeImage.mutate({
+                        type: "banner",
+                        url: websiteSettings.data?.banner,
+                      })
+                    }
+                  >
+                    Remove banner
+                  </button>
+                </div>
+              )}
             </div>
             <Divider className="my-4" />
 

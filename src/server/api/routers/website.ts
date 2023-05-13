@@ -2,11 +2,14 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import {
+  removeImageSchema,
   websiteGeneralSchema,
   websiteIntegrationsSchema,
   websiteSubmissionSchema,
   websiteThemeSchema,
 } from "~/server/schemas";
+import axios from "axios";
+import { env } from "process";
 
 export const websiteRouter = createTRPCRouter({
   checkAvailableSubdomain: protectedProcedure
@@ -108,5 +111,32 @@ export const websiteRouter = createTRPCRouter({
           hidden: input,
         },
       });
+    }),
+  removeImage: protectedProcedure
+    .input(removeImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await axios
+        .delete(input.url, {
+          headers: {
+            "content-type": "application/octet-stream",
+            AccessKey: env.BUNNY_PASSWORD,
+          },
+        })
+        .then(async () => {
+          await prisma.website.update({
+            where: {
+              userId: ctx.session.user.id,
+            },
+            data: {
+              banner: input.type === "banner" ? null : undefined,
+              thumbnail: input.type === "thumbnail" ? null : undefined,
+            },
+          });
+        })
+        .catch((err) => {
+          if (err) {
+            throw new Error(err);
+          }
+        });
     }),
 });

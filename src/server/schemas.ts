@@ -56,6 +56,8 @@ export const websiteGeneralSchema = z.object({
   patreon: z.union([z.string(), z.undefined()]).nullable(),
   podcast: z.union([z.string(), z.undefined()]).nullable(),
   youtube: z.union([z.string(), z.undefined()]).nullable(),
+  banner: z.string().optional().nullable(),
+  thumbnail: z.string().optional().nullable(),
 });
 
 export const websiteIntegrationsSchema = z.object({
@@ -75,4 +77,9 @@ export const websiteSubmissionSchema = z.object({
       required: z.boolean(),
     })
   ),
+});
+
+export const removeImageSchema = z.object({
+  type: z.string(),
+  url: z.string(),
 });

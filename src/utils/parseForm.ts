@@ -12,6 +12,7 @@ import {
   THUMBNAIL_UPLOAD_URL,
 } from "~/url.constants";
 import { env } from "~/env.mjs";
+import queryString from "query-string";
 
 export const parseForm = async (
   req: NextApiRequest
@@ -63,6 +64,23 @@ export const parseForm = async (
             `${uploadDir}/${files.filepond[0].newFilename}`
           );
 
+          const imageProcessingOptionsBanner = queryString.stringify({
+            crop: `1500,500`,
+            crop_gravity: "center",
+          });
+
+          const imageProcessingOptionsThumbnail = queryString.stringify({
+            crop: "200,200",
+            crop_gravity: "center",
+          });
+
+          const processingOptions =
+            uploadType === "thumbnail"
+              ? imageProcessingOptionsThumbnail
+              : imageProcessingOptionsBanner;
+
+          const folder = uploadType === "thumbnail" ? "thumbnail" : "banner";
+
           await axios
             .put(
               uploadType === "thumbnail"
@@ -86,7 +104,7 @@ export const parseForm = async (
             });
 
           resolve({
-            url: `${PULL_ZONE}/thumbnails/${files.filepond[0].newFilename}`,
+            url: `${PULL_ZONE}/${folder}/${files.filepond[0].newFilename}?${processingOptions}`,
           });
         }
       } catch (error) {

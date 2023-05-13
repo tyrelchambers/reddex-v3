@@ -155,6 +155,8 @@ model Website {
     podcast     String?
     theme       String  @default("light")
     colour      String  @default("#000")
+    banner      String?
+    thumbnail   String?
 
     submissionPage   SubmissionPage @relation(fields: [submissionPageId], references: [id])
     user             User           @relation(fields: [userId], references: [id])

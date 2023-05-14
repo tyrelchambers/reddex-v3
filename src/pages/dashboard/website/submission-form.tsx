@@ -18,6 +18,7 @@ interface SubmissionFormProps {
   name: string | null;
   subtitle: string | null;
   description: string | null;
+  submissionFormModules: Module[];
 }
 
 const SubmissionForm = () => {
@@ -29,20 +30,16 @@ const SubmissionForm = () => {
       name: "",
       subtitle: "",
       description: "",
-    },
-  });
-
-  const formModules = useForm<{ modules: Module[] }>({
-    initialValues: {
-      modules: [],
+      submissionFormModules: [],
     },
   });
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.setValues({ ...websiteSettings.data });
-      formModules.setValues({
-        modules: websiteSettings.data.submissionPage.submissionFormModules,
+      form.setValues({
+        ...websiteSettings.data,
+        submissionFormModules:
+          websiteSettings.data.submissionPage.submissionFormModules,
       });
     }
   }, [websiteSettings.data]);
@@ -52,7 +49,7 @@ const SubmissionForm = () => {
 
     const { hasErrors } = form.validate();
 
-    const { name, subtitle, description } = form.values;
+    const { name, subtitle, description, submissionFormModules } = form.values;
 
     if (hasErrors) return;
 
@@ -60,7 +57,7 @@ const SubmissionForm = () => {
       name,
       subtitle,
       description,
-      submissionFormModules: formModules.values.modules,
+      submissionFormModules,
     });
   };
 
@@ -121,15 +118,18 @@ const SubmissionForm = () => {
                       <Checkbox
                         label="Enabled"
                         description="Show this module on your submission page"
-                        {...formModules.getInputProps(`modules.${id}.enabled`, {
-                          type: "checkbox",
-                        })}
+                        {...form.getInputProps(
+                          `submissionFormModules.${id}.enabled`,
+                          {
+                            type: "checkbox",
+                          }
+                        )}
                       />
                       <Checkbox
                         label="Required"
                         description="Make this field required"
-                        {...formModules.getInputProps(
-                          `modules.${id}.required`,
+                        {...form.getInputProps(
+                          `submissionFormModules.${id}.required`,
                           {
                             type: "checkbox",
                           }

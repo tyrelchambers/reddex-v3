@@ -50,13 +50,11 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser(message) {
       const { user } = message;
-      Promise.all([
-        await prisma.profile.create({
-          data: {
-            userId: user.id,
-          },
-        }),
-
+      await prisma.profile.create({
+        data: {
+          userId: user.id,
+        },
+      }),
         await prisma.website.create({
           data: {
             user: {
@@ -65,11 +63,26 @@ export const authOptions: NextAuthOptions = {
               },
             },
             submissionPage: {
-              create: {},
+              create: {
+                submissionFormModules: {
+                  createMany: {
+                    data: [
+                      {
+                        name: "email",
+                      },
+                      {
+                        name: "title",
+                      },
+                      {
+                        name: "author",
+                      },
+                    ],
+                  },
+                },
+              },
             },
           },
-        }),
-      ]);
+        });
     },
   },
   providers: [

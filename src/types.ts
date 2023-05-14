@@ -96,4 +96,7 @@ export interface GeneralSettings {
   youtube: string | null | undefined;
 }
 
-export type SubmissionFormModuleWithoutId = Omit<SubmissionFormModule, "id">;
+export type SubmissionFormModuleWithoutId = Omit<
+  SubmissionFormModule,
+  "id" | "submissionPageId"
+>;

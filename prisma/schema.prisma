@@ -161,7 +161,7 @@ model Website {
     submissionPage   SubmissionPage @relation(fields: [submissionPageId], references: [id])
     user             User           @relation(fields: [userId], references: [id])
     userId           String         @unique
-    submissionPageId String
+    submissionPageId String         @unique
 }
 
 model SubmissionPage {
@@ -170,14 +170,15 @@ model SubmissionPage {
     subtitle    String?
     description String? @db.Text
 
+    website               Website?
     submissionFormModules SubmissionFormModule[]
-    Website               Website[]
 }
 
 model SubmissionFormModule {
-    id             String           @id @default(cuid())
-    name           String
-    enabled        Boolean          @default(false)
-    required       Boolean          @default(false)
-    SubmissionPage SubmissionPage[]
+    id               String          @id @default(cuid())
+    name             String
+    enabled          Boolean         @default(false)
+    required         Boolean         @default(false)
+    SubmissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
+    submissionPageId String?
 }

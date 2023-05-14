@@ -8,7 +8,7 @@ import {
   websiteSubmissionSchema,
   websiteThemeSchema,
 } from "~/server/schemas";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { env } from "process";
 
 export const websiteRouter = createTRPCRouter({
@@ -26,6 +26,13 @@ export const websiteRouter = createTRPCRouter({
     return await prisma.website.findUnique({
       where: {
         userId: ctx.session.user.id,
+      },
+      include: {
+        submissionPage: {
+          include: {
+            submissionFormModules: true,
+          },
+        },
       },
     });
   }),
@@ -67,14 +74,41 @@ export const websiteRouter = createTRPCRouter({
   saveSubmissionForm: protectedProcedure
     .input(websiteSubmissionSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.website.update({
+      const existingWebsite = await prisma.website.findFirst({
         where: {
           userId: ctx.session.user.id,
         },
-        data: {
-          ...input,
+        include: {
+          submissionPage: true,
         },
       });
+
+      await prisma.submissionPage.update({
+        where: {
+          id: existingWebsite?.submissionPageId,
+        },
+        data: {
+          description: input.description,
+          name: input.name,
+          subtitle: input.subtitle,
+        },
+      });
+
+      for (let index = 0; index < input.submissionFormModules.length; index++) {
+        const element = input.submissionFormModules[index];
+
+        if (element) {
+          await prisma.submissionFormModule.updateMany({
+            where: {
+              id: element.id,
+            },
+            data: {
+              enabled: element.enabled,
+              required: element.required,
+            },
+          });
+        }
+      }
     }),
   saveIntegrations: protectedProcedure
     .input(websiteIntegrationsSchema)
@@ -133,9 +167,9 @@ export const websiteRouter = createTRPCRouter({
             },
           });
         })
-        .catch((err) => {
+        .catch((err: AxiosError) => {
           if (err) {
-            throw new Error(err);
+            throw new Error(err.message);
           }
         });
     }),

@@ -70,7 +70,9 @@ export const parseForm = async (
           });
 
           const imageProcessingOptionsThumbnail = queryString.stringify({
-            crop: "200,200",
+            width: "200",
+            height: "200",
+            aspect_ratio: "1:1",
             crop_gravity: "center",
           });
 

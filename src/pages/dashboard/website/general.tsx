@@ -25,7 +25,6 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FileUpload from "~/components/FileUpload";
-import axios from "axios";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -193,8 +192,13 @@ const General = () => {
                 <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
               ) : (
                 <div className="flex flex-col">
-                  <div className="overflow-hidden rounded-xl">
-                    <Image src={websiteSettings.data.thumbnail} alt="" />
+                  <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
+                    <Image
+                      src={websiteSettings.data.thumbnail}
+                      alt=""
+                      w={200}
+                      h={200}
+                    />
                   </div>
                   <button
                     className="button alt mt-2"

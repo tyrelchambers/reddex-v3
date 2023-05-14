@@ -1,53 +1,57 @@
 import { Checkbox, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { websiteTabItems, routes } from "~/routes";
-import { SubmissionFormModuleWithoutId } from "~/types";
 import { api } from "~/utils/api";
+
+interface Module {
+  id?: string;
+  name: string;
+  enabled: boolean;
+  required: boolean;
+}
+
+interface SubmissionFormProps {
+  name: string | null;
+  subtitle: string | null;
+  description: string | null;
+}
 
 const SubmissionForm = () => {
   const submissionFormSave = api.website.saveSubmissionForm.useMutation();
-  const form = useForm({
+  const websiteSettings = api.website.settings.useQuery();
+
+  const form = useForm<SubmissionFormProps>({
     initialValues: {
       name: "",
       subtitle: "",
       description: "",
-      author_enabled: false,
-      author_required: false,
-      title_enabled: false,
-      title_required: false,
-      email_enabled: false,
-      email_required: false,
     },
   });
+
+  const formModules = useForm<{ modules: Module[] }>({
+    initialValues: {
+      modules: [],
+    },
+  });
+
+  useEffect(() => {
+    if (websiteSettings.data) {
+      form.setValues({ ...websiteSettings.data });
+      formModules.setValues({
+        modules: websiteSettings.data.submissionPage.submissionFormModules,
+      });
+    }
+  }, [websiteSettings.data]);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
 
     const { hasErrors } = form.validate();
-    const authorModule: SubmissionFormModuleWithoutId = {
-      name: "author",
-      enabled: form.values.author_enabled,
-      required: form.values.author_required,
-    };
-    const titleModule: SubmissionFormModuleWithoutId = {
-      name: "title",
-      enabled: form.values.title_enabled,
-      required: form.values.title_required,
-    };
-    const emailModule: SubmissionFormModuleWithoutId = {
-      name: "email",
-      enabled: form.values.email_enabled,
-      required: form.values.email_required,
-    };
-    const submissionFormModules: SubmissionFormModuleWithoutId[] = [
-      authorModule,
-      titleModule,
-      emailModule,
-    ];
+
     const { name, subtitle, description } = form.values;
 
     if (hasErrors) return;
@@ -56,7 +60,7 @@ const SubmissionForm = () => {
       name,
       subtitle,
       description,
-      submissionFormModules,
+      submissionFormModules: formModules.values.modules,
     });
   };
 
@@ -103,56 +107,38 @@ const SubmissionForm = () => {
                 Customize modules
               </p>
 
-              <div className="flex flex-col rounded-xl bg-gray-50 p-4">
-                <p className="label font-bold text-gray-700">Author</p>
+              {websiteSettings.data?.submissionPage.submissionFormModules.map(
+                (mod, id) => (
+                  <div
+                    key={mod.id}
+                    className="flex flex-col rounded-xl bg-gray-50 p-4"
+                  >
+                    <p className="label font-bold capitalize text-gray-700">
+                      {mod.name}
+                    </p>
 
-                <div className="mt-2 flex gap-4">
-                  <Checkbox
-                    label="Enabled"
-                    description="Show this module on your submission page"
-                    {...form.getInputProps("author_enabled")}
-                  />
-                  <Checkbox
-                    label="Required"
-                    description="Make this field required"
-                    {...form.getInputProps("author_required")}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col rounded-xl bg-gray-50 p-4">
-                <p className="label font-bold text-gray-700">Title</p>
-
-                <div className="mt-2 flex gap-4">
-                  <Checkbox
-                    label="Enabled"
-                    description="Show this module on your submission page"
-                    {...form.getInputProps("title_enabled")}
-                  />
-                  <Checkbox
-                    label="Required"
-                    description="Make this field required"
-                    {...form.getInputProps("title_required")}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col rounded-xl bg-gray-50 p-4">
-                <p className="label font-bold text-gray-700">Email</p>
-
-                <div className="mt-2 flex gap-4">
-                  <Checkbox
-                    label="Enabled"
-                    description="Show this module on your submission page"
-                    {...form.getInputProps("email_enabled")}
-                  />
-                  <Checkbox
-                    label="Required"
-                    description="Make this field required"
-                    {...form.getInputProps("email_required")}
-                  />
-                </div>
-              </div>
+                    <div className="mt-2 flex gap-4">
+                      <Checkbox
+                        label="Enabled"
+                        description="Show this module on your submission page"
+                        {...formModules.getInputProps(`modules.${id}.enabled`, {
+                          type: "checkbox",
+                        })}
+                      />
+                      <Checkbox
+                        label="Required"
+                        description="Make this field required"
+                        {...formModules.getInputProps(
+                          `modules.${id}.required`,
+                          {
+                            type: "checkbox",
+                          }
+                        )}
+                      />
+                    </div>
+                  </div>
+                )
+              )}
             </section>
 
             <button type="submit" className="button main mt-4 w-full">

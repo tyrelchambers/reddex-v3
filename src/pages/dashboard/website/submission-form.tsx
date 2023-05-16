@@ -51,7 +51,7 @@ const SubmissionForm = () => {
   useEffect(() => {
     if (websiteSettings.data) {
       form.setValues({
-        ...websiteSettings.data,
+        ...websiteSettings.data.submissionPage,
         submissionFormModules:
           websiteSettings.data.submissionPage.submissionFormModules,
       });

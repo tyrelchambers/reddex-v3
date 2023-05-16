@@ -1,6 +1,6 @@
 import { ColorPicker, NativeSelect } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
@@ -11,12 +11,25 @@ const themes = ["light", "dark"];
 
 const Theme = () => {
   const saveTheme = api.website.saveTheme.useMutation();
+  const websiteSettings = api.website.settings.useQuery();
+
   const form = useForm({
     initialValues: {
-      mode: "light",
+      theme: "light",
       colour: "rgba(0,0,0,0)",
     },
   });
+
+  useEffect(() => {
+    if (websiteSettings.data) {
+      console.log(websiteSettings.data);
+
+      form.setValues({
+        theme: websiteSettings.data.theme,
+        colour: websiteSettings.data.colour,
+      });
+    }
+  }, [websiteSettings.data]);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -44,7 +57,7 @@ const Theme = () => {
             <NativeSelect
               label="Mode"
               data={themes}
-              {...form.getInputProps("mode")}
+              {...form.getInputProps("theme")}
             />
             <div className="flex flex-col">
               <p className="label">Colour</p>

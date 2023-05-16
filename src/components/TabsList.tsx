@@ -13,7 +13,10 @@ const TabsList = ({ tabs, route }: Props) => {
   const router = useRouter();
 
   return (
-    <ul role="tablist" className="flex w-fit flex-col gap-4 text-sm">
+    <ul
+      role="tablist"
+      className="sticky top-4 flex w-fit flex-col gap-4 text-sm"
+    >
       {tabs.map((item, idx) => (
         <li
           key={idx}

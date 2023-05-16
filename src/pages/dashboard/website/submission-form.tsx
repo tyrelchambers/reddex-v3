@@ -103,7 +103,7 @@ const SubmissionForm = () => {
           </div>
           <h1 className="h1 text-2xl">Submission form</h1>
 
-          <form onSubmit={submitHandler} className="mt-10 flex flex-col gap-4">
+          <form onSubmit={submitHandler} className="mt-4 flex flex-col gap-4">
             <TextInput label="Page title" {...form.getInputProps("name")} />
             <TextInput
               label="Page subtitle"

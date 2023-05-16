@@ -40,11 +40,12 @@ const General = () => {
       apiContext.website.invalidate();
     },
   });
-  const hideWebsite = api.website.hideWebsite.useMutation({
+  const hideWebsite = api.website.setVisibility.useMutation({
     onSuccess: () => {
       apiContext.website.visibility.invalidate();
     },
   });
+
   const removeImage = api.website.removeImage.useMutation({
     onSuccess: () => {
       apiContext.website.invalidate();

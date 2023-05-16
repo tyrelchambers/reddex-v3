@@ -47,6 +47,35 @@ export const websiteRouter = createTRPCRouter({
       },
     });
   }),
+  submissionFormVisibility: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        hidden: z.boolean(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return await prisma.submissionPage.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          hidden: input.hidden,
+        },
+      });
+    }),
+  getSubmissionFormVisibility: protectedProcedure
+    .input(z.string().optional())
+    .query(async ({ input }) => {
+      return await prisma.submissionPage.findUnique({
+        where: {
+          id: input,
+        },
+        select: {
+          hidden: true,
+        },
+      });
+    }),
   saveGeneral: protectedProcedure
     .input(websiteGeneralSchema)
     .mutation(async ({ ctx, input }) => {
@@ -134,7 +163,7 @@ export const websiteRouter = createTRPCRouter({
         },
       });
     }),
-  hideWebsite: protectedProcedure
+  setVisibility: protectedProcedure
     .input(z.boolean())
     .mutation(async ({ ctx, input }) => {
       return await prisma.website.update({

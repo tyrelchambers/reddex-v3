@@ -22,8 +22,22 @@ interface SubmissionFormProps {
 }
 
 const SubmissionForm = () => {
+  const apiContext = api.useContext();
   const submissionFormSave = api.website.saveSubmissionForm.useMutation();
   const websiteSettings = api.website.settings.useQuery();
+  const saveSubmissionFormVisibility =
+    api.website.submissionFormVisibility.useMutation({
+      onSuccess: async () => {
+        await apiContext.website.getSubmissionFormVisibility.invalidate();
+      },
+    });
+  const submissionFormVisibility =
+    api.website.getSubmissionFormVisibility.useQuery(
+      websiteSettings.data?.submissionPage?.id,
+      {
+        enabled: !!websiteSettings.data?.submissionPage?.hidden,
+      }
+    );
 
   const form = useForm<SubmissionFormProps>({
     initialValues: {
@@ -61,6 +75,15 @@ const SubmissionForm = () => {
     });
   };
 
+  const visibilityHandler = () => {
+    if (!websiteSettings.data?.submissionPage) return;
+
+    saveSubmissionFormVisibility.mutate({
+      hidden: !websiteSettings.data?.submissionPage.hidden,
+      id: websiteSettings.data?.submissionPage.id,
+    });
+  };
+
   return (
     <>
       <Header />
@@ -71,21 +94,14 @@ const SubmissionForm = () => {
         </header>
 
         <section className="flex w-full max-w-2xl flex-col">
-          <h1 className="h1 text-2xl">Submission form</h1>
-
-          <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-indigo-500 p-4 shadow-lg">
-            <div className="flex flex-col">
-              <p className="text-white">Enable Submission Form</p>
-              <p className="text-sm font-thin text-gray-200">
-                Enable this submission form to allow visitors to email you their
-                own stories.
-              </p>
-            </div>
-
-            <button className="button secondary whitespace-nowrap">
-              Enable submission form
-            </button>
+          <div className="mb-10">
+            {submissionFormVisibility.data?.hidden ? (
+              <DisableBanner clickHandler={visibilityHandler} />
+            ) : (
+              <EnableBanner clickHandler={visibilityHandler} />
+            )}
           </div>
+          <h1 className="h1 text-2xl">Submission form</h1>
 
           <form onSubmit={submitHandler} className="mt-10 flex flex-col gap-4">
             <TextInput label="Page title" {...form.getInputProps("name")} />
@@ -150,5 +166,39 @@ const SubmissionForm = () => {
     </>
   );
 };
+
+const EnableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
+  <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-indigo-500 p-4 shadow-lg">
+    <div className="flex flex-col">
+      <p className="text-white">Enable Submission Page</p>
+      <p className="text-sm font-thin text-gray-200">
+        Enable this submission form to allow visitors to email you their own
+        stories.
+      </p>
+    </div>
+
+    <button
+      className="button secondary whitespace-nowrap"
+      onClick={clickHandler}
+    >
+      Enable submission form
+    </button>
+  </div>
+);
+
+const DisableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
+  <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-gray-100 p-4">
+    <div className="flex flex-col">
+      <p className="text-gray-700">Hide Submission Page</p>
+      <p className="text-sm font-thin text-gray-500">
+        Hide your submission page so others can&apos;t send you stories.
+      </p>
+    </div>
+
+    <button className="button secondary" onClick={clickHandler}>
+      Hide
+    </button>
+  </div>
+);
 
 export default SubmissionForm;

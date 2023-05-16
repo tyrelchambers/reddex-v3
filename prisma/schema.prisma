@@ -165,11 +165,11 @@ model Website {
 }
 
 model SubmissionPage {
-    id          String  @id @default(cuid())
-    name        String?
-    subtitle    String?
-    description String? @db.Text
-
+    id                    String                 @id @default(cuid())
+    name                  String?
+    subtitle              String?
+    description           String?                @db.Text
+    hidden                Boolean                @default(true)
     website               Website?
     submissionFormModules SubmissionFormModule[]
 }

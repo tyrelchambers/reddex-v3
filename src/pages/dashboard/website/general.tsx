@@ -183,6 +183,7 @@ const General = () => {
             <Textarea
               label="Site description"
               description="Let people know who you are"
+              minRows={8}
               {...form.getInputProps("description")}
             />
 

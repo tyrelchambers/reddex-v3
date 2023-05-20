@@ -72,7 +72,7 @@ const QueueModal = ({ close }: Props) => {
           <button className="button simple">Initial greeting</button>
           <button className="button simple">Recurring greeting</button>
         </div>
-        <Textarea className="mt-2" />
+        <Textarea className="mt-2" variant="filled" />
       </div>
 
       <footer className="mt-6 flex justify-between">

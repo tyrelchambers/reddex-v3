@@ -12,7 +12,6 @@ import { ToastContainer } from "react-toastify";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
-import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 
 const font = Poppins({

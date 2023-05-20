@@ -71,6 +71,7 @@ const FilterSelections = ({ filters, dispatch }: FilterSelectionProps) => {
       <div className="flex flex-col">
         <p className="text-sm ">Keywords</p>
         <TextInput
+          variant="filled"
           className="mt-1"
           placeholder="Enter a comma separate list of keywords to search for"
           onChange={(e) =>

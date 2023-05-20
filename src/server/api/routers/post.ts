@@ -34,18 +34,18 @@ export const postRouter = createTRPCRouter({
           success: false,
           message: "Post not found. Unable to add to approved list.",
         };
+      } else {
+        return await prisma.redditPost.updateMany({
+          where: {
+            id: input,
+            userId: ctx.session.user.id,
+          },
+          data: {
+            permission: true,
+            read: false,
+          },
+        });
       }
-
-      await prisma.redditPost.updateMany({
-        where: {
-          id: input,
-          userId: ctx.session.user.id,
-        },
-        data: {
-          permission: true,
-          read: false,
-        },
-      });
     }),
   addToCompleted: protectedProcedure
     .input(z.string())

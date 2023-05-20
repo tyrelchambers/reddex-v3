@@ -12,7 +12,6 @@ import { FormattedMessagesList, RedditInboxMessage } from "~/types";
 import { formatInboxMessagesToList } from "~/utils/formatInboxMessagesToList";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
-import { sendToast } from "~/utils/sendToast";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -24,8 +23,8 @@ const SelectedInboxMessage = ({ message }: Props) => {
   const addContact = api.contact.save.useMutation();
   const stories = api.post.addToApproved.useMutation({
     onSuccess: (data) => {
-      if (!data?.success && data?.message) {
-        return sendToast({ message: data.message });
+      if ("success" in data && !data.success) {
+        return toast(data.message, { type: "info" });
       }
     },
   });
@@ -98,6 +97,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
         onSubmit={submitHandler}
       >
         <Textarea
+          variant="filled"
           placeholder="Send a reply..."
           classNames={{
             input:

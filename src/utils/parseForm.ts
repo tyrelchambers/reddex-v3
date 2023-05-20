@@ -4,7 +4,7 @@ import { join } from "path";
 import * as dateFn from "date-fns";
 import formidable from "formidable";
 import { mkdir, readFile, stat } from "fs/promises";
-import { rmdir, rmdirSync } from "fs";
+import { rmdirSync } from "fs";
 import axios from "axios";
 import {
   BANNER_UPLOAD_URL,
@@ -26,13 +26,15 @@ export const parseForm = async (
 
     try {
       await stat(uploadDir);
-    } catch (e: any) {
-      if (e.code === "ENOENT") {
-        await mkdir(uploadDir, { recursive: true });
-      } else {
-        console.error(e);
-        reject(e);
-        return;
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        if ("code" in e && e.code === "ENOENT") {
+          await mkdir(uploadDir, { recursive: true });
+        } else {
+          console.error(e);
+          reject(e);
+          return;
+        }
       }
     }
 
@@ -44,7 +46,7 @@ export const parseForm = async (
       filename: (_name, _ext, part) => {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
         const filename = `${part.name || "unknown"}-${uniqueSuffix}.${
-          mime.getExtension(part.mimetype || "") || "unknown"
+          mime.extension(part.mimetype || "") || "unknown"
         }`;
 
         return filename;
@@ -59,55 +61,52 @@ export const parseForm = async (
 
     form.parse(req, async function (err, fields, files) {
       try {
-        if (files.filepond) {
-          const saveFile = await readFile(
-            `${uploadDir}/${files.filepond[0].newFilename}`
-          );
+        if (Array.isArray(files.filepond)) {
+          if (files.filepond[0]) {
+            const saveFile = await readFile(
+              `${uploadDir}/${files.filepond[0].newFilename}`
+            );
 
-          const imageProcessingOptionsBanner = queryString.stringify({
-            crop: `1500,500`,
-            crop_gravity: "center",
-          });
-
-          const imageProcessingOptionsThumbnail = queryString.stringify({
-            width: "200",
-            height: "200",
-            aspect_ratio: "1:1",
-            crop_gravity: "center",
-          });
-
-          const processingOptions =
-            uploadType === "thumbnail"
-              ? imageProcessingOptionsThumbnail
-              : imageProcessingOptionsBanner;
-
-          const folder = uploadType === "thumbnail" ? "thumbnail" : "banner";
-
-          await axios
-            .put(
-              uploadType === "thumbnail"
-                ? THUMBNAIL_UPLOAD_URL(files.filepond[0].newFilename)
-                : BANNER_UPLOAD_URL(files.filepond[0].newFilename),
-              saveFile,
-              {
-                headers: {
-                  "content-type": "application/octet-stream",
-                  AccessKey: env.BUNNY_PASSWORD,
-                },
-              }
-            )
-            .then(() => {
-              rmdirSync(uploadDir, { recursive: true });
-            })
-            .catch((err) => {
-              if (err) {
-                throw new Error(err);
-              }
+            const imageProcessingOptionsBanner = queryString.stringify({
+              crop: `1500,500`,
+              crop_gravity: "center",
             });
 
-          resolve({
-            url: `${PULL_ZONE}/${folder}/${files.filepond[0].newFilename}?${processingOptions}`,
-          });
+            const imageProcessingOptionsThumbnail = queryString.stringify({
+              width: "200",
+              height: "200",
+              aspect_ratio: "1:1",
+              crop_gravity: "center",
+            });
+
+            const processingOptions =
+              uploadType === "thumbnail"
+                ? imageProcessingOptionsThumbnail
+                : imageProcessingOptionsBanner;
+
+            const folder = uploadType === "thumbnail" ? "thumbnail" : "banner";
+
+            await axios
+              .put(
+                uploadType === "thumbnail"
+                  ? THUMBNAIL_UPLOAD_URL(files.filepond[0].newFilename)
+                  : BANNER_UPLOAD_URL(files.filepond[0].newFilename),
+                saveFile,
+                {
+                  headers: {
+                    "content-type": "application/octet-stream",
+                    AccessKey: env.BUNNY_PASSWORD,
+                  },
+                }
+              )
+              .then(() => {
+                rmdirSync(uploadDir, { recursive: true });
+              });
+
+            resolve({
+              url: `${PULL_ZONE}/${folder}/${files.filepond[0].newFilename}?${processingOptions}`,
+            });
+          }
         }
       } catch (error) {
         reject(error);

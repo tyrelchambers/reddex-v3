@@ -52,11 +52,16 @@ const Contacts = () => {
         <Modal opened={opened} onClose={close} title="Add contact">
           <form onSubmit={submitHandler}>
             <TextInput
+              variant="filled"
               label="Name"
               placeholder="Add your contact's name"
               {...form.getInputProps("name")}
             />
-            <Textarea label="Notes" {...form.getInputProps("notes")} />
+            <Textarea
+              label="Notes"
+              {...form.getInputProps("notes")}
+              variant="filled"
+            />
             <button type="submit" className="button main mt-4 w-full">
               Save
             </button>

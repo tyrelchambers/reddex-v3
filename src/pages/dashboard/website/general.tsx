@@ -158,6 +158,7 @@ const General = () => {
               <div className="flex h-fit items-center rounded-lg bg-gray-100 p-1">
                 <span className="px-3 text-gray-500">http://</span>
                 <TextInput
+                  variant="filled"
                   placeholder="subdomain"
                   className="flex-1 rounded-none"
                   classNames={{
@@ -176,11 +177,13 @@ const General = () => {
             </div>
 
             <TextInput
+              variant="filled"
               label="Site name"
               placeholder="Name of your site"
               {...form.getInputProps("name")}
             />
             <Textarea
+              variant="filled"
               label="Site description"
               description="Let people know who you are"
               minRows={8}
@@ -255,31 +258,37 @@ const General = () => {
 
               <div className="mt-6 flex flex-col gap-3">
                 <TextInput
+                  variant="filled"
                   placeholder="Twitter"
                   icon={<FontAwesomeIcon icon={faTwitter} />}
                   {...form.getInputProps("twitter")}
                 />
                 <TextInput
+                  variant="filled"
                   placeholder="Facebook"
                   icon={<FontAwesomeIcon icon={faFacebook} />}
                   {...form.getInputProps("facebook")}
                 />
                 <TextInput
+                  variant="filled"
                   placeholder="Instagram"
                   icon={<FontAwesomeIcon icon={faInstagram} />}
                   {...form.getInputProps("instagram")}
                 />
                 <TextInput
+                  variant="filled"
                   placeholder="Patreon"
                   icon={<FontAwesomeIcon icon={faPatreon} />}
                   {...form.getInputProps("patreon")}
                 />
                 <TextInput
+                  variant="filled"
                   placeholder="Youtube"
                   icon={<FontAwesomeIcon icon={faYoutube} />}
                   {...form.getInputProps("youtube")}
                 />
                 <TextInput
+                  variant="filled"
                   placeholder="Podcast"
                   icon={<FontAwesomeIcon icon={faPodcast} />}
                   {...form.getInputProps("podcast")}

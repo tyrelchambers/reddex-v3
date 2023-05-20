@@ -49,6 +49,7 @@ const Tags = () => {
       <Modal opened={opened} onClose={close} title="Create tag">
         <form onSubmit={submitHandler}>
           <TextInput
+            variant="filled"
             label="Name"
             placeholder="A name for your tag"
             {...form.getInputProps("tag")}

@@ -51,12 +51,14 @@ const settings = () => {
             </h2>
 
             <Textarea
+              variant="filled"
               label="Greeting"
               description="This message is used when you haven't messaged an author before. Think of it as an initial greeting. Say hello, introduce yourself, go from there."
               defaultValue={currentUser?.Profile?.greeting || undefined}
             />
 
             <Textarea
+              variant="filled"
               label="Recurring"
               description="This is used when you've already messaged an author. It's useful so users don't feel like they're just getting copy and pasted messages."
               defaultValue={currentUser?.Profile?.recurring || undefined}

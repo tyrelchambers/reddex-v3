@@ -33,6 +33,7 @@ const SubredditSearchForm = ({
         }}
       >
         <TextInput
+          variant="filled"
           placeholder="subreddit"
           icon="r/"
           className="flex-1"

@@ -23,6 +23,7 @@ const ApprovedStoriesList = () => {
 
         <div className="flex h-9 gap-3">
           <TextInput
+            variant="filled"
             placeholder="Search by keywords"
             icon={<FontAwesomeIcon icon={faSearch} />}
             value={query}

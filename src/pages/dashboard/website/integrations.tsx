@@ -55,6 +55,7 @@ const Integrations = () => {
           </p>
           <form onSubmit={submitHandler} className="mt-10 w-full max-w-md">
             <TextInput
+              variant="filled"
               label="Youtube"
               description="Show the last 5 videos on your website."
               placeholder="Youtube channel ID"

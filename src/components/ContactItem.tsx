@@ -31,8 +31,12 @@ const ContactItem = ({ contact }: Props) => {
 
       <Modal opened={opened} onClose={close} title="Editing contact">
         <form className="flex flex-col gap-4">
-          <TextInput value={contact.name} label="Name" />
-          <Textarea value={contact?.notes || undefined} label="Notes" />
+          <TextInput value={contact.name} label="Name" variant="filled" />
+          <Textarea
+            value={contact?.notes || undefined}
+            label="Notes"
+            variant="filled"
+          />
           <footer className="flex justify-between gap-3">
             <button className="button simple !text-red-500">
               Delete contact

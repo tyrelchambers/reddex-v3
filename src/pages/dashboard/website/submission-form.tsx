@@ -4,7 +4,7 @@ import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
-import { websiteTabItems, routes } from "~/routes";
+import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
 interface Module {
@@ -90,7 +90,7 @@ const SubmissionForm = () => {
       <DashNav />
       <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
         <header>
-          <TabsList tabs={websiteTabItems} route={routes.WEBSITE} />
+          <TabsList tabs={websiteTabItems} />
         </header>
 
         <section className="flex w-full max-w-2xl flex-col">
@@ -106,10 +106,12 @@ const SubmissionForm = () => {
           <form onSubmit={submitHandler} className="mt-4 flex flex-col gap-4">
             <TextInput label="Page title" {...form.getInputProps("name")} />
             <TextInput
+              variant="filled"
               label="Page subtitle"
               {...form.getInputProps("subtitle")}
             />
             <Textarea
+              variant="filled"
               label="Description"
               description="List any rules for submissions or any information you want people to know"
               minRows={8}

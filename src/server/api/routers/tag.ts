@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import { tagOnPostSchema, tagSaveSchema } from "~/server/schemas";
@@ -32,7 +31,7 @@ export const tagRouter = createTRPCRouter({
       }
       return;
     }),
-  all: protectedProcedure.query(async ({ ctx, input }) => {
+  all: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.tag.findMany({
       where: {
         userId: ctx.session.user.id,

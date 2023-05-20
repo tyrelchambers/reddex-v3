@@ -141,7 +141,7 @@ const General = () => {
       <DashNav />
       <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
         <header>
-          <TabsList tabs={websiteTabItems} route={routes.WEBSITE} />
+          <TabsList tabs={websiteTabItems} />
         </header>
 
         <section className="flex w-full max-w-2xl flex-col">

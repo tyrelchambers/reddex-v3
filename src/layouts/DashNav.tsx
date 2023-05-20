@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { routes } from "~/routes";
 
@@ -45,6 +46,7 @@ const _routes = [
 ];
 
 const DashNav = () => {
+  const pathname = useRouter().pathname;
   return (
     <nav className=" w-full bg-gray-100 p-3">
       <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
@@ -52,7 +54,9 @@ const DashNav = () => {
           <li key={r.label}>
             <Link
               href={r.slug}
-              className="flex items-center gap-2 text-gray-500 hover:text-indigo-500"
+              className={`flex items-center gap-2 text-gray-500 hover:text-indigo-500 ${
+                pathname.includes(r.slug) ? "text-indigo-500" : ""
+              }`}
             >
               <FontAwesomeIcon icon={r.icon} />
               <p>{r.label}</p>

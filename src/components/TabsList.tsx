@@ -6,10 +6,9 @@ import { Tab } from "~/types";
 
 interface Props {
   tabs: Tab[];
-  route: string;
 }
 
-const TabsList = ({ tabs, route }: Props) => {
+const TabsList = ({ tabs }: Props) => {
   const router = useRouter();
 
   return (

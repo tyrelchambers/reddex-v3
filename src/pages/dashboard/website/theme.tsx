@@ -2,6 +2,7 @@ import { ColorPicker, NativeSelect } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
+import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { routes, websiteTabItems } from "~/routes";
@@ -47,10 +48,13 @@ const Theme = () => {
       <DashNav />
       <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
         <header>
-          <TabsList tabs={websiteTabItems} route={routes.WEBSITE} />
+          <TabsList tabs={websiteTabItems} />
         </header>
 
-        <section className="flex w-full max-w-sm flex-col">
+        <BodyWithLoader
+          isLoading={websiteSettings.isLoading}
+          loadingMessage="Loading website theme settings..."
+        >
           <h1 className="h1 text-2xl">Theme</h1>
 
           <form className="flex w-full flex-col gap-4" onSubmit={submitHandler}>
@@ -87,7 +91,7 @@ const Theme = () => {
               Save changes
             </button>
           </form>
-        </section>
+        </BodyWithLoader>
       </main>
     </>
   );

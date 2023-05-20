@@ -1,7 +1,9 @@
 import { Checkbox, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
+import StatusBanner from "~/components/StatusBanner";
 import TabsList from "~/components/TabsList";
+import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { websiteTabItems } from "~/routes";
@@ -93,12 +95,37 @@ const SubmissionForm = () => {
           <TabsList tabs={websiteTabItems} />
         </header>
 
-        <section className="flex w-full max-w-2xl flex-col">
+        <BodyWithLoader
+          isLoading={websiteSettings.isLoading}
+          loadingMessage="Loading submission form settings..."
+        >
           <div className="mb-10">
             {submissionFormVisibility.data?.hidden ? (
-              <DisableBanner clickHandler={visibilityHandler} />
+              <StatusBanner
+                title="Enable Submission Page"
+                subtitle="Enable this submission form to allow visitors to email you their own stories."
+                action={
+                  <button
+                    className="button secondary whitespace-nowrap"
+                    onClick={visibilityHandler}
+                  >
+                    Enable submission form
+                  </button>
+                }
+              />
             ) : (
-              <EnableBanner clickHandler={visibilityHandler} />
+              <StatusBanner
+                title="Hide Submission Page"
+                subtitle="Hide your submission page so others can't send you stories."
+                action={
+                  <button
+                    className="button secondary"
+                    onClick={visibilityHandler}
+                  >
+                    Hide
+                  </button>
+                }
+              />
             )}
           </div>
           <h1 className="h1 text-2xl">Submission form</h1>
@@ -164,44 +191,10 @@ const SubmissionForm = () => {
               Save changes
             </button>
           </form>
-        </section>
+        </BodyWithLoader>
       </main>
     </>
   );
 };
-
-const EnableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
-  <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-indigo-500 p-4 shadow-lg">
-    <div className="flex flex-col">
-      <p className="text-white">Enable Submission Page</p>
-      <p className="text-sm font-thin text-gray-200">
-        Enable this submission form to allow visitors to email you their own
-        stories.
-      </p>
-    </div>
-
-    <button
-      className="button secondary whitespace-nowrap"
-      onClick={clickHandler}
-    >
-      Enable submission form
-    </button>
-  </div>
-);
-
-const DisableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
-  <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-gray-100 p-4">
-    <div className="flex flex-col">
-      <p className="text-gray-700">Hide Submission Page</p>
-      <p className="text-sm font-thin text-gray-500">
-        Hide your submission page so others can&apos;t send you stories.
-      </p>
-    </div>
-
-    <button className="button secondary" onClick={clickHandler}>
-      Hide
-    </button>
-  </div>
-);
 
 export default SubmissionForm;

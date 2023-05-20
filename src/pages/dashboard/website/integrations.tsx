@@ -4,6 +4,7 @@ import { TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
+import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { websiteTabItems } from "~/routes";
@@ -47,7 +48,10 @@ const Integrations = () => {
           <TabsList tabs={websiteTabItems} />
         </header>
 
-        <section className="flex w-full max-w-2xl flex-col">
+        <BodyWithLoader
+          isLoading={websiteSettings.isLoading}
+          loadingMessage="Loading website integrations..."
+        >
           <h1 className="h1 text-2xl">Integrations</h1>
           <p className="text-sm text-gray-500">
             Any integration field that lacks a value will not show up on your
@@ -67,7 +71,7 @@ const Integrations = () => {
               Save changes
             </button>
           </form>
-        </section>
+        </BodyWithLoader>
       </main>
     </>
   );

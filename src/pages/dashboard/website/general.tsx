@@ -25,6 +25,8 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FileUpload from "~/components/FileUpload";
+import StatusBanner from "~/components/StatusBanner";
+import BodyWithLoader from "~/layouts/BodyWithLoader";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -144,14 +146,38 @@ const General = () => {
           <TabsList tabs={websiteTabItems} />
         </header>
 
-        <section className="flex w-full max-w-2xl flex-col">
+        <BodyWithLoader
+          isLoading={websiteSettings.isLoading}
+          loadingMessage="Loading website settings..."
+        >
           <h1 className="h1 text-2xl">General</h1>
           {websiteVisibility.data?.hidden ? (
-            <EnableBanner clickHandler={hideWebsiteHandler} />
+            <StatusBanner
+              title="Enable Website"
+              subtitle="Enable your website to be seen by the public."
+              action={
+                <button
+                  className="button secondary"
+                  onClick={showWebsiteHandler}
+                >
+                  Make website public{" "}
+                </button>
+              }
+            />
           ) : (
-            <DisableBanner clickHandler={showWebsiteHandler} />
+            <StatusBanner
+              title="Hide Website"
+              subtitle="Hide your website so others can't see it."
+              action={
+                <button
+                  className="button secondary"
+                  onClick={showWebsiteHandler}
+                >
+                  Hide
+                </button>
+              }
+            />
           )}
-
           <form className="my-10 flex flex-col gap-4" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
               <p className="label">Subdomain</p>
@@ -301,40 +327,10 @@ const General = () => {
               Save changes
             </button>
           </form>
-        </section>
+        </BodyWithLoader>
       </main>
     </>
   );
 };
-
-const EnableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
-  <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-indigo-500 p-4 shadow-lg">
-    <div className="flex flex-col">
-      <p className="text-white">Enable Website</p>
-      <p className="text-sm font-thin text-gray-200">
-        Enable your website to be seen by the public.
-      </p>
-    </div>
-
-    <button className="button secondary" onClick={clickHandler}>
-      Make website public
-    </button>
-  </div>
-);
-
-const DisableBanner = ({ clickHandler }: { clickHandler: () => void }) => (
-  <div className="mt-6 flex w-full items-center justify-between rounded-xl bg-gray-100 p-4">
-    <div className="flex flex-col">
-      <p className="text-gray-700">Hide Website</p>
-      <p className="text-sm font-thin text-gray-500">
-        Hide your website so others can&apos;t see it.
-      </p>
-    </div>
-
-    <button className="button secondary" onClick={clickHandler}>
-      Hide
-    </button>
-  </div>
-);
 
 export default General;

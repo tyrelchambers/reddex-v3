@@ -147,7 +147,7 @@ export const websiteRouter = createTRPCRouter({
           userId: ctx.session.user.id,
         },
         data: {
-          ...input,
+          youtubeIntegrationId: input.youtubeIntegrationId,
         },
       });
     }),

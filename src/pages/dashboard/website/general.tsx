@@ -91,7 +91,8 @@ const General = () => {
   const subdomainAvailable =
     !subdomainQuery.data &&
     (!form.values.subdomain ||
-      form.values.subdomain !== websiteSettings.data?.subdomain);
+      form.values.subdomain !== websiteSettings.data?.subdomain) &&
+    form.values.subdomain !== "";
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();

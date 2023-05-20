@@ -2,7 +2,7 @@ import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
@@ -11,11 +11,22 @@ import { api } from "~/utils/api";
 
 const Integrations = () => {
   const saveIntegrations = api.website.saveIntegrations.useMutation();
+  const websiteSettings = api.website.settings.useQuery();
+
   const form = useForm({
     initialValues: {
-      youtube: "",
+      youtubeIntegrationId: "",
     },
   });
+
+  useEffect(() => {
+    if (websiteSettings.data) {
+      form.setValues({
+        youtubeIntegrationId:
+          websiteSettings.data?.youtubeIntegrationId || undefined,
+      });
+    }
+  }, [websiteSettings.data]);
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -48,7 +59,7 @@ const Integrations = () => {
               description="Show the last 5 videos on your website."
               placeholder="Youtube channel ID"
               icon={<FontAwesomeIcon icon={faYoutube} />}
-              {...form.getInputProps("youtube")}
+              {...form.getInputProps("youtubeIntegrationId")}
             />
 
             <button className="button main mt-4 w-full" type="submit">

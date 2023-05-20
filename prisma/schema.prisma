@@ -142,21 +142,22 @@ model SubmittedStory {
 }
 
 model Website {
-    id          String  @id @default(cuid())
-    hidden      Boolean @default(true)
-    subdomain   String? @unique
-    name        String?
-    description String? @db.Text
-    twitter     String?
-    facebook    String?
-    instagram   String?
-    patreon     String?
-    youtube     String?
-    podcast     String?
-    theme       String  @default("light")
-    colour      String  @default("#000")
-    banner      String?
-    thumbnail   String?
+    id                   String  @id @default(cuid())
+    hidden               Boolean @default(true)
+    subdomain            String? @unique
+    name                 String?
+    description          String? @db.Text
+    twitter              String?
+    facebook             String?
+    instagram            String?
+    patreon              String?
+    youtube              String?
+    podcast              String?
+    theme                String  @default("light")
+    colour               String  @default("#000")
+    banner               String?
+    thumbnail            String?
+    youtubeIntegrationId String?
 
     submissionPage   SubmissionPage @relation(fields: [submissionPageId], references: [id])
     user             User           @relation(fields: [userId], references: [id])
@@ -179,6 +180,6 @@ model SubmissionFormModule {
     name             String
     enabled          Boolean         @default(false)
     required         Boolean         @default(false)
-    SubmissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
+    submissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
     submissionPageId String?
 }

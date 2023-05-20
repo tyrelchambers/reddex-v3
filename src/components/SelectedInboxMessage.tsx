@@ -5,14 +5,15 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, Textarea } from "@mantine/core";
-import { add, fromUnixTime } from "date-fns";
-import Link from "next/link";
+import { fromUnixTime } from "date-fns";
 import { format } from "date-fns";
 import React, { FormEvent } from "react";
 import { FormattedMessagesList, RedditInboxMessage } from "~/types";
 import { formatInboxMessagesToList } from "~/utils/formatInboxMessagesToList";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
+import { sendToast } from "~/utils/sendToast";
+import { toast } from "react-toastify";
 
 interface Props {
   message: RedditInboxMessage | undefined;
@@ -21,7 +22,13 @@ interface Props {
 const SelectedInboxMessage = ({ message }: Props) => {
   const messageMutation = api.inbox.send.useMutation();
   const addContact = api.contact.save.useMutation();
-  const stories = api.post.addToApproved.useMutation();
+  const stories = api.post.addToApproved.useMutation({
+    onSuccess: (data) => {
+      if (!data?.success && data?.message) {
+        return sendToast({ message: data.message });
+      }
+    },
+  });
 
   const form = useForm({
     initialValues: {

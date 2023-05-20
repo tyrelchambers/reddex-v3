@@ -23,7 +23,20 @@ export const postRouter = createTRPCRouter({
   addToApproved: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      return await prisma.redditPost.updateMany({
+      const foundPost = await prisma.redditPost.findFirst({
+        where: {
+          id: input,
+        },
+      });
+
+      if (foundPost == null) {
+        return {
+          success: false,
+          message: "Post not found. Unable to add to approved list.",
+        };
+      }
+
+      await prisma.redditPost.updateMany({
         where: {
           id: input,
           userId: ctx.session.user.id,

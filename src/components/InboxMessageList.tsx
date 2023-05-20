@@ -31,7 +31,7 @@ const InboxMessageList = ({
         >
           <div
             className={`inbox-message-list-item rounded-2xl p-4 transition-all ${
-              m.id === selectedMessage ? "active" : ""
+              m.id === selectedMessage ? "active" : "bg-gray-50"
             }`}
           >
             <p className="text-left font-semibold text-gray-700">{m.subject}</p>

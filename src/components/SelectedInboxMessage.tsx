@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, Textarea } from "@mantine/core";
-import { fromUnixTime } from "date-fns";
+import { add, fromUnixTime } from "date-fns";
 import Link from "next/link";
 import { format } from "date-fns";
 import React, { FormEvent } from "react";
@@ -20,6 +20,9 @@ interface Props {
 
 const SelectedInboxMessage = ({ message }: Props) => {
   const messageMutation = api.inbox.send.useMutation();
+  const addContact = api.contact.save.useMutation();
+  const stories = api.post.addToApproved.useMutation();
+
   const form = useForm({
     initialValues: {
       message: "",
@@ -38,6 +41,14 @@ const SelectedInboxMessage = ({ message }: Props) => {
     });
   };
 
+  const addToContacts = (name: string) => {
+    addContact.mutate({ name });
+  };
+
+  const addStoryToReadingList = () => {
+    stories.mutate(message.id);
+  };
+
   return (
     <div className="flex-1 overflow-auto">
       <header className="w-full">
@@ -49,10 +60,18 @@ const SelectedInboxMessage = ({ message }: Props) => {
           </p>
 
           <div className=" flex gap-4">
-            <button type="button" className="button alt">
+            <button
+              type="button"
+              className="button alt"
+              onClick={() => addToContacts(message.dest)}
+            >
               Add to contacts
             </button>
-            <button type="button" className="button secondary">
+            <button
+              type="button"
+              className="button secondary"
+              onClick={addStoryToReadingList}
+            >
               Add to reading list
             </button>
           </div>

@@ -6,7 +6,7 @@ import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
-import { websiteTabItems, routes } from "~/routes";
+import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
 const Integrations = () => {
@@ -44,7 +44,7 @@ const Integrations = () => {
       <DashNav />
       <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
         <header>
-          <TabsList tabs={websiteTabItems} route={routes.WEBSITE} />
+          <TabsList tabs={websiteTabItems} />
         </header>
 
         <section className="flex w-full max-w-2xl flex-col">

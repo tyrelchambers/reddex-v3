@@ -15,7 +15,7 @@ const UserMenu = () => {
 
       <Menu.Dropdown>
         <Menu.Label>App</Menu.Label>
-        <Link href={routes.STORIES}>
+        <Link href={routes.APPROVED}>
           <Menu.Item>Dashboard</Menu.Item>
         </Link>
       </Menu.Dropdown>

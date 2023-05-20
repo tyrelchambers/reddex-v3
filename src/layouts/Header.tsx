@@ -28,7 +28,7 @@ const Header = () => {
   return (
     <header className="mx-auto flex max-w-screen-2xl items-center justify-between py-4">
       <div className="flex items-center">
-        <Image src={logo} alt="" className="w-12" />
+        <Image src={logo as string} alt="" className="w-12" />
         <nav className="ml-4">
           <ul className="flex gap-4">
             {_routes.map((r) => (

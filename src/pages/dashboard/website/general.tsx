@@ -14,7 +14,7 @@ import React, { FormEvent, useEffect, useRef } from "react";
 import TabsList from "~/components/TabsList";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
-import { routes, websiteTabItems } from "~/routes";
+import { websiteTabItems } from "~/routes";
 import { GeneralSettings } from "~/types";
 import { api } from "~/utils/api";
 import { FilePond, registerPlugin } from "react-filepond";

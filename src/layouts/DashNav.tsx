@@ -14,7 +14,7 @@ import { routes } from "~/routes";
 const _routes = [
   {
     label: "Stories",
-    slug: routes.STORIES,
+    slug: routes.APPROVED,
     icon: faLayerGroup,
   },
   {

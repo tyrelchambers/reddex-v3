@@ -146,11 +146,10 @@ const General = () => {
 
         <section className="flex w-full max-w-2xl flex-col">
           <h1 className="h1 text-2xl">General</h1>
-
           {websiteVisibility.data?.hidden ? (
-            <DisableBanner clickHandler={showWebsiteHandler} />
-          ) : (
             <EnableBanner clickHandler={hideWebsiteHandler} />
+          ) : (
+            <DisableBanner clickHandler={showWebsiteHandler} />
           )}
 
           <form className="my-10 flex flex-col gap-4" onSubmit={submitHandler}>

@@ -50,7 +50,7 @@ const Stories = () => {
       <DashNav />
       <main className="mx-auto my-6 flex max-w-screen-2xl gap-14">
         <header>
-          <TabsList tabs={nav} route={routes.STORIES} />
+          <TabsList tabs={nav} route={routes.APPROVED} />
         </header>
 
         <section className="flex-1">

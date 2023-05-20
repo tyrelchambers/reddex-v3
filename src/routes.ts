@@ -1,9 +1,12 @@
 import {
   faBrowser,
   faCog,
+  faInboxIn,
   faPalette,
   faPenNib,
   faPuzzlePiece,
+  faRectangleHistory,
+  faRectangleList,
 } from "@fortawesome/pro-light-svg-icons";
 
 export const routes = {
@@ -12,14 +15,14 @@ export const routes = {
   PRICING: "/pricing",
   LOGIN: "/login",
   AUTH_REDDIT: "/auth/callback/reddit",
-  COMPLETED: "/dashboard/completed",
-  SUBMITTED: "/dasboard/submitted",
+  COMPLETED: "/dashboard/stories/completed",
+  SUBMITTED: "/dasboard/stories/submitted",
   TAGS: "/dashboard/tags",
   CONTACTS: "/dashboard/contacts",
   INBOX: "/dashboard/inbox",
   WEBSITE: "/dashboard/website",
   SETTINGS: "/dashboard/settings",
-  STORIES: "/dashboard/stories",
+  APPROVED: "/dashboard/stories/approved",
   WEBSITE_GENERAL: "/dashboard/website/general",
 };
 export const websiteTabItems = [
@@ -47,5 +50,23 @@ export const websiteTabItems = [
     label: "Settings",
     slug: "settings",
     icon: faCog,
+  },
+];
+
+export const storiesTabs = [
+  {
+    label: "Approved",
+    slug: routes.APPROVED,
+    icon: faRectangleHistory,
+  },
+  {
+    label: "Completed",
+    slug: routes.COMPLETED,
+    icon: faRectangleList,
+  },
+  {
+    label: "Submitted",
+    slug: routes.SUBMITTED,
+    icon: faInboxIn,
   },
 ];

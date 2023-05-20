@@ -57,7 +57,10 @@ const Theme = () => {
         >
           <h1 className="h1 text-2xl">Theme</h1>
 
-          <form className="flex w-full flex-col gap-4" onSubmit={submitHandler}>
+          <form
+            className="flex w-full max-w-sm flex-col gap-4"
+            onSubmit={submitHandler}
+          >
             <NativeSelect
               label="Mode"
               data={themes}

@@ -37,6 +37,7 @@ const server = z.object({
  */
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK: z.string(),
 });
 
 /**
@@ -59,6 +60,8 @@ const processEnv = {
   BUNNY_PASSWORD: process.env.BUNNY_PASSWORD,
   STRIPE_TEST_KEY: process.env.STRIPE_TEST_KEY,
   STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
+  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK:
+    process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

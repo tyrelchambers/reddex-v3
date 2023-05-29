@@ -12,6 +12,7 @@ export const userRouter = createTRPCRouter({
       },
       include: {
         Profile: true,
+        Subscription: true,
       },
     });
   }),

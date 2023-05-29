@@ -47,7 +47,6 @@ model User {
     email            String?            @unique
     emailVerified    DateTime?
     image            String?
-    customerId       String?
     accounts         Account[]
     sessions         Session[]
     contact          Contact[]
@@ -57,6 +56,16 @@ model User {
     SubmittedStory   SubmittedStory[]
     Website          Website[]
     Profile          Profile?
+    Subscription     Subscription?
+}
+
+model Subscription {
+    id           String @id @default(cuid())
+    customerId   String
+    selectedPlan String
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @unique
 }
 
 model VerificationToken {

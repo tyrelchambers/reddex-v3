@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/pro-light-svg-icons";
 
 export const routes = {
-  HOME: "/home",
+  HOME: "/",
   ABOUT: "/about",
   PRICING: "/pricing",
   LOGIN: "/login",
@@ -24,6 +24,7 @@ export const routes = {
   SETTINGS: "/dashboard/settings",
   APPROVED: "/dashboard/stories/approved",
   WEBSITE_GENERAL: "/dashboard/website/general",
+  SUBSCRIPTION_CHECK: "/subscription-check",
 };
 export const websiteTabItems = [
   {

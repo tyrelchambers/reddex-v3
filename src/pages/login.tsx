@@ -7,14 +7,17 @@ import { ClientSafeProvider, getProviders, signIn } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "~/server/auth";
+import { routes } from "~/routes";
 
 interface Props {
   providers: ClientSafeProvider[];
 }
 
-const login = ({ providers }: Props) => {
+const Login = ({ providers }: Props) => {
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
-    await signIn(p.id);
+    await signIn(p.id, {
+      callbackUrl: routes.SUBSCRIPTION_CHECK,
+    });
   };
 
   const redditProvider = providers[0];
@@ -67,4 +70,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-export default login;
+export default Login;

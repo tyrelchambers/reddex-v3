@@ -115,6 +115,7 @@ const SubmissionForm = () => {
               />
             ) : (
               <StatusBanner
+                type="secondary"
                 title="Hide Submission Page"
                 subtitle="Hide your submission page so others can't send you stories."
                 action={
@@ -131,7 +132,11 @@ const SubmissionForm = () => {
           <h1 className="h1 text-2xl">Submission form</h1>
 
           <form onSubmit={submitHandler} className="mt-4 flex flex-col gap-4">
-            <TextInput label="Page title" {...form.getInputProps("name")} />
+            <TextInput
+              variant="filled"
+              label="Page title"
+              {...form.getInputProps("name")}
+            />
             <TextInput
               variant="filled"
               label="Page subtitle"

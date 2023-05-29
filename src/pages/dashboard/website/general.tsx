@@ -166,6 +166,7 @@ const General = () => {
             />
           ) : (
             <StatusBanner
+              type="secondary"
               title="Hide Website"
               subtitle="Hide your website so others can't see it."
               action={

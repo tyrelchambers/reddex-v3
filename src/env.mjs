@@ -27,6 +27,8 @@ const server = z.object({
   AWS_REGION: z.string(),
   AWS_SECRET_KEY: z.string(),
   BUNNY_PASSWORD: z.string(),
+  STRIPE_TEST_KEY: z.string(),
+  STRIPE_LIVE_KEY: z.string(),
 });
 
 /**
@@ -55,6 +57,8 @@ const processEnv = {
   AWS_REGION: process.env.AWS_REGION,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   BUNNY_PASSWORD: process.env.BUNNY_PASSWORD,
+  STRIPE_TEST_KEY: process.env.STRIPE_TEST_KEY,
+  STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

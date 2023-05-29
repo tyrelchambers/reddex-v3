@@ -83,3 +83,8 @@ export const removeImageSchema = z.object({
   type: z.string(),
   url: z.string(),
 });
+
+export const saveProfileSchema = z.object({
+  words_per_minute: z.number().optional(),
+  email: z.string(),
+});

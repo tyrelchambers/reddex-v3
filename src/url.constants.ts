@@ -1,3 +1,6 @@
+import { env } from "./env.mjs";
+
+export const apiBaseUrl = env.NEXT_URL;
 export const PULL_ZONE = `https://reddex.b-cdn.net`;
 export const UPLOAD_BASE_URL = `https://storage.bunnycdn.com/reddex-images`;
 export const THUMBNAIL_UPLOAD_URL = (fileName: string) =>

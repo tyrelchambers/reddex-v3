@@ -6,6 +6,7 @@ import { contactRouter } from "./routers/contact";
 import { tagRouter } from "./routers/tag";
 import { inboxRouter } from "./routers/inbox";
 import { websiteRouter } from "./routers/website";
+import { billingRouter } from "./routers/billing";
 /**
  * This is the primary router for your server.
  *
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   tag: tagRouter,
   inbox: inboxRouter,
   website: websiteRouter,
+  billing: billingRouter,
 });
 
 // export type definition of API

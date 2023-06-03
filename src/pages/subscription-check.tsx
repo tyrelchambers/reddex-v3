@@ -7,6 +7,12 @@ import { api } from "~/utils/api";
 const SubscriptionCheck = () => {
   const router = useRouter();
   const userQuery = api.user.me.useQuery();
+  const billingPortal = api.billing.createPortal.useQuery(
+    userQuery.data?.Subscription?.customerId,
+    {
+      enabled: !!userQuery.data?.Subscription?.customerId || false,
+    }
+  );
 
   useEffect(() => {
     if (userQuery.data?.Subscription?.selectedPlan) {
@@ -14,7 +20,7 @@ const SubscriptionCheck = () => {
     } else {
       router.push(env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK);
     }
-  }, [userQuery.data]);
+  }, [userQuery.data, billingPortal.data]);
 
   return null;
 };

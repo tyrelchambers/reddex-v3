@@ -1,41 +1,9 @@
 import { clsx } from "@mantine/core";
+import Link from "next/link";
 import React from "react";
+import PricingFrequencySelect from "~/components/PricingFrequencySelect";
+import { plans } from "~/constants";
 import Header from "~/layouts/Header";
-
-const plans = [
-  {
-    name: "Pro",
-    desc: "You want organization with a custom website and to receive submissions",
-    price: 15,
-    yearlyPrice: 165,
-    isMostPop: true,
-    features: [
-      "Customize your reading list",
-      "Unlimited reading history",
-      "Submission form to receive stories",
-      "Save personalized messages",
-      "Searchable Reddit-connected inbox",
-      "Customizable personal website",
-      "Custom website",
-      "Contact list",
-    ],
-  },
-  {
-    name: "Basic",
-    desc: "You want organization from stories to contacts, but don't need a custom website",
-    price: 10,
-    yearlyPrice: 110,
-    isMostPop: false,
-    features: [
-      "Customize your reading list",
-      "Unlimited reading history",
-      "Contact list",
-      "Save personalized messages",
-      "Searchable Reddit-connected inbox",
-      "Customizable personal website",
-    ],
-  },
-];
 
 const Pricing = () => {
   const [frequency, setFrequency] = React.useState<"yearly" | "monthly">(
@@ -67,34 +35,10 @@ const Pricing = () => {
               </p>
             </div>
           </div>
-          <div className="relative mt-4 flex justify-center">
-            <div className="rounded-full bg-white p-1">
-              <button
-                className={clsx(
-                  "rounded-full px-4 py-2 text-sm font-semibold duration-150",
-                  {
-                    "bg-indigo-500 text-white": frequency === "yearly",
-                  }
-                )}
-                type="button"
-                onClick={() => setFrequency("yearly")}
-              >
-                Yearly
-              </button>
-              <button
-                onClick={() => setFrequency("monthly")}
-                className={clsx(
-                  "rounded-full px-4 py-2 text-sm font-semibold duration-150",
-                  {
-                    "bg-indigo-500 text-white": frequency === "monthly",
-                  }
-                )}
-                type="button"
-              >
-                Monthly
-              </button>
-            </div>
-          </div>
+          <PricingFrequencySelect
+            frequency={frequency}
+            setFrequency={setFrequency}
+          />
           <div className="mt-16 justify-center sm:flex">
             {plans.map((item, idx) => (
               <div
@@ -108,15 +52,25 @@ const Pricing = () => {
                     {item.name}
                   </span>
                   <div className="text-3xl font-semibold text-gray-800">
-                    ${frequency === "yearly" ? item.yearlyPrice : item.price}{" "}
+                    $
+                    {frequency === "yearly"
+                      ? item.yearly.price
+                      : item.monthly.price}{" "}
                     <span className="text-xl font-normal text-gray-600">
                       /mo
                     </span>
                   </div>
                   <p>{item.desc}</p>
-                  <button className="w-full rounded-lg bg-indigo-500 px-3 py-3 text-sm font-semibold text-white duration-150 hover:bg-indigo-500 active:bg-indigo-700">
+                  <Link
+                    href={`/login?plan=${
+                      frequency === "yearly"
+                        ? item.yearly.productId
+                        : item.monthly.productId
+                    }`}
+                    className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-3 text-sm font-semibold text-white duration-150 hover:bg-indigo-500 active:bg-indigo-700"
+                  >
                     Get Started
-                  </button>
+                  </Link>
                 </div>
                 <ul className="space-y-3 p-4 py-8 md:p-8">
                   <li className="pb-2 font-medium text-gray-800">

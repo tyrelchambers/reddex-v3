@@ -155,7 +155,7 @@ const Settings = () => {
 
             <div className="mt-4 flex flex-col gap-2 rounded-xl border-[1px] border-gray-300 bg-gray-50 p-4">
               <header className="flex justify-between">
-                <p>
+                <p className="text-sm">
                   <span className="font-thin text-gray-500">Your plan:</span>{" "}
                   <span className="font-semibold">
                     {subscription?.plan.product.name}
@@ -179,20 +179,24 @@ const Settings = () => {
                 {invoices && (
                   <button
                     type="button"
-                    className="rounded-lg border-[1px] border-gray-300  px-6 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    className="rounded-lg border-[1px] border-gray-300 px-6  py-2 text-sm  text-gray-700 hover:bg-gray-50"
                     onClick={open}
                   >
-                    View invoices <FontAwesomeIcon icon={faReceipt} />
+                    View invoices{" "}
+                    <FontAwesomeIcon icon={faReceipt} className="ml-2" />
                   </button>
                 )}
                 {updateLink.data && (
                   <Link
                     href={updateLink.data}
-                    className="flex-1 rounded-lg border-[1px] border-gray-300 bg-white px-6 py-2 text-center text-sm text-gray-700 hover:bg-gray-50"
+                    className="flex-1 rounded-lg border-[1px] border-gray-300 bg-white px-6 py-2 text-center text-sm  text-gray-700 hover:bg-gray-50"
                     target="_blank"
                   >
                     Manage subscription{" "}
-                    <FontAwesomeIcon icon={faSquareArrowUpRight} />
+                    <FontAwesomeIcon
+                      icon={faSquareArrowUpRight}
+                      className="ml-2"
+                    />
                   </Link>
                 )}
               </footer>

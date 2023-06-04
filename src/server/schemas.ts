@@ -88,3 +88,19 @@ export const saveProfileSchema = z.object({
   words_per_minute: z.number().optional(),
   email: z.string(),
 });
+
+export const updateBillingSchema = z.object({
+  customerId: z.string(),
+  subscriptionId: z.string().optional(),
+});
+
+export const createSubscriptionSchema = z.object({
+  customerId: z.string(),
+  plan: z.string(),
+});
+
+export const createCheckoutSchema = z.object({
+  customerId: z.string(),
+  customerEmail: z.string(),
+  plan: z.string(),
+});

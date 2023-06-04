@@ -25,6 +25,7 @@ export const routes = {
   APPROVED: "/dashboard/stories/approved",
   WEBSITE_GENERAL: "/dashboard/website/general",
   SUBSCRIPTION_CHECK: "/subscription-check",
+  ACCOUNT_CHECK: "/account-setup",
 };
 export const websiteTabItems = [
   {

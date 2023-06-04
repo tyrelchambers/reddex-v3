@@ -10,10 +10,11 @@ import { authOptions } from "~/server/auth";
 import { routes } from "~/routes";
 import { useRouter } from "next/router";
 import { plans } from "~/constants";
-import { Divider, List, clsx } from "@mantine/core";
+import { Divider, List } from "@mantine/core";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import PricingChip from "~/components/PricingChip";
 import PricingFrequencySelect from "~/components/PricingFrequencySelect";
+import { useLocalStorage } from "@mantine/hooks";
 
 interface Props {
   providers: ClientSafeProvider[];
@@ -26,19 +27,19 @@ interface NoSelectedPlanProps {
 }
 
 const Login = ({ providers }: Props) => {
-  const [selectedPlan, setSelectedPlan] = React.useState<string | undefined>(
-    undefined
-  );
   const [selectedFrequency, setSelectedFrequency] = React.useState<
     "yearly" | "monthly"
   >("yearly");
+  const [selectedPlan, setSelectedPlan] = useLocalStorage({
+    key: "selected-plan",
+  });
 
   const router = useRouter();
   const plan = (router.query.plan as string | undefined) || selectedPlan;
 
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
     await signIn(p.id, {
-      callbackUrl: routes.SUBSCRIPTION_CHECK,
+      callbackUrl: routes.ACCOUNT_CHECK,
     });
   };
 
@@ -46,10 +47,6 @@ const Login = ({ providers }: Props) => {
 
   const setSelectedPlanHandler = (plan: string) => {
     setSelectedPlan(plan);
-    router.push({
-      pathname: routes.LOGIN,
-      query: { plan },
-    });
   };
 
   return (
@@ -62,7 +59,7 @@ const Login = ({ providers }: Props) => {
 
         <section className="mx-auto my-20 flex max-w-screen-lg gap-4">
           <div className="flex w-1/2 flex-col">
-            <h1 className="h1 text-2xl">Login to Reddex</h1>
+            <h1 className="text-2xl">Login to Reddex</h1>
             <p className=" text-gray-500">
               Login with Reddit to create an account if you don&apos;t have one,
               or login to an existing account.

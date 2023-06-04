@@ -1,4 +1,4 @@
-import { clsx } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import Link from "next/link";
 import React from "react";
 import PricingFrequencySelect from "~/components/PricingFrequencySelect";
@@ -9,6 +9,9 @@ const Pricing = () => {
   const [frequency, setFrequency] = React.useState<"yearly" | "monthly">(
     "yearly"
   );
+  const [, setValue] = useLocalStorage({
+    key: "selected-plan",
+  });
 
   return (
     <>
@@ -35,10 +38,12 @@ const Pricing = () => {
               </p>
             </div>
           </div>
-          <PricingFrequencySelect
-            frequency={frequency}
-            setFrequency={setFrequency}
-          />
+          <div className="mt-6">
+            <PricingFrequencySelect
+              frequency={frequency}
+              setFrequency={setFrequency}
+            />
+          </div>
           <div className="mt-16 justify-center sm:flex">
             {plans.map((item, idx) => (
               <div
@@ -62,12 +67,15 @@ const Pricing = () => {
                   </div>
                   <p>{item.desc}</p>
                   <Link
-                    href={`/login?plan=${
-                      frequency === "yearly"
-                        ? item.yearly.productId
-                        : item.monthly.productId
-                    }`}
+                    href="/login"
                     className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-3 text-sm font-semibold text-white duration-150 hover:bg-indigo-500 active:bg-indigo-700"
+                    onClick={() => {
+                      setValue(
+                        frequency === "yearly"
+                          ? item.yearly.productId
+                          : item.monthly.productId
+                      );
+                    }}
                   >
                     Get Started
                   </Link>

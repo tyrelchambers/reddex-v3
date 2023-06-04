@@ -1,22 +1,75 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { stripeClient } from "~/utils/stripe";
-import { apiBaseUrl } from "~/url.constants";
+import { updateBillingSchema } from "~/server/schemas";
+import { prisma } from "~/server/db";
 
 export const billingRouter = createTRPCRouter({
-  createPortal: protectedProcedure
-    .input(z.string().optional())
-    .query(async ({ input }) => {
-      console.log("#_#_#_#_#_# ", input);
+  createCustomer: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      try {
+        const existingCustomer = await stripeClient.customers
+          .search({
+            query: `email:\'${input}\'`,
+            limit: 1,
+          })
+          .then((res) => res.data[0])
+          .catch(() => null);
 
-      if (!input) throw new Error("No customer ID provided");
+        if (existingCustomer) {
+          return existingCustomer.id;
+        }
 
-      const customerId = input;
-      const session = await stripeClient.billingPortal.sessions.create({
-        customer: customerId,
-        return_url: `${apiBaseUrl}/dashboard/settings/`,
-      });
+        const customer = await stripeClient.customers.create({
+          email: input,
+        });
 
-      return session.url;
+        return customer.id;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     }),
+  updateBilling: protectedProcedure
+    .input(updateBillingSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          Subscription: {
+            update: {
+              customerId: input.customerId,
+              subscriptionId: input.subscriptionId,
+            },
+          },
+        },
+      });
+    }),
+  info: protectedProcedure.mutation(async ({ ctx }) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      include: {
+        Subscription: true,
+      },
+    });
+    const customer =
+      user?.Subscription?.customerId &&
+      (await stripeClient.customers.retrieve(user?.Subscription?.customerId));
+
+    const subscription =
+      user?.Subscription?.subscriptionId &&
+      (await stripeClient.subscriptions.retrieve(
+        user?.Subscription?.subscriptionId
+      ));
+
+    return {
+      customer,
+      subscription,
+    };
+  }),
 });

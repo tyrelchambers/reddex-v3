@@ -61,8 +61,6 @@ const AccountSetup = () => {
       customerId: customerId,
     });
 
-    console.log(link);
-
     if (link) {
       window.open(link, "_self", "rel=noopener,noreferrer");
     }
@@ -88,8 +86,12 @@ const AccountSetup = () => {
           type="email"
           {...form.getInputProps("email")}
         />
-        <button type="submit" className="button main mt-4 w-full">
-          Go to payments
+        <button
+          type="submit"
+          className="button main mt-4 w-full"
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "Continue"}
         </button>
       </form>
     </main>

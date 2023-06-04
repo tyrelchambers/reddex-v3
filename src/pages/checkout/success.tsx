@@ -5,13 +5,13 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge, Divider } from "@mantine/core";
-import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { routes } from "~/routes";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/formatCurrency";
+import { formatStripeTime } from "~/utils/formatStripeTime";
 
 const Success = () => {
   const router = useRouter();
@@ -53,10 +53,7 @@ const Success = () => {
 
         <Row title="Customer ID" body={details?.customer as string} />
         <Row title="Invoice #" body={details.invoice?.id} />
-        <Row
-          title="Completed on"
-          body={format(new Date(details.created * 1000), "MMMM do, yyyy")}
-        />
+        <Row title="Completed on" body={formatStripeTime(details.created)} />
 
         <footer className="mt-6">
           {details.invoice.invoice_pdf && (

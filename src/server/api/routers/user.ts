@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { stripeClient } from "~/utils/stripe";
 import { z } from "zod";
 import { saveProfileSchema } from "~/server/schemas";
+import Stripe from "stripe";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -18,14 +19,26 @@ export const userRouter = createTRPCRouter({
   }),
   subscription: protectedProcedure
     .input(z.string().optional())
-    .query(async ({ input }) => {
-      console.log(input);
-
-      if (!input) {
+    .query(async ({ ctx, input }) => {
+      const userSubscription = await prisma.subscription.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!input || !userSubscription?.subscriptionId) {
         return null;
       }
-      const subscription = await stripeClient.customers.retrieve(input);
-      console.log(subscription);
+
+      const subscription = await stripeClient.subscriptions.retrieve(
+        userSubscription.subscriptionId,
+        {
+          expand: ["plan", "plan.product"],
+        }
+      );
+
+      return subscription as Stripe.Response<Stripe.Subscription> & {
+        plan: Stripe.Plan & { product: Stripe.Product };
+      };
     }),
   saveProfile: protectedProcedure
     .input(saveProfileSchema)

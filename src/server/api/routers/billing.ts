@@ -3,6 +3,15 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { stripeClient } from "~/utils/stripe";
 import { subscriptionSchema } from "~/server/schemas";
 import { prisma } from "~/server/db";
+import Stripe from "stripe";
+
+interface BillingInfo {
+  customer: Stripe.Customer;
+  subscription: Stripe.Subscription & {
+    plan: Stripe.Plan & { product: Stripe.Product };
+  };
+  invoices: Stripe.ApiList<Stripe.Invoice>;
+}
 
 export const billingRouter = createTRPCRouter({
   createCustomer: protectedProcedure
@@ -53,7 +62,7 @@ export const billingRouter = createTRPCRouter({
         },
       });
     }),
-  info: protectedProcedure.mutation(async ({ ctx }) => {
+  info: protectedProcedure.query(async ({ ctx }) => {
     const user = await prisma.user.findUnique({
       where: {
         id: ctx.session.user.id,
@@ -62,19 +71,51 @@ export const billingRouter = createTRPCRouter({
         Subscription: true,
       },
     });
-    const customer =
-      user?.Subscription?.customerId &&
-      (await stripeClient.customers.retrieve(user?.Subscription?.customerId));
 
-    const subscription =
-      user?.Subscription?.subscriptionId &&
-      (await stripeClient.subscriptions.retrieve(
-        user?.Subscription?.subscriptionId
-      ));
+    if (!user?.Subscription) {
+      return;
+    }
+
+    const customer = await stripeClient.customers.retrieve(
+      user.Subscription.customerId
+    );
+
+    const subscription = (await stripeClient.subscriptions.retrieve(
+      user.Subscription.subscriptionId || "",
+      {
+        expand: ["plan", "plan.product"],
+      }
+    )) as Stripe.Response<
+      Stripe.Subscription & {
+        plan: Stripe.Plan & { product: Stripe.Product };
+      }
+    >;
+
+    const invoices = await stripeClient.invoices.list({
+      customer: customer.id,
+    });
 
     return {
       customer,
       subscription,
-    };
+      invoices,
+    } as BillingInfo;
+  }),
+  updateLink: protectedProcedure.query(async ({ ctx }) => {
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+
+    if (!subscription) {
+      return;
+    }
+
+    const session = await stripeClient.billingPortal.sessions.create({
+      customer: subscription.customerId,
+    });
+
+    return session.url;
   }),
 });

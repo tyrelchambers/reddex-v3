@@ -10,9 +10,8 @@ const AccountSetup = () => {
   const userQuery = api.user.me.useQuery();
   const updateUser = api.user.saveProfile.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
-  const updateBilling = api.billing.updateBilling.useMutation();
   const paymentLink = api.stripe.createCheckout.useMutation();
-
+  const createSubscription = api.billing.createSubscription.useMutation();
   const [selectedPlan] = useLocalStorage({
     key: "selected-plan",
   });
@@ -30,9 +29,9 @@ const AccountSetup = () => {
   });
 
   React.useEffect(() => {
-    if (user?.email && user.Subscription?.customerId) {
-      router.push("/dashboard");
-    }
+    // if (user?.email && user.Subscription?.customerId) {
+    //   router.push("/dashboard");
+    // }
 
     if (!userQuery.isLoading && !userQuery.data) {
       router.push("/");
@@ -49,11 +48,15 @@ const AccountSetup = () => {
       return setLoading(false);
     }
 
-    updateUser.mutateAsync({
+    await updateUser.mutateAsync({
       email: form.values.email,
     });
 
     const customerId = await createCustomer.mutateAsync(form.values.email);
+
+    await createSubscription.mutateAsync({
+      customerId,
+    });
 
     const link = await paymentLink.mutateAsync({
       customerEmail: form.values.email,

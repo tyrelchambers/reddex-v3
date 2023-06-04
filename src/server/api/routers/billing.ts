@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { stripeClient } from "~/utils/stripe";
-import { updateBillingSchema } from "~/server/schemas";
+import { subscriptionSchema } from "~/server/schemas";
 import { prisma } from "~/server/db";
 
 export const billingRouter = createTRPCRouter({
@@ -31,20 +31,25 @@ export const billingRouter = createTRPCRouter({
         throw error;
       }
     }),
-  updateBilling: protectedProcedure
-    .input(updateBillingSchema)
+  createSubscription: protectedProcedure
+    .input(subscriptionSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.user.update({
+      const subscription = await prisma.subscription.findUnique({
         where: {
-          id: ctx.session.user.id,
+          userId: ctx.session.user.id,
         },
+      });
+
+      if (subscription) {
+        return;
+      }
+
+      return await prisma.subscription.create({
         data: {
-          Subscription: {
-            update: {
-              customerId: input.customerId,
-              subscriptionId: input.subscriptionId,
-            },
-          },
+          customerId: input.customerId,
+          subscriptionId: input.subscriptionId,
+          plan: input.plan,
+          userId: ctx.session.user.id,
         },
       });
     }),

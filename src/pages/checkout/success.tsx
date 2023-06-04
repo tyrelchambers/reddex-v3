@@ -52,20 +52,23 @@ const Success = () => {
         <Divider />
 
         <Row title="Customer ID" body={details?.customer as string} />
-        <Row title="Invoice #" body={details.invoice as string} />
+        <Row title="Invoice #" body={details.invoice?.id} />
         <Row
           title="Completed on"
           body={format(new Date(details.created * 1000), "MMMM do, yyyy")}
         />
 
         <footer className="mt-6">
-          <a
-            href="#"
-            className="flex w-full items-center justify-center rounded-full bg-gray-200 p-4 text-gray-500 hover:bg-gray-300"
-          >
-            <FontAwesomeIcon icon={faDownload} className="mr-3" />
-            <span className="text-sm">Download receipt</span>
-          </a>
+          {details.invoice.invoice_pdf && (
+            <a
+              href={details.invoice?.invoice_pdf}
+              className="flex w-full items-center justify-center rounded-full bg-gray-200 p-4 text-gray-500 hover:bg-gray-300"
+              download
+            >
+              <FontAwesomeIcon icon={faDownload} className="mr-3" />
+              <span className="text-sm">Download receipt</span>
+            </a>
+          )}
 
           <Link
             href={routes.HOME}
@@ -87,8 +90,8 @@ interface RowProps {
 const Row = ({ title, body }: RowProps) => (
   <div className="flex">
     <p className="text-sm font-thin text-gray-500">{title}</p>
-    {body instanceof React.Component ? (
-      body
+    {typeof body !== "string" ? (
+      <div className="flex flex-1 justify-end">{body}</div>
     ) : (
       <p className="flex-1 text-right text-sm text-gray-700">{body || ""}</p>
     )}

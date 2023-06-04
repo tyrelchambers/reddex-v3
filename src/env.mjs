@@ -30,6 +30,7 @@ const server = z.object({
   STRIPE_TEST_KEY: z.string(),
   STRIPE_LIVE_KEY: z.string(),
   NEXT_URL: z.string().url(),
+  STRIPE_WEBHOOK_SECRET: z.string(),
 });
 
 /**
@@ -61,6 +62,7 @@ const processEnv = {
   BUNNY_PASSWORD: process.env.BUNNY_PASSWORD,
   STRIPE_TEST_KEY: process.env.STRIPE_TEST_KEY,
   STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK:
     process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK,
   NEXT_URL: process.env.NEXT_URL,

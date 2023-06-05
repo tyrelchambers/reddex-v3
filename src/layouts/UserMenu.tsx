@@ -31,7 +31,7 @@ const UserMenu = () => {
           <Menu.Item>Dashboard</Menu.Item>
         </Link>
         <Menu.Divider />
-        <button type="button" onClick={logoutHandler}>
+        <button type="button" onClick={logoutHandler} className="w-full">
           <Menu.Item>Logout</Menu.Item>
         </button>
       </Menu.Dropdown>

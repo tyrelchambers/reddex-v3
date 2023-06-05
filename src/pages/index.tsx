@@ -129,23 +129,6 @@ const Hero = () => (
         no-time at all. Save hours searching for stories and requesting
         permission. Reddex helps you do all that in a matter of minutes.
       </p>
-      <div className="flex h-10 gap-8">
-        <div className="flex h-full flex-1">
-          <span className="flex h-10 w-10 items-center justify-center rounded-bl-md rounded-tl-md bg-gray-200 font-black uppercase text-gray-600">
-            r/
-          </span>
-          <TextInput
-            className="flex-1"
-            classNames={{
-              input: "h-10 rounded-none rounded-tr-md rounded-br-md",
-            }}
-            placeholder="subreddit"
-          />
-        </div>
-        <Link href={routes.LOGIN} className="button main">
-          Find stories <FontAwesomeIcon icon={faArrowRight} className="ml-4" />
-        </Link>
-      </div>
     </div>
     <div className="w-1/2">
       <Image src={computerImg} alt="" className="w-full max-w-xl rounded-xl" />

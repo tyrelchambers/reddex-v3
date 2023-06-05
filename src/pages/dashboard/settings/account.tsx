@@ -12,6 +12,7 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/formatCurrency";
+import { formatStripeTime } from "~/utils/formatStripeTime";
 
 const Settings = () => {
   const subscriptionQuery = api.billing.info.useQuery();
@@ -40,11 +41,10 @@ const Settings = () => {
           <div className="mt-4 flex flex-col gap-2 rounded-xl border-[1px] border-gray-300 bg-gray-50 p-4">
             <header className="flex justify-between">
               <p className="text-sm">
-                <span className="font-thin text-gray-500">Your plan:</span>{" "}
-                <span className="font-semibold">
-                  {subscription?.plan.product.name}
-                </span>
+                <span className="font-semibold">Your plan:</span>{" "}
+                {subscription?.plan.product.name}
               </p>
+
               <p className="font-semibold text-gray-800">
                 {formatCurrency(
                   subscription?.plan.amount,
@@ -55,6 +55,16 @@ const Settings = () => {
                 </span>
               </p>
             </header>
+            <p className="text-sm text-neutral-500">
+              <span className="font-semibold text-neutral-800 ">
+                Next invoice:
+              </span>{" "}
+              {formatCurrency(
+                subscription?.plan.amount,
+                subscription?.plan.currency
+              )}{" "}
+              on {formatStripeTime(subscription.current_period_end)}
+            </p>
             <Badge variant="dot" className="w-fit" color="green">
               {subscription?.status === "active" ? "active" : "inactive"}
             </Badge>

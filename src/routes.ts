@@ -7,10 +7,12 @@ import {
   faPuzzlePiece,
   faRectangleHistory,
   faRectangleList,
+  faUser,
 } from "@fortawesome/pro-light-svg-icons";
+import { Tab } from "./types";
 
 export const routes = {
-  HOME: "/home",
+  HOME: "/",
   ABOUT: "/about",
   PRICING: "/pricing",
   LOGIN: "/login",
@@ -24,6 +26,10 @@ export const routes = {
   SETTINGS: "/dashboard/settings",
   APPROVED: "/dashboard/stories/approved",
   WEBSITE_GENERAL: "/dashboard/website/general",
+  SUBSCRIPTION_CHECK: "/subscription-check",
+  ACCOUNT_CHECK: "/account-setup",
+  SETTINGS_PROFILE: "/dashboard/settings/profile",
+  SETTINGS_ACCOUNT: "/dashboard/settings/account",
 };
 export const websiteTabItems = [
   {
@@ -53,7 +59,7 @@ export const websiteTabItems = [
   },
 ];
 
-export const storiesTabs = [
+export const storiesTabs: Tab[] = [
   {
     label: "Approved",
     slug: routes.APPROVED,
@@ -68,5 +74,18 @@ export const storiesTabs = [
     label: "Submitted",
     slug: routes.SUBMITTED,
     icon: faInboxIn,
+  },
+];
+
+export const settingsTabs: Tab[] = [
+  {
+    label: "Profile",
+    slug: routes.SETTINGS_PROFILE,
+    icon: faUser,
+  },
+  {
+    label: "Account",
+    slug: routes.SETTINGS_ACCOUNT,
+    icon: faCog,
   },
 ];

@@ -5,7 +5,8 @@ import TabsList from "~/components/TabsList";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
-import { routes, websiteTabItems } from "~/routes";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
 const themes = ["light", "dark"];
@@ -43,24 +44,15 @@ const Theme = () => {
   };
 
   return (
-    <>
-      <Header />
-      <DashNav />
-      <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
-        <header>
-          <TabsList tabs={websiteTabItems} />
-        </header>
-
+    <WrapperWithNav tabs={websiteTabItems}>
+      <main className="my-6 flex w-full max-w-screen-2xl gap-10">
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website theme settings..."
         >
           <h1 className="h1 text-2xl">Theme</h1>
 
-          <form
-            className="flex w-full max-w-sm flex-col gap-4"
-            onSubmit={submitHandler}
-          >
+          <form className="form mt-4 max-w-sm " onSubmit={submitHandler}>
             <NativeSelect
               label="Mode"
               data={themes}
@@ -96,7 +88,7 @@ const Theme = () => {
           </form>
         </BodyWithLoader>
       </main>
-    </>
+    </WrapperWithNav>
   );
 };
 

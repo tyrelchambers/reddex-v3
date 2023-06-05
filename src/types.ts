@@ -5,6 +5,11 @@ export interface RedditPostWithText extends RedditPost {
   selftext: string;
 }
 
+export interface Tab {
+  label: string;
+  slug: string;
+}
+
 export interface PostFromReddit {
   author: string;
   created: number;

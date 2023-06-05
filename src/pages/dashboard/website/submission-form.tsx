@@ -6,6 +6,7 @@ import TabsList from "~/components/TabsList";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
@@ -87,51 +88,49 @@ const SubmissionForm = () => {
   };
 
   return (
-    <>
-      <Header />
-      <DashNav />
-      <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
-        <header>
-          <TabsList tabs={websiteTabItems} />
-        </header>
-
+    <WrapperWithNav tabs={websiteTabItems}>
+      <main className=" my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading submission form settings..."
         >
-          <div className="mb-10">
-            {submissionFormVisibility.data?.hidden ? (
-              <StatusBanner
-                title="Enable Submission Page"
-                subtitle="Enable this submission form to allow visitors to email you their own stories."
-                action={
-                  <button
-                    className="button secondary whitespace-nowrap"
-                    onClick={visibilityHandler}
-                  >
-                    Enable submission form
-                  </button>
-                }
-              />
-            ) : (
-              <StatusBanner
-                title="Hide Submission Page"
-                subtitle="Hide your submission page so others can't send you stories."
-                action={
-                  <button
-                    className="button secondary"
-                    onClick={visibilityHandler}
-                  >
-                    Hide
-                  </button>
-                }
-              />
-            )}
-          </div>
           <h1 className="h1 text-2xl">Submission form</h1>
 
-          <form onSubmit={submitHandler} className="mt-4 flex flex-col gap-4">
-            <TextInput label="Page title" {...form.getInputProps("name")} />
+          {submissionFormVisibility.data?.hidden ? (
+            <StatusBanner
+              title="Enable Submission Page"
+              subtitle="Enable this submission form to allow visitors to email you their own stories."
+              action={
+                <button
+                  className="button secondary whitespace-nowrap"
+                  onClick={visibilityHandler}
+                >
+                  Enable submission form
+                </button>
+              }
+            />
+          ) : (
+            <StatusBanner
+              type="secondary"
+              title="Hide Submission Page"
+              subtitle="Hide your submission page so others can't send you stories."
+              action={
+                <button
+                  className="button secondary"
+                  onClick={visibilityHandler}
+                >
+                  Hide
+                </button>
+              }
+            />
+          )}
+
+          <form onSubmit={submitHandler} className="form mt-4">
+            <TextInput
+              variant="filled"
+              label="Page title"
+              {...form.getInputProps("name")}
+            />
             <TextInput
               variant="filled"
               label="Page subtitle"
@@ -193,7 +192,7 @@ const SubmissionForm = () => {
           </form>
         </BodyWithLoader>
       </main>
-    </>
+    </WrapperWithNav>
   );
 };
 

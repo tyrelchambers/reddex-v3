@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextInput } from "@mantine/core";
 import React, { useState } from "react";
 import StoryListItem from "~/components/StoryListItem";
-import StoriesWrapper from "~/layouts/StoriesWrapper";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { storiesTabs } from "~/routes";
 import { api } from "~/utils/api";
 
 const Approved = () => {
@@ -13,7 +14,7 @@ const Approved = () => {
   const regex = new RegExp(query, "gi");
 
   return (
-    <StoriesWrapper>
+    <WrapperWithNav tabs={storiesTabs}>
       <header className="flex flex-1 justify-between">
         <div className="flex flex-col">
           <h1 className="h1 text-2xl">Approved list</h1>
@@ -45,7 +46,7 @@ const Approved = () => {
             <StoryListItem key={item.id} story={item} list="approved" />
           )) || null}
       </div>
-    </StoriesWrapper>
+    </WrapperWithNav>
   );
 };
 

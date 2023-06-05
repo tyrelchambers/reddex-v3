@@ -27,6 +27,10 @@ const server = z.object({
   AWS_REGION: z.string(),
   AWS_SECRET_KEY: z.string(),
   BUNNY_PASSWORD: z.string(),
+  STRIPE_TEST_KEY: z.string(),
+  STRIPE_LIVE_KEY: z.string(),
+  NEXT_URL: z.string().url(),
+  STRIPE_WEBHOOK_SECRET: z.string(),
 });
 
 /**
@@ -35,6 +39,7 @@ const server = z.object({
  */
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK: z.string(),
 });
 
 /**
@@ -55,6 +60,12 @@ const processEnv = {
   AWS_REGION: process.env.AWS_REGION,
   AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   BUNNY_PASSWORD: process.env.BUNNY_PASSWORD,
+  STRIPE_TEST_KEY: process.env.STRIPE_TEST_KEY,
+  STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK:
+    process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK,
+  NEXT_URL: process.env.NEXT_URL,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

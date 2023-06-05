@@ -56,4 +56,8 @@
   .sublabel {
     @apply mb-2 text-xs text-gray-500;
   }
+
+  .form {
+    @apply flex flex-col gap-6;
+  }
 }

@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser(message) {
       const { user } = message;
+
       await prisma.profile.create({
         data: {
           userId: user.id,

@@ -1,14 +1,14 @@
 import React from "react";
 
 interface Props {
-  type?: "show" | "hide";
+  type?: "primary" | "secondary";
   title: string;
   subtitle: string;
   action: React.ReactNode;
 }
 
-const StatusBanner = ({ type = "show", title, subtitle, action }: Props) => {
-  if (type === "show") {
+const StatusBanner = ({ type = "primary", title, subtitle, action }: Props) => {
+  if (type === "primary") {
     return (
       <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-indigo-500 p-4 shadow-lg">
         <div className="flex flex-col">

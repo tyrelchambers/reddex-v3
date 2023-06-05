@@ -1,21 +1,22 @@
 import React from "react";
 import TabsList from "~/components/TabsList";
-import { storiesTabs } from "~/routes";
 import Header from "./Header";
 import DashNav from "./DashNav";
+import { Tab } from "~/types";
 
 interface Props {
   children: React.ReactNode[] | React.ReactNode;
+  tabs: Tab[];
 }
 
-const StoriesWrapper = ({ children }: Props) => {
+const WrapperWithNav = ({ children, tabs }: Props) => {
   return (
     <>
       <Header />
       <DashNav />
       <main className="mx-auto my-6 flex w-full max-w-screen-2xl gap-14">
-        <header>
-          <TabsList tabs={storiesTabs} />
+        <header className="w-48">
+          <TabsList tabs={tabs} />
         </header>
         {children}
       </main>
@@ -23,4 +24,4 @@ const StoriesWrapper = ({ children }: Props) => {
   );
 };
 
-export default StoriesWrapper;
+export default WrapperWithNav;

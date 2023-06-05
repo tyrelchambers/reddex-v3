@@ -22,8 +22,14 @@ const Settings = () => {
   const invoices = subscriptionQuery.data?.invoices;
   const [opened, { open, close }] = useDisclosure(false);
 
+  const isLoading = subscriptionQuery.isLoading;
+
   return (
-    <WrapperWithNav tabs={settingsTabs}>
+    <WrapperWithNav
+      loading={isLoading}
+      loadingMessage="Loading account data..."
+      tabs={settingsTabs}
+    >
       <section className="flex max-w-screen-sm flex-col gap-8">
         <h1 className="h1 text-3xl">Account</h1>
 
@@ -55,16 +61,18 @@ const Settings = () => {
                 </span>
               </p>
             </header>
-            <p className="text-sm text-neutral-500">
-              <span className="font-semibold text-neutral-800 ">
-                Next invoice:
-              </span>{" "}
-              {formatCurrency(
-                subscription?.plan.amount,
-                subscription?.plan.currency
-              )}{" "}
-              on {formatStripeTime(subscription.current_period_end)}
-            </p>
+            {subscription?.current_period_end && (
+              <p className="text-sm text-neutral-500">
+                <span className="font-semibold text-neutral-800 ">
+                  Next invoice:
+                </span>{" "}
+                {formatCurrency(
+                  subscription?.plan.amount,
+                  subscription?.plan.currency
+                )}{" "}
+                on {formatStripeTime(subscription.current_period_end)}
+              </p>
+            )}
             <Badge variant="dot" className="w-fit" color="green">
               {subscription?.status === "active" ? "active" : "inactive"}
             </Badge>

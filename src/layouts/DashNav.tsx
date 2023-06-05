@@ -40,7 +40,7 @@ const _routes = [
   },
   {
     label: "Settings",
-    slug: routes.SETTINGS,
+    slug: routes.SETTINGS_PROFILE,
     icon: faCog,
   },
 ];

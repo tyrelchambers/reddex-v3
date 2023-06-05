@@ -27,6 +27,7 @@ import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FileUpload from "~/components/FileUpload";
 import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -138,14 +139,8 @@ const General = () => {
   };
 
   return (
-    <>
-      <Header />
-      <DashNav />
-      <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
-        <header>
-          <TabsList tabs={websiteTabItems} />
-        </header>
-
+    <WrapperWithNav tabs={websiteTabItems}>
+      <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website settings..."
@@ -179,7 +174,7 @@ const General = () => {
               }
             />
           )}
-          <form className="my-10 flex flex-col gap-4" onSubmit={submitHandler}>
+          <form className="form my-10" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
               <p className="label">Subdomain</p>
               <div className="flex h-fit items-center rounded-lg bg-gray-100 p-1">
@@ -330,7 +325,7 @@ const General = () => {
           </form>
         </BodyWithLoader>
       </main>
-    </>
+    </WrapperWithNav>
   );
 };
 

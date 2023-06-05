@@ -1,13 +1,14 @@
 import React from "react";
 import StoryListItem from "~/components/StoryListItem";
-import StoriesWrapper from "~/layouts/StoriesWrapper";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { storiesTabs } from "~/routes";
 import { api } from "~/utils/api";
 
 const Completed = () => {
   const completedListQuery = api.post.getCompletedList.useQuery();
 
   return (
-    <StoriesWrapper>
+    <WrapperWithNav tabs={storiesTabs}>
       <header className="flex flex-1 justify-between">
         <div className="flex flex-col">
           <h1 className="h1 text-2xl">Completed list</h1>
@@ -26,7 +27,7 @@ const Completed = () => {
           <StoryListItem key={item.id} story={item} list="completed" />
         )) || null}
       </div>
-    </StoriesWrapper>
+    </WrapperWithNav>
   );
 };
 

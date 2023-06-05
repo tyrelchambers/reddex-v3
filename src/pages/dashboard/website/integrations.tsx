@@ -7,6 +7,7 @@ import TabsList from "~/components/TabsList";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
@@ -40,14 +41,8 @@ const Integrations = () => {
   };
 
   return (
-    <>
-      <Header />
-      <DashNav />
-      <main className="mx-auto my-6 flex max-w-screen-2xl gap-10">
-        <header>
-          <TabsList tabs={websiteTabItems} />
-        </header>
-
+    <WrapperWithNav tabs={websiteTabItems}>
+      <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website integrations..."
@@ -57,7 +52,7 @@ const Integrations = () => {
             Any integration field that lacks a value will not show up on your
             website.
           </p>
-          <form onSubmit={submitHandler} className="mt-10 w-full max-w-md">
+          <form onSubmit={submitHandler} className="form mt-10">
             <TextInput
               variant="filled"
               label="Youtube"
@@ -73,7 +68,7 @@ const Integrations = () => {
           </form>
         </BodyWithLoader>
       </main>
-    </>
+    </WrapperWithNav>
   );
 };
 

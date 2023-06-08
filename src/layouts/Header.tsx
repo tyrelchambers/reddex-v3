@@ -42,15 +42,17 @@ const Header = () => {
         </nav>
       </div>
 
-      <div className="flex">
-        {session.status === "authenticated" ? (
-          <UserMenu />
-        ) : (
-          <Link href={routes.LOGIN} className="button main">
-            Get Started
-          </Link>
-        )}
-      </div>
+      {session.status !== "loading" && (
+        <div className="flex">
+          {session.status === "authenticated" ? (
+            <UserMenu />
+          ) : (
+            <Link href={routes.LOGIN} className="button main">
+              Get Started
+            </Link>
+          )}
+        </div>
+      )}
     </header>
   );
 };

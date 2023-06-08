@@ -18,7 +18,7 @@ export const routes = {
   LOGIN: "/login",
   AUTH_REDDIT: "/auth/callback/reddit",
   COMPLETED: "/dashboard/stories/completed",
-  SUBMITTED: "/dasboard/stories/submitted",
+  SUBMITTED: "/dashboard/stories/submitted",
   TAGS: "/dashboard/tags",
   CONTACTS: "/dashboard/contacts",
   INBOX: "/dashboard/inbox",

@@ -1,195 +1,186 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id               String             @id @default(cuid())
-    name             String?
-    email            String?            @unique
-    emailVerified    DateTime?
-    image            String?
-    accounts         Account[]
-    sessions         Session[]
-    contact          Contact[]
-    ContactedWriters ContactedWriters[]
-    RedditPost       RedditPost[]
-    Tag              Tag[]
-    SubmittedStory   SubmittedStory[]
-    Website          Website[]
-    Profile          Profile?
-    Subscription     Subscription?
+  id               String             @id @default(cuid())
+  name             String?
+  email            String?            @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  contact          Contact[]
+  ContactedWriters ContactedWriters[]
+  Profile          Profile?
+  RedditPost       RedditPost[]
+  sessions         Session[]
+  SubmittedStory   SubmittedStory[]
+  Subscription     Subscription?
+  Tag              Tag[]
+  Website          Website?
 }
 
 model Subscription {
-    id             String  @id @default(cuid())
-    customerId     String
-    plan           String?
-    subscriptionId String?
-    user           User    @relation(fields: [userId], references: [id])
-    userId         String  @unique
+  id             String  @id @default(cuid())
+  customerId     String
+  userId         String  @unique
+  subscriptionId String?
+  plan           String?
+  user           User    @relation(fields: [userId], references: [id])
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model Contact {
-    id     String  @id @default(cuid())
-    name   String
-    notes  String? @db.Text
-    user   User    @relation(fields: [userId], references: [id])
-    userId String
+  id     String  @id @default(cuid())
+  name   String
+  notes  String?
+  userId String
+  user   User    @relation(fields: [userId], references: [id])
 }
 
-// this is for selecting which message to greet them with
 model ContactedWriters {
-    id     String @id @default(cuid())
-    name   String
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
+  id     String @id @default(cuid())
+  name   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Profile {
-    id               String   @id @default(cuid())
-    greeting         String?  @db.Text
-    recurring        String?  @db.Text
-    words_per_minute Int?
-    searches         String[]
-    user             User     @relation(fields: [userId], references: [id])
-    userId           String   @unique
+  id               String   @id @default(cuid())
+  greeting         String?
+  recurring        String?
+  words_per_minute Int?
+  searches         String[]
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id])
 }
 
 model RedditPost {
-    id            String          @id @default(cuid())
-    author        String
-    flair         String?
-    num_comments  Int
-    post_id       String
-    story_length  Int
-    title         String
-    ups           Int
-    url           String
-    subreddit     String
-    permission    Boolean         @default(false)
-    read          Boolean         @default(false)
-    reading_time  Int
-    upvote_ratio  Float
-    created       Int
-    user          User            @relation(fields: [userId], references: [id])
-    userId        String
-    TagsOnStories TagsOnStories[]
+  id            String          @id @default(cuid())
+  author        String
+  flair         String?
+  num_comments  Int
+  post_id       String
+  story_length  Int
+  title         String
+  ups           Int
+  url           String
+  subreddit     String
+  permission    Boolean         @default(false)
+  read          Boolean         @default(false)
+  reading_time  Int
+  upvote_ratio  Float
+  created       Int
+  userId        String
+  user          User            @relation(fields: [userId], references: [id])
+  TagsOnStories TagsOnStories[]
 }
 
 model TagsOnStories {
-    RedditPost   RedditPost @relation(fields: [RedditPostId], references: [id])
-    RedditPostId String
-    tag          Tag        @relation(fields: [tagId], references: [id])
-    tagId        String
+  RedditPostId String
+  tagId        String
+  RedditPost   RedditPost @relation(fields: [RedditPostId], references: [id])
+  tag          Tag        @relation(fields: [tagId], references: [id])
 
-    @@id([RedditPostId, tagId])
+  @@id([RedditPostId, tagId])
 }
 
 model Tag {
-    id            String          @id @default(cuid())
-    tag           String
-    user          User            @relation(fields: [userId], references: [id])
-    userId        String
-    TagsOnStories TagsOnStories[]
+  id            String          @id @default(cuid())
+  tag           String
+  userId        String
+  user          User            @relation(fields: [userId], references: [id])
+  TagsOnStories TagsOnStories[]
 }
 
 model SubmittedStory {
-    id             String   @id @default(cuid())
-    email          String?
-    author         String?
-    story_title    String?
-    sent_to_others Boolean?
-    body           String   @db.Text
-    user           User     @relation(fields: [userId], references: [id])
-    userId         String
+  id             String   @id @default(cuid())
+  email          String?
+  author         String?
+  sent_to_others Boolean?
+  body           String
+  userId         String
+  title          String?
+  user           User     @relation(fields: [userId], references: [id])
+  date           DateTime @default(now())
 }
 
 model Website {
-    id                   String  @id @default(cuid())
-    hidden               Boolean @default(true)
-    subdomain            String? @unique
-    name                 String?
-    description          String? @db.Text
-    twitter              String?
-    facebook             String?
-    instagram            String?
-    patreon              String?
-    youtube              String?
-    podcast              String?
-    theme                String  @default("light")
-    colour               String  @default("#000")
-    banner               String?
-    thumbnail            String?
-    youtubeIntegrationId String?
-
-    submissionPage   SubmissionPage @relation(fields: [submissionPageId], references: [id])
-    user             User           @relation(fields: [userId], references: [id])
-    userId           String         @unique
-    submissionPageId String         @unique
+  id                   String         @id @default(cuid())
+  hidden               Boolean        @default(true)
+  subdomain            String?        @unique
+  name                 String?
+  description          String?
+  twitter              String?
+  facebook             String?
+  instagram            String?
+  patreon              String?
+  youtube              String?
+  podcast              String?
+  theme                String         @default("light")
+  colour               String         @default("#000")
+  banner               String?
+  thumbnail            String?
+  userId               String         @unique
+  submissionPageId     String         @unique
+  youtubeIntegrationId String?
+  submissionPage       SubmissionPage @relation(fields: [submissionPageId], references: [id])
+  user                 User           @relation(fields: [userId], references: [id])
 }
 
 model SubmissionPage {
-    id                    String                 @id @default(cuid())
-    name                  String?
-    subtitle              String?
-    description           String?                @db.Text
-    hidden                Boolean                @default(true)
-    website               Website?
-    submissionFormModules SubmissionFormModule[]
+  id                    String                 @id @default(cuid())
+  name                  String?
+  subtitle              String?
+  description           String?
+  hidden                Boolean                @default(true)
+  submissionFormModules SubmissionFormModule[]
+  website               Website?
 }
 
 model SubmissionFormModule {
-    id               String          @id @default(cuid())
-    name             String
-    enabled          Boolean         @default(false)
-    required         Boolean         @default(false)
-    submissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
-    submissionPageId String?
+  id               String          @id @default(cuid())
+  name             String
+  enabled          Boolean         @default(false)
+  required         Boolean         @default(false)
+  submissionPageId String?
+  submissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
 }

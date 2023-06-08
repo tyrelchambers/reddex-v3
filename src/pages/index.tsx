@@ -3,11 +3,7 @@ import Head from "next/head";
 import Header from "~/layouts/Header";
 import computerImg from "../../public/images/computer.jpg";
 import Image from "next/image";
-import { Badge, TextInput } from "@mantine/core";
-import Link from "next/link";
-import { routes } from "~/routes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/pro-regular-svg-icons";
+import { Badge } from "@mantine/core";
 const Home: NextPage = () => {
   return (
     <>
@@ -121,9 +117,7 @@ const Hero = () => (
       <Badge className="w-fit" color="rose">
         Thousands of stories read
       </Badge>
-      <h1 className="h1">
-        We help Youtube Narrators like you save time and effort
-      </h1>
+      <h1 className="h1">We help Narrators like you save time and effort</h1>
       <p>
         Reddex is a tool designed to help you find the next best Reddit story in
         no-time at all. Save hours searching for stories and requesting

@@ -82,4 +82,11 @@ export const postRouter = createTRPCRouter({
       },
     });
   }),
+  submittedList: protectedProcedure.query(async ({ ctx, input }) => {
+    return await prisma.submittedStory.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
 });

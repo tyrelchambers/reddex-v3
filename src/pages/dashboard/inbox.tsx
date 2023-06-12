@@ -1,19 +1,29 @@
 import { Loader, TextInput } from "@mantine/core";
+import { useDebouncedState } from "@mantine/hooks";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
+import Spinner from "~/components/Spinner";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 
 const Inbox = () => {
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useDebouncedState("", 200);
   const router = useRouter();
   const inboxQuery = api.inbox.all.useQuery();
+  const searchInboxQuery = api.inbox.search.useQuery(search, {
+    enabled: !!search,
+    refetchOnWindowFocus: false,
+  });
+
   const messages = useMemo(
-    () => inboxQuery.data?.data.children.flatMap((d) => d.data) || [],
-    [inboxQuery.data?.data.children]
+    () => searchInboxQuery.data || inboxQuery.data || [],
+    [searchInboxQuery.data, inboxQuery.data]
   );
+
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
     null
   );
@@ -27,6 +37,13 @@ const Inbox = () => {
       setSelectedMessageId(router.query["message"] as string);
     }
   }, [router.query, router.isReady]);
+
+  const resetSearch = () => {
+    setSearch("");
+    if (searchRef.current) {
+      searchRef.current.value = "";
+    }
+  };
 
   return (
     <>
@@ -42,16 +59,38 @@ const Inbox = () => {
           <div className="flex flex-col">
             <header className="mb-6 flex items-center justify-between">
               <h1 className="h1 text-3xl">Inbox</h1>
-              <TextInput placeholder="Search for a message" className="w-96" />
+              <div className="flex gap-4">
+                <TextInput
+                  ref={searchRef}
+                  placeholder="Search for a message via author or subject"
+                  className="w-96"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="button alt"
+                  onClick={resetSearch}
+                >
+                  Reset
+                </button>
+              </div>
             </header>
             <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
-              <InboxMessageList
-                messages={messages}
-                selectedMessage={selectedMessage?.id}
-                setSelectedMessageId={setSelectedMessageId}
-                router={router}
-              />
-              <SelectedInboxMessage message={selectedMessage} />
+              {!searchInboxQuery.isFetching ? (
+                <>
+                  <InboxMessageList
+                    messages={
+                      searchInboxQuery.data ? searchInboxQuery.data : messages
+                    }
+                    selectedMessage={selectedMessage?.id}
+                    setSelectedMessageId={setSelectedMessageId}
+                    router={router}
+                  />
+                  <SelectedInboxMessage message={selectedMessage} />
+                </>
+              ) : (
+                <Spinner />
+              )}
             </section>
           </div>
         )}

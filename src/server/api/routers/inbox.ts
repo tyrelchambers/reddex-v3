@@ -2,8 +2,9 @@ import axios from "axios";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import { refreshAccessToken } from "~/utils/refreshAccessToken";
-import { RedditInboxResponse } from "~/types";
+import { RedditInboxMessage, RedditInboxResponse } from "~/types";
 import { sendMessageSchema } from "~/server/schemas";
+import { z } from "zod";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -33,7 +34,7 @@ export const inboxRouter = createTRPCRouter({
       })
       .then((res) => res.data);
 
-    return inbox;
+    return inbox.data.children.map((item) => item.data);
   }),
   send: protectedProcedure
     .input(sendMessageSchema)
@@ -71,4 +72,59 @@ export const inboxRouter = createTRPCRouter({
         })
         .catch(console.log);
     }),
+  search: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    const query = input.toLowerCase();
+    const userAccount = await prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      include: {
+        accounts: true,
+      },
+    });
+    const redditAccount = userAccount?.accounts.find(
+      (acc) => acc.provider === "reddit"
+    );
+
+    if (!redditAccount?.access_token) return;
+
+    const accessToken = await refreshAccessToken(redditAccount);
+
+    if (!accessToken) return;
+
+    const posts: RedditInboxMessage[] = [];
+    let after = ``;
+
+    for (let i = 0; i < 10 && after !== null; i++) {
+      await axios
+        .get<RedditInboxResponse>(
+          `https://oauth.reddit.com/message/messages?after=${after}`,
+          {
+            headers: {
+              Authorization: `bearer ${accessToken}`,
+            },
+          }
+        )
+        // eslint-disable-next-line no-loop-func
+        .then((res) => {
+          posts.push(
+            res.data.data.children.map(
+              (post) => post.data
+            ) as unknown as RedditInboxMessage
+          );
+          after = res.data.data.after;
+        });
+    }
+
+    const found = posts
+      .flat()
+      .filter(
+        (post) =>
+          post.subject.toLowerCase().includes(query) ||
+          post.dest.toLowerCase().includes(query)
+      );
+    console.log(found);
+
+    return found;
+  }),
 });

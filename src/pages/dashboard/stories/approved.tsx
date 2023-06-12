@@ -18,7 +18,7 @@ const Approved = () => {
       <header className="flex flex-1 justify-between">
         <div className="flex flex-col">
           <h1 className="h1 text-2xl">Approved list</h1>
-          <p className=" text-gray-500">
+          <p className="font-light text-gray-700">
             Your list of stories for which you have permission to read.
           </p>
         </div>
@@ -31,7 +31,7 @@ const Approved = () => {
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
 
-          <button type="button" className="button secondary !max-h-full">
+          <button type="button" className="button alt !max-h-full">
             Import story
           </button>
         </div>

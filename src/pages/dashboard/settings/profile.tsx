@@ -1,6 +1,6 @@
 import { Divider, NumberInput, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
@@ -13,8 +13,8 @@ const Profile = () => {
 
   const profileForm = useForm({
     initialValues: {
-      words_per_minute: userQuery.data?.Profile?.words_per_minute || 200,
-      email: userQuery.data?.email || "",
+      words_per_minute: 200,
+      email: "",
     },
     validate: {
       email: isNotEmpty("This field is required"),
@@ -22,10 +22,24 @@ const Profile = () => {
   });
   const messagesForm = useForm({
     initialValues: {
-      greeting: userQuery.data?.Profile?.greeting || undefined,
-      recurring: userQuery.data?.Profile?.recurring || undefined,
+      greeting: "",
+      recurring: "",
     },
   });
+
+  useEffect(() => {
+    if (userQuery.data) {
+      profileForm.setValues({
+        email: userQuery.data.email || "",
+        words_per_minute: userQuery.data.Profile?.words_per_minute || 150,
+      });
+
+      messagesForm.setValues({
+        greeting: userQuery.data.Profile?.greeting || "",
+        recurring: userQuery.data.Profile?.recurring || "",
+      });
+    }
+  }, [userQuery.data]);
 
   const saveProfileHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -36,6 +50,17 @@ const Profile = () => {
 
     saveProfile.mutate(profileForm.values);
   };
+
+  const saveMessagesHandler = (e: FormEvent) => {
+    e.preventDefault();
+
+    const { hasErrors } = messagesForm.validate();
+
+    if (hasErrors) return;
+
+    saveProfile.mutate(messagesForm.values);
+  };
+
   return (
     <WrapperWithNav tabs={settingsTabs}>
       <div className="flex max-w-screen-sm flex-col gap-8">
@@ -88,20 +113,24 @@ const Profile = () => {
         <div className="flex flex-col gap-3">
           <h2 className="mb-4 text-xl font-semibold text-gray-800">Messages</h2>
 
-          <form action="" className="form">
+          <form action="" className="form" onSubmit={saveMessagesHandler}>
             <Textarea
               variant="filled"
               label="Greeting"
               description="This message is used when you haven't messaged an author before. Think of it as an initial greeting. Say hello, introduce yourself, go from there."
+              minRows={10}
               {...messagesForm.getInputProps("greeting")}
             />
             <Textarea
               variant="filled"
               label="Recurring"
               description="This is used when you've already messaged an author. It's useful so users don't feel like they're just getting copy and pasted messages."
+              minRows={10}
               {...messagesForm.getInputProps("recurring")}
             />
-            <button className="button main mt-3">Save messages</button>
+            <button className="button main mt-3" type="submit">
+              Save messages
+            </button>
           </form>
         </div>
       </div>

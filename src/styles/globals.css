@@ -27,7 +27,7 @@
   }
 
   .button.alt {
-    @apply bg-gray-100 text-gray-500 shadow-none hover:bg-gray-200;
+    @apply bg-gray-100 text-indigo-500 shadow-none hover:bg-gray-200;
   }
 
   .button.simple {

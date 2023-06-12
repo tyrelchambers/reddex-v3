@@ -40,21 +40,28 @@ const Submitted = () => {
         <p className="font-light text-gray-700">
           These are your stories submitted via your website.
         </p>
-        {stories && (
-          <Table verticalSpacing="md" highlightOnHover striped className="mt-4">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Email</th>
-                <th>Story</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-          </Table>
-        )}
+        <div className="flex-1">
+          {stories && (
+            <Table
+              verticalSpacing="md"
+              highlightOnHover
+              striped
+              className="mt-4"
+            >
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Email</th>
+                  <th>Story</th>
+                  <th>Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>{rows}</tbody>
+            </Table>
+          )}
+        </div>
       </section>
     </WrapperWithNav>
   );

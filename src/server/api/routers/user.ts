@@ -43,15 +43,19 @@ export const userRouter = createTRPCRouter({
   saveProfile: protectedProcedure
     .input(saveProfileSchema)
     .mutation(async ({ ctx, input }) => {
+      if (!input.email) throw new Error("No email provided.");
       const user = await prisma.user.update({
         where: {
           id: ctx.session.user.id,
         },
         data: {
           email: input.email,
+
           Profile: {
             update: {
               words_per_minute: input.words_per_minute,
+              greeting: input.greeting,
+              recurring: input.recurring,
             },
           },
         },

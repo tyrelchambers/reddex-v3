@@ -3,6 +3,7 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import ContactItem from "~/components/ContactItem";
+import EmptyState from "~/components/EmptyState";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
@@ -43,11 +44,15 @@ const Contacts = () => {
           </button>
         </header>
 
-        <section className="my-10 grid grid-cols-3">
-          {contactsQuery.data?.map((ct) => (
-            <ContactItem key={ct.id} contact={ct} />
-          )) || null}
-        </section>
+        {contactsQuery.data && contactsQuery.data.length > 0 ? (
+          <section className="my-10 grid grid-cols-3">
+            {contactsQuery.data?.map((ct) => (
+              <ContactItem key={ct.id} contact={ct} />
+            ))}
+          </section>
+        ) : (
+          <EmptyState label="contacts" />
+        )}
 
         <Modal opened={opened} onClose={close} title="Add contact">
           <form onSubmit={submitHandler}>

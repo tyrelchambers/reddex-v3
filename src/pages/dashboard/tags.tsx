@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import TagListItem from "~/components/TagListItem";
 import { getStorySelectList } from "~/utils/getStorySelectList";
+import EmptyState from "~/components/EmptyState";
 
 const Tags = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -40,11 +41,15 @@ const Tags = () => {
           </button>
         </header>
 
-        <section className="my-10 grid grid-cols-3 gap-4">
-          {tagQuery.data?.map((tag) => (
-            <TagListItem key={tag.id} tag={tag} />
-          )) || null}
-        </section>
+        {tagQuery.data && tagQuery.data.length > 0 ? (
+          <section className="my-10 grid grid-cols-3 gap-4">
+            {tagQuery.data?.map((tag) => (
+              <TagListItem key={tag.id} tag={tag} />
+            )) || null}
+          </section>
+        ) : (
+          <EmptyState label="tags" />
+        )}
       </main>
       <Modal opened={opened} onClose={close} title="Create tag">
         <form onSubmit={submitHandler}>

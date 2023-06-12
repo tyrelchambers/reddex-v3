@@ -12,7 +12,7 @@ const QueueBanner = ({ openQueue }: Props) => {
 
   return (
     <div className="sticky top-2 mt-6 flex items-center justify-center gap-4 rounded-xl bg-indigo-500 p-2 text-white shadow-xl">
-      <p className="text-lg">
+      <p className="text-sm">
         <span className="font-bold">{queueStore.queue.length}</span> items in
         queue
       </p>

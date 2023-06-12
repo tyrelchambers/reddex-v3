@@ -62,4 +62,11 @@ export const userRouter = createTRPCRouter({
       });
       return user;
     }),
+  contactedWriters: protectedProcedure.query(async ({ ctx, input }) => {
+    return await prisma.contactedWriters.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
 });

@@ -35,7 +35,6 @@ const Search = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  // const savedPosts = useLiveQuery(() => db.posts.toArray());
   const [savedPosts, setSavedPosts] = useState<PostFromReddit[]>([]);
   const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =

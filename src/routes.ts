@@ -52,11 +52,6 @@ export const websiteTabItems = [
     slug: "integrations",
     icon: faPuzzlePiece,
   },
-  {
-    label: "Settings",
-    slug: "settings",
-    icon: faCog,
-  },
 ];
 
 export const storiesTabs: Tab[] = [

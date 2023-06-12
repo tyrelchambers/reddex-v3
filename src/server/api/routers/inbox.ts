@@ -59,6 +59,8 @@ export const inboxRouter = createTRPCRouter({
       if (!accessToken) return;
 
       const body = new FormData();
+
+      // thing_id is the name of the recipient
       body.set("thing_id", input.thing_id);
       body.set("text", input.message);
       body.set("return_rtjson", "true");

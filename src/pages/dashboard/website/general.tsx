@@ -11,9 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, Image, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import React, { FormEvent, useEffect, useRef } from "react";
-import TabsList from "~/components/TabsList";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import { websiteTabItems } from "~/routes";
 import { GeneralSettings } from "~/types";
 import { api } from "~/utils/api";
@@ -167,7 +164,7 @@ const General = () => {
               action={
                 <button
                   className="button secondary"
-                  onClick={showWebsiteHandler}
+                  onClick={hideWebsiteHandler}
                 >
                   Hide
                 </button>

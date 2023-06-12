@@ -13,7 +13,7 @@ import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
-import { Tooltip } from "@mantine/core";
+import { Tooltip, clsx } from "@mantine/core";
 
 interface Props {
   post: PostFromReddit;
@@ -25,25 +25,34 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
 
   const isInQueue = queueStore.exists(post);
 
+  const activeClasses = {
+    header: clsx(isInQueue ? "bg-indigo-500" : "bg-gray-100"),
+    headerText: clsx(isInQueue && "text-white"),
+  };
+
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
+    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white shadow-md">
       <header
-        className={`mb-2 flex items-center justify-between gap-3 bg-gradient-to-b ${
-          isInQueue ? "from-green-300" : "from-gray-300"
-        } to-transparent p-3 py-5`}
+        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header}  p-3 py-5`}
       >
-        <div className="flex items-center rounded-full  font-black text-orange-500">
+        <div
+          className={`flex items-center rounded-full  font-black text-orange-500 ${activeClasses.headerText}`}
+        >
           <FontAwesomeIcon icon={faUp} className="mr-2" />
           {post.ups}
         </div>
 
         <div className="flex gap-3">
-          <div className="flex items-center rounded-full text-sm text-gray-500">
+          <div
+            className={`flex items-center rounded-full text-sm text-gray-500 ${activeClasses.headerText}`}
+          >
             <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
             {post.author}
           </div>
 
-          <div className="flex items-center rounded-full text-sm text-gray-500">
+          <div
+            className={`flex items-center rounded-full text-sm text-gray-500  ${activeClasses.headerText}`}
+          >
             <FontAwesomeIcon icon={faThumbsUp} className="mr-2" />
             {(post.upvote_ratio * 100).toFixed(0)}%
           </div>

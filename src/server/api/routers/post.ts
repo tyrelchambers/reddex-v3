@@ -64,13 +64,22 @@ export const postRouter = createTRPCRouter({
   save: protectedProcedure
     .input(postSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.redditPost.create({
+      await prisma.redditPost.create({
         data: {
           ...input,
           flair: input.flair != null ? input.flair : undefined,
           userId: ctx.session.user.id,
         },
       });
+
+      await prisma.contactedWriters.create({
+        data: {
+          name: input.author,
+          userId: ctx.session.user.id,
+        },
+      });
+
+      return true;
     }),
   getUsedPostIds: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.redditPost.findMany({

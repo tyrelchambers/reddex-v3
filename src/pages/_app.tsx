@@ -38,7 +38,7 @@ const MyApp: AppType<MyAppProps> = ({
             TextInput: {
               classNames: {
                 label: "label",
-                input: "text-gray-800",
+                input: "text-gray-500 ",
               },
             },
             NativeSelect: {
@@ -50,7 +50,7 @@ const MyApp: AppType<MyAppProps> = ({
             Textarea: {
               classNames: {
                 label: "label",
-                input: "text-gray-800",
+                input: "text-gray-500 ",
               },
             },
             Checkbox: {

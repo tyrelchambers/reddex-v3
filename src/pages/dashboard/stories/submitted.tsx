@@ -25,7 +25,7 @@ const Submitted = () => {
       <td>
         <Link
           href="#"
-          className="rounded-full border-[1px] border-gray-200 px-5 py-1 text-indigo-500 hover:bg-gray-200"
+          className="rounded-full border-[1px] border-gray-200 px-5 py-1 text-rose-500 hover:bg-gray-200"
         >
           View
         </Link>

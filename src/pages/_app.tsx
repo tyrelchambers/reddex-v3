@@ -13,6 +13,8 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { useTheme } from "~/hooks/useTheme";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -27,6 +29,16 @@ const MyApp: AppType<MyAppProps> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const { colorScheme } = useTheme();
+
+  useEffect(() => {
+    const document = window.document.querySelector("html");
+
+    if (document) {
+      document.className = colorScheme;
+    }
+  }, [colorScheme]);
+
   return (
     <SessionProvider session={session}>
       <MantineProvider

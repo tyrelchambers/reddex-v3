@@ -1,3 +1,5 @@
+import { faTimes } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, NumberInput, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
@@ -96,8 +98,15 @@ const Profile = () => {
           {currentUser?.Profile?.searches &&
           currentUser?.Profile?.searches.length > 0 ? (
             currentUser?.Profile?.searches.map((s, id) => (
-              <div key={`${s}_${id}`} className="flex items-baseline">
-                <button className="button simple mr-4">Clear</button>
+              <div
+                key={`${s}_${id}`}
+                className="flex w-fit items-baseline rounded-full bg-gray-50 p-2"
+              >
+                <button className="button simple mr-4">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100">
+                    <FontAwesomeIcon icon={faTimes} className="rounded-full" />
+                  </div>
+                </button>
                 <p className="font-thin text-gray-600">{s}</p>
               </div>
             ))

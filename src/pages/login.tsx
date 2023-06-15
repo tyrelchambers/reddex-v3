@@ -110,7 +110,7 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
           size="sm"
           center
           icon={
-            <FontAwesomeIcon className="text-indigo-500" icon={faCheckCircle} />
+            <FontAwesomeIcon className="text-rose-500" icon={faCheckCircle} />
           }
           className="mt-6"
         >

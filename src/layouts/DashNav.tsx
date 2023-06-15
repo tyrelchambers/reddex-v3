@@ -54,8 +54,8 @@ const DashNav = () => {
           <li key={r.label}>
             <Link
               href={r.slug}
-              className={`flex items-center gap-2 text-gray-500 hover:text-indigo-500 ${
-                pathname.includes(r.slug) ? "text-indigo-500" : ""
+              className={`flex items-center gap-2 text-gray-500 hover:text-rose-500 ${
+                pathname.includes(r.slug) ? "text-rose-500" : ""
               }`}
             >
               <FontAwesomeIcon icon={r.icon} />

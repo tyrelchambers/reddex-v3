@@ -22,10 +22,10 @@ const PricingChip = ({
         )
       }
     >
-      <div className="rounded-2xl border-2 border-transparent bg-white p-4 text-start shadow-xl hover:border-indigo-500">
+      <div className="rounded-2xl border-2 border-transparent bg-white p-4 text-start shadow-xl hover:border-rose-500">
         <p className="text-xl">{plan.name}</p>
         <p className="text-sm text-gray-500">{plan.desc}</p>
-        <div className="mt-4 text-3xl font-semibold text-indigo-500">
+        <div className="mt-4 text-3xl font-semibold text-rose-500">
           ${frequency === "yearly" ? plan.yearly.price : plan.monthly.price}{" "}
           <span className="text-xl font-normal text-gray-600">/mo</span>
         </div>

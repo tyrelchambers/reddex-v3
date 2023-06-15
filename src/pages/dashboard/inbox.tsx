@@ -52,8 +52,8 @@ const Inbox = () => {
       <main className="mx-auto my-6 max-w-screen-2xl">
         {inboxQuery.isLoading ? (
           <div className="my-20 flex w-full flex-col items-center">
-            <Loader color="indigo" />
-            <p className="mt-4 text-xl text-indigo-500">Loading inbox...</p>
+            <Loader color="rose" />
+            <p className="mt-4 text-xl text-rose-500">Loading inbox...</p>
           </div>
         ) : (
           <div className="flex flex-col">

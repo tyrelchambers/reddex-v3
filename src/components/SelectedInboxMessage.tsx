@@ -93,7 +93,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
       </section>
 
       <form
-        className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-indigo-500 p-2 shadow-lg"
+        className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-rose-500 p-2 shadow-lg"
         onSubmit={submitHandler}
       >
         <Textarea
@@ -101,7 +101,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
           placeholder="Send a reply..."
           classNames={{
             input:
-              "border-indigo-400 bg-transparent border-1[px] text-white placeholder:text-white rounded-lg",
+              "border-rose-400 bg-transparent border-1[px] text-white placeholder:text-white rounded-lg",
           }}
           className="min-h-10 flex-1"
           autosize
@@ -114,7 +114,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
         >
           <FontAwesomeIcon
             icon={faPaperPlaneTop}
-            className="text-sm text-indigo-500 shadow-sm"
+            className="text-sm text-rose-500 shadow-sm"
           />
         </button>
       </form>
@@ -128,7 +128,7 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
       <header className="mb-2 flex items-baseline justify-between">
         <p className="mb-2 text-xl font-bold text-gray-700">
           {message.isReply && (
-            <FontAwesomeIcon icon={faReply} className="mr-4 text-indigo-500" />
+            <FontAwesomeIcon icon={faReply} className="mr-4 text-rose-500" />
           )}
           {message.author}
         </p>

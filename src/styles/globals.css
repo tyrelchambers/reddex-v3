@@ -4,11 +4,11 @@
 
 @layer components {
   .button {
-    @apply max-h-8 rounded-md px-5 py-2 text-xs  font-bold text-white transition-all hover:shadow-lg;
+    @apply h-full rounded-md px-5 py-2 text-xs  font-bold text-white transition-all hover:shadow-lg;
   }
 
   .button.main {
-    @apply bg-indigo-500 hover:bg-indigo-600;
+    @apply bg-rose-500 hover:bg-rose-600;
   }
 
   .button.danger {
@@ -16,35 +16,35 @@
   }
 
   .button.secondary {
-    @apply bg-white text-indigo-500 hover:bg-indigo-100;
+    @apply bg-white text-rose-500 hover:bg-rose-100;
   }
 
   .button.third {
     @apply border-[1px] border-gray-300 bg-white text-gray-600;
   }
   .button.main:disabled {
-    @apply cursor-not-allowed bg-indigo-300 text-indigo-500 shadow-none;
+    @apply cursor-not-allowed bg-rose-300 text-rose-500 shadow-none;
   }
 
   .button.alt {
-    @apply bg-gray-100 text-indigo-500 shadow-none hover:bg-gray-200;
+    @apply bg-gray-100 text-rose-500 shadow-none hover:bg-gray-200;
   }
 
   .button.simple {
-    @apply p-0 text-sm text-indigo-500 underline shadow-none;
+    @apply p-0 text-sm text-rose-500 underline shadow-none;
   }
 
   .h1 {
     @apply text-5xl font-black text-gray-800;
   }
   .inbox-message-list-item:hover {
-    @apply bg-indigo-500 shadow-md;
+    @apply bg-rose-500 shadow-md;
   }
   .inbox-message-list-item:hover * {
     @apply text-white;
   }
   .inbox-message-list-item.active {
-    @apply bg-indigo-500 shadow-md;
+    @apply bg-rose-500 shadow-md;
   }
   .inbox-message-list-item.active * {
     @apply text-white;

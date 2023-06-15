@@ -26,12 +26,12 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
   const isInQueue = queueStore.exists(post);
 
   const activeClasses = {
-    header: clsx(isInQueue ? "bg-indigo-500" : "bg-gray-100"),
+    header: clsx(isInQueue ? "bg-rose-500" : "bg-gray-100"),
     headerText: clsx(isInQueue && "text-white"),
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white shadow-md">
+    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
       <header
         className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header}  p-3 py-5`}
       >
@@ -59,7 +59,7 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
         </div>
       </header>
       <Link
-        className="  p-3 font-bold text-gray-800 underline hover:text-indigo-500"
+        className="  p-3 font-bold text-gray-800 underline hover:text-rose-500"
         href={post.url}
         target="_blank"
       >

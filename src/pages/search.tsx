@@ -81,17 +81,13 @@ const Search = () => {
       </Head>
       <main>
         <Header />
-
+        <SubredditSearchForm
+          open={open}
+          searchHandler={searchHandler}
+          disableSearch={subredditSearch.isLoading}
+          searches={currentUser.data?.Profile?.searches}
+        />
         <div className=" relative flex flex-col p-4">
-          <div className="mx-auto w-full max-w-screen-lg gap-3 rounded-xl bg-white p-2 ">
-            <SubredditSearchForm
-              open={open}
-              searchHandler={searchHandler}
-              disableSearch={subredditSearch.isLoading}
-              searches={currentUser.data?.Profile?.searches}
-            />
-          </div>
-
           <QueueBanner openQueue={openQueue} />
 
           {loading && (

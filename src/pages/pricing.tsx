@@ -26,7 +26,7 @@ const Pricing = () => {
         ></div>
         <div className="mx-auto max-w-screen-xl text-gray-600 sm:px-4 md:px-8">
           <div className="relative mx-auto max-w-xl space-y-3 px-4 sm:px-0 sm:text-center">
-            <h3 className="font-semibold text-indigo-500">Pricing</h3>
+            <h3 className="font-semibold text-rose-500">Pricing</h3>
             <p className="text-3xl font-semibold text-gray-800 sm:text-4xl">
               Choose the plan that best suits you.
             </p>
@@ -53,9 +53,7 @@ const Pricing = () => {
                 }`}
               >
                 <div className="space-y-4 border-b p-4 py-8 md:p-8">
-                  <span className="font-medium text-indigo-500">
-                    {item.name}
-                  </span>
+                  <span className="font-medium text-rose-500">{item.name}</span>
                   <div className="text-3xl font-semibold text-gray-800">
                     $
                     {frequency === "yearly"
@@ -68,7 +66,7 @@ const Pricing = () => {
                   <p>{item.desc}</p>
                   <Link
                     href="/login"
-                    className="flex w-full justify-center rounded-lg bg-indigo-500 px-3 py-3 text-sm font-semibold text-white duration-150 hover:bg-indigo-500 active:bg-indigo-700"
+                    className="flex w-full justify-center rounded-lg bg-rose-500 px-3 py-3 text-sm font-semibold text-white duration-150 hover:bg-rose-500 active:bg-rose-700"
                     onClick={() => {
                       setValue(
                         frequency === "yearly"
@@ -88,7 +86,7 @@ const Pricing = () => {
                     <li key={idx} className="flex items-center gap-5">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-indigo-500"
+                        className="h-5 w-5 text-rose-500"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >

@@ -23,7 +23,7 @@ const InvoicesList = ({ invoices }: Props) => {
       </td>
       <td>
         {invoice.invoice_pdf && (
-          <a href={invoice.invoice_pdf} download className="text-indigo-500">
+          <a href={invoice.invoice_pdf} download className="text-rose-500">
             Download <FontAwesomeIcon icon={faDownload} className="ml-2" />
           </a>
         )}

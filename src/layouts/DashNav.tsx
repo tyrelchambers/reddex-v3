@@ -48,7 +48,7 @@ const _routes = [
 const DashNav = () => {
   const pathname = useRouter().pathname;
   return (
-    <nav className=" w-full bg-card p-3">
+    <nav className=" w-full bg-foreground/5 p-3">
       <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
         {_routes.map((r) => (
           <li key={r.label}>

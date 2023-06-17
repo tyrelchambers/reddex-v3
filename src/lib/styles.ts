@@ -2,6 +2,7 @@ import {
   BadgeStylesNames,
   CheckboxStylesNames,
   DividerStylesNames,
+  ModalStylesNames,
   NumberInputStylesNames,
   TextInputStylesNames,
 } from "@mantine/core";
@@ -47,4 +48,9 @@ export const mantineNumberClasses: Partial<
 
 export const mantineBadgeClasses: Partial<Record<BadgeStylesNames, string>> = {
   root: "text-accent-foreground bg-accent",
+};
+
+export const mantineModalClasses: Partial<Record<ModalStylesNames, string>> = {
+  header: "bg-background text-foreground",
+  content: "bg-background rounded-3xl p-6",
 };

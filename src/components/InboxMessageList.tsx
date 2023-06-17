@@ -18,7 +18,7 @@ const InboxMessageList = ({
   router,
 }: Props) => {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-gray-200 pr-6">
+    <div className="flex w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-border pr-6">
       {messages.map((m) => (
         <button
           key={m.id}

@@ -144,9 +144,9 @@ const Profile = () => {
               classNames={mantineInputClasses}
               {...messagesForm.getInputProps("recurring")}
             />
-            <button className="button main mt-3" type="submit">
+            <Button className=" mt-3" type="submit">
               Save messages
-            </button>
+            </Button>
           </form>
         </div>
       </div>

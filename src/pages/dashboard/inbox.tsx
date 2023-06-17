@@ -54,14 +54,14 @@ const Inbox = () => {
       <main className="mx-auto my-6 max-w-screen-2xl">
         {inboxQuery.isLoading ? (
           <div className="my-20 flex w-full flex-col items-center">
-            <Loader color="rose" />
-            <p className="mt-4 text-xl text-rose-500">Loading inbox...</p>
+            <Loader color="pink" />
+            <p className="mt-4 text-xl text-accent">Loading inbox...</p>
           </div>
         ) : (
           <div className="flex flex-col">
             <header className="mb-6 flex items-center justify-between">
               <h1 className="text-2xl text-foreground">Inbox</h1>
-              <div className="flex gap-4">
+              <div className="flex w-full max-w-lg gap-4">
                 <TextInput
                   ref={searchRef}
                   placeholder="Search for a message via author or subject"

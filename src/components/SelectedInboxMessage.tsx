@@ -90,7 +90,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
       </section>
 
       <form
-        className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-muted p-2 shadow-lg"
+        className="sticky bottom-4 flex items-end gap-3 rounded-xl border-[1px] border-border bg-muted p-2 shadow-lg"
         onSubmit={submitHandler}
       >
         <Textarea
@@ -120,13 +120,13 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
     <div className="rounded-2xl bg-muted p-4">
       <header className="mb-2 flex items-baseline justify-between">
-        <p className="mb-2 text-xl font-bold text-foreground">
+        <p className="mb-2  font-bold text-foreground">
           {message.isReply && (
             <FontAwesomeIcon icon={faReply} className="mr-4 text-accent" />
           )}
           {message.author}
         </p>
-        <p className=" font-thin text-foreground">
+        <p className="font-thin italic text-foreground">
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>

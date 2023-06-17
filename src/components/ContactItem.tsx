@@ -5,6 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Contact } from "@prisma/client";
 import React from "react";
 import { Button } from "./ui/button";
+import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 
 interface Props {
   contact: Contact;
@@ -37,13 +38,24 @@ const ContactItem = ({ contact }: Props) => {
         </Button>
       </footer>
 
-      <Modal opened={opened} onClose={close} title="Editing contact">
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Editing contact"
+        classNames={mantineModalClasses}
+      >
         <form className="flex flex-col gap-4">
-          <TextInput value={contact.name} label="Name" variant="filled" />
+          <TextInput
+            value={contact.name}
+            label="Name"
+            variant="filled"
+            classNames={mantineInputClasses}
+          />
           <Textarea
             value={contact?.notes || undefined}
             label="Notes"
             variant="filled"
+            classNames={mantineInputClasses}
           />
           <footer className="flex justify-between gap-3">
             <button className="button simple !text-red-500">

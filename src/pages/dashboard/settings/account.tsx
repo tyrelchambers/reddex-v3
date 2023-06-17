@@ -10,7 +10,7 @@ import React from "react";
 import InvoicesList from "~/components/InvoicesList";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineBadgeClasses } from "~/lib/styles";
+import { mantineBadgeClasses, mantineModalClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/formatCurrency";
@@ -46,7 +46,7 @@ const Settings = () => {
             update your billing information, cancel or update your plan.
           </p>
 
-          <div className="mt-4 flex flex-col gap-2 rounded-xl border-[1px] border-border bg-card p-4">
+          <div className="mt-4 flex flex-col gap-2 rounded-xl border-[1px] border-border p-4">
             <header className="flex justify-between text-card-foreground">
               <p className="text-sm">
                 <span className="font-semibold">Your plan:</span>{" "}
@@ -77,13 +77,13 @@ const Settings = () => {
             )}
             <Badge
               variant="dot"
-              className="w-fit text-foreground"
+              className="my-2 w-fit text-foreground"
               color="green"
             >
               {subscription?.status === "active" ? "active" : "inactive"}
             </Badge>
 
-            <footer className="mt-2 flex justify-end gap-4 border-t-[1px] border-t-gray-200 pt-3">
+            <footer className="mt-2 flex justify-end gap-4 border-t-[1px] border-t-border pt-3">
               {invoices && (
                 <Button variant="ghost" onClick={open}>
                   View invoices{" "}
@@ -93,7 +93,7 @@ const Settings = () => {
               {updateLink.data && (
                 <Link
                   href={updateLink.data}
-                  className="flex-1 rounded-lg border-[1px] border-border bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
+                  className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
                   target="_blank"
                 >
                   Manage subscription{" "}
@@ -118,7 +118,13 @@ const Settings = () => {
         </div>
       </section>
 
-      <Modal opened={opened} onClose={close} title="Invoices" size="xl">
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Invoices"
+        size="xl"
+        classNames={mantineModalClasses}
+      >
         {invoices && <InvoicesList invoices={invoices.data} />}
       </Modal>
     </WrapperWithNav>

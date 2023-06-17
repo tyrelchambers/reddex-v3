@@ -4,6 +4,7 @@ import { Modal, TextInput, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Contact } from "@prisma/client";
 import React from "react";
+import { Button } from "./ui/button";
 
 interface Props {
   contact: Contact;
@@ -13,20 +14,27 @@ const ContactItem = ({ contact }: Props) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
-    <div key={contact.id} className="overflow-hidden rounded-xl shadow-md">
-      <header className="flex bg-rose-700 p-4">
-        <p className="flex items-center gap-3 text-white">
+    <div
+      key={contact.id}
+      className="overflow-hidden rounded-xl border shadow-md"
+    >
+      <header className="flex bg-card p-4">
+        <p className="flex items-center gap-3 text-card-foreground">
           <FontAwesomeIcon icon={faUserCircle} />
           {contact.name}
         </p>
       </header>
 
-      <p className="p-3 font-medium text-gray-700">{contact.notes}</p>
+      {contact.notes ? (
+        <p className="p-3 font-medium text-card-foreground">{contact.notes}</p>
+      ) : (
+        <p className="p-3 font-medium italic text-muted-foreground">No notes</p>
+      )}
 
-      <footer className="flex justify-end bg-gray-100 p-2 px-4">
-        <button className="button secondary" onClick={open}>
+      <footer className="flex justify-end p-2 px-4">
+        <Button variant="secondary" onClick={open}>
           Edit
-        </button>
+        </Button>
       </footer>
 
       <Modal opened={opened} onClose={close} title="Editing contact">

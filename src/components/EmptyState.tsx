@@ -6,8 +6,8 @@ interface Props {
 
 const EmptyState = ({ label }: Props) => {
   return (
-    <div className="mt-6 flex w-full justify-center rounded-xl bg-gray-50 p-8">
-      <p className="font-normal text-gray-700">
+    <div className="mt-6 flex w-full justify-center rounded-xl bg-muted p-8">
+      <p className="font-normal text-foreground">
         Nothing to show {label && `for ${label}`}
       </p>
     </div>

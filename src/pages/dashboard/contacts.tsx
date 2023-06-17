@@ -4,6 +4,7 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
+import { Button } from "~/components/ui/button";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
@@ -37,15 +38,15 @@ const Contacts = () => {
       <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl">
         <header className="flex items-center justify-between">
-          <h1 className="h1 text-3xl">Contacts</h1>
+          <h1 className="text-2xl text-foreground">Contacts</h1>
 
-          <button type="button" className="button main" onClick={open}>
+          <Button variant="secondary" onClick={open}>
             Add contact
-          </button>
+          </Button>
         </header>
 
         {contactsQuery.data && contactsQuery.data.length > 0 ? (
-          <section className="my-10 grid grid-cols-3">
+          <section className="my-10 grid grid-cols-3 gap-6">
             {contactsQuery.data?.map((ct) => (
               <ContactItem key={ct.id} contact={ct} />
             ))}

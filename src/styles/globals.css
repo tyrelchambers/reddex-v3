@@ -34,9 +34,6 @@
     @apply p-0 text-sm text-rose-500 underline shadow-none;
   }
 
-  .h1 {
-    @apply text-5xl font-black text-gray-800;
-  }
   .inbox-message-list-item:hover {
     @apply bg-rose-500 shadow-md;
   }
@@ -111,10 +108,6 @@
     /* Primary colors for <Button /> */
     --primary: 350 89% 60%;
     --primary-foreground: 222.2 47.4% 100%;
-
-    /* Secondary colors for <Button /> */
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
 
     /* Used for accents such as hover effects on <DropdownMenuItem>, <SelectItem>...etc */
     --accent: 350 89% 60%;

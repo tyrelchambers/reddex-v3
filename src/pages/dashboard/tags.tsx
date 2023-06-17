@@ -8,6 +8,7 @@ import { useForm } from "@mantine/form";
 import TagListItem from "~/components/TagListItem";
 import { getStorySelectList } from "~/utils/getStorySelectList";
 import EmptyState from "~/components/EmptyState";
+import { Button } from "~/components/ui/button";
 
 const Tags = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -35,10 +36,10 @@ const Tags = () => {
       <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl">
         <header className="flex justify-between">
-          <h1 className="h1 text-3xl">Tags</h1>
-          <button className="button main" onClick={open}>
+          <h1 className="text-2xl text-foreground">Tags</h1>
+          <Button variant="secondary" onClick={open}>
             Create tag
-          </button>
+          </Button>
         </header>
 
         {tagQuery.data && tagQuery.data.length > 0 ? (

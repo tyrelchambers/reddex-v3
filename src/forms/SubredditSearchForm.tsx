@@ -1,13 +1,18 @@
 import { faSpinnerThird } from "@fortawesome/pro-duotone-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NativeSelect, TextInput } from "@mantine/core";
+import { Select, TextInput } from "@mantine/core";
 import React, { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { mantineSelectClasses } from "~/lib/styles";
 
 const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
 interface Props {
   open: () => void;
-  searchHandler: (state: { subreddit: string; category: string }) => void;
+  searchHandler: (state: {
+    subreddit: string;
+    category: string | null;
+  }) => void;
   disableSearch: boolean;
   searches: string[] | undefined;
 }
@@ -18,13 +23,16 @@ const SubredditSearchForm = ({
   disableSearch,
   searches,
 }: Props) => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<{
+    subreddit: string;
+    category: string | null;
+  }>({
     subreddit: "",
     category: "Hot",
   });
 
   return (
-    <div className="flex w-full bg-gray-50 dark:bg-neutral-800">
+    <div className="flex w-full">
       <div className="mx-auto flex w-full max-w-screen-xl flex-col p-3">
         <form
           className="flex w-full items-end gap-3"
@@ -39,35 +47,23 @@ const SubredditSearchForm = ({
             icon="r/"
             className="flex-1"
             classNames={{
-              input: "dark:bg-neutral-700",
+              input: "bg-input text-foreground",
             }}
             onChange={(e) =>
               setState({ ...state, subreddit: e.currentTarget.value })
             }
             value={state.subreddit}
           />
-          <NativeSelect
+          <Select
+            defaultValue={categories[0]}
             data={categories}
-            classNames={{
-              input:
-                "dark:bg-neutral-700 dark:text-white dark:border-neutral-600",
-            }}
-            onChange={(e) =>
-              setState({ ...state, category: e.currentTarget.value })
-            }
+            onChange={(e) => setState({ ...state, category: e })}
+            classNames={mantineSelectClasses}
           />
-          <button
-            type="button"
-            className="button third  whitespace-nowrap"
-            onClick={open}
-          >
+          <Button type="button" variant="outline" onClick={open}>
             Add filters
-          </button>
-          <button
-            type="submit"
-            className="button main  whitespace-nowrap"
-            disabled={disableSearch}
-          >
+          </Button>
+          <Button type="button" variant="default" disabled={disableSearch}>
             {disableSearch ? (
               <FontAwesomeIcon
                 icon={faSpinnerThird}
@@ -80,19 +76,19 @@ const SubredditSearchForm = ({
             ) : (
               "Search"
             )}
-          </button>
+          </Button>
         </form>
         {searches && (
           <ul className="mt-1">
             {searches.map((s) => (
               <li key={s}>
-                <button
-                  type="button"
-                  className="text-sm text-gray-600 underline dark:text-gray-200"
+                <Button
+                  variant="link"
+                  size="sm"
                   onClick={() => searchHandler({ ...state, subreddit: s })}
                 >
                   {s}
-                </button>
+                </Button>
               </li>
             ))}
           </ul>

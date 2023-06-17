@@ -14,6 +14,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
 import { Tooltip, clsx } from "@mantine/core";
+import { Button } from "./ui/button";
 
 interface Props {
   post: PostFromReddit;
@@ -26,14 +27,14 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
   const isInQueue = queueStore.exists(post);
 
   const activeClasses = {
-    header: clsx(isInQueue ? "bg-rose-500" : "bg-gray-100"),
+    header: clsx(isInQueue ? "bg-accent/80" : "bg-foreground/10"),
     headerText: clsx(isInQueue && "text-white"),
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-gray-200 bg-white">
+    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-card">
       <header
-        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header}  p-3 py-5`}
+        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header} p-3 py-5`}
       >
         <div
           className={`flex items-center rounded-full  font-black text-orange-500 ${activeClasses.headerText}`}
@@ -44,14 +45,14 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
 
         <div className="flex gap-3">
           <div
-            className={`flex items-center rounded-full text-sm text-gray-500 ${activeClasses.headerText}`}
+            className={`flex items-center rounded-full text-sm text-card-foreground ${activeClasses.headerText}`}
           >
             <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
             {post.author}
           </div>
 
           <div
-            className={`flex items-center rounded-full text-sm text-gray-500  ${activeClasses.headerText}`}
+            className={`flex items-center rounded-full text-sm text-card-foreground  ${activeClasses.headerText}`}
           >
             <FontAwesomeIcon icon={faThumbsUp} className="mr-2" />
             {(post.upvote_ratio * 100).toFixed(0)}%
@@ -59,7 +60,7 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
         </div>
       </header>
       <Link
-        className="  p-3 font-bold text-gray-800 underline hover:text-rose-500"
+        className="p-3 font-bold text-card-foreground underline hover:text-rose-500"
         href={post.url}
         target="_blank"
       >
@@ -68,12 +69,12 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
 
       <footer className="mt-auto flex items-end justify-between p-3">
         <div className="flex gap-3">
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-primary-foreground/50">
             <FontAwesomeIcon icon={faFolder} />
             <p>{post.subreddit}</p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-primary-foreground/50">
             <FontAwesomeIcon icon={faCalendar} />
             <p>
               {formatDistanceToNowStrict(new Date(post.created * 1000))} ago
@@ -91,22 +92,22 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
             </Tooltip>
           )}
           {isInQueue ? (
-            <button
-              type="button"
-              className="button secondary h-8 !bg-gray-100 p-2 text-xs font-bold !text-gray-500 !shadow-none"
+            <Button
+              variant="default"
+              size="xs"
               onClick={() => queueStore.remove(post)}
             >
               Remove from queue
-            </button>
+            </Button>
           ) : (
-            <button
-              type="button"
-              className="button secondary h-8 p-2 text-xs font-bold"
+            <Button
+              variant="outline"
+              size="xs"
               onClick={() => queueStore.add(post)}
             >
               <FontAwesomeIcon icon={faAdd} className="mr-2" />
               Add to Queue
-            </button>
+            </Button>
           )}
         </div>
       </footer>

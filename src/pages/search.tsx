@@ -96,7 +96,7 @@ const Search = () => {
             </div>
           )}
 
-          <div className="mt-6 grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-6">
             {(!loading &&
               savedPosts?.map((item) => (
                 <SubredditSearchItem

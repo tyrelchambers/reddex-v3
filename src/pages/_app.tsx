@@ -1,7 +1,7 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, createStyles } from "@mantine/core";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -46,32 +46,8 @@ const MyApp: AppType<MyAppProps> = ({
         withNormalizeCSS
         theme={{
           fontFamily: font.style.fontFamily,
-          components: {
-            TextInput: {
-              classNames: {
-                label: "label",
-                input: "text-gray-500 ",
-              },
-            },
-            NativeSelect: {
-              classNames: {
-                label: "label",
-                input: "text-gray-800",
-              },
-            },
-            Textarea: {
-              classNames: {
-                label: "label",
-                input: "text-gray-500 ",
-              },
-            },
-            Checkbox: {
-              classNames: {
-                label: "label",
-              },
-            },
-          },
         }}
+        withCSSVariables
       >
         <main className={font.className}>
           <Component {...pageProps} />

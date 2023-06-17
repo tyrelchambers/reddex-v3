@@ -65,7 +65,7 @@
     --foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 240 5% 65%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
@@ -76,7 +76,7 @@
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 0 0% 50%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
@@ -97,7 +97,7 @@
 
     /* Muted backgrounds such as <TabsList />, <Skeleton /> and <Switch /> */
     --muted: 240 4% 16%;
-    --muted-foreground: 215.4 16.3% 56.9%;
+    --muted-foreground: 240 4% 66%;
 
     --card: 240 4% 16%;
     --card-foreground: 213 31% 91%;

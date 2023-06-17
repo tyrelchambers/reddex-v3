@@ -45,5 +45,5 @@ export const mantineNumberClasses: Partial<
 };
 
 export const mantineBadgeClasses: Partial<Record<BadgeStylesNames, string>> = {
-  root: "text-foreground",
+  root: "text-foreground bg-accent",
 };

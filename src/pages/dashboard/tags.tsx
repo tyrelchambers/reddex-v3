@@ -1,4 +1,4 @@
-import { Modal, NativeSelect, TextInput } from "@mantine/core";
+import { Modal, NativeSelect, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import DashNav from "~/layouts/DashNav";
@@ -8,6 +8,12 @@ import { useForm } from "@mantine/form";
 import TagListItem from "~/components/TagListItem";
 import { getStorySelectList } from "~/utils/getStorySelectList";
 import EmptyState from "~/components/EmptyState";
+import { Button } from "~/components/ui/button";
+import {
+  mantineInputClasses,
+  mantineModalClasses,
+  mantineSelectClasses,
+} from "~/lib/styles";
 
 const Tags = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -35,10 +41,10 @@ const Tags = () => {
       <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl">
         <header className="flex justify-between">
-          <h1 className="h1 text-3xl">Tags</h1>
-          <button className="button main" onClick={open}>
+          <h1 className="text-2xl text-foreground">Tags</h1>
+          <Button variant="secondary" onClick={open}>
             Create tag
-          </button>
+          </Button>
         </header>
 
         {tagQuery.data && tagQuery.data.length > 0 ? (
@@ -51,29 +57,32 @@ const Tags = () => {
           <EmptyState label="tags" />
         )}
       </main>
-      <Modal opened={opened} onClose={close} title="Create tag">
-        <form onSubmit={submitHandler}>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Create tag"
+        classNames={mantineModalClasses}
+      >
+        <form onSubmit={submitHandler} className="flex flex-col gap-4">
           <TextInput
             variant="filled"
             label="Name"
             placeholder="A name for your tag"
+            classNames={mantineInputClasses}
             {...form.getInputProps("tag")}
           />
 
           {storiesList && (
-            <NativeSelect
+            <Select
               data={storiesList}
               label="Add to an approved story"
+              classNames={mantineSelectClasses}
               {...form.getInputProps("storyId")}
             />
           )}
-          <button
-            className="button main mt-4 w-full"
-            type="submit"
-            onClick={submitHandler}
-          >
+          <Button className="mt-6 w-full" type="submit" onClick={submitHandler}>
             Save tag
-          </button>
+          </Button>
         </form>
       </Modal>
     </>

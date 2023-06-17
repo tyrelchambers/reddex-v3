@@ -13,7 +13,7 @@ const TagListItem = ({ tag }: Props) => {
       key={tag.id}
       className="flex flex-col justify-between overflow-hidden rounded-xl shadow-md"
     >
-      <header className="flex bg-indigo-700 p-4">
+      <header className="flex bg-rose-700 p-4">
         <p className="flex items-center gap-3 text-white">
           <FontAwesomeIcon icon={faHashtag} />
           {tag.tag}

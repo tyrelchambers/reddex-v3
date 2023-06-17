@@ -18,7 +18,14 @@ const UserMenu = () => {
   };
 
   return (
-    <Menu shadow="md" width={200}>
+    <Menu
+      shadow="md"
+      width={200}
+      classNames={{
+        dropdown: "bg-muted border-border",
+        item: "hover:bg-muted-foreground/20 text-foreground",
+      }}
+    >
       <Menu.Target>
         <button type="button">
           <UserChip />
@@ -30,7 +37,7 @@ const UserMenu = () => {
         <Link href={routes.APPROVED}>
           <Menu.Item>Dashboard</Menu.Item>
         </Link>
-        <Menu.Divider />
+        <Menu.Divider className="border-border" />
         <button type="button" onClick={logoutHandler} className="w-full">
           <Menu.Item>Logout</Menu.Item>
         </button>

@@ -18,7 +18,7 @@ const InboxMessageList = ({
   router,
 }: Props) => {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-gray-200 pr-6">
+    <div className="flex w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-border pr-6">
       {messages.map((m) => (
         <button
           key={m.id}
@@ -31,13 +31,17 @@ const InboxMessageList = ({
         >
           <div
             className={`inbox-message-list-item rounded-2xl p-4 transition-all ${
-              m.id === selectedMessage ? "active" : "bg-gray-50"
+              m.id === selectedMessage ? "active" : "bg-card"
             }`}
           >
-            <p className="text-left font-semibold text-gray-700">{m.subject}</p>
+            <p className="text-left font-semibold text-foreground">
+              {m.subject}
+            </p>
             <footer className="mt-4 flex justify-between">
-              <p className="text-sm font-thin text-gray-500">{m.dest}</p>
-              <p className="text-sm font-thin text-gray-500">
+              <p className="text-sm font-thin text-muted-foreground">
+                {m.dest}
+              </p>
+              <p className="text-sm font-thin text-muted-foreground">
                 {format(fromUnixTime(m.created), "MMM do, yyyy")}
               </p>
             </footer>

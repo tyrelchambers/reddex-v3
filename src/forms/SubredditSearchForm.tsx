@@ -1,13 +1,18 @@
 import { faSpinnerThird } from "@fortawesome/pro-duotone-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NativeSelect, TextInput } from "@mantine/core";
+import { Select, TextInput } from "@mantine/core";
 import React, { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { mantineSelectClasses } from "~/lib/styles";
 
 const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
 interface Props {
   open: () => void;
-  searchHandler: (state: { subreddit: string; category: string }) => void;
+  searchHandler: (state: {
+    subreddit: string;
+    category: string | null;
+  }) => void;
   disableSearch: boolean;
   searches: string[] | undefined;
 }
@@ -18,77 +23,77 @@ const SubredditSearchForm = ({
   disableSearch,
   searches,
 }: Props) => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<{
+    subreddit: string;
+    category: string | null;
+  }>({
     subreddit: "",
     category: "Hot",
   });
 
   return (
-    <div className="flex w-full flex-col">
-      <form
-        className="flex w-full max-w-screen-lg items-end gap-3"
-        onSubmit={(e) => {
-          e.preventDefault();
-          searchHandler(state);
-        }}
-      >
-        <TextInput
-          variant="filled"
-          placeholder="subreddit"
-          icon="r/"
-          className="flex-1"
-          onChange={(e) =>
-            setState({ ...state, subreddit: e.currentTarget.value })
-          }
-          value={state.subreddit}
-        />
-        <NativeSelect
-          data={categories}
-          onChange={(e) =>
-            setState({ ...state, category: e.currentTarget.value })
-          }
-        />
-        <button
-          type="button"
-          className="button third  whitespace-nowrap"
-          onClick={open}
+    <div className="flex w-full">
+      <div className="mx-auto flex w-full max-w-screen-xl flex-col p-3">
+        <form
+          className="flex w-full items-end gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            searchHandler(state);
+          }}
         >
-          Add filters
-        </button>
-        <button
-          type="submit"
-          className="button main  whitespace-nowrap"
-          disabled={disableSearch}
-        >
-          {disableSearch ? (
-            <FontAwesomeIcon
-              icon={faSpinnerThird}
-              spin
-              style={{
-                "--fa-primary-color": "#fff",
-                "--fa-secondary-color": "#1b3055",
-              }}
-            />
-          ) : (
-            "Search"
-          )}
-        </button>
-      </form>
-      {searches && (
-        <ul className="mt-1">
-          {searches.map((s) => (
-            <li key={s}>
-              <button
-                type="button"
-                className="text-sm text-gray-600 underline"
-                onClick={() => searchHandler({ ...state, subreddit: s })}
-              >
-                {s}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+          <TextInput
+            variant="filled"
+            placeholder="subreddit"
+            icon="r/"
+            className="flex-1"
+            classNames={{
+              input: "bg-input text-foreground",
+            }}
+            onChange={(e) =>
+              setState({ ...state, subreddit: e.currentTarget.value })
+            }
+            value={state.subreddit}
+          />
+          <Select
+            defaultValue={categories[0]}
+            data={categories}
+            onChange={(e) => setState({ ...state, category: e })}
+            classNames={mantineSelectClasses}
+          />
+          <Button type="button" variant="outline" onClick={open}>
+            Add filters
+          </Button>
+          <Button type="button" variant="default" disabled={disableSearch}>
+            {disableSearch ? (
+              <FontAwesomeIcon
+                icon={faSpinnerThird}
+                spin
+                style={{
+                  "--fa-primary-color": "#fff",
+                  "--fa-secondary-color": "#1b3055",
+                }}
+              />
+            ) : (
+              "Search"
+            )}
+          </Button>
+        </form>
+        {searches && (
+          <ul className="mt-1">
+            {searches.map((s) => (
+              <li key={s}>
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => searchHandler({ ...state, subreddit: s })}
+                >
+                  {s}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

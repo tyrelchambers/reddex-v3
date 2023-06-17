@@ -12,20 +12,22 @@ const Submitted = () => {
   const stories = submittedStories.data;
 
   const rows = stories?.map((story) => (
-    <tr key={story.id}>
-      <td className="w-[200px] font-light text-gray-700">{story.title}</td>
-      <td className="w-[200px] font-light text-gray-700">{story.author}</td>
-      <td className="w-[200px] font-light text-gray-700">{story.email}</td>
+    <tr key={story.id} className=" !bg-card">
+      <td className="w-[200px] font-light !text-foreground">{story.title}</td>
+      <td className="w-[200px] font-light !text-foreground">{story.author}</td>
+      <td className="w-[200px] font-light !text-foreground">{story.email}</td>
       <td className="flex-1">
-        <p className="line-clamp-1  font-light text-gray-700">{story.body}</p>
+        <p className="line-clamp-1  font-light !text-foreground">
+          {story.body}
+        </p>
       </td>
-      <td className="w-[200px] font-light text-gray-700">
+      <td className="w-[200px] font-light !text-foreground">
         {format(new Date(story.date), "MMMM do, yyyy")}
       </td>
       <td>
         <Link
           href="#"
-          className="rounded-full border-[1px] border-gray-200 px-5 py-1 text-indigo-500 hover:bg-gray-200"
+          className="rounded-full border-[1px] border-border px-5 py-1 text-muted-foreground  hover:bg-gray-200 hover:text-background"
         >
           View
         </Link>
@@ -36,8 +38,8 @@ const Submitted = () => {
   return (
     <WrapperWithNav tabs={storiesTabs}>
       <section className="flex flex-col">
-        <h1 className="h1 text-2xl">Submitted</h1>
-        <p className="font-light text-gray-700">
+        <h1 className="text-2xl text-foreground">Submitted</h1>
+        <p className="font-light text-muted-foreground">
           These are your stories submitted via your website.
         </p>
         <div className="flex-1">
@@ -50,12 +52,22 @@ const Submitted = () => {
             >
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Email</th>
-                  <th>Story</th>
-                  <th>Date</th>
-                  <th></th>
+                  <th className="!border-border !text-muted-foreground">
+                    Title
+                  </th>
+                  <th className="!border-border !text-muted-foreground">
+                    Author
+                  </th>
+                  <th className="!border-border !text-muted-foreground">
+                    Email
+                  </th>
+                  <th className="!border-border !text-muted-foreground">
+                    Story
+                  </th>
+                  <th className="!border-border !text-muted-foreground">
+                    Date
+                  </th>
+                  <th className="!border-border !text-muted-foreground"></th>
                 </tr>
               </thead>
               <tbody>{rows}</tbody>

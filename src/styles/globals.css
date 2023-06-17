@@ -4,11 +4,11 @@
 
 @layer components {
   .button {
-    @apply max-h-8 rounded-md px-5 py-2 text-xs  font-bold text-white transition-all hover:shadow-lg;
+    @apply h-full rounded-md px-5 py-2 text-xs  font-bold text-white transition-all hover:shadow-lg;
   }
 
   .button.main {
-    @apply bg-indigo-500 hover:bg-indigo-600;
+    @apply bg-rose-500 hover:bg-rose-600;
   }
 
   .button.danger {
@@ -16,35 +16,32 @@
   }
 
   .button.secondary {
-    @apply bg-white text-indigo-500 hover:bg-indigo-100;
+    @apply bg-white text-rose-500 hover:bg-rose-100;
   }
 
   .button.third {
     @apply border-[1px] border-gray-300 bg-white text-gray-600;
   }
   .button.main:disabled {
-    @apply cursor-not-allowed bg-indigo-300 text-indigo-500 shadow-none;
+    @apply cursor-not-allowed bg-rose-300 text-rose-500 shadow-none;
   }
 
   .button.alt {
-    @apply bg-gray-100 text-indigo-500 shadow-none hover:bg-gray-200;
+    @apply bg-gray-100 text-rose-500 shadow-none hover:bg-gray-200;
   }
 
   .button.simple {
-    @apply p-0 text-sm text-indigo-500 underline shadow-none;
+    @apply p-0 text-sm text-rose-500 underline shadow-none;
   }
 
-  .h1 {
-    @apply text-5xl font-black text-gray-800;
-  }
   .inbox-message-list-item:hover {
-    @apply bg-indigo-500 shadow-md;
+    @apply bg-rose-500 shadow-md;
   }
   .inbox-message-list-item:hover * {
     @apply text-white;
   }
   .inbox-message-list-item.active {
-    @apply bg-indigo-500 shadow-md;
+    @apply bg-rose-500 shadow-md;
   }
   .inbox-message-list-item.active * {
     @apply text-white;
@@ -59,5 +56,85 @@
 
   .form {
     @apply flex flex-col gap-6;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 240 5% 65%;
+
+    --card: 240 4% 96%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 240 4% 96%;
+
+    --primary: 350 89% 60%;
+    --primary-foreground: 222.2 47.4% 100%;
+
+    --secondary: 210 40% 97.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 350 89% 60%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+
+    --border: 240 4% 86%;
+  }
+
+  .dark {
+    /* Default background color of <body />...etc */
+    --background: 240 6% 10%;
+    --foreground: 213 31% 91%;
+
+    /* Muted backgrounds such as <TabsList />, <Skeleton /> and <Switch /> */
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 4% 66%;
+
+    --card: 240 4% 16%;
+    --card-foreground: 213 31% 91%;
+
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+
+    /* Primary colors for <Button /> */
+    --primary: 350 89% 60%;
+    --primary-foreground: 222.2 47.4% 100%;
+
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 350 89% 60%;
+
+    /* Used for accents such as hover effects on <DropdownMenuItem>, <SelectItem>...etc */
+    --accent: 350 89% 60%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 240 4% 16%;
+
+    --radius: 0.5rem;
+
+    --border: 240 4% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

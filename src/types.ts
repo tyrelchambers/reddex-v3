@@ -105,3 +105,8 @@ export type SubmissionFormModuleWithoutId = Omit<
   SubmissionFormModule,
   "id" | "submissionPageId"
 >;
+
+export interface SelectValue {
+  label: string;
+  value: string;
+}

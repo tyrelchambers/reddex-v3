@@ -35,7 +35,7 @@ const _routes = [
   },
   {
     label: "Website",
-    slug: routes.WEBSITE,
+    slug: routes.WEBSITE_GENERAL,
     icon: faBrowser,
   },
   {
@@ -48,14 +48,16 @@ const _routes = [
 const DashNav = () => {
   const pathname = useRouter().pathname;
   return (
-    <nav className=" w-full bg-gray-100 p-3">
+    <nav className=" w-full bg-foreground/5 p-3">
       <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
         {_routes.map((r) => (
           <li key={r.label}>
             <Link
               href={r.slug}
-              className={`flex items-center gap-2 text-gray-500 hover:text-indigo-500 ${
-                pathname.includes(r.slug) ? "text-indigo-500" : ""
+              className={`flex items-center gap-2 hover:text-accent ${
+                pathname.includes(r.slug)
+                  ? "text-foreground"
+                  : " text-foreground/50"
               }`}
             >
               <FontAwesomeIcon icon={r.icon} />

@@ -69,7 +69,7 @@ const Success = () => {
 
           <Link
             href={routes.HOME}
-            className="mt-4 flex w-full items-center justify-center rounded-full bg-indigo-500 p-4 text-white hover:bg-indigo-600"
+            className="mt-4 flex w-full items-center justify-center rounded-full bg-rose-500 p-4 text-white hover:bg-rose-600"
           >
             <FontAwesomeIcon icon={faCheck} className="mr-3" /> Complete
           </Link>

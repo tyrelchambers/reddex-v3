@@ -4,8 +4,10 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
+import { Button } from "~/components/ui/button";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
+import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { api } from "~/utils/api";
 
 const Contacts = () => {
@@ -37,15 +39,15 @@ const Contacts = () => {
       <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl">
         <header className="flex items-center justify-between">
-          <h1 className="h1 text-3xl">Contacts</h1>
+          <h1 className="text-2xl text-foreground">Contacts</h1>
 
-          <button type="button" className="button main" onClick={open}>
+          <Button variant="secondary" onClick={open}>
             Add contact
-          </button>
+          </Button>
         </header>
 
         {contactsQuery.data && contactsQuery.data.length > 0 ? (
-          <section className="my-10 grid grid-cols-3">
+          <section className="my-10 grid grid-cols-3 gap-6">
             {contactsQuery.data?.map((ct) => (
               <ContactItem key={ct.id} contact={ct} />
             ))}
@@ -54,22 +56,29 @@ const Contacts = () => {
           <EmptyState label="contacts" />
         )}
 
-        <Modal opened={opened} onClose={close} title="Add contact">
-          <form onSubmit={submitHandler}>
+        <Modal
+          opened={opened}
+          onClose={close}
+          title="Add contact"
+          classNames={mantineModalClasses}
+        >
+          <form onSubmit={submitHandler} className="flex flex-col gap-4">
             <TextInput
               variant="filled"
               label="Name"
               placeholder="Add your contact's name"
+              classNames={mantineInputClasses}
               {...form.getInputProps("name")}
             />
             <Textarea
               label="Notes"
               {...form.getInputProps("notes")}
               variant="filled"
+              classNames={mantineInputClasses}
             />
-            <button type="submit" className="button main mt-4 w-full">
+            <Button type="submit" className="mt-6 w-full">
               Save
-            </button>
+            </Button>
           </form>
         </Modal>
       </main>

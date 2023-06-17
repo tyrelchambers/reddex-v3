@@ -3,11 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
-import TabsList from "~/components/TabsList";
+import { Button } from "~/components/ui/button";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
@@ -47,8 +46,8 @@ const Integrations = () => {
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website integrations..."
         >
-          <h1 className="h1 text-2xl">Integrations</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl text-foreground">Integrations</h1>
+          <p className="text-sm text-muted-foreground">
             Any integration field that lacks a value will not show up on your
             website.
           </p>
@@ -56,15 +55,14 @@ const Integrations = () => {
             <TextInput
               variant="filled"
               label="Youtube"
+              classNames={mantineInputClasses}
               description="Show the last 5 videos on your website."
               placeholder="Youtube channel ID"
               icon={<FontAwesomeIcon icon={faYoutube} />}
               {...form.getInputProps("youtubeIntegrationId")}
             />
 
-            <button className="button main mt-4 w-full" type="submit">
-              Save changes
-            </button>
+            <Button type="submit">Save changes</Button>
           </form>
         </BodyWithLoader>
       </main>

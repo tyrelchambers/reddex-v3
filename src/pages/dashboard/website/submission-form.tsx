@@ -2,11 +2,9 @@ import { Checkbox, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import StatusBanner from "~/components/StatusBanner";
-import TabsList from "~/components/TabsList";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
@@ -94,7 +92,7 @@ const SubmissionForm = () => {
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading submission form settings..."
         >
-          <h1 className="h1 text-2xl">Submission form</h1>
+          <h1 className="text-2xl text-foreground">Submission form</h1>
 
           {submissionFormVisibility.data?.hidden ? (
             <StatusBanner
@@ -129,11 +127,13 @@ const SubmissionForm = () => {
             <TextInput
               variant="filled"
               label="Page title"
+              classNames={mantineInputClasses}
               {...form.getInputProps("name")}
             />
             <TextInput
               variant="filled"
               label="Page subtitle"
+              classNames={mantineInputClasses}
               {...form.getInputProps("subtitle")}
             />
             <Textarea
@@ -141,21 +141,20 @@ const SubmissionForm = () => {
               label="Description"
               description="List any rules for submissions or any information you want people to know"
               minRows={8}
+              classNames={mantineInputClasses}
               {...form.getInputProps("description")}
             />
 
-            <section className="mt-10 flex flex-col gap-4">
-              <p className="text-grayy-800 text-xl font-semibold">
-                Customize modules
-              </p>
+            <section className="flex flex-col gap-4">
+              <p className="text-xl text-foreground">Customize modules</p>
 
               {websiteSettings.data?.submissionPage.submissionFormModules.map(
                 (mod, id) => (
                   <div
                     key={mod.id}
-                    className="flex flex-col rounded-xl bg-gray-50 p-4"
+                    className="flex flex-col rounded-xl bg-card p-4"
                   >
-                    <p className="label font-bold capitalize text-gray-700">
+                    <p className="label font-bold capitalize text-card-foreground">
                       {mod.name}
                     </p>
 
@@ -163,6 +162,7 @@ const SubmissionForm = () => {
                       <Checkbox
                         label="Enabled"
                         description="Show this module on your submission page"
+                        classNames={mantineCheckBoxClasses}
                         {...form.getInputProps(
                           `submissionFormModules.${id}.enabled`,
                           {
@@ -173,6 +173,7 @@ const SubmissionForm = () => {
                       <Checkbox
                         label="Required"
                         description="Make this field required"
+                        classNames={mantineCheckBoxClasses}
                         {...form.getInputProps(
                           `submissionFormModules.${id}.required`,
                           {

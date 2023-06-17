@@ -4,6 +4,7 @@ import Header from "~/layouts/Header";
 import computerImg from "../../public/images/computer.jpg";
 import Image from "next/image";
 import { Badge } from "@mantine/core";
+import { mantineBadgeClasses } from "~/lib/styles";
 const Home: NextPage = () => {
   return (
     <>
@@ -32,6 +33,7 @@ const UsedBy = () => {
   const usedBy = [
     "Mr.CreepyPasta",
     "AsTheRavenDreams",
+    "Stories After Midnight",
     "TheDarkNarrator",
     "To_42",
     "TheOminousDarkness",
@@ -43,11 +45,13 @@ const UsedBy = () => {
 
   return (
     <section>
-      <p className="text-center font-bold">Trusted by these great narrators</p>
+      <p className="text-center font-bold text-muted-foreground">
+        Trusted by these great narrators
+      </p>
 
       <ul className="mt-4 flex flex-wrap justify-center gap-3">
         {usedBy.map((u) => (
-          <li key={u} className="text-3xl font-black text-gray-700">
+          <li key={u} className="text-3xl font-black text-foreground">
             {u}
           </li>
         ))}
@@ -112,21 +116,18 @@ const Stats = () => {
 };
 
 const Hero = () => (
-  <section className="hero flex items-center gap-10">
-    <div className="flex w-1/2 flex-col gap-8">
-      <Badge className="w-fit" color="rose">
-        Thousands of stories read
-      </Badge>
-      <h1 className="h1">We help Narrators like you save time and effort</h1>
-      <p>
-        Reddex is a tool designed to help you find the next best Reddit story in
-        no-time at all. Save hours searching for stories and requesting
-        permission. Reddex helps you do all that in a matter of minutes.
-      </p>
-    </div>
-    <div className="w-1/2">
-      <Image src={computerImg} alt="" className="w-full max-w-xl rounded-xl" />
-    </div>
+  <section className="hero mx-auto flex w-full max-w-screen-md  flex-col items-center justify-center gap-10">
+    <Badge className="w-fit" classNames={mantineBadgeClasses} color="rose">
+      Thousands of stories read
+    </Badge>
+    <h1 className="text-center text-5xl font-semibold text-foreground">
+      We help Narrators like you save time and effort
+    </h1>
+    <p className="text-center text-2xl font-thin text-muted-foreground">
+      Reddex is a tool designed to help you find the next best Reddit story in
+      no-time at all. Save hours searching for stories and requesting
+      permission. Reddex helps you do all that in a matter of minutes.
+    </p>
   </section>
 );
 

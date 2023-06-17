@@ -9,12 +9,12 @@ interface Props {
 const PricingFrequencySelect = ({ frequency, setFrequency }: Props) => {
   return (
     <div className="relative flex justify-center">
-      <div className="rounded-full bg-white p-1">
+      <div className="rounded-full bg-background p-1">
         <button
           className={clsx(
             "rounded-full px-4 py-2 text-sm font-semibold duration-150",
             {
-              "bg-indigo-500 text-white": frequency === "yearly",
+              "bg-accent text-accent-foreground": frequency === "yearly",
             }
           )}
           type="button"
@@ -27,7 +27,7 @@ const PricingFrequencySelect = ({ frequency, setFrequency }: Props) => {
           className={clsx(
             "rounded-full px-4 py-2 text-sm font-semibold duration-150",
             {
-              "bg-indigo-500 text-white": frequency === "monthly",
+              "bg-accent text-accent-foreground": frequency === "monthly",
             }
           )}
           type="button"

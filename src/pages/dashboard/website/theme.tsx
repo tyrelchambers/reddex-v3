@@ -1,4 +1,4 @@
-import { ColorPicker, NativeSelect } from "@mantine/core";
+import { ColorPicker, NativeSelect, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import TabsList from "~/components/TabsList";
@@ -6,6 +6,7 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { mantineSelectClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { api } from "~/utils/api";
 
@@ -50,16 +51,17 @@ const Theme = () => {
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website theme settings..."
         >
-          <h1 className="h1 text-2xl">Theme</h1>
+          <h1 className="text-2xl text-foreground">Theme</h1>
 
           <form className="form mt-4 max-w-sm " onSubmit={submitHandler}>
-            <NativeSelect
+            <Select
+              classNames={mantineSelectClasses}
               label="Mode"
               data={themes}
               {...form.getInputProps("theme")}
             />
             <div className="flex flex-col">
-              <p className="label">Colour</p>
+              <p className="label text-foreground">Colour</p>
               <ColorPicker
                 format="rgba"
                 swatches={[

@@ -5,8 +5,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import Spinner from "~/components/Spinner";
+import { Button } from "~/components/ui/button";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
+import { mantineInputClasses } from "~/lib/styles";
 import { api } from "~/utils/api";
 
 const Inbox = () => {
@@ -58,21 +60,17 @@ const Inbox = () => {
         ) : (
           <div className="flex flex-col">
             <header className="mb-6 flex items-center justify-between">
-              <h1 className="h1 text-3xl">Inbox</h1>
+              <h1 className="text-2xl text-foreground">Inbox</h1>
               <div className="flex gap-4">
                 <TextInput
                   ref={searchRef}
                   placeholder="Search for a message via author or subject"
-                  className="w-96"
+                  classNames={mantineInputClasses}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <button
-                  type="button"
-                  className="button alt"
-                  onClick={resetSearch}
-                >
+                <Button variant="secondary" onClick={resetSearch}>
                   Reset
-                </button>
+                </Button>
               </div>
             </header>
             <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">

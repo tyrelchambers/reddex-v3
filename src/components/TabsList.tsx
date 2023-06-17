@@ -28,7 +28,7 @@ const TabsList = ({ tabs }: Props) => {
           <Link
             aria-selected={router.pathname.includes(item.slug)}
             aria-controls={`tabpanel-${idx + 1}`}
-            className="flex items-center gap-x-2 rounded-lg px-2 py-2 font-medium duration-150 hover:bg-muted hover:text-foreground active:bg-gray-100"
+            className="flex items-center gap-x-2 rounded-lg px-2 py-2 font-medium duration-150 hover:bg-muted hover:text-foreground "
             href={item.slug}
           >
             <FontAwesomeIcon icon={item.icon} />

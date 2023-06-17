@@ -25,6 +25,8 @@ import FileUpload from "~/components/FileUpload";
 import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { Button } from "~/components/ui/button";
+import { mantineInputClasses } from "~/lib/styles";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -142,18 +144,15 @@ const General = () => {
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website settings..."
         >
-          <h1 className="h1 text-2xl">General</h1>
+          <h1 className="text-2xl text-foreground">General</h1>
           {websiteVisibility.data?.hidden ? (
             <StatusBanner
               title="Enable Website"
               subtitle="Enable your website to be seen by the public."
               action={
-                <button
-                  className="button secondary"
-                  onClick={showWebsiteHandler}
-                >
+                <Button variant="defaultInvert" onClick={showWebsiteHandler}>
                   Make website public{" "}
-                </button>
+                </Button>
               }
             />
           ) : (
@@ -161,28 +160,19 @@ const General = () => {
               type="secondary"
               title="Hide Website"
               subtitle="Hide your website so others can't see it."
-              action={
-                <button
-                  className="button secondary"
-                  onClick={hideWebsiteHandler}
-                >
-                  Hide
-                </button>
-              }
+              action={<Button onClick={hideWebsiteHandler}>Hide</Button>}
             />
           )}
           <form className="form my-10" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
-              <p className="label">Subdomain</p>
-              <div className="flex h-fit items-center rounded-lg bg-gray-100 p-1">
+              <p className="label text-foreground">Subdomain</p>
+              <div className="flex h-fit items-center rounded-lg bg-card p-1">
                 <span className="px-3 text-gray-500">http://</span>
                 <TextInput
                   variant="filled"
                   placeholder="subdomain"
                   className="flex-1 rounded-none"
-                  classNames={{
-                    input: "bg-gray-100 border-0",
-                  }}
+                  classNames={mantineInputClasses}
                   {...form.getInputProps("subdomain")}
                 />
                 <span className="px-3 text-gray-500">.reddex.app</span>
@@ -198,11 +188,13 @@ const General = () => {
             <TextInput
               variant="filled"
               label="Site name"
+              classNames={mantineInputClasses}
               placeholder="Name of your site"
               {...form.getInputProps("name")}
             />
             <Textarea
               variant="filled"
+              classNames={mantineInputClasses}
               label="Site description"
               description="Let people know who you are"
               minRows={8}
@@ -210,8 +202,10 @@ const General = () => {
             />
 
             <div className="flex flex-col">
-              <p className="label">Thumbnail</p>
-              <p className="sublabel">Optimal image size 200 x 200</p>
+              <p className="label text-foreground">Thumbnail</p>
+              <p className="sublabel text-muted-foreground">
+                Optimal image size 200 x 200
+              </p>
               {!websiteSettings.data?.thumbnail ? (
                 <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
               ) : (
@@ -224,8 +218,9 @@ const General = () => {
                       h={200}
                     />
                   </div>
-                  <button
-                    className="button alt mt-2"
+                  <Button
+                    variant="secondary"
+                    className=" mt-4"
                     onClick={() =>
                       websiteSettings.data?.thumbnail &&
                       removeImage.mutate({
@@ -235,14 +230,16 @@ const General = () => {
                     }
                   >
                     Remove thumbnail
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
 
             <div className="flex flex-col">
-              <p className="label">Cover image</p>
-              <p className="sublabel">Optimal image size 1500 x 500</p>
+              <p className="label text-foreground">Cover image</p>
+              <p className="sublabel text-muted-foreground">
+                Optimal image size 1500 x 500
+              </p>
               {!websiteSettings.data?.banner ? (
                 <FileUpload uploadRef={bannerRef} type="banner" />
               ) : (
@@ -250,8 +247,9 @@ const General = () => {
                   <div className="overflow-hidden rounded-xl">
                     <Image src={websiteSettings.data.banner} alt="" />
                   </div>
-                  <button
-                    className="button alt mt-2"
+                  <Button
+                    variant="secondary"
+                    className=" mt-4"
                     onClick={() =>
                       websiteSettings.data?.banner &&
                       removeImage.mutate({
@@ -261,15 +259,15 @@ const General = () => {
                     }
                   >
                     Remove banner
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
             <Divider className="my-4" />
 
             <section className="flex flex-col">
-              <h2 className="text-xl font-bold text-gray-700">Social media</h2>
-              <p className="font-thin text-gray-600">
+              <h2 className="text-xl text-foreground">Social media</h2>
+              <p className="font-thin text-muted-foreground">
                 The links below will appear as social icons on your site. These
                 are not required, and the icons will not appear on your site if
                 you leave them blank.
@@ -278,36 +276,42 @@ const General = () => {
               <div className="mt-6 flex flex-col gap-3">
                 <TextInput
                   variant="filled"
+                  classNames={mantineInputClasses}
                   placeholder="Twitter"
                   icon={<FontAwesomeIcon icon={faTwitter} />}
                   {...form.getInputProps("twitter")}
                 />
                 <TextInput
                   variant="filled"
+                  classNames={mantineInputClasses}
                   placeholder="Facebook"
                   icon={<FontAwesomeIcon icon={faFacebook} />}
                   {...form.getInputProps("facebook")}
                 />
                 <TextInput
                   variant="filled"
+                  classNames={mantineInputClasses}
                   placeholder="Instagram"
                   icon={<FontAwesomeIcon icon={faInstagram} />}
                   {...form.getInputProps("instagram")}
                 />
                 <TextInput
                   variant="filled"
+                  classNames={mantineInputClasses}
                   placeholder="Patreon"
                   icon={<FontAwesomeIcon icon={faPatreon} />}
                   {...form.getInputProps("patreon")}
                 />
                 <TextInput
                   variant="filled"
+                  classNames={mantineInputClasses}
                   placeholder="Youtube"
                   icon={<FontAwesomeIcon icon={faYoutube} />}
                   {...form.getInputProps("youtube")}
                 />
                 <TextInput
                   variant="filled"
+                  classNames={mantineInputClasses}
                   placeholder="Podcast"
                   icon={<FontAwesomeIcon icon={faPodcast} />}
                   {...form.getInputProps("podcast")}

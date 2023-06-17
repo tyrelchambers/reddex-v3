@@ -13,6 +13,8 @@ import { formatInboxMessagesToList } from "~/utils/formatInboxMessagesToList";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
+import { Button } from "./ui/button";
+import { mantineInputClasses } from "~/lib/styles";
 
 interface Props {
   message: RedditInboxMessage | undefined;
@@ -58,28 +60,23 @@ const SelectedInboxMessage = ({ message }: Props) => {
   return (
     <div className="flex-1 overflow-auto">
       <header className="w-full">
-        <p className="text-2xl font-bold text-gray-700">{message.subject}</p>
+        <p className="text-2xl text-foreground">{message.subject}</p>
         <footer className="mt-6 flex items-center gap-10 ">
-          <p className="flex items-center gap-2 text-gray-500">
+          <p className="flex items-center gap-2 text-muted-foreground">
             <FontAwesomeIcon icon={faUserCircle} />
             {message.dest}
           </p>
 
           <div className=" flex gap-4">
-            <button
-              type="button"
-              className="button alt"
+            <Button
+              variant="secondary"
               onClick={() => addToContacts(message.dest)}
             >
               Add to contacts
-            </button>
-            <button
-              type="button"
-              className="button secondary"
-              onClick={addStoryToReadingList}
-            >
+            </Button>
+            <Button variant="secondary" onClick={addStoryToReadingList}>
               Add to reading list
-            </button>
+            </Button>
           </div>
         </footer>
       </header>
@@ -93,16 +90,13 @@ const SelectedInboxMessage = ({ message }: Props) => {
       </section>
 
       <form
-        className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-rose-500 p-2 shadow-lg"
+        className="sticky bottom-4 flex items-end gap-3 rounded-xl bg-muted p-2 shadow-lg"
         onSubmit={submitHandler}
       >
         <Textarea
           variant="filled"
           placeholder="Send a reply..."
-          classNames={{
-            input:
-              "border-rose-400 bg-transparent border-1[px] text-white placeholder:text-white rounded-lg",
-          }}
+          classNames={mantineInputClasses}
           className="min-h-10 flex-1"
           autosize
           maxRows={6}
@@ -124,19 +118,19 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
 const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
-    <div className="rounded-2xl bg-gray-50 p-4">
+    <div className="rounded-2xl bg-muted p-4">
       <header className="mb-2 flex items-baseline justify-between">
-        <p className="mb-2 text-xl font-bold text-gray-700">
+        <p className="mb-2 text-xl font-bold text-foreground">
           {message.isReply && (
-            <FontAwesomeIcon icon={faReply} className="mr-4 text-rose-500" />
+            <FontAwesomeIcon icon={faReply} className="mr-4 text-accent" />
           )}
           {message.author}
         </p>
-        <p className=" font-thin text-gray-800">
+        <p className=" font-thin text-foreground">
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>
-      <p className="whitespace-pre-wrap font-thin text-gray-700">
+      <p className="whitespace-pre-wrap font-thin text-foreground">
         {message.body}
       </p>
     </div>

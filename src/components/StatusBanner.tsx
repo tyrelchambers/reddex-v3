@@ -10,10 +10,10 @@ interface Props {
 const StatusBanner = ({ type = "primary", title, subtitle, action }: Props) => {
   if (type === "primary") {
     return (
-      <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-rose-500 p-4 shadow-lg">
+      <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-accent p-4 shadow-lg">
         <div className="flex flex-col">
-          <p className="text-white">{title}</p>
-          <p className="text-sm font-thin text-gray-200">{subtitle}</p>
+          <p className="text-accent-foreground">{title}</p>
+          <p className="text-sm font-thin text-foreground">{subtitle}</p>
         </div>
 
         {action}
@@ -22,10 +22,10 @@ const StatusBanner = ({ type = "primary", title, subtitle, action }: Props) => {
   }
 
   return (
-    <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-gray-100 p-4">
+    <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-card p-4">
       <div className="flex flex-col">
-        <p className="text-gray-700">{title}</p>
-        <p className="text-sm font-thin text-gray-500">{subtitle}</p>
+        <p className="text-card-foreground">{title}</p>
+        <p className="text-sm font-thin text-muted-foreground">{subtitle}</p>
       </div>
 
       {action}

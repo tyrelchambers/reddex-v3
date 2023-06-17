@@ -63,7 +63,7 @@ const Pricing = () => {
                       /mo
                     </span>
                   </div>
-                  <p>{item.desc}</p>
+                  <p className="text-foreground/50">{item.desc}</p>
                   <Link
                     href="/login"
                     className="flex w-full justify-center rounded-lg bg-accent px-3 py-3 text-sm font-semibold text-white duration-150 hover:bg-accent active:bg-rose-700"
@@ -96,7 +96,7 @@ const Pricing = () => {
                           clip-rule="evenodd"
                         ></path>
                       </svg>
-                      {featureItem}
+                      <p className="text-foreground/50">{featureItem}</p>
                     </li>
                   ))}
                 </ul>

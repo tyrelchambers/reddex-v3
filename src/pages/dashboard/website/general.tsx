@@ -166,13 +166,15 @@ const General = () => {
           <form className="form my-10" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
               <p className="label text-foreground">Subdomain</p>
-              <div className="flex h-fit items-center rounded-lg bg-card p-1">
+              <div className="flex h-fit items-center rounded-lg bg-input p-1">
                 <span className="px-3 text-gray-500">http://</span>
                 <TextInput
                   variant="filled"
                   placeholder="subdomain"
-                  className="flex-1 rounded-none"
-                  classNames={mantineInputClasses}
+                  classNames={{
+                    ...mantineInputClasses,
+                    input: `${mantineInputClasses.input || ""} !border-0`,
+                  }}
                   {...form.getInputProps("subdomain")}
                 />
                 <span className="px-3 text-gray-500">.reddex.app</span>
@@ -185,21 +187,25 @@ const General = () => {
               )}
             </div>
 
-            <TextInput
-              variant="filled"
-              label="Site name"
-              classNames={mantineInputClasses}
-              placeholder="Name of your site"
-              {...form.getInputProps("name")}
-            />
-            <Textarea
-              variant="filled"
-              classNames={mantineInputClasses}
-              label="Site description"
-              description="Let people know who you are"
-              minRows={8}
-              {...form.getInputProps("description")}
-            />
+            <div className="flex">
+              <TextInput
+                variant="filled"
+                label="Site name"
+                classNames={mantineInputClasses}
+                placeholder="Name of your site"
+                {...form.getInputProps("name")}
+              />
+            </div>
+            <div className="flex h-fit">
+              <Textarea
+                variant="filled"
+                classNames={mantineInputClasses}
+                label="Site description"
+                description="Let people know who you are"
+                minRows={8}
+                {...form.getInputProps("description")}
+              />
+            </div>
 
             <div className="flex flex-col">
               <p className="label text-foreground">Thumbnail</p>

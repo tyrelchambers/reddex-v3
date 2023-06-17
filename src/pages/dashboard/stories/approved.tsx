@@ -25,7 +25,7 @@ const Approved = () => {
           </p>
         </div>
 
-        <div className="flex h-fit gap-3">
+        <div className="flex h-10 w-full max-w-md gap-3">
           <TextInput
             placeholder="Search by keywords"
             icon={<FontAwesomeIcon icon={faSearch} />}

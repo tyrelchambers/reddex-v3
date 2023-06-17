@@ -106,9 +106,11 @@ const Profile = () => {
                   key={`${s}_${id}`}
                   className="flex w-fit items-center gap-4 rounded-full bg-card p-2"
                 >
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-card-foreground">
-                    <FontAwesomeIcon icon={faTimes} className="rounded-full" />
-                  </div>
+                  <FontAwesomeIcon
+                    icon={faTimes}
+                    className="rounded-full text-card-foreground"
+                  />
+
                   <p className="font-thin text-card-foreground">{s}</p>
                 </div>
               ))}

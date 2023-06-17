@@ -35,7 +35,7 @@ const _routes = [
   },
   {
     label: "Website",
-    slug: routes.WEBSITE,
+    slug: routes.WEBSITE_GENERAL,
     icon: faBrowser,
   },
   {
@@ -48,13 +48,13 @@ const _routes = [
 const DashNav = () => {
   const pathname = useRouter().pathname;
   return (
-    <nav className=" w-full bg-muted p-3">
+    <nav className=" w-full bg-card p-3">
       <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
         {_routes.map((r) => (
           <li key={r.label}>
             <Link
               href={r.slug}
-              className={`flex items-center gap-2 hover:text-rose-500 ${
+              className={`flex items-center gap-2 hover:text-accent ${
                 pathname.includes(r.slug)
                   ? "text-foreground"
                   : " text-foreground/50"

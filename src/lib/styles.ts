@@ -19,10 +19,11 @@ export const mantineSelectClasses: Partial<
 export const mantineInputClasses: Partial<
   Record<TextInputStylesNames, string>
 > = {
-  input: "bg-input text-foreground border-muted w-full rounded-md h-full p-3",
-  wrapper: "h-fit box-border",
+  input: "bg-input text-foreground border-muted w-full rounded-md  px-3",
+  wrapper: " box-border flex-1",
   label: "text-card-foreground",
   description: "text-muted-foreground",
+  root: "flex-1",
 };
 
 export const mantineCheckBoxClasses: Partial<
@@ -39,11 +40,11 @@ export const mantineNumberClasses: Partial<
   wrapper: "h-fit box-border",
   label: "text-card-foreground",
   description: "text-muted-foreground",
-  controlUp: "bg-card text-card-foreground border-muted-foreground ",
-  controlDown: "bg-card text-card-foreground border-muted-foreground",
+  controlUp: "bg-card text-card-foreground border-border ",
+  controlDown: "bg-card text-card-foreground border-border",
   rightSection: "border-accent",
 };
 
 export const mantineBadgeClasses: Partial<Record<BadgeStylesNames, string>> = {
-  root: "text-foreground bg-accent",
+  root: "text-accent-foreground bg-accent",
 };

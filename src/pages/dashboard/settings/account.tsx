@@ -77,8 +77,7 @@ const Settings = () => {
             )}
             <Badge
               variant="dot"
-              className="w-fit"
-              classNames={mantineBadgeClasses}
+              className="w-fit text-foreground"
               color="green"
             >
               {subscription?.status === "active" ? "active" : "inactive"}

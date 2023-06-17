@@ -21,14 +21,14 @@ const TabsList = ({ tabs }: Props) => {
           key={idx}
           className={`rounded-lg ${
             router.pathname.includes(item.slug)
-              ? "bg-muted text-foreground"
+              ? "bg-card text-foreground"
               : " text-gray-500"
           }`}
         >
           <Link
             aria-selected={router.pathname.includes(item.slug)}
             aria-controls={`tabpanel-${idx + 1}`}
-            className="flex items-center gap-x-2 rounded-lg px-2 py-2 font-medium duration-150 hover:bg-muted hover:text-foreground "
+            className="flex items-center gap-x-2 rounded-lg px-2 py-2 font-medium duration-150 hover:bg-card hover:text-foreground "
             href={item.slug}
           >
             <FontAwesomeIcon icon={item.icon} />

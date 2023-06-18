@@ -13,6 +13,7 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
+import { mantineModalClasses } from "~/lib/styles";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -117,9 +118,9 @@ const Search = () => {
           opened={opened}
           onClose={close}
           title="Add filters"
-          classNames={{ title: "font-bold" }}
+          classNames={mantineModalClasses}
         >
-          <p className="mb-4 text-sm text-gray-700">
+          <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
           <FilterSelections filters={filters} dispatch={dispatch} />
@@ -130,9 +131,7 @@ const Search = () => {
           onClose={closeQueue}
           size="xl"
           title="Story queue"
-          classNames={{
-            title: "font-black",
-          }}
+          classNames={mantineModalClasses}
         >
           <QueueModal close={closeQueue} />
         </Modal>

@@ -6,6 +6,7 @@ interface QueueState {
   add: (item: PostFromReddit) => void;
   exists: (item: PostFromReddit) => boolean;
   remove: (item: PostFromReddit) => void;
+  clear: () => void;
 }
 
 export const useQueueStore = create<QueueState>((set, get) => ({
@@ -31,4 +32,5 @@ export const useQueueStore = create<QueueState>((set, get) => ({
         queue: queueWithoutItem,
       };
     }),
+  clear: () => set(() => ({ queue: [] })),
 }));

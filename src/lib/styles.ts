@@ -1,9 +1,9 @@
 import {
   BadgeStylesNames,
   CheckboxStylesNames,
-  DividerStylesNames,
   ModalStylesNames,
   NumberInputStylesNames,
+  SwitchStylesNames,
   TextInputStylesNames,
 } from "@mantine/core";
 import { BaseSelectStylesNames } from "@mantine/core/lib/Select/types";
@@ -37,7 +37,7 @@ export const mantineCheckBoxClasses: Partial<
 export const mantineNumberClasses: Partial<
   Record<NumberInputStylesNames, string>
 > = {
-  input: "bg-input text-foreground border-muted w-full rounded-md h-full p-3",
+  input: "bg-input text-foreground border-muted w-full rounded-md h-full",
   wrapper: "h-fit box-border",
   label: "text-card-foreground",
   description: "text-muted-foreground",
@@ -53,4 +53,10 @@ export const mantineBadgeClasses: Partial<Record<BadgeStylesNames, string>> = {
 export const mantineModalClasses: Partial<Record<ModalStylesNames, string>> = {
   header: "bg-background text-foreground",
   content: "bg-background rounded-3xl p-6",
+};
+
+export const mantineSwitchStyles: Partial<Record<SwitchStylesNames, string>> = {
+  label: "text-foreground",
+  thumb: "bg-accent border-border",
+  track: "bg-background border-border",
 };

@@ -32,7 +32,7 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-card">
+    <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background">
       <header
         className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header} p-3 py-5`}
       >
@@ -69,12 +69,12 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
 
       <footer className="mt-auto flex items-end justify-between p-3">
         <div className="flex gap-3">
-          <div className="flex items-center gap-2 text-xs text-primary-foreground/50">
+          <div className="flex items-center gap-2 text-xs text-foreground/50">
             <FontAwesomeIcon icon={faFolder} />
             <p>{post.subreddit}</p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-primary-foreground/50">
+          <div className="flex items-center gap-2 text-xs text-foreground/50">
             <FontAwesomeIcon icon={faCalendar} />
             <p>
               {formatDistanceToNowStrict(new Date(post.created * 1000))} ago

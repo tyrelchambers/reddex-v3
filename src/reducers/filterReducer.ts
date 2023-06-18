@@ -17,7 +17,7 @@ type Filter =
       qualifier?: string | FilterQualifier;
       value: number;
     }
-  | { qualifier: string | FilterQualifier; value?: number };
+  | { qualifier: string | FilterQualifier | null; value?: number };
 
 export type FilterAction =
   | {

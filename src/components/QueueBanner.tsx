@@ -1,5 +1,6 @@
 import React from "react";
 import { useQueueStore } from "~/stores/queueStore";
+import { Button } from "./ui/button";
 
 interface Props {
   openQueue: () => void;
@@ -16,13 +17,12 @@ const QueueBanner = ({ openQueue }: Props) => {
         <span className="font-bold">{queueStore.queue.length}</span> items in
         queue
       </p>
-      <button
-        type="button"
-        className="rounded-lg bg-white px-4 py-2 text-sm text-accent/90 shadow-gray-600 transition-all hover:bg-gray-100 hover:shadow-md"
-        onClick={openQueue}
-      >
+      <Button type="button" variant="defaultInvert" onClick={openQueue}>
         Open queue
-      </button>
+      </Button>
+      <Button variant="ghost" onClick={() => queueStore.clear()}>
+        Clear queue
+      </Button>
     </div>
   );
 };

@@ -5,6 +5,8 @@ import React, { useEffect } from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit, RedditPostWithText } from "~/types";
 import { api } from "~/utils/api";
+import { Button } from "./ui/button";
+import { mantineInputClasses } from "~/lib/styles";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
@@ -101,47 +103,47 @@ const QueueModal = ({ close }: Props) => {
 
       <div className="mt-10 flex flex-col">
         <div className="flex items-baseline gap-4">
-          <p className="font-bold">Message</p>
+          <p className="font-bold text-foreground">Message</p>
 
-          <button
-            className="button simple"
+          <Button
+            variant="link"
             onClick={() => fillWithMessage(userQuery.data?.Profile?.recurring)}
           >
             Initial greeting
-          </button>
-          <button
-            className="button simple"
+          </Button>
+          <Button
+            variant="link"
             onClick={() => fillWithMessage(userQuery.data?.Profile?.greeting)}
           >
             Recurring greeting
-          </button>
+          </Button>
         </div>
         <Textarea
           className="mt-2"
           variant="filled"
           minRows={8}
+          classNames={mantineInputClasses}
           {...form.getInputProps("message")}
         />
       </div>
 
       <footer className="mt-6 flex justify-between">
         <div className="flex gap-3">
-          <button className="button alt" onClick={removeFromQueue}>
+          <Button variant="secondary" onClick={removeFromQueue}>
             Remove from queue
-          </button>
-          <button className="button secondary" onClick={saveContactHandler}>
+          </Button>
+          <Button variant="secondary" onClick={saveContactHandler}>
             Add {currentPost?.author} to contacts
-          </button>
+          </Button>
         </div>
 
-        <button
+        <Button
           type="button"
-          className="button main"
           onClick={sendHandler}
           disabled={redditPost.isLoading}
         >
           {redditPost.isLoading ? <Loader size="sm" /> : "Send message"}
-        </button>
+        </Button>
       </footer>
     </section>
   );
@@ -150,14 +152,20 @@ const QueueModal = ({ close }: Props) => {
 const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
   return (
     <header className="flex flex-col gap-3">
-      <div className="flex flex-col rounded-xl bg-gray-100 p-2">
-        <p className="text-xs font-normal uppercase text-gray-500">Subject</p>
-        <p className="mt-1 text-xl font-bold">{post.title}</p>
+      <div className="flex flex-col rounded-xl bg-card p-2">
+        <p className="text-xs font-normal uppercase text-card-foreground">
+          Subject
+        </p>
+        <p className="mt-1 text-xl font-bold text-card-foreground">
+          {post.title}
+        </p>
       </div>
 
-      <div className="flex flex-col rounded-xl bg-gray-100 p-2">
-        <p className="text-xs font-normal uppercase text-gray-500">Author</p>
-        <p className="mt-1 text-xl font-bold">
+      <div className="flex flex-col rounded-xl bg-card p-2">
+        <p className="text-xs font-normal uppercase text-card-foreground">
+          Author
+        </p>
+        <p className="mt-1 text-xl font-bold text-card-foreground">
           {post.author} {contact && <Badge>Is a contact</Badge>}
         </p>
       </div>

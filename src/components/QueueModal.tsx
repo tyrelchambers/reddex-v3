@@ -28,7 +28,7 @@ const QueueModal = ({ close }: Props) => {
     },
   });
 
-  const redditPost = api.post.save.useMutation({
+  const redditPost = api.story.save.useMutation({
     onSuccess: () => {
       if (currentPost) {
         queueStore.remove(currentPost);

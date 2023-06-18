@@ -17,7 +17,7 @@ import {
 
 const Tags = () => {
   const [opened, { open, close }] = useDisclosure(false);
-  const approvedStories = api.post.getApprovedList.useQuery();
+  const approvedStories = api.story.getApprovedList.useQuery();
   const tagMutation = api.tag.save.useMutation();
   const tagQuery = api.tag.all.useQuery();
 

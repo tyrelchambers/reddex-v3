@@ -3,7 +3,7 @@ import StoryListItem from "~/components/StoryListItem";
 import { api } from "~/utils/api";
 
 const CompletedStoriesList = () => {
-  const completedListQuery = api.post.getCompletedList.useQuery();
+  const completedListQuery = api.story.getCompletedList.useQuery();
 
   return (
     <>

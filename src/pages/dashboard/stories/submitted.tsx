@@ -1,32 +1,36 @@
-import { Table } from "@mantine/core";
+import { Badge, Table } from "@mantine/core";
 import { format } from "date-fns";
 import Link from "next/link";
 import React from "react";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { mantineBadgeClasses } from "~/lib/styles";
 import { storiesTabs } from "~/routes";
 import { api } from "~/utils/api";
 
 const Submitted = () => {
-  const submittedStories = api.post.submittedList.useQuery();
+  const submittedStories = api.story.submittedList.useQuery();
 
   const stories = submittedStories.data;
 
   const rows = stories?.map((story) => (
     <tr key={story.id} className=" !bg-card">
-      <td className="w-[200px] font-light !text-foreground">{story.title}</td>
-      <td className="w-[200px] font-light !text-foreground">{story.author}</td>
-      <td className="w-[200px] font-light !text-foreground">{story.email}</td>
-      <td className="flex-1">
-        <p className="line-clamp-1  font-light !text-foreground">
-          {story.body}
-        </p>
-      </td>
-      <td className="w-[200px] font-light !text-foreground">
+      <td className="flex-1 font-light !text-foreground">{story.title}</td>
+      <td className=" font-light !text-foreground">{story.author}</td>
+      <td className=" font-light !text-foreground">{story.email}</td>
+
+      <td className=" font-light !text-foreground">
         {format(new Date(story.date), "MMMM do, yyyy")}
       </td>
-      <td>
+
+      <td className=" font-light !text-foreground">
+        {story.completed ? (
+          <Badge classNames={mantineBadgeClasses}>Read</Badge>
+        ) : null}
+      </td>
+
+      <td className="flex justify-end">
         <Link
-          href="#"
+          href={"/story/" + story.id}
           className="rounded-full border-[1px] border-border px-5 py-1 text-muted-foreground  hover:bg-gray-200 hover:text-background"
         >
           View
@@ -52,7 +56,7 @@ const Submitted = () => {
             >
               <thead>
                 <tr>
-                  <th className="!border-border !text-muted-foreground">
+                  <th className="!flex-1 !border-border !text-muted-foreground">
                     Title
                   </th>
                   <th className="!border-border !text-muted-foreground">
@@ -61,11 +65,13 @@ const Submitted = () => {
                   <th className="!border-border !text-muted-foreground">
                     Email
                   </th>
-                  <th className="!border-border !text-muted-foreground">
-                    Story
-                  </th>
+
                   <th className="!border-border !text-muted-foreground">
                     Date
+                  </th>
+
+                  <th className="!border-border !text-muted-foreground">
+                    Read
                   </th>
                   <th className="!border-border !text-muted-foreground"></th>
                 </tr>

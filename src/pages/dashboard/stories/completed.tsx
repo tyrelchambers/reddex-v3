@@ -6,7 +6,7 @@ import { storiesTabs } from "~/routes";
 import { api } from "~/utils/api";
 
 const Completed = () => {
-  const completedListQuery = api.post.getCompletedList.useQuery();
+  const completedListQuery = api.story.getCompletedList.useQuery();
 
   return (
     <WrapperWithNav tabs={storiesTabs}>

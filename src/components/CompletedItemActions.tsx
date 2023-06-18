@@ -7,7 +7,7 @@ interface Props {
 
 const CompletedItemActions = ({ postId }: Props) => {
   const apiContext = api.useContext();
-  const addToApproved = api.post.addToApproved.useMutation({
+  const addToApproved = api.story.addToApproved.useMutation({
     onSuccess: () => {
       apiContext.post.getCompletedList.invalidate();
     },

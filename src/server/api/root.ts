@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { subredditSearchRouter } from "./routers/subredditSearch";
-import { postRouter } from "./routers/post";
+import { storyRouter } from "./routers/stories";
 import { contactRouter } from "./routers/contact";
 import { tagRouter } from "./routers/tag";
 import { inboxRouter } from "./routers/inbox";
@@ -16,7 +16,7 @@ import { stripeRouter } from "./routers/stripe";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   subredditSearch: subredditSearchRouter,
-  post: postRouter,
+  story: storyRouter,
   contact: contactRouter,
   tag: tagRouter,
   inbox: inboxRouter,

@@ -6,7 +6,7 @@ import StoryListItem from "~/components/StoryListItem";
 import { api } from "~/utils/api";
 
 const ApprovedStoriesList = () => {
-  const approvedListQuery = api.post.getApprovedList.useQuery();
+  const approvedListQuery = api.story.getApprovedList.useQuery();
 
   const [query, setQuery] = useState("");
   const regex = new RegExp(query, "gi");

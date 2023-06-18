@@ -141,6 +141,7 @@ model SubmittedStory {
   title          String?
   user           User     @relation(fields: [userId], references: [id])
   date           DateTime @default(now())
+  completed      Boolean  @default(false)
 }
 
 model Website {

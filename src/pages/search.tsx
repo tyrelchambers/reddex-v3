@@ -30,7 +30,7 @@ const Search = () => {
       await db.posts.bulkAdd(data);
     },
   });
-  const usedPostIdsQuery = api.post.getUsedPostIds.useQuery(undefined, {
+  const usedPostIdsQuery = api.story.getUsedPostIds.useQuery(undefined, {
     enabled: session.status === "authenticated",
   });
 

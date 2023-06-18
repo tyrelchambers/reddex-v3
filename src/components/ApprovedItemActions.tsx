@@ -25,7 +25,7 @@ const ApprovedItemActions = ({ postId }: Props) => {
     },
   });
 
-  const addToCompleted = api.post.addToCompleted.useMutation({
+  const addToCompleted = api.story.addToCompleted.useMutation({
     onSuccess: () => {
       apiContext.post.getApprovedList.invalidate();
     },

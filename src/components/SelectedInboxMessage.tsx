@@ -23,7 +23,7 @@ interface Props {
 const SelectedInboxMessage = ({ message }: Props) => {
   const messageMutation = api.inbox.send.useMutation();
   const addContact = api.contact.save.useMutation();
-  const stories = api.post.addToApproved.useMutation({
+  const stories = api.story.addToApproved.useMutation({
     onSuccess: (data) => {
       if ("success" in data && !data.success) {
         return toast(data.message, { type: "info" });

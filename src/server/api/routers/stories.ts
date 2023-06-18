@@ -3,7 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { prisma } from "~/server/db";
 
-export const postRouter = createTRPCRouter({
+export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.redditPost.findMany({
       where: {
@@ -98,4 +98,34 @@ export const postRouter = createTRPCRouter({
       },
     });
   }),
+  storyById: protectedProcedure
+    .input(z.string().optional())
+    .query(async ({ ctx, input }) => {
+      if (!input) return;
+      return await prisma.submittedStory.findFirst({
+        where: {
+          id: input,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
+
+  completeStory: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        completed: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await prisma.submittedStory.updateMany({
+        where: {
+          id: input.id,
+          userId: ctx.session.user.id,
+        },
+        data: {
+          completed: input.completed,
+        },
+      });
+    }),
 });

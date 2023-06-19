@@ -1,9 +1,9 @@
-import { Loader, Modal } from "@mantine/core";
+import { Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useReducer, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, usePagination } from "@mantine/hooks";
 import { type FilterState, filterReducer } from "~/reducers/filterReducer";
 import { api } from "~/utils/api";
 import SubredditSearchItem from "~/components/SubredditSearchItem";
@@ -20,6 +20,8 @@ interface SearchHandlerProps {
 }
 
 const Search = () => {
+  const [activePage, setPage] = useState(1);
+
   const session = useSession();
   const currentUser = api.user.me.useQuery(undefined, {
     enabled: session.status === "authenticated",
@@ -40,6 +42,14 @@ const Search = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
+
+  const PAGINATION_LIMIT_PER_PAGE = 15;
+  const PAGINATION_TOTAL_PAGES = savedPosts.length / PAGINATION_LIMIT_PER_PAGE;
+
+  const pagination = usePagination({
+    total: PAGINATION_TOTAL_PAGES,
+    initialPage: 1,
+  });
 
   const [filters, dispatch] = useReducer(filterReducer, {
     upvotes: {
@@ -99,19 +109,26 @@ const Search = () => {
 
           <div className="grid grid-cols-3 gap-6">
             {(!loading &&
-              savedPosts?.map((item) => (
-                <SubredditSearchItem
-                  key={item.id}
-                  post={item}
-                  hasBeenUsed={
-                    !!usedPostIdsQuery.data?.find(
-                      (id) => id.post_id === item.id
-                    )
-                  }
-                />
-              ))) ||
+              savedPosts
+                ?.slice(activePage, activePage + PAGINATION_LIMIT_PER_PAGE)
+                .map((item) => (
+                  <SubredditSearchItem
+                    key={item.id}
+                    post={item}
+                    hasBeenUsed={
+                      !!usedPostIdsQuery.data?.find(
+                        (id) => id.post_id === item.id
+                      )
+                    }
+                  />
+                ))) ||
               null}
           </div>
+          <Pagination
+            value={activePage}
+            onChange={setPage}
+            total={PAGINATION_TOTAL_PAGES}
+          />
         </div>
 
         <Modal

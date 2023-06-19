@@ -12,7 +12,11 @@ export const userRouter = createTRPCRouter({
         id: ctx.session.user.id,
       },
       include: {
-        Profile: true,
+        Profile: {
+          include: {
+            searches: true,
+          },
+        },
         Subscription: true,
       },
     });
@@ -62,11 +66,26 @@ export const userRouter = createTRPCRouter({
       });
       return user;
     }),
-  contactedWriters: protectedProcedure.query(async ({ ctx, input }) => {
+  contactedWriters: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.contactedWriters.findMany({
       where: {
         userId: ctx.session.user.id,
       },
     });
   }),
+  removeSearch: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const userProfile = await prisma.profile.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+      return await prisma.recentlySearched.deleteMany({
+        where: {
+          id: input,
+          profileId: userProfile?.id,
+        },
+      });
+    }),
 });

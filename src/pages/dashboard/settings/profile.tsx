@@ -2,21 +2,23 @@ import { faTimes } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, NumberInput, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
+import { RecentlySearched } from "@prisma/client";
 import React, { FormEvent, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import {
-  mantineCheckBoxClasses,
-  mantineInputClasses,
-  mantineNumberClasses,
-} from "~/lib/styles";
+import { mantineInputClasses, mantineNumberClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 
 const Profile = () => {
+  const apiContext = api.useContext();
   const saveProfile = api.user.saveProfile.useMutation();
   const userQuery = api.user.me.useQuery();
-
+  const deleteSearched = api.user.removeSearch.useMutation({
+    onSuccess: () => {
+      apiContext.user.invalidate();
+    },
+  });
   const currentUser = userQuery.data;
 
   const profileForm = useForm({
@@ -69,6 +71,10 @@ const Profile = () => {
     saveProfile.mutate(messagesForm.values);
   };
 
+  const deleteRecentlySearchedItem = (id: RecentlySearched["id"]) => {
+    deleteSearched.mutate(id);
+  };
+
   return (
     <WrapperWithNav tabs={settingsTabs}>
       <div className="flex max-w-screen-sm flex-col gap-8">
@@ -102,22 +108,23 @@ const Profile = () => {
           currentUser?.Profile?.searches.length > 0 ? (
             <div className="flex gap-4">
               {currentUser?.Profile?.searches.map((s, id) => (
-                <div
-                  key={`${s}_${id}`}
+                <button
+                  key={`${s.text}_${id}`}
                   className="flex w-fit items-center gap-4 rounded-full bg-card p-2"
+                  onClick={() => deleteRecentlySearchedItem(s.id)}
                 >
                   <FontAwesomeIcon
                     icon={faTimes}
                     className="rounded-full text-card-foreground"
                   />
 
-                  <p className="font-thin text-card-foreground">{s}</p>
-                </div>
+                  <p className="font-thin text-card-foreground">{s.text}</p>
+                </button>
               ))}
             </div>
           ) : (
-            <div className="flex justify-center rounded-xl bg-gray-50 p-4">
-              <p className="fint-thin text-sm text-gray-700">
+            <div className="flex justify-center rounded-xl bg-card p-4">
+              <p className="fint-thin text-sm text-card-foreground">
                 Nothing searched yet.
               </p>
             </div>

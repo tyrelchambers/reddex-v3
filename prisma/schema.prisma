@@ -84,13 +84,20 @@ model ContactedWriters {
 }
 
 model Profile {
-  id               String   @id @default(cuid())
+  id               String             @id @default(cuid())
   greeting         String?
   recurring        String?
   words_per_minute Int?
-  searches         String[]
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id])
+  searches         RecentlySearched[]
+  userId           String             @unique
+  user             User               @relation(fields: [userId], references: [id])
+}
+
+model RecentlySearched {
+  id        String   @id @default(cuid())
+  text      String   @unique
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId String?
 }
 
 model RedditPost {

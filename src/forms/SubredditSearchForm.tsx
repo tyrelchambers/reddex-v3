@@ -1,6 +1,7 @@
 import { faSpinnerThird } from "@fortawesome/pro-duotone-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Select, TextInput } from "@mantine/core";
+import { RecentlySearched } from "@prisma/client";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { mantineSelectClasses } from "~/lib/styles";
@@ -9,12 +10,9 @@ const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
 interface Props {
   open: () => void;
-  searchHandler: (state: {
-    subreddit: string;
-    category: string | null;
-  }) => void;
+  searchHandler: (state: { subreddit: string; category: string }) => void;
   disableSearch: boolean;
-  searches: string[] | undefined;
+  searches: RecentlySearched[] | undefined;
 }
 
 const SubredditSearchForm = ({
@@ -25,7 +23,7 @@ const SubredditSearchForm = ({
 }: Props) => {
   const [state, setState] = useState<{
     subreddit: string;
-    category: string | null;
+    category: string;
   }>({
     subreddit: "",
     category: "Hot",
@@ -57,13 +55,13 @@ const SubredditSearchForm = ({
           <Select
             defaultValue={categories[0]}
             data={categories}
-            onChange={(e) => setState({ ...state, category: e })}
+            onChange={(e) => setState({ ...state, category: e as string })}
             classNames={mantineSelectClasses}
           />
           <Button type="button" variant="outline" onClick={open}>
             Add filters
           </Button>
-          <Button type="button" variant="default" disabled={disableSearch}>
+          <Button type="submit" variant="default" disabled={disableSearch}>
             {disableSearch ? (
               <FontAwesomeIcon
                 icon={faSpinnerThird}
@@ -79,15 +77,15 @@ const SubredditSearchForm = ({
           </Button>
         </form>
         {searches && (
-          <ul className="mt-1">
+          <ul className="mt-1 flex flex-wrap gap-6">
             {searches.map((s) => (
-              <li key={s}>
+              <li key={s.text}>
                 <Button
                   variant="link"
                   size="sm"
-                  onClick={() => searchHandler({ ...state, subreddit: s })}
+                  onClick={() => searchHandler({ ...state, subreddit: s.text })}
                 >
-                  {s}
+                  {s.text}
                 </Button>
               </li>
             ))}

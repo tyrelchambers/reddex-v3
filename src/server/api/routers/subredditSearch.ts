@@ -31,17 +31,22 @@ export const subredditSearchRouter = createTRPCRouter({
         where: {
           userId: ctx.session?.user.id,
         },
+        include: {
+          searches: true,
+        },
       });
+      const recentlySearchedMap =
+        userProfile?.searches.map((s) => s.text) || null;
 
-      if (userProfile && !userProfile.searches.includes(input.subreddit)) {
-        await prisma.profile.updateMany({
-          where: {
-            id: userProfile.id,
-          },
+      if (
+        userProfile &&
+        recentlySearchedMap &&
+        !recentlySearchedMap.includes(input.subreddit)
+      ) {
+        await prisma.recentlySearched.create({
           data: {
-            searches: {
-              push: input.subreddit,
-            },
+            text: input.subreddit,
+            profileId: userProfile.id,
           },
         });
       }

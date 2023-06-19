@@ -13,7 +13,7 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import { mantineModalClasses } from "~/lib/styles";
+import { mantineModalClasses, mantinePaginationStyles } from "~/lib/styles";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -124,11 +124,14 @@ const Search = () => {
                 ))) ||
               null}
           </div>
-          <Pagination
-            value={activePage}
-            onChange={setPage}
-            total={PAGINATION_TOTAL_PAGES}
-          />
+          <div className="my-6 flex justify-center">
+            <Pagination
+              classNames={mantinePaginationStyles}
+              value={activePage}
+              onChange={setPage}
+              total={PAGINATION_TOTAL_PAGES}
+            />
+          </div>
         </div>
 
         <Modal

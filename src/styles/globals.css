@@ -57,6 +57,10 @@
   .form {
     @apply flex flex-col gap-6;
   }
+
+  button[data-active="true"] {
+    @apply !bg-accent;
+  }
 }
 
 @layer base {

@@ -1,8 +1,10 @@
 import {
   BadgeStylesNames,
   CheckboxStylesNames,
+  ClassNames,
   ModalStylesNames,
   NumberInputStylesNames,
+  PaginationStylesNames,
   SwitchStylesNames,
   TextInputStylesNames,
 } from "@mantine/core";
@@ -59,4 +61,8 @@ export const mantineSwitchStyles: Partial<Record<SwitchStylesNames, string>> = {
   label: "text-foreground",
   thumb: "bg-accent border-border",
   track: "bg-background border-border",
+};
+
+export const mantinePaginationStyles: ClassNames<PaginationStylesNames> = {
+  control: "text-foreground bg-card border-border",
 };

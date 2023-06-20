@@ -15,12 +15,12 @@ import { clsx } from "@mantine/core";
 const _routes = [
   {
     label: "Home",
-    slug: "/",
+    slug: routes.HOME,
   },
-  { label: "Search", slug: "/search" },
+  { label: "Search", slug: routes.SEARCH },
   {
     label: "Pricing",
-    slug: "/pricing",
+    slug: routes.PRICING,
   },
 ];
 

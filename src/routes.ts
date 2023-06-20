@@ -30,6 +30,7 @@ export const routes = {
   ACCOUNT_CHECK: "/account-setup",
   SETTINGS_PROFILE: "/dashboard/settings/profile",
   SETTINGS_ACCOUNT: "/dashboard/settings/account",
+  SEARCH: "/search",
 };
 export const websiteTabItems = [
   {

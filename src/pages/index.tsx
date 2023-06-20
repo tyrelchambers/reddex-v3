@@ -4,6 +4,7 @@ import Header from "~/layouts/Header";
 import { Badge } from "@mantine/core";
 import { mantineBadgeClasses } from "~/lib/styles";
 import { api } from "~/utils/api";
+import Footer from "~/layouts/Footer";
 const Home: NextPage = () => {
   const statsQuery = api.stats.get.useQuery();
   return (
@@ -25,6 +26,7 @@ const Home: NextPage = () => {
           {statsQuery.data && <Stats stats={statsQuery.data} />}
         </div>
       </main>
+      <Footer />
     </>
   );
 };

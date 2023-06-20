@@ -1,4 +1,4 @@
-import { Badge, Loader, Modal, Pagination } from "@mantine/core";
+import { Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useReducer, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
@@ -13,15 +13,9 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import {
-  mantineBadgeClasses,
-  mantineModalClasses,
-  mantinePaginationStyles,
-} from "~/lib/styles";
+import { mantineModalClasses, mantinePaginationStyles } from "~/lib/styles";
 import { FilterPosts } from "~/lib/utils";
-import { activeFilters } from "~/utils/activeFilters";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/pro-light-svg-icons";
+import ActiveFilterList from "~/components/ActiveFilterList";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -84,7 +78,7 @@ const Search = () => {
     const filterClone = appliedFilters;
     if (!filterClone) return;
 
-    delete filterClone[filter];
+    delete filterClone[filter as keyof FilterState];
     setAppliedFilters(filterClone);
     dispatch({ type: "REMOVE_FILTER", payload: filter });
   };
@@ -111,22 +105,15 @@ const Search = () => {
             </div>
           )}
 
-          <div className="bg-card-background mb-4 flex flex-col gap-1">
-            <ul className="flex gap-3">
-              {activeFilters(appliedFilters).map((filter) => (
-                <li
-                  key={filter}
-                  className="flex w-fit cursor-pointer items-center gap-2 rounded-full border-[1px] border-border p-1"
-                  onClick={() => removeFilter(filter)}
-                >
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card p-1">
-                    <FontAwesomeIcon icon={faTimes} />
-                  </span>
-                  <Badge classNames={mantineBadgeClasses}>{filter}</Badge>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ActiveFilterList
+            filters={appliedFilters}
+            removeFilter={removeFilter}
+            reset={() => {
+              dispatch({ type: "RESET" });
+              setAppliedFilters(null);
+            }}
+          />
+
           <div className="grid grid-cols-3 gap-6">
             {(!loading &&
               paginatedSlice(

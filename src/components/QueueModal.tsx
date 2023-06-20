@@ -58,6 +58,10 @@ const QueueModal = ({ close }: Props) => {
     }
   }, [currentPost]);
 
+  useEffect(() => {
+    if (!currentPost) return close();
+  }, [currentPost]);
+
   if (!currentPost) return null;
 
   const contactQuery = api.contact.getByName.useQuery(currentPost.author, {
@@ -76,8 +80,6 @@ const QueueModal = ({ close }: Props) => {
       reading_time: Math.round(currentPost.selftext.length / 200),
     } as unknown as RedditPostWithText);
   };
-
-  if (!currentPost) return close();
 
   const saveContactHandler = () => {
     if (!currentPost) return;

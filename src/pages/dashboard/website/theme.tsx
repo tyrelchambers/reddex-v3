@@ -1,10 +1,7 @@
-import { ColorPicker, NativeSelect, Select } from "@mantine/core";
+import { ColorPicker, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
-import TabsList from "~/components/TabsList";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineSelectClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";

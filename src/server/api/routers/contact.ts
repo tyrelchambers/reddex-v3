@@ -23,7 +23,7 @@ export const contactRouter = createTRPCRouter({
       });
     }),
   getByName: protectedProcedure
-    .input(z.string())
+    .input(z.string().optional())
     .query(async ({ ctx, input }) => {
       return await prisma.contact.findFirst({
         where: {

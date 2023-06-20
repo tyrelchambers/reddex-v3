@@ -40,6 +40,9 @@ export type FilterAction =
   | {
       type: "REMOVE_FILTER";
       payload: string;
+    }
+  | {
+      type: "RESET";
     };
 
 export const filterReducer = (
@@ -72,10 +75,13 @@ export const filterReducer = (
       };
     case "REMOVE_FILTER": {
       const clone = { ...state };
-      delete clone[action.payload];
+      delete clone[action.payload as keyof FilterState];
       return {
         ...clone,
       };
+    }
+    case "RESET": {
+      return {} as FilterState;
     }
     default:
       return state;

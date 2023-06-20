@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import PricingFrequencySelect from "~/components/PricingFrequencySelect";
 import { plans } from "~/constants";
+import Footer from "~/layouts/Footer";
 import Header from "~/layouts/Header";
 
 const Pricing = () => {
@@ -105,6 +106,7 @@ const Pricing = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 };

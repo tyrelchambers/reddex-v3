@@ -19,10 +19,6 @@ const _routes = [
   },
   { label: "Search", slug: "/search" },
   {
-    label: "About",
-    slug: "/about",
-  },
-  {
     label: "Pricing",
     slug: "/pricing",
   },

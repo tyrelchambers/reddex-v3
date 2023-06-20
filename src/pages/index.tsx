@@ -174,7 +174,7 @@ const Testimonials = () => {
     <section className="py-14">
       <div className="mx-auto max-w-screen-xl px-4 md:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h3 className="pb-6 font-semibold text-indigo-600">
+          <h3 className="pb-6 font-semibold text-accent">
             What people are saying
           </h3>
           <ul>
@@ -183,7 +183,7 @@ const Testimonials = () => {
                 <li key={idx}>
                   <figure>
                     <blockquote>
-                      <p className="text-xl font-semibold text-gray-800 sm:text-2xl">
+                      <p className="text-xl font-semibold text-foreground/70 sm:text-2xl">
                         “{item.quote}“
                       </p>
                     </blockquote>
@@ -193,16 +193,14 @@ const Testimonials = () => {
                         className="mx-auto h-16 w-16 rounded-full"
                       />
                       <div className="mt-3">
-                        <span className="block font-semibold text-gray-800">
+                        <span className="block font-semibold text-foreground">
                           {item.name}
                         </span>
                       </div>
                     </div>
                   </figure>
                 </li>
-              ) : (
-                ""
-              )
+              ) : null
             )}
           </ul>
         </div>
@@ -284,7 +282,7 @@ const Features = () => {
       <div className="mt-20 grid grid-cols-1 gap-20 md:mt-40 md:grid-cols-2 lg:grid-cols-3 ">
         <div className="flex flex-col items-center">
           <Image className="h-20" src={contactList} alt="contact list" />
-          <h2 className="text-foregorund mt-6 text-center font-bold">
+          <h2 className="mt-6 text-center font-bold text-foreground">
             Organize your contacts
           </h2>
           <p className="mt-2 text-center font-light text-foreground/60">
@@ -293,7 +291,7 @@ const Features = () => {
         </div>
         <div className="flex flex-col items-center">
           <Image className="h-20" src={savedMessage} alt="saved messages" />
-          <h2 className="text-foregorund mt-6 text-center font-bold">
+          <h2 className="mt-6 text-center font-bold text-foreground">
             No more copy and pasting from notepad
           </h2>
           <p className="mt-2 text-center font-light text-foreground/60">
@@ -302,7 +300,7 @@ const Features = () => {
         </div>
         <div className="flex flex-col items-center">
           <Image className="h-20" src={tagIcon} alt="tags" />
-          <h2 className="text-foregorund mt-6 text-center font-bold">
+          <h2 className="mt-6 text-center font-bold text-foreground">
             Organize with tags
           </h2>
           <p className="mt-2 text-center font-light text-foreground/60">
@@ -315,7 +313,7 @@ const Features = () => {
             src={storySubmission}
             alt="story submissions"
           />
-          <h2 className="text-foregorund mt-6 text-center font-bold">
+          <h2 className="mt-6 text-center font-bold text-foreground">
             Accept custom written stories via your own website
           </h2>
           <p className="mt-2 text-center font-light text-foreground/60">
@@ -325,7 +323,7 @@ const Features = () => {
         </div>
         <div className="flex flex-col items-center">
           <Image className="h-20" src={inboxFilter} alt="filter inbox" />
-          <h2 className="text-foregorund mt-6 text-center font-bold">
+          <h2 className="mt-6 text-center font-bold text-foreground">
             Filter your inbox
           </h2>
           <p className="mt-2 text-center font-light text-foreground/60">
@@ -335,7 +333,7 @@ const Features = () => {
         </div>
         <div className="flex flex-col items-center">
           <Image className="h-20" src={readingList} alt="reading list" />
-          <h2 className="text-foregorund mt-6 text-center font-bold">
+          <h2 className="mt-6 text-center font-bold text-foreground">
             Your own reading list
           </h2>
           <p className="mt-2 text-center font-light text-foreground/60">

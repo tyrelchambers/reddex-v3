@@ -34,6 +34,7 @@ const Search = () => {
     async onSuccess(data) {
       await db.posts.clear();
       await db.posts.bulkAdd(data);
+      statsUpdate.mutate(data.length);
     },
   });
   const usedPostIdsQuery = api.story.getUsedPostIds.useQuery(undefined, {
@@ -61,7 +62,6 @@ const Search = () => {
 
       const posts = await db.posts.toArray();
       setSavedPosts(posts);
-      statsUpdate.mutate(posts.length);
       setLoading(false);
     };
 

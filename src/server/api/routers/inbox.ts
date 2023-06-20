@@ -125,7 +125,6 @@ export const inboxRouter = createTRPCRouter({
           post.subject.toLowerCase().includes(query) ||
           post.dest.toLowerCase().includes(query)
       );
-    console.log(found);
 
     return found;
   }),

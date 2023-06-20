@@ -6,6 +6,7 @@ import {
   faThumbsUp,
   faUp,
   faWarning,
+  faHashtag,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -80,6 +81,13 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
               {formatDistanceToNowStrict(new Date(post.created * 1000))} ago
             </p>
           </div>
+
+          {post.link_flair_text && (
+            <div className="flex items-center gap-2 text-xs text-foreground/50">
+              <FontAwesomeIcon icon={faHashtag} />
+              <p>{post.link_flair_text}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex items-end gap-2">

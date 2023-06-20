@@ -72,9 +72,9 @@ export const filterReducer = (
       };
     case "REMOVE_FILTER": {
       const clone = { ...state };
-
+      delete clone[action.payload];
       return {
-        ...state,
+        ...clone,
       };
     }
     default:

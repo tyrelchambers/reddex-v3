@@ -1,9 +1,9 @@
-import { Loader, Modal, Pagination } from "@mantine/core";
+import { Badge, Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useReducer, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
-import { useDisclosure, usePagination } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { type FilterState, filterReducer } from "~/reducers/filterReducer";
 import { api } from "~/utils/api";
 import SubredditSearchItem from "~/components/SubredditSearchItem";
@@ -13,7 +13,15 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import { mantineModalClasses, mantinePaginationStyles } from "~/lib/styles";
+import {
+  mantineBadgeClasses,
+  mantineModalClasses,
+  mantinePaginationStyles,
+} from "~/lib/styles";
+import { FilterPosts } from "~/lib/utils";
+import { activeFilters } from "~/utils/activeFilters";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/pro-light-svg-icons";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -43,27 +51,14 @@ const Search = () => {
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
 
+  const [filters, dispatch] = useReducer(filterReducer, {} as FilterState);
+  const [appliedFilters, setAppliedFilters] = useState<FilterState | null>(
+    null
+  );
+
   const PAGINATION_LIMIT_PER_PAGE = 15;
-  const PAGINATION_TOTAL_PAGES = savedPosts.length / PAGINATION_LIMIT_PER_PAGE;
-
-  const pagination = usePagination({
-    total: PAGINATION_TOTAL_PAGES,
-    initialPage: 1,
-  });
-
-  const [filters, dispatch] = useReducer(filterReducer, {
-    upvotes: {
-      qualifier: "Over",
-      value: 0,
-    },
-    readingTime: {
-      qualifier: "Over",
-      value: 0,
-    },
-    keywords: undefined,
-    seriesOnly: false,
-    excludeSeries: false,
-  } as FilterState);
+  const PAGINATION_TOTAL_PAGES =
+    filterPosts(appliedFilters, savedPosts).length / PAGINATION_LIMIT_PER_PAGE;
 
   useEffect(() => {
     const fn = async () => {
@@ -83,6 +78,15 @@ const Search = () => {
 
   const searchHandler = (data: SearchHandlerProps) => {
     subredditSearch.mutate(data);
+  };
+
+  const removeFilter = (filter: string) => {
+    const filterClone = appliedFilters;
+    if (!filterClone) return;
+
+    delete filterClone[filter];
+    setAppliedFilters(filterClone);
+    dispatch({ type: "REMOVE_FILTER", payload: filter });
   };
 
   return (
@@ -107,21 +111,39 @@ const Search = () => {
             </div>
           )}
 
+          <div className="bg-card-background mb-4 flex flex-col gap-1">
+            <ul className="flex gap-3">
+              {activeFilters(appliedFilters).map((filter) => (
+                <li
+                  key={filter}
+                  className="flex w-fit cursor-pointer items-center gap-2 rounded-full border-[1px] border-border p-1"
+                  onClick={() => removeFilter(filter)}
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card p-1">
+                    <FontAwesomeIcon icon={faTimes} />
+                  </span>
+                  <Badge classNames={mantineBadgeClasses}>{filter}</Badge>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="grid grid-cols-3 gap-6">
             {(!loading &&
-              savedPosts
-                ?.slice(activePage, activePage + PAGINATION_LIMIT_PER_PAGE)
-                .map((item) => (
-                  <SubredditSearchItem
-                    key={item.id}
-                    post={item}
-                    hasBeenUsed={
-                      !!usedPostIdsQuery.data?.find(
-                        (id) => id.post_id === item.id
-                      )
-                    }
-                  />
-                ))) ||
+              paginatedSlice(
+                filterPosts(appliedFilters, savedPosts),
+                PAGINATION_LIMIT_PER_PAGE,
+                activePage
+              ).map((item) => (
+                <SubredditSearchItem
+                  key={item.id}
+                  post={item}
+                  hasBeenUsed={
+                    !!usedPostIdsQuery.data?.find(
+                      (id) => id.post_id === item.id
+                    )
+                  }
+                />
+              ))) ||
               null}
           </div>
           <div className="my-6 flex justify-center">
@@ -143,7 +165,11 @@ const Search = () => {
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
-          <FilterSelections filters={filters} dispatch={dispatch} />
+          <FilterSelections
+            filters={filters}
+            dispatch={dispatch}
+            setAppliedFilters={setAppliedFilters}
+          />
         </Modal>
 
         <Modal
@@ -158,6 +184,46 @@ const Search = () => {
       </main>
     </>
   );
+};
+
+const paginatedSlice = (
+  array: PostFromReddit[],
+  page_size: number,
+  page_number: number
+) => {
+  return array.slice((page_number - 1) * page_size, page_number * page_size);
+};
+
+const filterPosts = (filters: FilterState | null, posts: PostFromReddit[]) => {
+  if (!filters) return posts;
+
+  const newArray: PostFromReddit[] = [];
+
+  for (let index = 0; index < posts.length; index++) {
+    const post = new FilterPosts(posts[index], filters);
+    const acceptance: boolean[] = [];
+    const element = posts[index];
+
+    const obj: {
+      [k in keyof FilterState as string]: () => boolean | undefined | null;
+    } = {
+      keywords: () => post.keywords(),
+      upvotes: () => post.upvotes(),
+    };
+
+    Object.keys(filters).forEach((key) => {
+      const result = obj[key]?.();
+      if (result !== undefined && result !== null) {
+        acceptance.push(result);
+      }
+    });
+
+    if (element && acceptance.every((item) => item)) {
+      newArray.push(element);
+    }
+  }
+
+  return newArray;
 };
 
 export default Search;

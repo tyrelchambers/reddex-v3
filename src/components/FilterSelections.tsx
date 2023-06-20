@@ -7,13 +7,19 @@ import {
   mantineSwitchStyles,
 } from "~/lib/styles";
 import { FilterState, FilterAction } from "~/reducers/filterReducer";
+import { Button } from "./ui/button";
 
 interface FilterSelectionProps {
   filters: FilterState;
   dispatch: (data: FilterAction) => void;
+  setAppliedFilters: (data: FilterState) => void;
 }
 
-const FilterSelections = ({ filters, dispatch }: FilterSelectionProps) => {
+const FilterSelections = ({
+  filters,
+  dispatch,
+  setAppliedFilters,
+}: FilterSelectionProps) => {
   const qualifiers = ["Over", "Under", "Equals"];
 
   return (
@@ -43,7 +49,7 @@ const FilterSelections = ({ filters, dispatch }: FilterSelectionProps) => {
                 payload: { value: Number(e) },
               })
             }
-            value={Number(filters.upvotes.value || 0)}
+            value={Number(filters.upvotes?.value || 0)}
           />
         </div>
       </div>
@@ -73,7 +79,7 @@ const FilterSelections = ({ filters, dispatch }: FilterSelectionProps) => {
                 payload: { value: Number(e) },
               })
             }
-            value={Number(filters.readingTime.value || 0)}
+            value={Number(filters.readingTime?.value || 0)}
           />
         </div>
       </div>
@@ -107,9 +113,9 @@ const FilterSelections = ({ filters, dispatch }: FilterSelectionProps) => {
         classNames={mantineSwitchStyles}
       />
 
-      <button type="button" className="button main mt-4 w-full">
+      <Button type="button" onClick={() => setAppliedFilters(filters)}>
         Apply filters
-      </button>
+      </Button>
     </section>
   );
 };

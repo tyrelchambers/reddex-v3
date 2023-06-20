@@ -25,8 +25,6 @@ const Theme = () => {
 
   useEffect(() => {
     if (websiteSettings.data) {
-      console.log(websiteSettings.data);
-
       form.setValues({
         theme: websiteSettings.data.theme,
         colour: websiteSettings.data.colour,

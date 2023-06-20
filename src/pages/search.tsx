@@ -23,8 +23,9 @@ interface SearchHandlerProps {
 
 const Search = () => {
   const [activePage, setPage] = useState(1);
-
   const session = useSession();
+
+  const statsUpdate = api.stats.set.useMutation();
   const currentUser = api.user.me.useQuery(undefined, {
     enabled: session.status === "authenticated",
   });
@@ -60,6 +61,7 @@ const Search = () => {
 
       const posts = await db.posts.toArray();
       setSavedPosts(posts);
+      statsUpdate.mutate(posts.length);
       setLoading(false);
     };
 

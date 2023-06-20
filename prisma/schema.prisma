@@ -192,3 +192,8 @@ model SubmissionFormModule {
   submissionPageId String?
   submissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
 }
+
+model Stats {
+  id    String @id @default(cuid())
+  posts Int    @default(0)
+}

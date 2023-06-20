@@ -1,11 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Header from "~/layouts/Header";
-import computerImg from "../../public/images/computer.jpg";
-import Image from "next/image";
 import { Badge } from "@mantine/core";
 import { mantineBadgeClasses } from "~/lib/styles";
+import { api } from "~/utils/api";
 const Home: NextPage = () => {
+  const statsQuery = api.stats.get.useQuery();
   return (
     <>
       <Head>
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
         <div className="mt-20 flex flex-col gap-36">
           <Hero />
           <UsedBy />
-          <Stats />
+          {statsQuery.data && <Stats stats={statsQuery.data} />}
         </div>
       </main>
     </>
@@ -60,23 +60,27 @@ const UsedBy = () => {
   );
 };
 
-const Stats = () => {
-  const stats = [
+interface Props {
+  stats: {
+    users: number;
+    posts: number | undefined;
+    stories: number;
+  };
+}
+
+const Stats = ({ stats }: Props) => {
+  const _stats = [
     {
-      data: "35K",
-      desc: "Customers consectetur adipiscing elit.",
+      data: stats.users,
+      desc: "Narrators using Reddex",
     },
     {
-      data: "10K+",
-      desc: "Downloads efficitur id eu nulla facilisis turpis",
+      data: stats.posts,
+      desc: "Total search results",
     },
     {
-      data: "40+",
-      desc: "Countries maximus sit amet auctor sed,",
-    },
-    {
-      data: "30M+",
-      desc: "Total revenue consectetur adipiscing elit",
+      data: stats.stories,
+      desc: "Stories submitted to narrators",
     },
   ];
   return (
@@ -84,16 +88,16 @@ const Stats = () => {
       <div className="relative z-10 mx-auto max-w-screen-xl px-4 md:px-8">
         <div className="max-w-2xl xl:mx-auto xl:text-center">
           <h3 className="text-3xl font-semibold text-white sm:text-4xl">
-            Our customers are always happy
+            Narrators love Reddex!
           </h3>
           <p className="mt-3 text-gray-300">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            venenatis sollicitudin quam ut tincidunt.
+            Seriously, Reddex can save you a boat load of time and gives you a
+            ton of cool features
           </p>
         </div>
         <div className="mt-12">
-          <ul className="flex-wrap items-center gap-x-12 gap-y-10 space-y-8 sm:flex sm:space-y-0 xl:justify-center">
-            {stats.map((item, idx) => (
+          <ul className="flex-wrap items-start gap-x-12 gap-y-10 space-y-8 sm:flex sm:space-y-0 xl:justify-center">
+            {_stats.map((item, idx) => (
               <li key={idx} className="sm:max-w-[15rem]">
                 <h4 className="text-4xl font-semibold text-white">
                   {item.data}

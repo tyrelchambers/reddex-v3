@@ -1,9 +1,12 @@
-import { Modal, NativeSelect } from "@mantine/core";
+import { Modal, NativeSelect, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { RedditPost } from "@prisma/client";
 import React, { FormEvent } from "react";
 import { api } from "~/utils/api";
+import { Button } from "./ui/button";
+import { mantineModalClasses, mantineSelectClasses } from "~/lib/styles";
+import EmptyState from "./EmptyState";
 
 interface Props {
   postId: RedditPost["id"];
@@ -27,7 +30,7 @@ const ApprovedItemActions = ({ postId }: Props) => {
 
   const addToCompleted = api.story.addToCompleted.useMutation({
     onSuccess: () => {
-      apiContext.post.getApprovedList.invalidate();
+      apiContext.story.getApprovedList.invalidate();
     },
   });
   const [opened, { open, close }] = useDisclosure(false);
@@ -43,27 +46,37 @@ const ApprovedItemActions = ({ postId }: Props) => {
 
   return (
     <div className="flex gap-3">
-      <button className="button alt" type="button" onClick={open}>
+      <Button variant="outline" type="button" onClick={open}>
         Add tags
-      </button>
-      <button
-        className="button main"
-        onClick={() => addToCompleted.mutate(postId)}
-        type="button"
-      >
+      </Button>
+      <Button onClick={() => addToCompleted.mutate(postId)} type="button">
         Mark as read
-      </button>
+      </Button>
 
-      <Modal opened={opened} onClose={close} title="Add a tag to story">
-        <form onSubmit={addTagHandler}>
-          <NativeSelect
-            data={formattedTags}
-            label="Add a tag"
-            {...form.getInputProps("tagId")}
-          />
-          <button className="button main mt-4 w-full" type="submit">
+      <Modal
+        opened={opened}
+        onClose={close}
+        classNames={mantineModalClasses}
+        title="Add a tag to story"
+      >
+        <form onSubmit={addTagHandler} className="flex flex-col gap-4">
+          {formattedTags.length > 0 ? (
+            <Select
+              data={formattedTags}
+              label="Add a tag"
+              classNames={mantineSelectClasses}
+              {...form.getInputProps("tagId")}
+            />
+          ) : (
+            <EmptyState label="tags" />
+          )}
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={!formattedTags.length}
+          >
             Add tag to story
-          </button>
+          </Button>
         </form>
       </Modal>
     </div>

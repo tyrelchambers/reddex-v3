@@ -24,12 +24,6 @@ const QueueModal = ({ close }: Props) => {
   const apiContext = api.useContext();
   const contactedWritersQuery = api.user.contactedWriters.useQuery();
 
-  const form = useForm({
-    initialValues: {
-      message: "",
-    },
-  });
-
   const redditPost = api.story.save.useMutation({
     onSuccess: () => {
       if (currentPost) {
@@ -43,14 +37,24 @@ const QueueModal = ({ close }: Props) => {
     },
   });
 
+  const contactQuery = api.contact.getByName.useQuery(currentPost?.author, {
+    enabled: !!currentPost,
+  });
+
+  const form = useForm({
+    initialValues: {
+      message: "",
+    },
+  });
+
   useEffect(() => {
     const currentPostAuthor = currentPost?.author;
     const contactedAuthors = contactedWritersQuery.data?.map(
       (item) => item.name
     );
 
-    if (contactedAuthors && currentPostAuthor) {
-      if (contactedAuthors.includes(currentPostAuthor)) {
+    if (currentPostAuthor) {
+      if (contactedAuthors && contactedAuthors.includes(currentPostAuthor)) {
         form.setValues({ message: userQuery.data?.Profile?.recurring || "" });
       } else {
         form.setValues({ message: userQuery.data?.Profile?.greeting || "" });
@@ -64,10 +68,6 @@ const QueueModal = ({ close }: Props) => {
 
   if (!currentPost) return null;
 
-  const contactQuery = api.contact.getByName.useQuery(currentPost.author, {
-    enabled: !!currentPost,
-  });
-
   const sendHandler = () => {
     // send message ->
     if (!currentPost) return;
@@ -78,7 +78,8 @@ const QueueModal = ({ close }: Props) => {
       flair: currentPost.link_flair_text,
       post_id: currentPost.id,
       reading_time: Math.round(currentPost.selftext.length / 200),
-    } as unknown as RedditPostWithText);
+      message: form.values.message,
+    });
   };
 
   const saveContactHandler = () => {

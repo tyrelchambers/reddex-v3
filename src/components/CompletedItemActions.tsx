@@ -1,5 +1,6 @@
 import React from "react";
 import { api } from "~/utils/api";
+import { Button } from "./ui/button";
 
 interface Props {
   postId: string;
@@ -7,20 +8,28 @@ interface Props {
 
 const CompletedItemActions = ({ postId }: Props) => {
   const apiContext = api.useContext();
-  const addToApproved = api.story.addToApproved.useMutation({
+  const deleteStory = api.story.deleteStory.useMutation({
     onSuccess: () => {
-      apiContext.post.getCompletedList.invalidate();
+      apiContext.story.getCompletedList.invalidate();
     },
   });
+  const addToApproved = api.story.addToApproved.useMutation({
+    onSuccess: () => {
+      apiContext.story.getCompletedList.invalidate();
+    },
+  });
+
+  const deleteStoryHandler = () => {
+    deleteStory.mutate(postId);
+  };
   return (
     <div className="flex gap-3">
-      <button className="button alt">Add tags</button>
-      <button
-        className="button main"
-        onClick={() => addToApproved.mutate(postId)}
-      >
-        Mark as read
-      </button>
+      <Button variant="outline" onClick={deleteStoryHandler}>
+        Delete
+      </Button>
+      <Button className="w-full" onClick={() => addToApproved.mutate(postId)}>
+        Add to reading list
+      </Button>
     </div>
   );
 };

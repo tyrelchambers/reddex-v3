@@ -20,6 +20,7 @@ export const postSchema = z.object({
   reading_time: z.number(),
   upvote_ratio: z.number(),
   created: z.number(),
+  message: z.string(),
 });
 
 export const contactSchema = z.object({

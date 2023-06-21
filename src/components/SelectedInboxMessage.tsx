@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, Textarea } from "@mantine/core";
 import { fromUnixTime } from "date-fns";
 import { format } from "date-fns";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useMemo } from "react";
 import { FormattedMessagesList, RedditInboxMessage } from "~/types";
 import { formatInboxMessagesToList } from "~/utils/formatInboxMessagesToList";
 import { api } from "~/utils/api";
@@ -23,6 +23,11 @@ interface Props {
 const SelectedInboxMessage = ({ message }: Props) => {
   const messageMutation = api.inbox.send.useMutation();
   const addContact = api.contact.save.useMutation();
+  const findPostQuery = api.inbox.findPostByTitle.useQuery(message?.subject, {
+    enabled: !!message?.subject,
+  });
+  const contactquery = api.contact.getByName.useQuery(message?.author);
+  const approvedListQuery = api.story.getApprovedList.useQuery();
   const stories = api.story.addToApproved.useMutation({
     onSuccess: (data) => {
       if ("success" in data && !data.success) {
@@ -31,11 +36,26 @@ const SelectedInboxMessage = ({ message }: Props) => {
     },
   });
 
+  const post = findPostQuery.data;
+
+  const postIsInReadingList = useMemo(() => {
+    if (post?.id && approvedListQuery.data) {
+      return approvedListQuery.data.some((item) => {
+        return item.id === post.id;
+      });
+    }
+
+    return false;
+  }, [post?.id, approvedListQuery.data]);
+
+  const isAContact = contactquery.data;
+
   const form = useForm({
     initialValues: {
       message: "",
     },
   });
+
   if (!message) return null;
 
   const formattedMessages = formatInboxMessagesToList(message);
@@ -54,29 +74,48 @@ const SelectedInboxMessage = ({ message }: Props) => {
   };
 
   const addStoryToReadingList = () => {
-    stories.mutate(message.id);
+    console.log(message);
+
+    if (post) {
+      stories.mutate(post.id);
+    }
   };
 
   return (
     <div className="flex-1 overflow-auto">
       <header className="w-full">
-        <p className="text-2xl text-foreground">{message.subject}</p>
+        <p className="text-2xl font-semibold text-foreground">
+          {message.subject}
+        </p>
         <footer className="mt-6 flex items-center gap-10 ">
-          <p className="flex items-center gap-2 text-muted-foreground">
+          <p className="flex items-center gap-2 text-foreground">
             <FontAwesomeIcon icon={faUserCircle} />
             {message.dest}
           </p>
 
           <div className=" flex gap-4">
-            <Button
-              variant="secondary"
-              onClick={() => addToContacts(message.dest)}
-            >
-              Add to contacts
-            </Button>
-            <Button variant="secondary" onClick={addStoryToReadingList}>
-              Add to reading list
-            </Button>
+            {!isAContact ? (
+              <Button
+                variant="secondary"
+                onClick={() => addToContacts(message.dest)}
+              >
+                Add to contacts
+              </Button>
+            ) : (
+              <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
+                {message.author} is already a contact
+              </div>
+            )}
+
+            {!postIsInReadingList ? (
+              <Button variant="secondary" onClick={addStoryToReadingList}>
+                Add to reading list
+              </Button>
+            ) : (
+              <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
+                Story is in reading list
+              </div>
+            )}
           </div>
         </footer>
       </header>

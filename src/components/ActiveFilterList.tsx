@@ -32,9 +32,11 @@ const ActiveFilterList = ({ filters, removeFilter, reset }: Props) => {
         </ul>
       </div>
 
-      <Button variant="outline" onClick={reset}>
-        Reset filters
-      </Button>
+      {filters && (
+        <Button variant="outline" onClick={reset}>
+          Reset filters
+        </Button>
+      )}
     </div>
   );
 };

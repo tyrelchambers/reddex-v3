@@ -9,3 +9,5 @@ export const BANNER_UPLOAD_URL = (fileName: string) =>
   `${UPLOAD_BASE_URL}/banner/${fileName}`;
 
 export const CHECKOUT_SUCCESS_URL = `${apiBaseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
+
+export const COMPOSE_MESSAGE_URL = `https://oauth.reddit.com/api/compose`;

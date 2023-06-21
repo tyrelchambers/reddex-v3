@@ -2,12 +2,19 @@ import { postSchema } from "~/server/schemas";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { prisma } from "~/server/db";
+import axios from "axios";
+import { COMPOSE_MESSAGE_URL } from "~/url.constants";
+import { formatSubject } from "~/utils/formatSubject";
+import { env } from "~/env.mjs";
+import { refreshAccessToken } from "~/utils/refreshAccessToken";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.redditPost.findMany({
       where: {
         userId: ctx.session.user.id,
+        permission: true,
+        read: false,
       },
     });
   }),
@@ -64,20 +71,54 @@ export const storyRouter = createTRPCRouter({
   save: protectedProcedure
     .input(postSchema)
     .mutation(async ({ ctx, input }) => {
-      await prisma.redditPost.create({
-        data: {
-          ...input,
-          flair: input.flair != null ? input.flair : undefined,
-          userId: ctx.session.user.id,
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+        include: {
+          accounts: true,
         },
       });
+      const redditAccount = user?.accounts.find(
+        (acc) => acc.provider === "reddit"
+      );
 
-      await prisma.contactedWriters.create({
-        data: {
-          name: input.author,
-          userId: ctx.session.user.id,
-        },
-      });
+      if (!redditAccount) return;
+
+      const accessToken = await refreshAccessToken(redditAccount);
+      // env.NODE_ENV === "production" &&
+      if (accessToken) {
+        const body = new FormData();
+        // body.set("to", input.author);
+        body.set("to", "StoriesAfterMidnight");
+        body.set("subject", formatSubject(input.title));
+        body.set("text", input.message);
+
+        await axios
+          .post(COMPOSE_MESSAGE_URL, body, {
+            headers: {
+              Authorization: `bearer ${accessToken}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          })
+          .then(async (res) => {
+            const { message, ...rest } = input;
+            await prisma.redditPost.create({
+              data: {
+                ...rest,
+                flair: input.flair ?? undefined,
+                userId: ctx.session.user.id,
+              },
+            });
+
+            await prisma.contactedWriters.create({
+              data: {
+                name: input.author,
+                userId: ctx.session.user.id,
+              },
+            });
+          });
+      }
 
       return true;
     }),
@@ -125,6 +166,16 @@ export const storyRouter = createTRPCRouter({
         },
         data: {
           completed: input.completed,
+        },
+      });
+    }),
+  deleteStory: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await prisma.redditPost.deleteMany({
+        where: {
+          id: input,
+          userId: ctx.session.user.id,
         },
       });
     }),

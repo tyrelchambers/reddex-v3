@@ -20,6 +20,8 @@ import guyWithGlasses from "../../public/images/guy_with_glasses.svg";
 import hero from "../../public/images/hero_illustration.svg";
 
 import Image from "next/image";
+import Link from "next/link";
+import { routes } from "~/routes";
 
 const Home: NextPage = () => {
   const statsQuery = api.stats.get.useQuery();
@@ -152,6 +154,16 @@ const Hero = () => (
       no-time at all. Save hours searching for stories and requesting
       permission. Reddex helps you do all that in a matter of minutes.
     </p>
+
+    <div className="cta-bg-parent relative h-fit w-full max-w-md">
+      <div id="cta-bg"></div>
+      <Link
+        href={routes.SEARCH}
+        className="search-cta absolute z-30 flex w-full justify-center rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
+      >
+        Start searching
+      </Link>
+    </div>
   </section>
 );
 

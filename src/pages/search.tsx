@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import { mantineModalClasses, mantinePaginationStyles } from "~/lib/styles";
 import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
+import { format } from "date-fns";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -34,6 +35,7 @@ const Search = () => {
     async onSuccess(data) {
       await db.posts.clear();
       await db.posts.bulkAdd(data);
+      await db.lastSearched.add({ time: new Date(Date.now()) });
       statsUpdate.mutate(data.length);
     },
   });
@@ -42,7 +44,10 @@ const Search = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [savedPosts, setSavedPosts] = useState<PostFromReddit[]>([]);
+  const [posts, setPosts] = useState<PostFromReddit[]>([]);
+  const [lastSearched, setLastSearched] = useState<{ time: Date } | undefined>(
+    undefined
+  );
   const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
@@ -54,14 +59,17 @@ const Search = () => {
 
   const PAGINATION_LIMIT_PER_PAGE = 15;
   const PAGINATION_TOTAL_PAGES =
-    filterPosts(appliedFilters, savedPosts).length / PAGINATION_LIMIT_PER_PAGE;
+    filterPosts(appliedFilters, posts).length / PAGINATION_LIMIT_PER_PAGE;
 
   useEffect(() => {
     const fn = async () => {
       setLoading(true);
 
       const posts = await db.posts.toArray();
-      setSavedPosts(posts);
+      const lastSearchedTime = await db.lastSearched.toArray();
+
+      setLastSearched(lastSearchedTime[0]);
+      setPosts(posts);
       setLoading(false);
     };
 
@@ -119,7 +127,7 @@ const Search = () => {
           <div className="mt-4 grid grid-cols-3 gap-6">
             {(!loading &&
               paginatedSlice(
-                filterPosts(appliedFilters, savedPosts),
+                filterPosts(appliedFilters, posts),
                 PAGINATION_LIMIT_PER_PAGE,
                 activePage
               ).map((item) => (
@@ -135,7 +143,13 @@ const Search = () => {
               ))) ||
               null}
           </div>
-          <div className="my-6 flex justify-center">
+          <div className="my-6 flex justify-between">
+            {lastSearched && (
+              <p className="text-sm text-foreground/70">
+                Last searched:{" "}
+                {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
+              </p>
+            )}
             <Pagination
               classNames={mantinePaginationStyles}
               value={activePage}

@@ -7,6 +7,8 @@ import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { mantineModalClasses, mantineSelectClasses } from "~/lib/styles";
 import EmptyState from "./EmptyState";
+import Link from "next/link";
+import { routes } from "~/routes";
 
 interface Props {
   postId: RedditPost["id"];
@@ -49,9 +51,16 @@ const ApprovedItemActions = ({ postId }: Props) => {
       <Button variant="outline" type="button" onClick={open}>
         Add tags
       </Button>
-      <Button onClick={() => addToCompleted.mutate(postId)} type="button">
+      <Button
+        variant="outline"
+        onClick={() => addToCompleted.mutate(postId)}
+        type="button"
+      >
         Mark as read
       </Button>
+      <Link href={routes.STUDIO + `/${postId}`}>
+        <Button>View in Studio</Button>
+      </Link>
 
       <Modal
         opened={opened}

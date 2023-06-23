@@ -21,6 +21,7 @@ export const postSchema = z.object({
   upvote_ratio: z.number(),
   created: z.number(),
   message: z.string(),
+  content: z.string(),
 });
 
 export const contactSchema = z.object({
@@ -112,4 +113,13 @@ export const subscriptionSchema = z.object({
   customerId: z.string(),
   subscriptionId: z.string().optional(),
   plan: z.string().optional(),
+});
+
+export const openAIGenerateSchema = z.object({
+  type: z.union([
+    z.literal("title"),
+    z.literal("description"),
+    z.literal("tags"),
+  ]),
+  postId: z.string(),
 });

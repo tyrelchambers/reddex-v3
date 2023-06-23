@@ -59,8 +59,8 @@ const Login = ({ providers }: Props) => {
 
         <section className="mx-auto my-20 flex max-w-screen-lg gap-4">
           <div className="flex w-1/2 flex-col">
-            <h1 className="text-2xl">Login to Reddex</h1>
-            <p className=" text-gray-500">
+            <h1 className="text-2xl text-foreground">Login to Reddex</h1>
+            <p className=" text-foreground/70">
               Login with Reddit to create an account if you don&apos;t have one,
               or login to an existing account.
             </p>
@@ -98,13 +98,19 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
   );
 
   return (
-    <div className="flex w-1/2 flex-col rounded-2xl bg-gray-50 p-8">
-      <p className="text-2xl">That&apos;s a nice looking plan!</p>
-      <p className="text-gray-500">Here&apos;s what you&apos;ve chosen.</p>
-      <Divider className="my-8" />
+    <div className="flex w-1/2 flex-col rounded-2xl bg-card p-8">
+      <p className="text-2xl text-card-foreground">
+        That&apos;s a nice looking plan!
+      </p>
+      <p className="text-card-foreground/70">
+        Here&apos;s what you&apos;ve chosen.
+      </p>
+      <Divider className="my-8 border-border" />
       <div>
-        <h2 className="text-3xl font-medium">{selectedPlan?.name}</h2>
-        <p className="text-gray-500">{selectedPlan?.desc}</p>
+        <h2 className="text-3xl font-medium text-card-foreground">
+          {selectedPlan?.name}
+        </h2>
+        <p className="text-card-foreground/70">{selectedPlan?.desc}</p>
         <List
           spacing="xs"
           size="sm"
@@ -115,7 +121,7 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
           className="mt-6"
         >
           {selectedPlan?.features.map((feature, idx) => (
-            <List.Item key={idx} className="text-gray-600">
+            <List.Item key={idx} className="text-card-foreground/70">
               {feature}
             </List.Item>
           ))}

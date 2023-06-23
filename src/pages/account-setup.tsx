@@ -3,6 +3,8 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { useLocalStorage } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import React, { FormEvent } from "react";
+import { Button } from "~/components/ui/button";
+import { mantineInputClasses } from "~/lib/styles";
 import { api } from "~/utils/api";
 
 const AccountSetup = () => {
@@ -73,13 +75,15 @@ const AccountSetup = () => {
 
   return (
     <main className="mx-auto max-w-screen-md py-20">
-      <h1>Let&apos;s finish setting up your account.</h1>
-      <p className="text-gray-500">
+      <h1 className="text-foreground">
+        Let&apos;s finish setting up your account.
+      </h1>
+      <p className="text-foreground/70">
         We just need to add a thing or two to your accont, then you&apos;ll be
         all set!
       </p>
       <form
-        className="mt-4 rounded-2xl bg-gray-50 p-4"
+        className="mt-4 rounded-2xl border-[1px] border-border p-4"
         onSubmit={submitHandler}
       >
         <TextInput
@@ -87,15 +91,12 @@ const AccountSetup = () => {
           placeholder="Email"
           required
           type="email"
+          classNames={mantineInputClasses}
           {...form.getInputProps("email")}
         />
-        <button
-          type="submit"
-          className="button main mt-4 w-full"
-          disabled={loading}
-        >
+        <Button type="submit" disabled={loading} className="mt-4">
           {loading ? "Saving..." : "Continue"}
-        </button>
+        </Button>
       </form>
     </main>
   );

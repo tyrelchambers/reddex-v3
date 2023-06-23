@@ -38,7 +38,7 @@ const Approved = () => {
         </div>
       </header>
 
-      <div className="mt-6 grid grid-cols-3 gap-3">
+      <div className="mt-6 grid grid-cols-2 gap-3">
         {approvedListQuery.data
           ?.filter(
             (item) => item.title.match(regex) || item.author.match(regex)

@@ -68,7 +68,7 @@ const MyApp: AppType<MyAppProps> = ({
         draggable
         pauseOnHover
         limit={3}
-        theme="light"
+        theme={colorScheme}
       />
     </SessionProvider>
   );

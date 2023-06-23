@@ -31,6 +31,7 @@ export const routes = {
   SETTINGS_PROFILE: "/dashboard/settings/profile",
   SETTINGS_ACCOUNT: "/dashboard/settings/account",
   SEARCH: "/search",
+  STUDIO: "/dashboard/studio",
 };
 export const websiteTabItems = [
   {

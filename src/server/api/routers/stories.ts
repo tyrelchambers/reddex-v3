@@ -150,7 +150,18 @@ export const storyRouter = createTRPCRouter({
         },
       });
     }),
-
+  postById: protectedProcedure
+    .input(z.string().optional())
+    .query(async ({ ctx, input }) => {
+      return await prisma.redditPost
+        .findMany({
+          where: {
+            id: input,
+            userId: ctx.session.user.id,
+          },
+        })
+        .then((res) => res[0]);
+    }),
   completeStory: protectedProcedure
     .input(
       z.object({

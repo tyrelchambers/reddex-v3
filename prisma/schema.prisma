@@ -116,6 +116,7 @@ model RedditPost {
   reading_time  Int
   upvote_ratio  Float
   created       Int
+  content       String          @db.Text()
   userId        String
   user          User            @relation(fields: [userId], references: [id])
   TagsOnStories TagsOnStories[]

@@ -74,8 +74,6 @@ const SelectedInboxMessage = ({ message }: Props) => {
   };
 
   const addStoryToReadingList = () => {
-    console.log(message);
-
     if (post) {
       stories.mutate(post.id);
     }
@@ -107,14 +105,18 @@ const SelectedInboxMessage = ({ message }: Props) => {
               </div>
             )}
 
-            {!postIsInReadingList ? (
-              <Button variant="secondary" onClick={addStoryToReadingList}>
-                Add to reading list
-              </Button>
-            ) : (
-              <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
-                Story is in reading list
-              </div>
+            {post && (
+              <>
+                {!postIsInReadingList ? (
+                  <Button variant="secondary" onClick={addStoryToReadingList}>
+                    Add to reading list
+                  </Button>
+                ) : (
+                  <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
+                    Story is in reading list
+                  </div>
+                )}
+              </>
             )}
           </div>
         </footer>

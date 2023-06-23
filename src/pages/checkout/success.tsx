@@ -31,12 +31,12 @@ const Success = () => {
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
         <FontAwesomeIcon icon={faBadgeCheck} className="text-green-700" />
       </div>
-      <h1 className="mt-4 text-center text-gray-800">Payment successful!</h1>
-      <p className="mt-2 text-center font-thin text-gray-500">
+      <h1 className="mt-4 text-center text-foreground">Payment successful!</h1>
+      <p className="mt-2 text-center font-thin text-foreground/70">
         Your payment has completed successfully and your subscription is now
         active!
       </p>
-      <section className="mt-10 flex w-full flex-col gap-3 rounded-2xl bg-gray-100 p-4">
+      <section className="mt-10 flex w-full flex-col gap-3 rounded-2xl bg-card p-4">
         <Row title="Name" body={details.customer_details?.name} />
 
         <Row
@@ -86,11 +86,13 @@ interface RowProps {
 
 const Row = ({ title, body }: RowProps) => (
   <div className="flex">
-    <p className="text-sm font-thin text-gray-500">{title}</p>
+    <p className="text-sm font-thin text-card-foreground">{title}</p>
     {typeof body !== "string" ? (
       <div className="flex flex-1 justify-end">{body}</div>
     ) : (
-      <p className="flex-1 text-right text-sm text-gray-700">{body || ""}</p>
+      <p className="flex-1 text-right text-sm text-card-foreground">
+        {body || ""}
+      </p>
     )}
   </div>
 );

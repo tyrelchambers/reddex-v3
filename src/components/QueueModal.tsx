@@ -74,6 +74,7 @@ const QueueModal = ({ close }: Props) => {
 
     redditPost.mutate({
       ...currentPost,
+      content: currentPost.selftext,
       story_length: currentPost.selftext.length,
       flair: currentPost.link_flair_text,
       post_id: currentPost.id,

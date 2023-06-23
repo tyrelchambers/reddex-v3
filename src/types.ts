@@ -110,3 +110,5 @@ export interface SelectValue {
   label: string;
   value: string;
 }
+
+export type GenerateTypes = "title" | "description" | "tags";

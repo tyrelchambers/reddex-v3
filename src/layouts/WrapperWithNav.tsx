@@ -7,7 +7,7 @@ import Spinner from "~/components/Spinner";
 
 interface Props {
   children: React.ReactNode[] | React.ReactNode;
-  tabs: Tab[];
+  tabs?: Tab[];
   loading?: boolean;
   loadingMessage?: string;
 }
@@ -18,9 +18,11 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
       <Header />
       <DashNav />
       <main className="mx-auto my-6 flex w-full max-w-screen-2xl gap-14">
-        <header className="w-48">
-          <TabsList tabs={tabs} />
-        </header>
+        {tabs && (
+          <header className="w-48">
+            <TabsList tabs={tabs} />
+          </header>
+        )}
         <section className="w-full max-w-screen-2xl">
           {loading ? <Spinner message={loadingMessage} /> : children}
         </section>

@@ -31,6 +31,8 @@ const server = z.object({
   STRIPE_LIVE_KEY: z.string(),
   NEXT_URL: z.string().url(),
   STRIPE_WEBHOOK_SECRET: z.string(),
+  OPEN_AI_KEY: z.string(),
+  OPEN_AI_ORG: z.string(),
 });
 
 /**
@@ -66,6 +68,8 @@ const processEnv = {
   NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK:
     process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK,
   NEXT_URL: process.env.NEXT_URL,
+  OPEN_AI_KEY: process.env.OPEN_AI_KEY,
+  OPEN_AI_ORG: process.env.OPEN_AI_ORG,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

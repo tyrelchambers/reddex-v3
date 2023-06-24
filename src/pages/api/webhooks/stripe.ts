@@ -20,6 +20,8 @@ export default async function handler(
   let event;
   const signature = req.headers["stripe-signature"] as string;
 
+  console.log("--- Processing subscription webhook event ---");
+
   try {
     event = stripeClient.webhooks.constructEvent(
       reqBuffer,

@@ -72,7 +72,7 @@ export const billingRouter = createTRPCRouter({
       },
     });
 
-    if (!user?.Subscription) {
+    if (!user?.Subscription?.subscriptionId) {
       return;
     }
 
@@ -81,7 +81,7 @@ export const billingRouter = createTRPCRouter({
     );
 
     const subscription = (await stripeClient.subscriptions.retrieve(
-      user.Subscription.subscriptionId || "",
+      user.Subscription.subscriptionId,
       {
         expand: ["plan", "plan.product"],
       }

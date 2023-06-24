@@ -57,7 +57,7 @@ model Subscription {
   userId         String  @unique
   subscriptionId String?
   plan           String?
-  user           User    @relation(fields: [userId], references: [id])
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -73,7 +73,7 @@ model Contact {
   name   String
   notes  String? @db.Text
   userId String
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ContactedWriters {
@@ -90,13 +90,13 @@ model Profile {
   words_per_minute Int?
   searches         RecentlySearched[]
   userId           String             @unique
-  user             User               @relation(fields: [userId], references: [id])
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model RecentlySearched {
   id        String   @id @default(cuid())
   text      String   @unique
-  profile   Profile? @relation(fields: [profileId], references: [id])
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId String?
 }
 
@@ -118,15 +118,15 @@ model RedditPost {
   created       Int
   content       String          @db.Text
   userId        String
-  user          User            @relation(fields: [userId], references: [id])
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   TagsOnStories TagsOnStories[]
 }
 
 model TagsOnStories {
   RedditPostId String
   tagId        String
-  RedditPost   RedditPost @relation(fields: [RedditPostId], references: [id])
-  tag          Tag        @relation(fields: [tagId], references: [id])
+  RedditPost   RedditPost @relation(fields: [RedditPostId], references: [id], onDelete: Cascade)
+  tag          Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([RedditPostId, tagId])
 }
@@ -135,7 +135,7 @@ model Tag {
   id            String          @id @default(cuid())
   tag           String          @db.Text
   userId        String
-  user          User            @relation(fields: [userId], references: [id])
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   TagsOnStories TagsOnStories[]
 }
 
@@ -147,7 +147,7 @@ model SubmittedStory {
   body           String   @db.Text
   userId         String
   title          String?
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   date           DateTime @default(now())
   completed      Boolean  @default(false)
 }
@@ -171,8 +171,8 @@ model Website {
   userId               String         @unique
   submissionPageId     String         @unique
   youtubeIntegrationId String?
-  submissionPage       SubmissionPage @relation(fields: [submissionPageId], references: [id])
-  user                 User           @relation(fields: [userId], references: [id])
+  submissionPage       SubmissionPage @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
+  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SubmissionPage {
@@ -191,7 +191,7 @@ model SubmissionFormModule {
   enabled          Boolean         @default(false)
   required         Boolean         @default(false)
   submissionPageId String?
-  submissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id])
+  submissionPage   SubmissionPage? @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
 }
 
 model Stats {

@@ -12,7 +12,7 @@ const PricingFrequencySelect = ({ frequency, setFrequency }: Props) => {
       <div className="rounded-full bg-background p-1">
         <button
           className={clsx(
-            "rounded-full px-4 py-2 text-sm font-semibold duration-150",
+            "rounded-full px-4 py-2 text-sm font-semibold text-foreground duration-150",
             {
               "bg-accent text-accent-foreground": frequency === "yearly",
             }
@@ -25,7 +25,7 @@ const PricingFrequencySelect = ({ frequency, setFrequency }: Props) => {
         <button
           onClick={() => setFrequency("monthly")}
           className={clsx(
-            "rounded-full px-4 py-2 text-sm font-semibold duration-150",
+            "rounded-full px-4 py-2 text-sm font-semibold text-foreground duration-150",
             {
               "bg-accent text-accent-foreground": frequency === "monthly",
             }

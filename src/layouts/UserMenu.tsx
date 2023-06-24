@@ -1,4 +1,4 @@
-import { Menu } from "@mantine/core";
+import { Divider, Menu } from "@mantine/core";
 import React from "react";
 import UserChip from "./UserChip";
 import Link from "next/link";
@@ -33,10 +33,32 @@ const UserMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>App</Menu.Label>
+        <Menu.Label>Reading list</Menu.Label>
         <Link href={routes.APPROVED}>
-          <Menu.Item>Dashboard</Menu.Item>
+          <Menu.Item>Approved</Menu.Item>
         </Link>
+
+        <Link href={routes.COMPLETED}>
+          <Menu.Item>Completed</Menu.Item>
+        </Link>
+        <Menu.Divider className="border-border" />
+
+        <Menu.Label>Website</Menu.Label>
+        <Link href={routes.WEBSITE_GENERAL}>
+          <Menu.Item>Website</Menu.Item>
+        </Link>
+
+        <Menu.Divider className="border-border" />
+
+        <Menu.Label>Settings</Menu.Label>
+        <Link href={routes.SETTINGS_PROFILE}>
+          <Menu.Item>Profile</Menu.Item>
+        </Link>
+
+        <Link href={routes.SETTINGS_ACCOUNT}>
+          <Menu.Item>Account</Menu.Item>
+        </Link>
+
         <Menu.Divider className="border-border" />
         <button type="button" onClick={logoutHandler} className="w-full">
           <Menu.Item>Logout</Menu.Item>

@@ -170,7 +170,7 @@ const General = () => {
                 <span className="px-3 text-gray-500">http://</span>
                 <TextInput
                   variant="filled"
-                  placeholder="subdomain"
+                  placeholder="Your custom subdomain"
                   classNames={{
                     ...mantineInputClasses,
                     input: `${mantineInputClasses.input || ""} !border-0`,
@@ -179,7 +179,7 @@ const General = () => {
                 />
                 <span className="px-3 text-gray-500">.reddex.app</span>
               </div>
-              {subdomainAvailable && (
+              {form.values.subdomain && subdomainAvailable && (
                 <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
                   <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
                   available

@@ -38,6 +38,9 @@ export const openAiRouter = createTRPCRouter({
         ""
       );
 
-      return result;
+      return {
+        result,
+        type: input.type,
+      };
     }),
 });

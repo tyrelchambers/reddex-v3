@@ -81,6 +81,10 @@
   .cta-bg-parent:hover #cta-bg {
     background: rgba(0, 0, 0, 0.4);
   }
+
+  .filepond--panel-root {
+    background-color: var(--card);
+  }
 }
 
 @layer base {

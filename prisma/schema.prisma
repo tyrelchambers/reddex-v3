@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,7 +14,7 @@ model Account {
   provider          String
   providerAccountId String
   refresh_token     String?
-  access_token      String?
+  access_token      String? @db.LongText
   expires_at        Int?
   token_type        String?
   scope             String?
@@ -71,7 +71,7 @@ model VerificationToken {
 model Contact {
   id     String  @id @default(cuid())
   name   String
-  notes  String?
+  notes  String? @db.Text
   userId String
   user   User    @relation(fields: [userId], references: [id])
 }
@@ -85,8 +85,8 @@ model ContactedWriters {
 
 model Profile {
   id               String             @id @default(cuid())
-  greeting         String?
-  recurring        String?
+  greeting         String?            @db.Text
+  recurring        String?            @db.Text
   words_per_minute Int?
   searches         RecentlySearched[]
   userId           String             @unique
@@ -116,7 +116,7 @@ model RedditPost {
   reading_time  Int
   upvote_ratio  Float
   created       Int
-  content       String          @db.Text()
+  content       String          @db.Text
   userId        String
   user          User            @relation(fields: [userId], references: [id])
   TagsOnStories TagsOnStories[]
@@ -133,7 +133,7 @@ model TagsOnStories {
 
 model Tag {
   id            String          @id @default(cuid())
-  tag           String
+  tag           String          @db.Text
   userId        String
   user          User            @relation(fields: [userId], references: [id])
   TagsOnStories TagsOnStories[]
@@ -144,7 +144,7 @@ model SubmittedStory {
   email          String?
   author         String?
   sent_to_others Boolean?
-  body           String
+  body           String   @db.Text
   userId         String
   title          String?
   user           User     @relation(fields: [userId], references: [id])
@@ -157,7 +157,7 @@ model Website {
   hidden               Boolean        @default(true)
   subdomain            String?        @unique
   name                 String?
-  description          String?
+  description          String?        @db.Text
   twitter              String?
   facebook             String?
   instagram            String?
@@ -178,8 +178,8 @@ model Website {
 model SubmissionPage {
   id                    String                 @id @default(cuid())
   name                  String?
-  subtitle              String?
-  description           String?
+  subtitle              String?                @db.Text
+  description           String?                @db.Text
   hidden                Boolean                @default(true)
   submissionFormModules SubmissionFormModule[]
   website               Website?

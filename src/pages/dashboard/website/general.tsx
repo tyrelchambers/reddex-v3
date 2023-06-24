@@ -326,9 +326,7 @@ const General = () => {
             </section>
             <Divider className="my-4" />
 
-            <button type="submit" className="button main">
-              Save changes
-            </button>
+            <Button type="submit">Save changes</Button>
           </form>
         </BodyWithLoader>
       </main>

@@ -2,6 +2,7 @@ import { Checkbox, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import StatusBanner from "~/components/StatusBanner";
+import { Button } from "~/components/ui/button";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
@@ -187,9 +188,7 @@ const SubmissionForm = () => {
               )}
             </section>
 
-            <button type="submit" className="button main mt-4 w-full">
-              Save changes
-            </button>
+            <Button type="submit">Save changes</Button>
           </form>
         </BodyWithLoader>
       </main>

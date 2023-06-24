@@ -2,18 +2,14 @@ version: "3.9"
 services:
   db:
     container_name: reddex_db
-    image: postgres
+    image: mysql
     restart: unless-stopped
     env_file:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - "5432:5432"
-  mongodb:
-    container_name: mongodb
-    image: mongo
-    restart: unless-stopped
+      - "3306:3306"
 networks:
   default:
     name: reddex_v3

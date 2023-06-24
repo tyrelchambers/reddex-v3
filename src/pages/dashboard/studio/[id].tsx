@@ -19,7 +19,26 @@ const StudioId = () => {
   const router = useRouter();
 
   const storyQuery = api.story.postById.useQuery(router.query.id as string);
-  const generateMutation = api.openAi.generate.useMutation();
+  const generateMutation = api.openAi.generate.useMutation({
+    onSuccess: (res) => {
+      if (res) {
+        if (res.type === "title" && res.result) {
+          form.setFieldValue("title", res.result);
+        }
+        if (res.type === "description" && res.result) {
+          form.setFieldValue("description", res.result);
+        }
+        if (res.type === "tags" && res.result) {
+          form.setFieldValue("tags", res.result.split(","));
+        }
+      }
+    },
+    onSettled: (res) => {
+      if (res?.type) {
+        setLoadingStates({ ...loadingStates, [res.type]: false });
+      }
+    },
+  });
   const [loadingStates, setLoadingStates] = useState({
     title: false,
     description: false,
@@ -39,27 +58,7 @@ const StudioId = () => {
 
     setLoadingStates({ ...loadingStates, [type]: true });
 
-    generateMutation.mutate(
-      { type, postId },
-      {
-        onSuccess: (res) => {
-          if (res) {
-            if (type === "title") {
-              form.setFieldValue("title", res);
-            }
-            if (type === "description") {
-              form.setFieldValue("description", res);
-            }
-            if (type === "tags") {
-              form.setFieldValue("tags", res.split(","));
-            }
-          }
-        },
-        onSettled: () => {
-          setLoadingStates({ ...loadingStates, [type]: false });
-        },
-      }
-    );
+    generateMutation.mutate({ type, postId });
   };
 
   const copyToClipboard = (type: GenerateTypes) => {

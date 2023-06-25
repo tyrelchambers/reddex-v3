@@ -1,13 +1,19 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { routes } from "~/routes";
 
 const Index = () => {
   const router = useRouter();
+  const { status } = useSession();
 
   useEffect(() => {
-    router.push(routes.APPROVED);
-  }, []);
+    if (status !== "loading" && status === "unauthenticated") {
+      router.push(routes.HOME);
+    } else if (status !== "loading" && status === "authenticated") {
+      router.push(routes.APPROVED);
+    }
+  }, [status]);
 
   return null;
 };

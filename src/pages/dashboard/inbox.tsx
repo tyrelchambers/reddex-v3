@@ -8,6 +8,7 @@ import Spinner from "~/components/Spinner";
 import { Button } from "~/components/ui/button";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
 import { api } from "~/utils/api";
 
@@ -48,52 +49,41 @@ const Inbox = () => {
   };
 
   return (
-    <>
-      <Header />
-      <DashNav />
-      <main className="mx-auto my-6 max-w-screen-2xl">
-        {inboxQuery.isLoading ? (
-          <div className="my-20 flex w-full flex-col items-center">
-            <Loader color="pink" />
-            <p className="mt-4 text-xl text-accent">Loading inbox...</p>
+    <WrapperWithNav loading={inboxQuery.isLoading}>
+      <div className="flex flex-col">
+        <header className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl text-foreground">Inbox</h1>
+          <div className="flex w-full max-w-lg gap-4">
+            <TextInput
+              ref={searchRef}
+              placeholder="Search for a message via author or subject"
+              classNames={mantineInputClasses}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Button variant="secondary" onClick={resetSearch}>
+              Reset
+            </Button>
           </div>
-        ) : (
-          <div className="flex flex-col">
-            <header className="mb-6 flex items-center justify-between">
-              <h1 className="text-2xl text-foreground">Inbox</h1>
-              <div className="flex w-full max-w-lg gap-4">
-                <TextInput
-                  ref={searchRef}
-                  placeholder="Search for a message via author or subject"
-                  classNames={mantineInputClasses}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <Button variant="secondary" onClick={resetSearch}>
-                  Reset
-                </Button>
-              </div>
-            </header>
-            <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
-              {!searchInboxQuery.isFetching ? (
-                <>
-                  <InboxMessageList
-                    messages={
-                      searchInboxQuery.data ? searchInboxQuery.data : messages
-                    }
-                    selectedMessage={selectedMessage?.id}
-                    setSelectedMessageId={setSelectedMessageId}
-                    router={router}
-                  />
-                  <SelectedInboxMessage message={selectedMessage} />
-                </>
-              ) : (
-                <Spinner />
-              )}
-            </section>
-          </div>
-        )}
-      </main>
-    </>
+        </header>
+        <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
+          {!searchInboxQuery.isFetching ? (
+            <>
+              <InboxMessageList
+                messages={
+                  searchInboxQuery.data ? searchInboxQuery.data : messages
+                }
+                selectedMessage={selectedMessage?.id}
+                setSelectedMessageId={setSelectedMessageId}
+                router={router}
+              />
+              <SelectedInboxMessage message={selectedMessage} />
+            </>
+          ) : (
+            <Spinner />
+          )}
+        </section>
+      </div>
+    </WrapperWithNav>
   );
 };
 

@@ -31,9 +31,9 @@ const AccountSetup = () => {
   });
 
   React.useEffect(() => {
-    // if (user?.email && user.Subscription?.customerId) {
-    //   router.push("/dashboard");
-    // }
+    if (user?.email && user.Subscription?.customerId) {
+      router.push("/dashboard");
+    }
 
     if (!userQuery.isLoading && !userQuery.data) {
       router.push("/");

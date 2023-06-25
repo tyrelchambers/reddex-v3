@@ -76,6 +76,7 @@
     "zustand": "^4.3.8"
   },
   "devDependencies": {
+    "@testing-library/react": "^14.0.0",
     "@types/eslint": "^8.40.2",
     "@types/formidable": "^2.0.6",
     "@types/multer": "^1.4.7",
@@ -88,6 +89,7 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^8.42.0",
     "eslint-config-next": "^13.4.5",
+    "msw": "^1.2.2",
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",

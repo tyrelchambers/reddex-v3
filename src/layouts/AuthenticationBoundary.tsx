@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { routes } from "~/routes";
 
 interface Props {

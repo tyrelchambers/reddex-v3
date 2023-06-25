@@ -1,4 +1,4 @@
-import { Loader, TextInput } from "@mantine/core";
+import { TextInput } from "@mantine/core";
 import { useDebouncedState } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -6,8 +6,6 @@ import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import Spinner from "~/components/Spinner";
 import { Button } from "~/components/ui/button";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
 import { api } from "~/utils/api";

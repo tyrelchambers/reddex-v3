@@ -5,10 +5,6 @@ import { stripeClient } from "~/utils/stripe";
 import { buffer } from "micro";
 import { prisma } from "~/server/db";
 
-interface Body {
-  data: Stripe.Event.Data;
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

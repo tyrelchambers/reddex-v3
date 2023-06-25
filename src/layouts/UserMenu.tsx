@@ -1,4 +1,4 @@
-import { Divider, Menu } from "@mantine/core";
+import { Menu } from "@mantine/core";
 import React from "react";
 import UserChip from "./UserChip";
 import Link from "next/link";

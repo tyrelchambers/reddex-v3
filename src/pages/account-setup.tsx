@@ -68,6 +68,7 @@ const AccountSetup = () => {
 
     if (link) {
       window.open(link, "_self", "rel=noopener,noreferrer");
+      window.localStorage.removeItem("selected-plan");
     }
 
     setLoading(false);

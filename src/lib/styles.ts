@@ -22,7 +22,8 @@ export const mantineSelectClasses: Partial<
 export const mantineInputClasses: Partial<
   Record<TextInputStylesNames, string>
 > = {
-  input: "bg-input text-foreground border-muted w-full rounded-md  px-3",
+  input:
+    "bg-input text-foreground placeholder:text-foreground/50 border-muted w-full rounded-md placeholder:italic px-3",
   wrapper: " box-border flex-1",
   label: "text-card-foreground",
   description: "text-muted-foreground",

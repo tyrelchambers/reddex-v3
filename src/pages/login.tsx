@@ -137,11 +137,11 @@ const NoSelectedPlan = ({
   setFrequency,
 }: NoSelectedPlanProps) => {
   return (
-    <div className="flex w-1/2 flex-col rounded-2xl bg-gray-50 p-8">
-      <p className="mb-2 text-2xl">
+    <div className="flex w-1/2 flex-col rounded-2xl bg-card p-8">
+      <p className="mb-2 text-2xl text-card-foreground">
         Looks like we haven&apos;t chosen a plan yet!
       </p>
-      <p className="text-gray-500">
+      <p className="text-card-foreground/70">
         That&apos;s okay, just select one below and we will get started.
       </p>
       <Divider className="my-8" />

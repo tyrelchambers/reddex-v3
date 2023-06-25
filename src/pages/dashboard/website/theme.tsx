@@ -1,6 +1,7 @@
 import { ColorPicker, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
+import { Button } from "~/components/ui/button";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineSelectClasses } from "~/lib/styles";
@@ -79,9 +80,7 @@ const Theme = () => {
                 {...form.getInputProps("colour")}
               />
             </div>
-            <button type="submit" className="button main mt-4 w-full">
-              Save changes
-            </button>
+            <Button type="submit">Save changes</Button>
           </form>
         </BodyWithLoader>
       </main>

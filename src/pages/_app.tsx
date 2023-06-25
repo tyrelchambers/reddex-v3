@@ -1,7 +1,7 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { MantineProvider, createStyles } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";

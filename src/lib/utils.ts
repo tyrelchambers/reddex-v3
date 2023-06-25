@@ -1,4 +1,3 @@
-import { RedditPost } from "@prisma/client";
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { FilterState } from "~/reducers/filterReducer";

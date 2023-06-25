@@ -10,7 +10,7 @@ import React from "react";
 import InvoicesList from "~/components/InvoicesList";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineBadgeClasses, mantineModalClasses } from "~/lib/styles";
+import { mantineModalClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/formatCurrency";

@@ -1,4 +1,4 @@
-import { Modal, NativeSelect, Select } from "@mantine/core";
+import { Modal, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { RedditPost } from "@prisma/client";

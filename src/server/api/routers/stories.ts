@@ -5,7 +5,6 @@ import { prisma } from "~/server/db";
 import axios from "axios";
 import { COMPOSE_MESSAGE_URL } from "~/url.constants";
 import { formatSubject } from "~/utils/formatSubject";
-import { env } from "~/env.mjs";
 import { refreshAccessToken } from "~/utils/refreshAccessToken";
 
 export const storyRouter = createTRPCRouter({
@@ -101,7 +100,7 @@ export const storyRouter = createTRPCRouter({
               "Content-Type": "application/x-www-form-urlencoded",
             },
           })
-          .then(async (res) => {
+          .then(async () => {
             const { message, ...rest } = input;
             await prisma.redditPost.create({
               data: {
@@ -132,7 +131,7 @@ export const storyRouter = createTRPCRouter({
       },
     });
   }),
-  submittedList: protectedProcedure.query(async ({ ctx, input }) => {
+  submittedList: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.submittedStory.findMany({
       where: {
         userId: ctx.session.user.id,

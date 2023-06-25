@@ -100,12 +100,9 @@ const SubmissionForm = () => {
               title="Enable Submission Page"
               subtitle="Enable this submission form to allow visitors to email you their own stories."
               action={
-                <button
-                  className="button secondary whitespace-nowrap"
-                  onClick={visibilityHandler}
-                >
+                <Button variant="defaultInvert" onClick={visibilityHandler}>
                   Enable submission form
-                </button>
+                </Button>
               }
             />
           ) : (
@@ -114,12 +111,9 @@ const SubmissionForm = () => {
               title="Hide Submission Page"
               subtitle="Hide your submission page so others can't send you stories."
               action={
-                <button
-                  className="button secondary"
-                  onClick={visibilityHandler}
-                >
+                <Button variant="default" onClick={visibilityHandler}>
                   Hide
-                </button>
+                </Button>
               }
             />
           )}

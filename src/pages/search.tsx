@@ -147,11 +147,7 @@ const Search = () => {
                   <SubredditSearchItem
                     key={item.id}
                     post={item}
-                    hasBeenUsed={
-                      !!usedPostIdsQuery.data?.find(
-                        (id) => id.post_id === item.id
-                      )
-                    }
+                    hasBeenUsed={true}
                     usersWordsPerMinute={
                       currentUser.data?.Profile?.words_per_minute
                     }

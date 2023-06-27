@@ -8,6 +8,7 @@ import {
   faWarning,
   faHashtag,
   faClock,
+  faCheck,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -35,20 +36,30 @@ const SubredditSearchItem = ({
   const isInQueue = queueStore.exists(post);
 
   const activeClasses = {
-    header: clsx(isInQueue ? "bg-accent/80" : "bg-foreground/10"),
+    header: clsx(isInQueue ? "bg-accent" : "bg-foreground/10"),
     headerText: clsx(isInQueue && "text-white"),
   };
 
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background">
       <header
-        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header} p-3 py-5`}
+        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header} p-3 `}
       >
-        <div
-          className={`flex items-center rounded-full  font-black text-orange-500 ${activeClasses.headerText}`}
-        >
-          <FontAwesomeIcon icon={faUp} className="mr-2" />
-          {post.ups}
+        <div className="flex items-center gap-2">
+          <div
+            className={`flex items-center rounded-full  font-black text-orange-500 ${activeClasses.headerText}`}
+          >
+            <FontAwesomeIcon icon={faUp} className="mr-2" />
+            {post.ups}
+          </div>
+          {hasBeenUsed && (
+            <Tooltip label="Already used">
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-100 p-2 text-xs text-green-800"
+              />
+            </Tooltip>
+          )}
         </div>
 
         <div className="flex gap-3">
@@ -106,14 +117,6 @@ const SubredditSearchItem = ({
         </div>
 
         <div className="flex items-end gap-2">
-          {hasBeenUsed && (
-            <Tooltip label="Already used">
-              <FontAwesomeIcon
-                icon={faWarning}
-                className="flex items-center gap-2 rounded-full bg-yellow-100 p-2 text-xs text-yellow-800"
-              />
-            </Tooltip>
-          )}
           {isInQueue ? (
             <Button
               variant="default"

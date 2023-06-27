@@ -1,4 +1,3 @@
-import { RedditPost } from "@prisma/client";
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { FilterState } from "~/reducers/filterReducer";
@@ -7,6 +6,10 @@ import { PostFromReddit } from "~/types";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const calculateReadingTime = (text: string, time: number) => {
+  return Math.ceil(text.split(" ").length / time);
+};
 
 export const FilterPosts = class FilterClass {
   post: Partial<PostFromReddit> = {};
@@ -53,6 +56,47 @@ export const FilterPosts = class FilterClass {
           ?.toLowerCase()
           ?.includes(this.filters.keywords.toLowerCase())
       );
+    }
+  }
+
+  readingTime(time: number) {
+    if (!this.post.selftext) return false;
+
+    const calculatedTime = calculateReadingTime(this.post.selftext, time);
+
+    if (this.filters.readingTime) {
+      if (
+        this.filters.readingTime?.value &&
+        this.filters.readingTime.qualifier === "Over"
+      ) {
+        return calculatedTime >= this.filters.readingTime.value;
+      } else if (
+        this.filters.readingTime?.value &&
+        this.filters.readingTime.qualifier === "Under"
+      ) {
+        return calculatedTime <= this.filters.readingTime.value;
+      } else if (
+        this.filters.readingTime?.value &&
+        this.filters.readingTime.qualifier === "Equals"
+      ) {
+        return calculatedTime === this.filters.readingTime.value;
+      }
+    }
+  }
+
+  seriesOnly() {
+    if (!this.post.link_flair_text) return false;
+
+    if (this.filters.seriesOnly) {
+      return this.post.link_flair_text === "Series";
+    }
+  }
+
+  excludeSeries() {
+    if (!this.post.link_flair_text) return false;
+
+    if (this.filters.excludeSeries) {
+      return this.post.link_flair_text !== "Series";
     }
   }
 };

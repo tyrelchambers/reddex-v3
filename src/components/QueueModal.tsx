@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { Contact } from "@prisma/client";
 import React, { useEffect } from "react";
 import { useQueueStore } from "~/stores/queueStore";
-import { PostFromReddit, RedditPostWithText } from "~/types";
+import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";

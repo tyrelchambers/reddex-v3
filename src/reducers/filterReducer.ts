@@ -76,6 +76,7 @@ export const filterReducer = (
     case "REMOVE_FILTER": {
       const clone = { ...state };
       delete clone[action.payload as keyof FilterState];
+
       return {
         ...clone,
       };

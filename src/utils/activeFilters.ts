@@ -6,23 +6,23 @@ export const activeFilters = (filters: FilterState | null) => {
   const active = [];
 
   if (filters?.upvotes?.value && filters?.upvotes?.value > 0) {
-    active.push("upvotes");
+    active.push({ label: "upvotes", value: "upvotes" });
   }
 
   if (filters?.readingTime?.value && filters?.readingTime?.value > 0) {
-    active.push("reading time");
+    active.push({ label: "reading time", value: "readingTime" });
   }
 
   if (filters?.keywords) {
-    active.push("keywords");
+    active.push({ label: "keywords", value: "keywords" });
   }
 
   if (filters?.seriesOnly) {
-    active.push("series only");
+    active.push({ label: "series only", value: "seriesOnly" });
   }
 
   if (filters?.excludeSeries) {
-    active.push("exclude series");
+    active.push({ label: "exclude series", value: "excludeSeries" });
   }
 
   return active;

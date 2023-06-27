@@ -130,7 +130,7 @@ export const inboxRouter = createTRPCRouter({
   }),
   findPostByTitle: protectedProcedure
     .input(z.string().optional())
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const subject = input?.endsWith("...") ? input.slice(0, -3) : input;
 
       const post = await prisma.redditPost.findFirst({

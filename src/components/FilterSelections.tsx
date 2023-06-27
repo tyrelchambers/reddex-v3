@@ -104,6 +104,7 @@ const FilterSelections = ({
           dispatch({ type: "SERIES_ONLY", payload: e.currentTarget.checked })
         }
         classNames={mantineSwitchStyles}
+        defaultChecked={filters.seriesOnly}
       />
       <Switch
         label="Exclude series"
@@ -111,6 +112,7 @@ const FilterSelections = ({
           dispatch({ type: "EXCLUDE_SERIES", payload: e.currentTarget.checked })
         }
         classNames={mantineSwitchStyles}
+        defaultChecked={filters.excludeSeries}
       />
 
       <Button type="button" onClick={() => setAppliedFilters(filters)}>

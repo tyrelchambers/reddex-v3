@@ -35,7 +35,7 @@ const Search = () => {
     async onSuccess(data) {
       await db.posts.clear();
       await db.posts.bulkAdd(data);
-      await db.lastSearched.add({ time: new Date(Date.now()) });
+      await db.lastSearched.update(1, { time: new Date(Date.now()) });
       statsUpdate.mutate(data.length);
     },
   });

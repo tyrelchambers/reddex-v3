@@ -58,3 +58,9 @@ export const plans = [
     ],
   },
 ];
+
+export const breakpoints = {
+  mobile: 425,
+  tablet: 768,
+  laptop: 1024,
+};

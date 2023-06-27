@@ -88,13 +88,16 @@ const Search = () => {
     subredditSearch.mutate(data);
   };
 
-  const removeFilter = (filter: string) => {
+  const removeFilter = (filter: { label: string; value: string }) => {
     const filterClone = appliedFilters;
     if (!filterClone) return;
 
-    delete filterClone[filter as keyof FilterState];
+    delete filterClone[filter.value as keyof FilterState];
+
+    console.log(filter);
+
     setAppliedFilters(filterClone);
-    dispatch({ type: "REMOVE_FILTER", payload: filter });
+    dispatch({ type: "REMOVE_FILTER", payload: filter.value });
   };
 
   return (
@@ -230,6 +233,8 @@ const filterPosts = (
       keywords: () => post.keywords(),
       upvotes: () => post.upvotes(),
       readingTime: () => post.readingTime(profileReadingTime ?? 200),
+      seriesOnly: () => post.seriesOnly(),
+      excludeSeries: () => post.excludeSeries(),
     };
 
     Object.keys(filters).forEach((key) => {

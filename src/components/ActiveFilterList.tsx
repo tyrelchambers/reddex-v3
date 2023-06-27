@@ -9,7 +9,7 @@ import { Button } from "./ui/button";
 
 interface Props {
   filters: FilterState | null;
-  removeFilter: (filter: string) => void;
+  removeFilter: (filter: { label: string; value: string }) => void;
   reset: () => void;
 }
 const ActiveFilterList = ({ filters, removeFilter, reset }: Props) => {
@@ -19,14 +19,14 @@ const ActiveFilterList = ({ filters, removeFilter, reset }: Props) => {
         <ul className="flex gap-3">
           {activeFilters(filters).map((filter) => (
             <li
-              key={filter}
+              key={filter.label}
               className="flex w-fit cursor-pointer items-center gap-2 rounded-full border-[1px] border-border p-1"
               onClick={() => removeFilter(filter)}
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card p-1 text-card-foreground">
                 <FontAwesomeIcon icon={faTimes} />
               </span>
-              <Badge classNames={mantineBadgeClasses}>{filter}</Badge>
+              <Badge classNames={mantineBadgeClasses}>{filter.label}</Badge>
             </li>
           ))}
         </ul>

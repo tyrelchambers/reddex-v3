@@ -83,4 +83,20 @@ export const FilterPosts = class FilterClass {
       }
     }
   }
+
+  seriesOnly() {
+    if (!this.post.link_flair_text) return false;
+
+    if (this.filters.seriesOnly) {
+      return this.post.link_flair_text === "Series";
+    }
+  }
+
+  excludeSeries() {
+    if (!this.post.link_flair_text) return false;
+
+    if (this.filters.excludeSeries) {
+      return this.post.link_flair_text !== "Series";
+    }
+  }
 };

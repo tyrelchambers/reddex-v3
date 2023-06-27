@@ -60,9 +60,8 @@ const UserMenu = () => {
         </Link>
 
         <Menu.Divider className="border-border" />
-        <button type="button" onClick={logoutHandler} className="w-full">
-          <Menu.Item>Logout</Menu.Item>
-        </button>
+
+        <Menu.Item onClick={logoutHandler}>Logout</Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );

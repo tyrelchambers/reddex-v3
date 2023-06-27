@@ -7,6 +7,7 @@ import {
   faUp,
   faWarning,
   faHashtag,
+  faClock,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -16,13 +17,19 @@ import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
 import { Tooltip, clsx } from "@mantine/core";
 import { Button } from "./ui/button";
+import { calculateReadingTime } from "~/lib/utils";
 
 interface Props {
   post: PostFromReddit;
   hasBeenUsed: boolean;
+  usersWordsPerMinute: number | null | undefined;
 }
 
-const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
+const SubredditSearchItem = ({
+  post,
+  hasBeenUsed,
+  usersWordsPerMinute,
+}: Props) => {
   const queueStore = useQueueStore();
 
   const isInQueue = queueStore.exists(post);
@@ -79,6 +86,14 @@ const SubredditSearchItem = ({ post, hasBeenUsed }: Props) => {
             <FontAwesomeIcon icon={faCalendar} />
             <p>
               {formatDistanceToNowStrict(new Date(post.created * 1000))} ago
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs text-foreground/50">
+            <FontAwesomeIcon icon={faClock} />
+            <p>
+              {calculateReadingTime(post.selftext, usersWordsPerMinute ?? 200)}{" "}
+              mins
             </p>
           </div>
 

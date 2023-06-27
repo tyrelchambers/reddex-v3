@@ -7,6 +7,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const calculateReadingTime = (text: string, time: number) => {
+  return Math.ceil(text.split(" ").length / time);
+};
+
 export const FilterPosts = class FilterClass {
   post: Partial<PostFromReddit> = {};
   filters: Partial<FilterState> = {};
@@ -52,6 +56,31 @@ export const FilterPosts = class FilterClass {
           ?.toLowerCase()
           ?.includes(this.filters.keywords.toLowerCase())
       );
+    }
+  }
+
+  readingTime(time: number) {
+    if (!this.post.selftext) return false;
+
+    const calculatedTime = calculateReadingTime(this.post.selftext, time);
+
+    if (this.filters.readingTime) {
+      if (
+        this.filters.readingTime?.value &&
+        this.filters.readingTime.qualifier === "Over"
+      ) {
+        return calculatedTime >= this.filters.readingTime.value;
+      } else if (
+        this.filters.readingTime?.value &&
+        this.filters.readingTime.qualifier === "Under"
+      ) {
+        return calculatedTime <= this.filters.readingTime.value;
+      } else if (
+        this.filters.readingTime?.value &&
+        this.filters.readingTime.qualifier === "Equals"
+      ) {
+        return calculatedTime === this.filters.readingTime.value;
+      }
     }
   }
 };

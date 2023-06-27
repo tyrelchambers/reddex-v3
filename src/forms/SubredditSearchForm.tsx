@@ -4,7 +4,7 @@ import { Select, TextInput } from "@mantine/core";
 import { RecentlySearched } from "@prisma/client";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { mantineSelectClasses } from "~/lib/styles";
+import { mantineInputClasses, mantineSelectClasses } from "~/lib/styles";
 
 const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
@@ -44,9 +44,7 @@ const SubredditSearchForm = ({
             placeholder="subreddit"
             icon="r/"
             className="flex-1"
-            classNames={{
-              input: "bg-input text-foreground",
-            }}
+            classNames={mantineInputClasses}
             onChange={(e) =>
               setState({ ...state, subreddit: e.currentTarget.value })
             }

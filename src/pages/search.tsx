@@ -59,7 +59,11 @@ const Search = () => {
 
   const PAGINATION_LIMIT_PER_PAGE = 15;
   const PAGINATION_TOTAL_PAGES =
-    filterPosts(appliedFilters, posts).length / PAGINATION_LIMIT_PER_PAGE;
+    filterPosts(
+      appliedFilters,
+      posts,
+      currentUser.data?.Profile?.words_per_minute
+    ).length / PAGINATION_LIMIT_PER_PAGE;
 
   useEffect(() => {
     const fn = async () => {
@@ -127,20 +131,29 @@ const Search = () => {
           <div className="mt-4 grid grid-cols-3 gap-6">
             {(!loading &&
               paginatedSlice(
-                filterPosts(appliedFilters, posts),
+                filterPosts(
+                  appliedFilters,
+                  posts,
+                  currentUser.data?.Profile?.words_per_minute
+                ),
                 PAGINATION_LIMIT_PER_PAGE,
                 activePage
-              ).map((item) => (
-                <SubredditSearchItem
-                  key={item.id}
-                  post={item}
-                  hasBeenUsed={
-                    !!usedPostIdsQuery.data?.find(
-                      (id) => id.post_id === item.id
-                    )
-                  }
-                />
-              ))) ||
+              )
+                .sort((a, b) => b.created - a.created)
+                .map((item) => (
+                  <SubredditSearchItem
+                    key={item.id}
+                    post={item}
+                    hasBeenUsed={
+                      !!usedPostIdsQuery.data?.find(
+                        (id) => id.post_id === item.id
+                      )
+                    }
+                    usersWordsPerMinute={
+                      currentUser.data?.Profile?.words_per_minute
+                    }
+                  />
+                ))) ||
               null}
           </div>
           <div className="my-6 flex justify-between">
@@ -197,7 +210,11 @@ const paginatedSlice = (
   return array.slice((page_number - 1) * page_size, page_number * page_size);
 };
 
-const filterPosts = (filters: FilterState | null, posts: PostFromReddit[]) => {
+const filterPosts = (
+  filters: FilterState | null,
+  posts: PostFromReddit[],
+  profileReadingTime: number | undefined | null
+) => {
   if (!filters) return posts;
 
   const newArray: PostFromReddit[] = [];
@@ -212,10 +229,12 @@ const filterPosts = (filters: FilterState | null, posts: PostFromReddit[]) => {
     } = {
       keywords: () => post.keywords(),
       upvotes: () => post.upvotes(),
+      readingTime: () => post.readingTime(profileReadingTime ?? 200),
     };
 
     Object.keys(filters).forEach((key) => {
       const result = obj[key]?.();
+
       if (result !== undefined && result !== null) {
         acceptance.push(result);
       }

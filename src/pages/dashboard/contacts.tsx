@@ -37,7 +37,7 @@ const Contacts = () => {
     <>
       <Header />
       <DashNav />
-      <main className="mx-auto my-6 max-w-screen-2xl">
+      <main className="mx-auto my-6 max-w-screen-2xl px-4 lg:px-0">
         <header className="flex items-center justify-between">
           <h1 className="text-2xl text-foreground">Contacts</h1>
 
@@ -47,7 +47,7 @@ const Contacts = () => {
         </header>
 
         {contactsQuery.data && contactsQuery.data.length > 0 ? (
-          <section className="my-10 grid grid-cols-3 gap-6">
+          <section className="my-10 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
             {contactsQuery.data?.map((ct) => (
               <ContactItem key={ct.id} contact={ct} />
             ))}

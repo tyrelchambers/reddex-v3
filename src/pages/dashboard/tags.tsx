@@ -1,4 +1,4 @@
-import { Modal, NativeSelect, Select, TextInput } from "@mantine/core";
+import { Modal, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import DashNav from "~/layouts/DashNav";
@@ -39,7 +39,7 @@ const Tags = () => {
     <>
       <Header />
       <DashNav />
-      <main className="mx-auto my-6 max-w-screen-2xl">
+      <main className="mx-auto my-6 max-w-screen-2xl px-4 lg:px-0">
         <header className="flex justify-between">
           <h1 className="text-2xl text-foreground">Tags</h1>
           <Button variant="secondary" onClick={open}>
@@ -48,7 +48,7 @@ const Tags = () => {
         </header>
 
         {tagQuery.data && tagQuery.data.length > 0 ? (
-          <section className="my-10 grid grid-cols-3 gap-4">
+          <section className="my-10 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
             {tagQuery.data?.map((tag) => (
               <TagListItem key={tag.id} tag={tag} />
             )) || null}

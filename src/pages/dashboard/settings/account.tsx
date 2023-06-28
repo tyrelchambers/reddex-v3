@@ -32,7 +32,7 @@ const Settings = () => {
       loadingMessage="Loading account data..."
       tabs={settingsTabs}
     >
-      <section className="flex max-w-screen-sm flex-col gap-8">
+      <section className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
         <h1 className="text-3xl text-foreground">Account</h1>
 
         <div className="flex flex-col">
@@ -83,7 +83,7 @@ const Settings = () => {
               {subscription?.status === "active" ? "active" : "inactive"}
             </Badge>
 
-            <footer className="mt-2 flex justify-end gap-4 border-t-[1px] border-t-border pt-3">
+            <footer className="mt-2 flex flex-col justify-end gap-4 border-t-[1px] border-t-border pt-3 md:flex-row">
               {invoices && (
                 <Button variant="ghost" onClick={open}>
                   View invoices{" "}

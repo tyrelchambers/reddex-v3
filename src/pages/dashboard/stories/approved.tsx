@@ -17,15 +17,15 @@ const Approved = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <header className="flex flex-1 justify-between">
-        <div className="flex flex-col">
+      <header className="flex flex-1 flex-col justify-between px-4 lg:px-0">
+        <div className="mb-6 flex flex-col lg:mb-0">
           <h1 className="text-2xl text-foreground">Approved list</h1>
           <p className="font-light text-muted-foreground">
             Your list of stories for which you have permission to read.
           </p>
         </div>
 
-        <div className="flex h-10 w-full max-w-md gap-3">
+        <div className="lg:flew-row flex w-full max-w-md flex-col gap-3">
           <TextInput
             placeholder="Search by keywords"
             icon={<FontAwesomeIcon icon={faSearch} />}

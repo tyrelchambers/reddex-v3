@@ -19,9 +19,9 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
       <Header />
       <DashNav />
       <AuthenticationBoundary>
-        <main className="mx-auto my-6 flex w-full max-w-screen-2xl gap-14">
+        <main className="mx-auto my-6 flex w-full max-w-screen-2xl flex-col gap-8 lg:flex-row lg:gap-14">
           {tabs && (
-            <header className="w-48">
+            <header className="w-full lg:w-48">
               <TabsList tabs={tabs} />
             </header>
           )}

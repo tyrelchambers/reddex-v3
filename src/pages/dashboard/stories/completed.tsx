@@ -11,7 +11,7 @@ const Completed = () => {
   return (
     <WrapperWithNav tabs={storiesTabs}>
       <section className="flex w-full flex-col">
-        <header className="flex w-full flex-1 justify-between">
+        <header className="lg:flew-row flex w-full flex-1 flex-col justify-between px-4 lg:px-0">
           <div className="flex flex-col">
             <h1 className="text-2xl text-foreground">Completed list</h1>
             <p className="font-light text-muted-foreground">
@@ -19,7 +19,9 @@ const Completed = () => {
             </p>
           </div>
 
-          <Button variant="secondary">Remove all</Button>
+          <Button variant="secondary" className="mt-4 lg:mt-0">
+            Remove all
+          </Button>
         </header>
 
         <div className="mt-6 grid grid-cols-3 gap-3">

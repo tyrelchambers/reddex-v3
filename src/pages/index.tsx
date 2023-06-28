@@ -67,11 +67,11 @@ const UsedBy = () => {
 
   return (
     <section className="mx-2 xl:mx-0">
-      <p className="font-bold text-muted-foreground md:text-center">
+      <p className="text-center font-bold text-muted-foreground">
         Trusted by these great narrators
       </p>
 
-      <ul className="mt-4 flex flex-wrap gap-3 md:justify-center">
+      <ul className="mt-4 flex flex-wrap justify-center gap-3">
         {usedBy.map((u) => (
           <li
             key={u}

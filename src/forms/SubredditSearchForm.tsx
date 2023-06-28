@@ -33,7 +33,7 @@ const SubredditSearchForm = ({
     <div className="flex w-full">
       <div className="mx-auto flex w-full max-w-screen-xl flex-col p-3">
         <form
-          className="flex w-full items-end gap-3"
+          className="flex w-full flex-col items-end gap-3 lg:flex-row"
           onSubmit={(e) => {
             e.preventDefault();
             searchHandler(state);
@@ -43,7 +43,7 @@ const SubredditSearchForm = ({
             variant="filled"
             placeholder="subreddit"
             icon="r/"
-            className="flex-1"
+            className="w-full flex-1"
             classNames={mantineInputClasses}
             onChange={(e) =>
               setState({ ...state, subreddit: e.currentTarget.value })
@@ -55,11 +55,22 @@ const SubredditSearchForm = ({
             data={categories}
             onChange={(e) => setState({ ...state, category: e as string })}
             classNames={mantineSelectClasses}
+            className="w-full lg:w-fit"
           />
-          <Button type="button" variant="outline" onClick={open}>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full lg:w-fit"
+            onClick={open}
+          >
             Add filters
           </Button>
-          <Button type="submit" variant="default" disabled={disableSearch}>
+          <Button
+            type="submit"
+            variant="default"
+            className="w-full lg:w-fit"
+            disabled={disableSearch}
+          >
             {disableSearch ? (
               <FontAwesomeIcon
                 icon={faSpinnerThird}

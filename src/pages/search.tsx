@@ -131,7 +131,7 @@ const Search = () => {
             }}
           />
 
-          <div className="mt-4 grid grid-cols-3 gap-6">
+          <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
             {(!loading &&
               paginatedSlice(
                 filterPosts(
@@ -159,9 +159,9 @@ const Search = () => {
                 ))) ||
               null}
           </div>
-          <div className="my-6 flex justify-between">
+          <div className="my-6 flex flex-col justify-between lg:flex-row">
             {lastSearched && (
-              <p className="text-sm text-foreground/70">
+              <p className="mb-4 text-sm text-foreground/70 lg:mb-0">
                 Last searched:{" "}
                 {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
               </p>

@@ -86,8 +86,8 @@ const SubredditSearchItem = ({
         {post.title}
       </Link>
 
-      <footer className="mt-auto flex items-end justify-between p-3">
-        <div className="flex gap-3">
+      <footer className="mt-auto flex flex-col justify-between p-3 lg:flex-row">
+        <div className="flex flex-wrap gap-3">
           <div className="flex items-center gap-2 text-xs text-foreground/50">
             <FontAwesomeIcon icon={faFolder} />
             <p>{post.subreddit}</p>
@@ -116,7 +116,7 @@ const SubredditSearchItem = ({
           )}
         </div>
 
-        <div className="flex items-end gap-2">
+        <div className="mt-4 flex items-end gap-2 lg:mt-0">
           {isInQueue ? (
             <Button
               variant="default"

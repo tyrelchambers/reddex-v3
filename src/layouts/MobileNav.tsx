@@ -70,6 +70,13 @@ const MobileNav = ({ user }: Props) => {
 
             <Link
               className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
+              href={routes.INBOX}
+            >
+              Inbox
+            </Link>
+
+            <Link
+              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
               href={routes.WEBSITE_GENERAL}
             >
               Website

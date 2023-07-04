@@ -36,7 +36,9 @@ const SubredditSearchItem = ({
   const isInQueue = queueStore.exists(post);
 
   const activeClasses = {
-    header: clsx(isInQueue ? "bg-accent" : "bg-foreground/10"),
+    header: clsx(
+      isInQueue ? "bg-accent" : hasBeenUsed ? "bg-green-50" : "bg-foreground/5"
+    ),
     headerText: clsx(isInQueue && "text-white"),
   };
 
@@ -56,7 +58,7 @@ const SubredditSearchItem = ({
             <Tooltip label="Already used">
               <FontAwesomeIcon
                 icon={faCheck}
-                className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-100 p-2 text-xs text-green-800"
+                className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-200 p-2 text-xs text-green-800"
               />
             </Tooltip>
           )}

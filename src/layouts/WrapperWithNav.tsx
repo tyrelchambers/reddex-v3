@@ -25,7 +25,7 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
               <TabsList tabs={tabs} />
             </header>
           )}
-          <section className="w-full max-w-screen-2xl">
+          <section className="w-full max-w-screen-2xl px-4 xl:px-4">
             {loading ? <Spinner message={loadingMessage} /> : children}
           </section>
         </main>

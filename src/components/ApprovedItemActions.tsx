@@ -47,7 +47,7 @@ const ApprovedItemActions = ({ postId }: Props) => {
   };
 
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-wrap gap-3">
       <Button variant="outline" type="button" onClick={open}>
         Add tags
       </Button>
@@ -73,6 +73,7 @@ const ApprovedItemActions = ({ postId }: Props) => {
             <Select
               data={formattedTags}
               label="Add a tag"
+              withinPortal
               classNames={mantineSelectClasses}
               {...form.getInputProps("tagId")}
             />

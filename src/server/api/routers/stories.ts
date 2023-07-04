@@ -189,4 +189,29 @@ export const storyRouter = createTRPCRouter({
         },
       });
     }),
+  importStory: protectedProcedure
+    .input(postSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { message, ...rest } = input;
+
+      return await prisma.redditPost.create({
+        data: {
+          ...rest,
+          content: input.content,
+          flair: input.flair ?? undefined,
+          userId: ctx.session.user.id,
+          permission: true,
+          read: false,
+        },
+      });
+    }),
+  removeAllFromCompletedList: protectedProcedure.mutation(async ({ ctx }) => {
+    return prisma.redditPost.deleteMany({
+      where: {
+        read: true,
+        permission: true,
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
 });

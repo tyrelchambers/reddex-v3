@@ -27,7 +27,7 @@ const CompletedItemActions = ({ postId }: Props) => {
       <Button variant="outline" onClick={deleteStoryHandler}>
         Delete
       </Button>
-      <Button className="w-full" onClick={() => addToApproved.mutate(postId)}>
+      <Button onClick={() => addToApproved.mutate(postId)}>
         Add to reading list
       </Button>
     </div>

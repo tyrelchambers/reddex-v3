@@ -15,6 +15,7 @@ import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";
 import { User } from "@prisma/client";
+import { useRouter } from "next/router";
 
 const _routes = [
   {
@@ -33,6 +34,7 @@ interface Props {
 }
 
 const Header = ({ openDrawer }: Props) => {
+  const router = useRouter();
   const session = useSession();
   const { isDark, toggleTheme } = useTheme();
   const [opened, { toggle }] = useDisclosure(false);
@@ -105,17 +107,19 @@ const Header = ({ openDrawer }: Props) => {
               )}
             </div>
           )}
-          <button
-            type="button"
-            onClick={openDrawer}
-            className="flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
-          >
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="mr-2 text-xs text-accent-foreground"
-            />
-            <p className="text-sm text-accent-foreground">Search</p>
-          </button>
+          {router.asPath === routes.SEARCH && (
+            <button
+              type="button"
+              onClick={openDrawer}
+              className="flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
+            >
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="mr-2 text-xs text-accent-foreground"
+              />
+              <p className="text-sm text-accent-foreground">Search</p>
+            </button>
+          )}
         </div>
       )}
 

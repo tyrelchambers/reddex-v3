@@ -5,7 +5,6 @@ import {
   faFolder,
   faThumbsUp,
   faUp,
-  faWarning,
   faHashtag,
   faClock,
   faCheck,

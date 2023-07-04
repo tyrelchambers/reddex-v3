@@ -30,77 +30,75 @@ const SubredditSearchForm = ({
   });
 
   return (
-    <div className="flex w-full">
-      <div className="mx-auto flex w-full max-w-screen-xl flex-col p-3">
-        <form
-          className="flex w-full flex-col items-end gap-3 lg:flex-row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            searchHandler(state);
-          }}
+    <div className="flex flex-col p-3">
+      <form
+        className="flex w-full flex-col items-end gap-3 "
+        onSubmit={(e) => {
+          e.preventDefault();
+          searchHandler(state);
+        }}
+      >
+        <TextInput
+          variant="filled"
+          placeholder="subreddit"
+          icon="r/"
+          className="w-full flex-1"
+          classNames={mantineInputClasses}
+          onChange={(e) =>
+            setState({ ...state, subreddit: e.currentTarget.value })
+          }
+          value={state.subreddit}
+        />
+        <Select
+          defaultValue={categories[0]}
+          data={categories}
+          onChange={(e) => setState({ ...state, category: e as string })}
+          classNames={mantineSelectClasses}
+          className="w-full "
+        />
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full "
+          onClick={open}
         >
-          <TextInput
-            variant="filled"
-            placeholder="subreddit"
-            icon="r/"
-            className="w-full flex-1"
-            classNames={mantineInputClasses}
-            onChange={(e) =>
-              setState({ ...state, subreddit: e.currentTarget.value })
-            }
-            value={state.subreddit}
-          />
-          <Select
-            defaultValue={categories[0]}
-            data={categories}
-            onChange={(e) => setState({ ...state, category: e as string })}
-            classNames={mantineSelectClasses}
-            className="w-full lg:w-fit"
-          />
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full lg:w-fit"
-            onClick={open}
-          >
-            Add filters
-          </Button>
-          <Button
-            type="submit"
-            variant="default"
-            className="w-full lg:w-fit"
-            disabled={disableSearch}
-          >
-            {disableSearch ? (
-              <FontAwesomeIcon
-                icon={faSpinnerThird}
-                spin
-                style={{
-                  "--fa-primary-color": "#fff",
-                  "--fa-secondary-color": "#1b3055",
-                }}
-              />
-            ) : (
-              "Search"
-            )}
-          </Button>
-        </form>
-        {searches && (
-          <ul className="mt-1 flex flex-wrap gap-6">
-            {searches.map((s) => (
-              <li key={s.text}>
-                <Button
-                  variant="link"
-                  size="sm"
-                  onClick={() => searchHandler({ ...state, subreddit: s.text })}
-                >
-                  {s.text}
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+          Add filters
+        </Button>
+        <Button
+          type="submit"
+          variant="default"
+          className="w-full "
+          disabled={disableSearch}
+        >
+          {disableSearch ? (
+            <FontAwesomeIcon
+              icon={faSpinnerThird}
+              spin
+              style={{
+                "--fa-primary-color": "#fff",
+                "--fa-secondary-color": "#1b3055",
+              }}
+            />
+          ) : (
+            "Search"
+          )}
+        </Button>
+      </form>
+      {searches && (
+        <ul className="mt-1 flex flex-wrap gap-6">
+          {searches.map((s) => (
+            <li key={s.text}>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => searchHandler({ ...state, subreddit: s.text })}
+              >
+                {s.text}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

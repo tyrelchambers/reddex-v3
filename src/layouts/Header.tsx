@@ -8,7 +8,7 @@ import { routes } from "~/routes";
 import { useSession } from "next-auth/react";
 import UserMenu from "./UserMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSun } from "@fortawesome/pro-solid-svg-icons";
+import { faMoon, faSearch, faSun } from "@fortawesome/pro-solid-svg-icons";
 import { useTheme } from "~/hooks/useTheme";
 import { Burger, clsx } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
@@ -28,7 +28,11 @@ const _routes = [
   },
 ];
 
-const Header = () => {
+interface Props {
+  openDrawer: () => void;
+}
+
+const Header = ({ openDrawer }: Props) => {
   const session = useSession();
   const { isDark, toggleTheme } = useTheme();
   const [opened, { toggle }] = useDisclosure(false);
@@ -101,6 +105,17 @@ const Header = () => {
               )}
             </div>
           )}
+          <button
+            type="button"
+            onClick={openDrawer}
+            className="flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
+          >
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="mr-2 text-xs text-accent-foreground"
+            />
+            <p className="text-sm text-accent-foreground">Search</p>
+          </button>
         </div>
       )}
 

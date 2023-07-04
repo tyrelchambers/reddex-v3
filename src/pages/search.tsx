@@ -1,4 +1,4 @@
-import { Loader, Modal, Pagination } from "@mantine/core";
+import { Drawer, Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useReducer, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
@@ -25,6 +25,9 @@ interface SearchHandlerProps {
 const Search = () => {
   const [activePage, setPage] = useState(1);
   const session = useSession();
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const statsUpdate = api.stats.set.useMutation();
   const currentUser = api.user.me.useQuery(undefined, {
@@ -37,6 +40,7 @@ const Search = () => {
       await db.posts.bulkAdd(data);
       await db.lastSearched.update(1, { time: new Date(Date.now()) });
       statsUpdate.mutate(data.length);
+      closeDrawer();
     },
   });
   const usedPostIdsQuery = api.story.getUsedPostIds.useQuery(undefined, {
@@ -48,7 +52,6 @@ const Search = () => {
   const [lastSearched, setLastSearched] = useState<{ time: Date } | undefined>(
     undefined
   );
-  const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
 
@@ -106,13 +109,8 @@ const Search = () => {
         <title>Reddex | Search</title>
       </Head>
       <main>
-        <Header />
-        <SubredditSearchForm
-          open={open}
-          searchHandler={searchHandler}
-          disableSearch={subredditSearch.isLoading}
-          searches={currentUser.data?.Profile?.searches}
-        />
+        <Header openDrawer={openDrawer} />
+
         <div className=" relative flex flex-col p-4">
           <QueueBanner openQueue={openQueue} />
 
@@ -200,6 +198,19 @@ const Search = () => {
         >
           <QueueModal close={closeQueue} />
         </Modal>
+        <Drawer
+          opened={drawerOpened}
+          onClose={closeDrawer}
+          title="Search Reddit"
+          position="right"
+        >
+          <SubredditSearchForm
+            open={open}
+            searchHandler={searchHandler}
+            disableSearch={subredditSearch.isLoading}
+            searches={currentUser.data?.Profile?.searches}
+          />
+        </Drawer>
       </main>
     </>
   );

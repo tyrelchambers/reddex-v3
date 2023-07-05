@@ -12,9 +12,8 @@ import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineModalClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
+import { formatCurrency, formatStripeTime } from "~/utils";
 import { api } from "~/utils/api";
-import { formatCurrency } from "~/utils/formatCurrency";
-import { formatStripeTime } from "~/utils/formatStripeTime";
 
 const Settings = () => {
   const subscriptionQuery = api.billing.info.useQuery();

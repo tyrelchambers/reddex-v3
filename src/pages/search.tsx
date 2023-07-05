@@ -21,6 +21,8 @@ import {
 import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
+import EmptyState from "~/components/EmptyState";
+import { addLastSearchedOrUpdate } from "~/utils";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -42,7 +44,7 @@ const Search = () => {
     async onSuccess(data) {
       await db.posts.clear();
       await db.posts.bulkAdd(data);
-      await db.lastSearched.update(1, { time: new Date(Date.now()) });
+      await addLastSearchedOrUpdate();
       statsUpdate.mutate(data.length);
       closeDrawer();
     },
@@ -112,6 +114,12 @@ const Search = () => {
       </Head>
       <main>
         <Header openDrawer={openDrawer} />
+
+        {!loading && !posts.length && (
+          <section className="mx-auto max-w-screen-2xl">
+            <EmptyState label="subreddit posts" />
+          </section>
+        )}
 
         <div className=" relative flex flex-col p-4">
           <QueueBanner openQueue={openQueue} />

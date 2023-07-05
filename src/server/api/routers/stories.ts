@@ -4,8 +4,8 @@ import { z } from "zod";
 import { prisma } from "~/server/db";
 import axios from "axios";
 import { COMPOSE_MESSAGE_URL } from "~/url.constants";
-import { formatSubject } from "~/utils/formatSubject";
-import { refreshAccessToken } from "~/utils/refreshAccessToken";
+import { formatSubject } from "~/utils";
+import { refreshAccessToken } from "~/utils/getTokens";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {

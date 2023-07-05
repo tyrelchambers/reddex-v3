@@ -4,8 +4,8 @@ import { Badge } from "@mantine/core";
 import React from "react";
 import { mantineBadgeClasses } from "~/lib/styles";
 import { FilterState } from "~/reducers/filterReducer";
-import { activeFilters } from "~/utils/activeFilters";
 import { Button } from "./ui/button";
+import { activeFilters } from "~/utils";
 
 interface Props {
   filters: FilterState | null;

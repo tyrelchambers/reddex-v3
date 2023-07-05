@@ -21,7 +21,6 @@ import HeroImg from "../../public/images/hero_illustration.svg";
 import Squiggly from "../../public/images/undraw_fun-underline.svg";
 import DownArrow from "../../public/images/undraw_dashed-arrow.svg";
 
-import Image from "next/image";
 import Link from "next/link";
 import { routes } from "~/routes";
 
@@ -324,7 +323,7 @@ const Features = () => {
           </p>
         </div>
         <div className="flex flex-col items-center">
-          <SavedMessage className="h-20" alt="tags" />
+          <TagIcon className="h-20" alt="tags" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             Organize with tags
           </h2>

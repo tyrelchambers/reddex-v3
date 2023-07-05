@@ -1,10 +1,10 @@
 import axios from "axios";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
-import { refreshAccessToken } from "~/utils/refreshAccessToken";
 import { RedditInboxMessage, RedditInboxResponse } from "~/types";
 import { sendMessageSchema } from "~/server/schemas";
 import { z } from "zod";
+import { refreshAccessToken } from "~/utils";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {

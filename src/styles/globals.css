@@ -93,6 +93,10 @@
       fill: hsl(var(--accent));
     }
   }
+
+  #svg-empty {
+    scale: 0.25;
+  }
 }
 
 @layer base {

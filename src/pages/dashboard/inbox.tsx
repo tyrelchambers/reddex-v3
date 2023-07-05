@@ -2,7 +2,6 @@ import { faArrowLeft } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextInput } from "@mantine/core";
 import { useDebouncedState, useViewportSize } from "@mantine/hooks";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
@@ -12,7 +11,6 @@ import { Button } from "~/components/ui/button";
 import { breakpoints } from "~/constants";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
-import { routes } from "~/routes";
 import { api } from "~/utils/api";
 
 const Inbox = () => {

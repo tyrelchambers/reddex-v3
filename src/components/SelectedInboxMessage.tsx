@@ -9,13 +9,13 @@ import { fromUnixTime } from "date-fns";
 import { format } from "date-fns";
 import React, { FormEvent, useMemo } from "react";
 import { FormattedMessagesList, RedditInboxMessage } from "~/types";
-import { formatInboxMessagesToList } from "~/utils/formatInboxMessagesToList";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
 import { useViewportSize } from "@mantine/hooks";
+import { formatInboxMessagesToList } from "~/utils";
 
 interface Props {
   message: RedditInboxMessage | undefined;
@@ -37,7 +37,6 @@ const SelectedInboxMessage = ({ message }: Props) => {
     },
   });
 
-  const { width } = useViewportSize();
   const post = findPostQuery.data;
 
   const postIsInReadingList = useMemo(() => {

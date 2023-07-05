@@ -30,7 +30,7 @@ const _routes = [
 ];
 
 interface Props {
-  openDrawer: () => void;
+  openDrawer?: () => void;
 }
 
 const Header = ({ openDrawer }: Props) => {

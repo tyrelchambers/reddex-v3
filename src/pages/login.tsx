@@ -57,8 +57,8 @@ const Login = ({ providers }: Props) => {
       <main>
         <Header />
 
-        <section className="mx-auto my-20 flex max-w-screen-lg gap-4">
-          <div className="flex w-1/2 flex-col">
+        <section className="mx-auto my-20 flex max-w-screen-lg flex-col-reverse gap-4 px-4">
+          <div className="flex flex-col lg:w-1/2">
             <h1 className="text-2xl text-foreground">Login to Reddex</h1>
             <p className=" text-foreground/70">
               Login with Reddit to create an account if you don&apos;t have one,
@@ -98,7 +98,7 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
   );
 
   return (
-    <div className="flex w-1/2 flex-col rounded-2xl bg-card p-8">
+    <div className="flex flex-col rounded-2xl bg-card p-8 lg:w-1/2">
       <p className="text-2xl text-card-foreground">
         That&apos;s a nice looking plan!
       </p>
@@ -137,7 +137,7 @@ const NoSelectedPlan = ({
   setFrequency,
 }: NoSelectedPlanProps) => {
   return (
-    <div className="flex w-1/2 flex-col rounded-2xl bg-card p-8">
+    <div className="flex flex-col rounded-2xl bg-card p-8 lg:w-1/2">
       <p className="mb-2 text-2xl text-card-foreground">
         Looks like we haven&apos;t chosen a plan yet!
       </p>

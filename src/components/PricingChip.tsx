@@ -27,7 +27,9 @@ const PricingChip = ({
         <p className="text-sm text-foreground/70">{plan.desc}</p>
         <div className="mt-4 text-3xl font-semibold text-accent">
           ${frequency === "yearly" ? plan.yearly.price : plan.monthly.price}{" "}
-          <span className="text-xl font-normal text-muted-foreground">/mo</span>
+          <span className="text-xl font-normal text-muted-foreground">
+            {frequency === "yearly" ? "/year" : "/month"}
+          </span>
         </div>
       </div>
     </button>

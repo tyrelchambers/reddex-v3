@@ -101,8 +101,6 @@ const Search = () => {
 
     delete filterClone[filter.value as keyof FilterState];
 
-    console.log(filter);
-
     setAppliedFilters(filterClone);
     dispatch({ type: "REMOVE_FILTER", payload: filter.value });
   };
@@ -157,6 +155,7 @@ const Search = () => {
                     usersWordsPerMinute={
                       currentUser.data?.Profile?.words_per_minute
                     }
+                    isAuthenticated={session.status === "authenticated"}
                   />
                 ))) ||
               null}

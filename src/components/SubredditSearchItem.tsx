@@ -23,12 +23,14 @@ interface Props {
   post: PostFromReddit;
   hasBeenUsed: boolean;
   usersWordsPerMinute: number | null | undefined;
+  isAuthenticated: boolean;
 }
 
 const SubredditSearchItem = ({
   post,
   hasBeenUsed,
   usersWordsPerMinute,
+  isAuthenticated,
 }: Props) => {
   const queueStore = useQueueStore();
 
@@ -37,11 +39,11 @@ const SubredditSearchItem = ({
   const activeClasses = {
     header: clsx(
       "bg-foreground/5",
-      isInQueue && "bg-accent",
+      isInQueue && "!bg-accent",
       hasBeenUsed && "bg-success"
     ),
     headerText: clsx(
-      isInQueue && "text-white",
+      isInQueue && "!text-accent-foreground",
       hasBeenUsed && "text-success-foreground"
     ),
   };
@@ -122,26 +124,28 @@ const SubredditSearchItem = ({
           )}
         </div>
 
-        <div className="mt-4 flex items-end gap-2 lg:mt-0">
-          {isInQueue ? (
-            <Button
-              variant="default"
-              size="xs"
-              onClick={() => queueStore.remove(post)}
-            >
-              Remove from queue
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              size="xs"
-              onClick={() => queueStore.add(post)}
-            >
-              <FontAwesomeIcon icon={faAdd} className="mr-2" />
-              Add to Queue
-            </Button>
-          )}
-        </div>
+        {isAuthenticated && (
+          <div className="mt-4 flex items-end gap-2 lg:mt-0">
+            {isInQueue ? (
+              <Button
+                variant="default"
+                size="xs"
+                onClick={() => queueStore.remove(post)}
+              >
+                Remove from queue
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="xs"
+                onClick={() => queueStore.add(post)}
+              >
+                <FontAwesomeIcon icon={faAdd} className="mr-2" />
+                Add to Queue
+              </Button>
+            )}
+          </div>
+        )}
       </footer>
     </div>
   );

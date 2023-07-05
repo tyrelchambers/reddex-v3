@@ -110,6 +110,9 @@
     --accent: 350 89% 60%;
     --accent-foreground: 210 40% 98%;
 
+    --success: 142 71% 45%;
+    --success-foreground: 222.2 47.4% 100%;
+
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
 
@@ -141,6 +144,9 @@
 
     --secondary: 0 0% 100%;
     --secondary-foreground: 350 89% 60%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 240 6% 10%;
 
     /* Used for accents such as hover effects on <DropdownMenuItem>, <SelectItem>...etc */
     --accent: 350 89% 60%;

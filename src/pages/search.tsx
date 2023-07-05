@@ -13,7 +13,11 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import { mantineModalClasses, mantinePaginationStyles } from "~/lib/styles";
+import {
+  mantineDrawerClasses,
+  mantineModalClasses,
+  mantinePaginationStyles,
+} from "~/lib/styles";
 import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
@@ -203,6 +207,7 @@ const Search = () => {
           onClose={closeDrawer}
           title="Search Reddit"
           position="right"
+          classNames={mantineDrawerClasses}
         >
           <SubredditSearchForm
             open={open}

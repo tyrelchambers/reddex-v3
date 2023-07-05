@@ -135,6 +135,19 @@ const Header = ({ openDrawer }: Props) => {
               className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
             />
           </button>
+          {router.asPath === routes.SEARCH && !opened && (
+            <button
+              type="button"
+              onClick={openDrawer}
+              className="mr-4 flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
+            >
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="mr-2 text-xs text-accent-foreground"
+              />
+              <p className="text-sm text-accent-foreground">Search</p>
+            </button>
+          )}
           <Burger
             opened={opened}
             onClick={toggle}

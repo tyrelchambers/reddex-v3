@@ -36,9 +36,14 @@ const SubredditSearchItem = ({
 
   const activeClasses = {
     header: clsx(
-      isInQueue ? "bg-accent" : hasBeenUsed ? "bg-green-50" : "bg-foreground/5"
+      "bg-foreground/5",
+      isInQueue && "bg-accent",
+      hasBeenUsed && "bg-success"
     ),
-    headerText: clsx(isInQueue && "text-white"),
+    headerText: clsx(
+      isInQueue && "text-white",
+      hasBeenUsed && "text-success-foreground"
+    ),
   };
 
   return (

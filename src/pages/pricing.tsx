@@ -61,7 +61,7 @@ const Pricing = () => {
                       ? item.yearly.price
                       : item.monthly.price}{" "}
                     <span className="text-xl font-normal text-gray-600">
-                      /mo
+                      {frequency === "yearly" ? "/year" : "/month"}
                     </span>
                   </div>
                   <p className="text-foreground/50">{item.desc}</p>

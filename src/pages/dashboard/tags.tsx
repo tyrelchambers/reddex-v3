@@ -6,7 +6,6 @@ import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import TagListItem from "~/components/TagListItem";
-import { getStorySelectList } from "~/utils/getStorySelectList";
 import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,6 +13,7 @@ import {
   mantineModalClasses,
   mantineSelectClasses,
 } from "~/lib/styles";
+import { getStorySelectList } from "~/utils";
 
 const Tags = () => {
   const [opened, { open, close }] = useDisclosure(false);

@@ -17,12 +17,12 @@ export const plans = [
     name: "Pro",
     desc: "You want organization with a custom website and to receive submissions",
     monthly: {
-      price: 15,
-      productId: "price_1K64chI8C7KcVoSyUj7qgv65",
+      price: 20,
+      productId: "price_1KHc14I8C7KcVoSyCHwBi3aX",
     },
     yearly: {
-      price: 165,
-      productId: "price_1K64e7I8C7KcVoSySAubpPyj",
+      price: 200,
+      productId: "price_1NQejQI8C7KcVoSyAeORTi6T",
     },
     isMostPop: true,
     features: [
@@ -40,11 +40,11 @@ export const plans = [
     name: "Basic",
     desc: "You want organization from stories to contacts, but don't need a custom website",
     monthly: {
-      price: 10,
+      price: 15,
       productId: "price_1K64RzI8C7KcVoSyJ6MjuR8i",
     },
     yearly: {
-      price: 110,
+      price: 150,
       productId: "price_1K64eWI8C7KcVoSyvxqt7X0y",
     },
     isMostPop: false,

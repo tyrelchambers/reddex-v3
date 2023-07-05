@@ -4,7 +4,7 @@ import { prisma } from "~/server/db";
 import { RedditInboxMessage, RedditInboxResponse } from "~/types";
 import { sendMessageSchema } from "~/server/schemas";
 import { z } from "zod";
-import { refreshAccessToken } from "~/utils";
+import { refreshAccessToken } from "~/utils/getTokens";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {

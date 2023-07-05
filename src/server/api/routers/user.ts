@@ -88,4 +88,5 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {}),
 });

@@ -57,7 +57,7 @@ const Login = ({ providers }: Props) => {
       <main>
         <Header />
 
-        <section className="mx-auto my-20 flex max-w-screen-lg flex-col-reverse gap-4 px-4">
+        <section className="mx-auto my-20 flex max-w-screen-lg flex-col-reverse gap-4 px-4 lg:flex-row">
           <div className="flex flex-col lg:w-1/2">
             <h1 className="text-2xl text-foreground">Login to Reddex</h1>
             <p className=" text-foreground/70">

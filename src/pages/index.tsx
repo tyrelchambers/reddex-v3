@@ -9,15 +9,17 @@ import Footer from "~/layouts/Footer";
 import { useState } from "react";
 import ATRDLogo from "../../public/images/ravendreams.jpeg";
 import ContactIcon from "../../public/images/monitor_illustration_2.svg";
-import monitor from "../../public/images/monitor_illustration.svg";
-import readingList from "../../public/images/colorful_icon_2.svg";
-import inboxFilter from "../../public/images/colorful_icon_7.svg";
-import savedMessage from "../../public/images/ecommerce_icons_1.svg";
-import tagIcon from "../../public/images/organization_icons_4.svg";
-import contactList from "../../public/images/random_icons_6.svg";
-import storySubmission from "../../public/images/seo_icons_6.svg";
-import guyWithGlasses from "../../public/images/guy_with_glasses.svg";
-import hero from "../../public/images/hero_illustration.svg";
+import Monitor from "../../public/images/monitor_illustration.svg";
+import ReadingList from "../../public/images/colorful_icon_2.svg";
+import InboxFilter from "../../public/images/colorful_icon_7.svg";
+import SavedMessage from "../../public/images/ecommerce_icons_1.svg";
+import TagIcon from "../../public/images/organization_icons_4.svg";
+import ContactList from "../../public/images/random_icons_6.svg";
+import StorySubmission from "../../public/images/seo_icons_6.svg";
+import GuyWithGlasses from "../../public/images/guy_with_glasses.svg";
+import HeroImg from "../../public/images/hero_illustration.svg";
+import Squiggly from "../../public/images/undraw_fun-underline.svg";
+import DownArrow from "../../public/images/undraw_dashed-arrow.svg";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -41,6 +43,9 @@ const Home: NextPage = () => {
         <div className="mt-20 flex flex-col gap-36">
           <Hero />
           <UsedBy />
+          <span className="mx-auto">
+            <DownArrow id="down-arrow" />
+          </span>
           <Testimonials />
           {statsQuery.data && <Stats stats={statsQuery.data} />}
         </div>
@@ -149,10 +154,15 @@ const Hero = () => (
     <Badge className="w-fit" classNames={mantineBadgeClasses} color="rose">
       Thousands of stories read
     </Badge>
-    <h1 className="text-center text-5xl font-semibold text-foreground">
-      We help Narrators like you save time and effort
-    </h1>
-    <p className="text-center text-2xl font-thin text-muted-foreground">
+    <div className="relative">
+      <h1 className="text-center text-5xl font-semibold text-foreground">
+        We help Narrators like you save time and effort
+      </h1>
+      <span className="absolute right-[11%] ">
+        <Squiggly id="svg-squig" />
+      </span>
+    </div>
+    <p className="relative z-10 mt-4 text-center text-2xl font-thin text-muted-foreground">
       Reddex is a tool designed to help you find the next best Reddit story in
       no-time at all. Save hours searching for stories and requesting
       permission. Reddex helps you do all that in a matter of minutes.
@@ -242,7 +252,7 @@ const Features = () => {
   return (
     <section className="mx-auto max-w-screen-lg px-2 xl:px-0">
       <div className="mt-20 flex w-full  flex-col items-center gap-16 md:mt-40 md:flex-row ">
-        <Image src={guyWithGlasses} className="w-80" alt="" />
+        <GuyWithGlasses className="w-80" alt="" />
 
         <div className="flex flex-col">
           <h2 className="text-center text-4xl font-bold text-foreground md:text-left">
@@ -263,11 +273,11 @@ const Features = () => {
             You can use Reddex to show off your work with your own website!
           </p>
         </div>
-        <Image src={hero} className="w-80" alt="" />
+        <HeroImg className="w-80" alt="" />
       </div>
 
       <div className="mt-20 flex w-full flex-col items-center gap-10 md:mt-40 md:flex-row ">
-        <Image src={monitor} className="w-80" alt="" />
+        <Monitor className="w-80" alt="" />
 
         <div className="flex flex-col">
           <h2 className="text-center text-4xl font-bold text-foreground md:text-left">
@@ -291,12 +301,12 @@ const Features = () => {
             and the stories you&apos;ve completed, with a reading list!
           </p>
         </div>
-        <Image src={ContactIcon} className="w-80" alt="" />
+        <ContactIcon className="w-80" alt="" />
       </div>
 
       <div className="mt-20 grid grid-cols-1 gap-20 md:mt-40 md:grid-cols-2 lg:grid-cols-3 ">
         <div className="flex flex-col items-center">
-          <Image className="h-20" src={contactList} alt="contact list" />
+          <ContactList className="h-20" alt="contact list" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             Organize your contacts
           </h2>
@@ -305,7 +315,7 @@ const Features = () => {
           </p>
         </div>
         <div className="flex flex-col items-center">
-          <Image className="h-20" src={savedMessage} alt="saved messages" />
+          <SavedMessage className="h-20" alt="saved messages" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             No more copy and pasting from notepad
           </h2>
@@ -314,7 +324,7 @@ const Features = () => {
           </p>
         </div>
         <div className="flex flex-col items-center">
-          <Image className="h-20" src={tagIcon} alt="tags" />
+          <SavedMessage className="h-20" alt="tags" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             Organize with tags
           </h2>
@@ -323,11 +333,7 @@ const Features = () => {
           </p>
         </div>
         <div className="flex flex-col items-center">
-          <Image
-            className="h-20"
-            src={storySubmission}
-            alt="story submissions"
-          />
+          <StorySubmission className="h-20" alt="story submissions" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             Accept custom written stories via your own website
           </h2>
@@ -337,7 +343,7 @@ const Features = () => {
           </p>
         </div>
         <div className="flex flex-col items-center">
-          <Image className="h-20" src={inboxFilter} alt="filter inbox" />
+          <InboxFilter className="h-20" alt="filter inbox" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             Filter your inbox
           </h2>
@@ -347,7 +353,7 @@ const Features = () => {
           </p>
         </div>
         <div className="flex flex-col items-center">
-          <Image className="h-20" src={readingList} alt="reading list" />
+          <ReadingList className="h-20" alt="reading list" />
           <h2 className="mt-6 text-center font-bold text-foreground">
             Your own reading list
           </h2>

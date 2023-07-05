@@ -81,6 +81,18 @@
   .filepond--panel-root {
     background-color: var(--card);
   }
+  #svg-squig path {
+    fill: hsl(var(--accent));
+    transform: scale(1.5) scaleX(2.4);
+  }
+
+  #down-arrow {
+    transform: rotateZ(135deg);
+
+    & path {
+      fill: hsl(var(--accent));
+    }
+  }
 }
 
 @layer base {

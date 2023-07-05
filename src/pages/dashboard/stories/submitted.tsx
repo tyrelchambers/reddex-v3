@@ -42,10 +42,12 @@ const Submitted = () => {
   return (
     <WrapperWithNav tabs={storiesTabs}>
       <section className="flex flex-col">
-        <h1 className="text-2xl text-foreground">Submitted</h1>
-        <p className="font-light text-muted-foreground">
-          These are your stories submitted via your website.
-        </p>
+        <header className="flex flex-col px-4 lg:px-0">
+          <h1 className="text-2xl text-foreground">Submitted</h1>
+          <p className="font-light text-muted-foreground">
+            These are your stories submitted via your website.
+          </p>
+        </header>
         <div className="flex-1">
           {stories && (
             <Table

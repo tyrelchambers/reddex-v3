@@ -15,6 +15,7 @@ import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
+import { useViewportSize } from "@mantine/hooks";
 
 interface Props {
   message: RedditInboxMessage | undefined;
@@ -36,6 +37,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
     },
   });
 
+  const { width } = useViewportSize();
   const post = findPostQuery.data;
 
   const postIsInReadingList = useMemo(() => {
@@ -85,13 +87,13 @@ const SelectedInboxMessage = ({ message }: Props) => {
         <p className="text-2xl font-semibold text-foreground">
           {message.subject}
         </p>
-        <footer className="mt-6 flex items-center gap-10 ">
-          <p className="flex items-center gap-2 text-foreground">
+        <footer className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:gap-10">
+          <p className="flex items-center gap-2 text-foreground/70">
             <FontAwesomeIcon icon={faUserCircle} />
             {message.dest}
           </p>
 
-          <div className=" flex gap-4">
+          <div className=" flex flex-col gap-4 lg:flex-row">
             {!isAContact ? (
               <Button
                 variant="secondary"
@@ -159,19 +161,19 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
 const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
-    <div className="rounded-2xl bg-muted p-4">
-      <header className="mb-2 flex items-baseline justify-between">
-        <p className="mb-2  font-bold text-foreground">
+    <div className="rounded-2xl bg-card p-4">
+      <header className="mb-6 flex flex-col items-baseline justify-between xl:mb-2 xl:flex-row">
+        <p className="mb-2  font-bold text-card-foreground">
           {message.isReply && (
             <FontAwesomeIcon icon={faReply} className="mr-4 text-accent" />
           )}
           {message.author}
         </p>
-        <p className="font-thin italic text-foreground">
+        <p className="font-thin italic text-card-foreground">
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>
-      <p className="whitespace-pre-wrap font-thin text-foreground">
+      <p className="whitespace-pre-wrap break-all font-thin text-card-foreground">
         {message.body}
       </p>
     </div>

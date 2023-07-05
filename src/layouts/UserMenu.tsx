@@ -22,8 +22,8 @@ const UserMenu = () => {
       shadow="md"
       width={200}
       classNames={{
-        dropdown: "bg-muted border-border",
-        item: "hover:bg-muted-foreground/20 text-foreground",
+        dropdown: "bg-card border-border",
+        item: "hover:bg-card-foreground/20 text-foreground",
       }}
     >
       <Menu.Target>
@@ -33,6 +33,11 @@ const UserMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Label>App</Menu.Label>
+        <Link href={routes.INBOX}>
+          <Menu.Item>Inbox</Menu.Item>
+        </Link>
+
         <Menu.Label>Reading list</Menu.Label>
         <Link href={routes.APPROVED}>
           <Menu.Item>Approved</Menu.Item>

@@ -106,21 +106,25 @@ const QueueModal = ({ close }: Props) => {
       <ActiveQueueItem post={currentPost} contact={contactQuery.data} />
 
       <div className="mt-10 flex flex-col">
-        <div className="flex items-baseline gap-4">
+        <div className="flex flex-col items-baseline gap-4 lg:flex-row">
           <p className="font-bold text-foreground">Message</p>
 
-          <Button
-            variant="link"
-            onClick={() => fillWithMessage(userQuery.data?.Profile?.recurring)}
-          >
-            Initial greeting
-          </Button>
-          <Button
-            variant="link"
-            onClick={() => fillWithMessage(userQuery.data?.Profile?.greeting)}
-          >
-            Recurring greeting
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              variant="link"
+              onClick={() =>
+                fillWithMessage(userQuery.data?.Profile?.recurring)
+              }
+            >
+              Initial greeting
+            </Button>
+            <Button
+              variant="link"
+              onClick={() => fillWithMessage(userQuery.data?.Profile?.greeting)}
+            >
+              Recurring greeting
+            </Button>
+          </div>
         </div>
         <Textarea
           className="mt-2"
@@ -131,8 +135,8 @@ const QueueModal = ({ close }: Props) => {
         />
       </div>
 
-      <footer className="mt-6 flex justify-between">
-        <div className="flex gap-3">
+      <footer className="mt-6 flex flex-col justify-between gap-3 lg:flex-row">
+        <div className="flex flex-col gap-3 lg:flex-row">
           <Button variant="secondary" onClick={removeFromQueue}>
             Remove from queue
           </Button>

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import { tagOnPostSchema, tagSaveSchema } from "~/server/schemas";
@@ -46,4 +47,14 @@ export const tagRouter = createTRPCRouter({
       },
     });
   }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return await prisma.tag.deleteMany({
+        where: {
+          id: input,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });

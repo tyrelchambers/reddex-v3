@@ -1,4 +1,4 @@
-import { Loader, Modal, Pagination } from "@mantine/core";
+import { Drawer, Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useReducer, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
@@ -13,7 +13,11 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import { mantineModalClasses, mantinePaginationStyles } from "~/lib/styles";
+import {
+  mantineDrawerClasses,
+  mantineModalClasses,
+  mantinePaginationStyles,
+} from "~/lib/styles";
 import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
@@ -25,6 +29,9 @@ interface SearchHandlerProps {
 const Search = () => {
   const [activePage, setPage] = useState(1);
   const session = useSession();
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const statsUpdate = api.stats.set.useMutation();
   const currentUser = api.user.me.useQuery(undefined, {
@@ -37,6 +44,7 @@ const Search = () => {
       await db.posts.bulkAdd(data);
       await db.lastSearched.update(1, { time: new Date(Date.now()) });
       statsUpdate.mutate(data.length);
+      closeDrawer();
     },
   });
   const usedPostIdsQuery = api.story.getUsedPostIds.useQuery(undefined, {
@@ -48,7 +56,6 @@ const Search = () => {
   const [lastSearched, setLastSearched] = useState<{ time: Date } | undefined>(
     undefined
   );
-  const [opened, { open, close }] = useDisclosure(false);
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
 
@@ -94,8 +101,6 @@ const Search = () => {
 
     delete filterClone[filter.value as keyof FilterState];
 
-    console.log(filter);
-
     setAppliedFilters(filterClone);
     dispatch({ type: "REMOVE_FILTER", payload: filter.value });
   };
@@ -106,13 +111,8 @@ const Search = () => {
         <title>Reddex | Search</title>
       </Head>
       <main>
-        <Header />
-        <SubredditSearchForm
-          open={open}
-          searchHandler={searchHandler}
-          disableSearch={subredditSearch.isLoading}
-          searches={currentUser.data?.Profile?.searches}
-        />
+        <Header openDrawer={openDrawer} />
+
         <div className=" relative flex flex-col p-4">
           <QueueBanner openQueue={openQueue} />
 
@@ -131,7 +131,7 @@ const Search = () => {
             }}
           />
 
-          <div className="mt-4 grid grid-cols-3 gap-6">
+          <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
             {(!loading &&
               paginatedSlice(
                 filterPosts(
@@ -155,13 +155,14 @@ const Search = () => {
                     usersWordsPerMinute={
                       currentUser.data?.Profile?.words_per_minute
                     }
+                    isAuthenticated={session.status === "authenticated"}
                   />
                 ))) ||
               null}
           </div>
-          <div className="my-6 flex justify-between">
+          <div className="my-6 flex flex-col justify-between lg:flex-row">
             {lastSearched && (
-              <p className="text-sm text-foreground/70">
+              <p className="mb-4 text-sm text-foreground/70 lg:mb-0">
                 Last searched:{" "}
                 {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
               </p>
@@ -200,6 +201,20 @@ const Search = () => {
         >
           <QueueModal close={closeQueue} />
         </Modal>
+        <Drawer
+          opened={drawerOpened}
+          onClose={closeDrawer}
+          title="Search Reddit"
+          position="right"
+          classNames={mantineDrawerClasses}
+        >
+          <SubredditSearchForm
+            open={open}
+            searchHandler={searchHandler}
+            disableSearch={subredditSearch.isLoading}
+            searches={currentUser.data?.Profile?.searches}
+          />
+        </Drawer>
       </main>
     </>
   );

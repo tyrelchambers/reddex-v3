@@ -167,7 +167,9 @@ const General = () => {
             <div className="flex w-full flex-col">
               <p className="label text-foreground">Subdomain</p>
               <div className="flex h-fit items-center rounded-lg bg-input p-1">
-                <span className="px-3 text-gray-500">http://</span>
+                <span className="hidden px-3 text-gray-500 md:flex">
+                  http://
+                </span>
                 <TextInput
                   variant="filled"
                   placeholder="Your custom subdomain"

@@ -1,13 +1,18 @@
+import { faArrowLeft } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextInput } from "@mantine/core";
-import { useDebouncedState } from "@mantine/hooks";
+import { useDebouncedState, useViewportSize } from "@mantine/hooks";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import Spinner from "~/components/Spinner";
 import { Button } from "~/components/ui/button";
+import { breakpoints } from "~/constants";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
+import { routes } from "~/routes";
 import { api } from "~/utils/api";
 
 const Inbox = () => {
@@ -19,6 +24,8 @@ const Inbox = () => {
     enabled: !!search,
     refetchOnWindowFocus: false,
   });
+
+  const { width } = useViewportSize();
 
   const messages = useMemo(
     () => searchInboxQuery.data || inboxQuery.data || [],
@@ -46,10 +53,23 @@ const Inbox = () => {
     }
   };
 
+  const backButton = () => {
+    setSelectedMessageId(null);
+  };
+
   return (
     <WrapperWithNav loading={inboxQuery.isLoading}>
-      <div className="flex flex-col">
-        <header className="mb-6 flex items-center justify-between">
+      <div className="flex flex-col px-4 xl:px-0">
+        <header className="mb-6 flex flex-col  justify-between gap-4 lg:flex-row lg:items-center">
+          {width < breakpoints.desktop && selectedMessage && (
+            <button onClick={backButton}>
+              <FontAwesomeIcon
+                icon={faArrowLeft}
+                className="mr-4 text-foreground"
+              />
+              Back to Inbox
+            </button>
+          )}
           <h1 className="text-2xl text-foreground">Inbox</h1>
           <div className="flex w-full max-w-lg gap-4">
             <TextInput
@@ -63,23 +83,47 @@ const Inbox = () => {
             </Button>
           </div>
         </header>
-        <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
-          {!searchInboxQuery.isFetching ? (
-            <>
-              <InboxMessageList
-                messages={
-                  searchInboxQuery.data ? searchInboxQuery.data : messages
-                }
-                selectedMessage={selectedMessage?.id}
-                setSelectedMessageId={setSelectedMessageId}
-                router={router}
-              />
-              <SelectedInboxMessage message={selectedMessage} />
-            </>
-          ) : (
-            <Spinner />
-          )}
-        </section>
+        {width < breakpoints.laptop ? (
+          <section className="my-2 flex gap-4">
+            {!searchInboxQuery.isFetching ? (
+              <>
+                {!selectedMessage?.id && (
+                  <InboxMessageList
+                    messages={
+                      searchInboxQuery.data ? searchInboxQuery.data : messages
+                    }
+                    selectedMessage={selectedMessage?.id}
+                    setSelectedMessageId={setSelectedMessageId}
+                    router={router}
+                  />
+                )}
+                {selectedMessage?.id && (
+                  <SelectedInboxMessage message={selectedMessage} />
+                )}
+              </>
+            ) : (
+              <Spinner />
+            )}
+          </section>
+        ) : (
+          <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
+            {!searchInboxQuery.isFetching ? (
+              <>
+                <InboxMessageList
+                  messages={
+                    searchInboxQuery.data ? searchInboxQuery.data : messages
+                  }
+                  selectedMessage={selectedMessage?.id}
+                  setSelectedMessageId={setSelectedMessageId}
+                  router={router}
+                />
+                <SelectedInboxMessage message={selectedMessage} />
+              </>
+            ) : (
+              <Spinner />
+            )}
+          </section>
+        )}
       </div>
     </WrapperWithNav>
   );

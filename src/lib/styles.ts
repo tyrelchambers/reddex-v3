@@ -2,6 +2,7 @@ import {
   BadgeStylesNames,
   CheckboxStylesNames,
   ClassNames,
+  DrawerStylesNames,
   ModalStylesNames,
   NumberInputStylesNames,
   PaginationStylesNames,
@@ -69,3 +70,9 @@ export const mantineSwitchStyles: Partial<Record<SwitchStylesNames, string>> = {
 export const mantinePaginationStyles: ClassNames<PaginationStylesNames> = {
   control: "text-foreground bg-card border-border",
 };
+
+export const mantineDrawerClasses: Partial<Record<DrawerStylesNames, string>> =
+  {
+    content: "bg-background",
+    header: "text-foreground bg-background",
+  };

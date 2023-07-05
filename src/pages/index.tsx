@@ -66,14 +66,17 @@ const UsedBy = () => {
   ];
 
   return (
-    <section>
+    <section className="mx-2 xl:mx-0">
       <p className="text-center font-bold text-muted-foreground">
         Trusted by these great narrators
       </p>
 
       <ul className="mt-4 flex flex-wrap justify-center gap-3">
         {usedBy.map((u) => (
-          <li key={u} className="text-3xl font-black text-foreground">
+          <li
+            key={u}
+            className="text-xl font-black text-foreground xl:text-3xl"
+          >
             {u}
           </li>
         ))}
@@ -106,9 +109,9 @@ const Stats = ({ stats }: Props) => {
     },
   ];
   return (
-    <section className="rounded-xl bg-gray-900 py-28">
+    <section className="relative mx-2 rounded-xl bg-gray-900 py-28 xl:mx-0">
       <div className="relative z-10 mx-auto max-w-screen-xl px-4 md:px-8">
-        <div className="max-w-2xl xl:mx-auto xl:text-center">
+        <div className="max-w-2xl lg:mx-auto lg:text-center">
           <h3 className="text-3xl font-semibold text-white sm:text-4xl">
             Narrators love Reddex!
           </h3>
@@ -118,7 +121,7 @@ const Stats = ({ stats }: Props) => {
           </p>
         </div>
         <div className="mt-12">
-          <ul className="flex-wrap items-start gap-x-12 gap-y-10 space-y-8 sm:flex sm:space-y-0 xl:justify-center">
+          <ul className="flex-wrap items-start gap-x-12 gap-y-10 space-y-8 sm:flex sm:space-y-0 lg:justify-center">
             {_stats.map((item, idx) => (
               <li key={idx} className="sm:max-w-[15rem]">
                 <h4 className="text-4xl font-semibold text-white">
@@ -142,7 +145,7 @@ const Stats = ({ stats }: Props) => {
 };
 
 const Hero = () => (
-  <section className="hero mx-auto flex w-full max-w-screen-md  flex-col items-center justify-center gap-10">
+  <section className="hero flex w-full max-w-screen-md  flex-col items-center justify-center gap-10 px-2 md:mx-auto">
     <Badge className="w-fit" classNames={mantineBadgeClasses} color="rose">
       Thousands of stories read
     </Badge>
@@ -159,7 +162,7 @@ const Hero = () => (
       <div id="cta-bg"></div>
       <Link
         href={routes.SEARCH}
-        className="search-cta absolute z-30 flex w-full justify-center rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
+        className="search-cta absolute z-10 flex w-full justify-center rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
       >
         Start searching
       </Link>
@@ -183,7 +186,7 @@ const Testimonials = () => {
     },
   ];
   return (
-    <section className="py-14">
+    <section className="py-4 xl:py-14">
       <div className="mx-auto max-w-screen-xl px-4 md:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <h3 className="pb-6 font-semibold text-accent">
@@ -237,7 +240,7 @@ const Testimonials = () => {
 
 const Features = () => {
   return (
-    <section className="mx-auto max-w-screen-lg">
+    <section className="mx-auto max-w-screen-lg px-2 xl:px-0">
       <div className="mt-20 flex w-full  flex-col items-center gap-16 md:mt-40 md:flex-row ">
         <Image src={guyWithGlasses} className="w-80" alt="" />
 

@@ -21,13 +21,15 @@ interface Props {
 const StoryListItem = ({ story, list }: Props) => {
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background shadow-md">
-      <header className={`flex items-center justify-between gap-3 bg-card p-3`}>
+      <header
+        className={`flex flex-wrap items-center justify-between gap-3 bg-card p-3`}
+      >
         <div className="flex items-center rounded-full  font-black text-card-foreground/70">
           <FontAwesomeIcon icon={faUp} className="mr-2" />
           {story.ups}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <div className="flex items-center rounded-full text-sm text-card-foreground/70">
             <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
             {story.author}
@@ -40,14 +42,14 @@ const StoryListItem = ({ story, list }: Props) => {
         </div>
       </header>
       <Link
-        className="  min-h-[100px] p-3 font-bold text-foreground underline hover:text-rose-500"
+        className=" block min-h-[100px] p-3 font-bold text-foreground underline hover:text-rose-500"
         href={story.url}
         target="_blank"
       >
         {story.title}
       </Link>
 
-      <footer className="mt-auto flex items-center justify-between bg-card p-3">
+      <footer className="mt-auto flex flex-wrap items-center justify-between gap-4 bg-card p-3">
         <div className="flex gap-3">
           <div className="flex items-center gap-2 text-xs text-card-foreground/70">
             <FontAwesomeIcon icon={faFolder} />

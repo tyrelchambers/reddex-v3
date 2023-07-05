@@ -5,7 +5,6 @@ import {
   faFolder,
   faThumbsUp,
   faUp,
-  faWarning,
   faHashtag,
   faClock,
   faCheck,
@@ -24,20 +23,29 @@ interface Props {
   post: PostFromReddit;
   hasBeenUsed: boolean;
   usersWordsPerMinute: number | null | undefined;
+  isAuthenticated: boolean;
 }
 
 const SubredditSearchItem = ({
   post,
   hasBeenUsed,
   usersWordsPerMinute,
+  isAuthenticated,
 }: Props) => {
   const queueStore = useQueueStore();
 
   const isInQueue = queueStore.exists(post);
 
   const activeClasses = {
-    header: clsx(isInQueue ? "bg-accent" : "bg-foreground/10"),
-    headerText: clsx(isInQueue && "text-white"),
+    header: clsx(
+      "bg-foreground/5",
+      isInQueue && "!bg-accent",
+      hasBeenUsed && "bg-success"
+    ),
+    headerText: clsx(
+      isInQueue && "!text-accent-foreground",
+      hasBeenUsed && "text-success-foreground"
+    ),
   };
 
   return (
@@ -56,7 +64,7 @@ const SubredditSearchItem = ({
             <Tooltip label="Already used">
               <FontAwesomeIcon
                 icon={faCheck}
-                className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-100 p-2 text-xs text-green-800"
+                className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-200 p-2 text-xs text-green-800"
               />
             </Tooltip>
           )}
@@ -86,8 +94,8 @@ const SubredditSearchItem = ({
         {post.title}
       </Link>
 
-      <footer className="mt-auto flex items-end justify-between p-3">
-        <div className="flex gap-3">
+      <footer className="mt-auto flex flex-col justify-between p-3 lg:flex-row">
+        <div className="flex flex-wrap gap-3">
           <div className="flex items-center gap-2 text-xs text-foreground/50">
             <FontAwesomeIcon icon={faFolder} />
             <p>{post.subreddit}</p>
@@ -116,26 +124,28 @@ const SubredditSearchItem = ({
           )}
         </div>
 
-        <div className="flex items-end gap-2">
-          {isInQueue ? (
-            <Button
-              variant="default"
-              size="xs"
-              onClick={() => queueStore.remove(post)}
-            >
-              Remove from queue
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              size="xs"
-              onClick={() => queueStore.add(post)}
-            >
-              <FontAwesomeIcon icon={faAdd} className="mr-2" />
-              Add to Queue
-            </Button>
-          )}
-        </div>
+        {isAuthenticated && (
+          <div className="mt-4 flex items-end gap-2 lg:mt-0">
+            {isInQueue ? (
+              <Button
+                variant="default"
+                size="xs"
+                onClick={() => queueStore.remove(post)}
+              >
+                Remove from queue
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="xs"
+                onClick={() => queueStore.add(post)}
+              >
+                <FontAwesomeIcon icon={faAdd} className="mr-2" />
+                Add to Queue
+              </Button>
+            )}
+          </div>
+        )}
       </footer>
     </div>
   );

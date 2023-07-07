@@ -15,6 +15,7 @@ import "~/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
+import { useUserStore } from "~/stores/useUserStore";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -30,6 +31,14 @@ const MyApp: AppType<MyAppProps> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const { colorScheme } = useTheme();
+  const userStore = useUserStore();
+  const userQuery = api.user.me.useQuery();
+
+  useEffect(() => {
+    if (userQuery.data) {
+      userStore.setUser(userQuery.data);
+    }
+  }, [userQuery.data]);
 
   useEffect(() => {
     const document = window.document.querySelector("html");

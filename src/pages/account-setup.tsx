@@ -37,7 +37,7 @@ const AccountSetup = () => {
     if (!userQuery.isLoading && !userQuery.data) {
       router.push("/");
     }
-  }, [user?.email, router.isReady]);
+  }, [user]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();

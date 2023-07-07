@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import TabsList from "~/components/TabsList";
 import Header from "./Header";
 import DashNav from "./DashNav";
 import { Tab } from "~/types";
 import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
-import { useUserStore } from "~/stores/useUserStore";
-import { api } from "~/utils/api";
 import { useSubscribed } from "~/hooks/useSubscribed";
 
 interface Props {
@@ -17,15 +15,7 @@ interface Props {
 }
 
 const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
-  const userStore = useUserStore();
   useSubscribed();
-  const userQuery = api.user.me.useQuery();
-
-  useEffect(() => {
-    if (userQuery.data) {
-      userStore.setUser(userQuery.data);
-    }
-  }, [userQuery.data]);
 
   return (
     <>

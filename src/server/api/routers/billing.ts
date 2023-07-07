@@ -6,9 +6,8 @@ import { prisma } from "~/server/db";
 import Stripe from "stripe";
 
 interface BillingInfo {
-  customer: Stripe.Customer;
-  subscription: Stripe.Subscription & {
-    plan: Stripe.Plan & { product: Stripe.Product };
+  customer: Stripe.Customer & {
+    subscriptions: Stripe.Subscription[] & { plan: Stripe.Plan };
   };
   invoices: Stripe.ApiList<Stripe.Invoice>;
 }
@@ -72,24 +71,24 @@ export const billingRouter = createTRPCRouter({
       },
     });
 
-    if (!user?.Subscription?.subscriptionId) {
+    if (!user?.Subscription) {
       return;
     }
 
-    const customer = await stripeClient.customers.retrieve(
-      user.Subscription.customerId
-    );
-
-    const subscription = (await stripeClient.subscriptions.retrieve(
-      user.Subscription.subscriptionId,
+    const customer = (await stripeClient.customers.retrieve(
+      user.Subscription.customerId,
       {
-        expand: ["plan", "plan.product"],
+        expand: [
+          "subscriptions",
+          "subscriptions.data.plan",
+          "subscriptions.data.plan.product",
+        ],
       }
-    )) as Stripe.Response<
-      Stripe.Subscription & {
-        plan: Stripe.Plan & { product: Stripe.Product };
-      }
-    >;
+    )) as unknown as Stripe.Customer & {
+      subscriptions: Stripe.Subscription[] & {
+        plan: Stripe.Plan;
+      };
+    };
 
     const invoices = await stripeClient.invoices.list({
       customer: customer.id,
@@ -97,7 +96,6 @@ export const billingRouter = createTRPCRouter({
 
     return {
       customer,
-      subscription,
       invoices,
     } as BillingInfo;
   }),

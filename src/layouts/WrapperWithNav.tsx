@@ -7,10 +7,6 @@ import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
 import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
-import { hasActiveSubscription } from "~/utils";
-import { useRouter } from "next/router";
-import { routeWhitelist, routes } from "~/routes";
-import { toast } from "react-toastify";
 import { useSubscribed } from "~/hooks/useSubscribed";
 
 interface Props {

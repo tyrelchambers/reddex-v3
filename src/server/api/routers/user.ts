@@ -25,13 +25,23 @@ export const userRouter = createTRPCRouter({
 
     if (!user) return null;
 
-    if (user.Subscription && user.Subscription.subscriptionId) {
-      subscription = (await stripeClient.subscriptions.retrieve(
-        user.Subscription.subscriptionId,
+    if (user.Subscription) {
+      const customer = (await stripeClient.customers.retrieve(
+        user.Subscription.customerId,
         {
-          expand: ["plan", "plan.product"],
+          expand: [
+            "subscriptions",
+            "subscriptions.data.plan",
+            "subscriptions.data.plan.product",
+          ],
         }
-      )) as Stripe.Subscription;
+      )) as unknown as Stripe.Customer & {
+        subscriptions: Stripe.Subscription[] & {
+          plan: Stripe.Plan;
+        };
+      };
+
+      subscription = customer.subscriptions.data[0] ?? null;
     }
 
     return {

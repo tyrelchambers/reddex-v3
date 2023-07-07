@@ -7,6 +7,7 @@ import { Badge, Divider, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import React from "react";
+import Stripe from "stripe";
 import InvoicesList from "~/components/InvoicesList";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
@@ -19,7 +20,12 @@ const Settings = () => {
   const subscriptionQuery = api.billing.info.useQuery();
   const updateLink = api.billing.updateLink.useQuery();
 
-  const subscription = subscriptionQuery.data?.subscription;
+  const subscription = subscriptionQuery.data?.customer.subscriptions
+    ?.data[0] as Stripe.Subscription & {
+    plan: Stripe.Plan & {
+      product: Stripe.Product;
+    };
+  };
   const invoices = subscriptionQuery.data?.invoices;
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -74,6 +80,12 @@ const Settings = () => {
                 on {formatStripeTime(subscription.current_period_end)}
               </p>
             )}
+            <p className="text-sm text-card-foreground/60">
+              <span className="font-semibold text-card-foreground">
+                Subscription ID:
+              </span>{" "}
+              {subscription?.id}
+            </p>
             <Badge
               variant="dot"
               className="my-2 w-fit text-foreground"

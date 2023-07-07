@@ -47,7 +47,7 @@ export const billingRouter = createTRPCRouter({
     });
 
     if (!user?.customerId) {
-      return;
+      return null;
     }
 
     const customer = (await stripeClient.customers.retrieve(user.customerId, {

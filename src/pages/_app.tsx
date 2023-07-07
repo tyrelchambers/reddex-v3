@@ -15,6 +15,7 @@ import "~/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
+import { useUserStore } from "~/stores/useUserStore";
 
 const font = Poppins({
   weight: ["300", "500", "700"],

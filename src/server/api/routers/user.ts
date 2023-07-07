@@ -7,7 +7,7 @@ import Stripe from "stripe";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
-    return await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: ctx.session.user.id,
       },
@@ -20,6 +20,24 @@ export const userRouter = createTRPCRouter({
         Subscription: true,
       },
     });
+
+    let subscription = null;
+
+    if (!user) return null;
+
+    if (user.Subscription && user.Subscription.subscriptionId) {
+      subscription = (await stripeClient.subscriptions.retrieve(
+        user.Subscription.subscriptionId,
+        {
+          expand: ["plan", "plan.product"],
+        }
+      )) as Stripe.Subscription;
+    }
+
+    return {
+      ...user,
+      subscription,
+    };
   }),
   subscription: protectedProcedure
     .input(z.string().optional())

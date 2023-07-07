@@ -1,10 +1,11 @@
-import { Account, RedditPost } from "@prisma/client";
+import { Account, RedditPost, User } from "@prisma/client";
 import { format } from "date-fns";
 import { FilterState } from "~/reducers/filterReducer";
 import { prisma } from "~/server/db";
 import { db } from "./dexie";
 import { FormattedMessagesList, RedditInboxMessage } from "~/types";
 import { getAccessToken } from "./getTokens";
+import Stripe from "stripe";
 
 export const addLastSearchedOrUpdate = async () => {
   const exists = await db.lastSearched.get(1);
@@ -119,4 +120,13 @@ export const getStorySelectList = (stories: RedditPost[] | undefined) => {
     ...formattedApprovedStories,
   ];
   return storiesList;
+};
+
+export const hasActiveSubscription = (
+  user: (User & { subscription: Stripe.Subscription | null }) | null
+) => {
+  if (!user || !user.subscription || user.subscription.status !== "active")
+    return false;
+
+  return true;
 };

@@ -86,3 +86,13 @@ export const settingsTabs: Tab[] = [
     icon: faCog,
   },
 ];
+
+export const routeWhitelist = [
+  routes.HOME,
+  routes.ABOUT,
+  routes.PRICING,
+  routes.LOGIN,
+  routes.AUTH_REDDIT,
+  routes.SETTINGS_ACCOUNT,
+  routes.SEARCH,
+];

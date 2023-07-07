@@ -23,6 +23,7 @@ import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
 import { addLastSearchedOrUpdate } from "~/utils";
+import { useSubscribed } from "~/hooks/useSubscribed";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -34,7 +35,7 @@ const Search = () => {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [opened, { open, close }] = useDisclosure(false);
-
+  const { activeSub } = useSubscribed();
   const statsUpdate = api.stats.set.useMutation();
   const currentUser = api.user.me.useQuery(undefined, {
     enabled: session.status === "authenticated",
@@ -163,7 +164,9 @@ const Search = () => {
                     usersWordsPerMinute={
                       currentUser.data?.Profile?.words_per_minute
                     }
-                    isAuthenticated={session.status === "authenticated"}
+                    canAddToQueue={
+                      session.status === "authenticated" && activeSub
+                    }
                   />
                 ))) ||
               null}

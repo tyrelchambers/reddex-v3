@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TabsList from "~/components/TabsList";
 import Header from "./Header";
 import DashNav from "./DashNav";
 import { Tab } from "~/types";
 import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
+import { useUserStore } from "~/stores/useUserStore";
+import { api } from "~/utils/api";
+import { hasActiveSubscription } from "~/utils";
+import { useRouter } from "next/router";
+import { routeWhitelist, routes } from "~/routes";
+import { toast } from "react-toastify";
+import { useSubscribed } from "~/hooks/useSubscribed";
 
 interface Props {
   children: React.ReactNode[] | React.ReactNode;
@@ -14,6 +21,16 @@ interface Props {
 }
 
 const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
+  const userStore = useUserStore();
+  useSubscribed();
+  const userQuery = api.user.me.useQuery();
+
+  useEffect(() => {
+    if (userQuery.data) {
+      userStore.setUser(userQuery.data);
+    }
+  }, [userQuery.data]);
+
   return (
     <>
       <Header />

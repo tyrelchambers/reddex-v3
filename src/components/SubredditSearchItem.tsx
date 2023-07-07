@@ -23,14 +23,14 @@ interface Props {
   post: PostFromReddit;
   hasBeenUsed: boolean;
   usersWordsPerMinute: number | null | undefined;
-  isAuthenticated: boolean;
+  canAddToQueue: boolean;
 }
 
 const SubredditSearchItem = ({
   post,
   hasBeenUsed,
   usersWordsPerMinute,
-  isAuthenticated,
+  canAddToQueue,
 }: Props) => {
   const queueStore = useQueueStore();
 
@@ -124,7 +124,7 @@ const SubredditSearchItem = ({
           )}
         </div>
 
-        {isAuthenticated && (
+        {canAddToQueue && (
           <div className="mt-4 flex items-end gap-2 lg:mt-0">
             {isInQueue ? (
               <Button

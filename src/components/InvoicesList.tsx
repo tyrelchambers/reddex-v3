@@ -4,8 +4,7 @@ import { Badge, Table } from "@mantine/core";
 import React from "react";
 import Stripe from "stripe";
 import { mantineBadgeClasses } from "~/lib/styles";
-import { formatCurrency } from "~/utils/formatCurrency";
-import { formatStripeTime } from "~/utils/formatStripeTime";
+import { formatCurrency, formatStripeTime } from "~/utils";
 
 interface Props {
   invoices: Stripe.Invoice[];

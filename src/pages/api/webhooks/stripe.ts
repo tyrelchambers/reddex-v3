@@ -33,42 +33,6 @@ export default async function handler(
   }
 
   if (eventType === "checkout.session.completed") {
-    const { customer, subscription, id } =
-      data.object as Stripe.Checkout.Session;
-
-    const line_items = await stripeClient.checkout.sessions.listLineItems(id);
-
-    const user = await prisma.user.findFirst({
-      where: {
-        Subscription: {
-          customerId: customer as string,
-        },
-      },
-      include: {
-        Subscription: true,
-      },
-    });
-
-    if (!line_items?.data[0]?.price?.id) {
-      return res.send(400);
-    }
-
-    if (!user) {
-      console.log(`⚠️  User not found.`);
-      return res.send(400);
-    }
-
-    await prisma.subscription.update({
-      where: {
-        userId: user.id,
-      },
-      data: {
-        subscriptionId: subscription as string,
-        customerId: customer as string,
-        plan: line_items.data[0].price.id,
-      },
-    });
-
     console.log(`🔔  Payment received!`);
   }
 

@@ -17,7 +17,6 @@ export const userRouter = createTRPCRouter({
             searches: true,
           },
         },
-        Subscription: true,
       },
     });
 
@@ -25,17 +24,14 @@ export const userRouter = createTRPCRouter({
 
     if (!user) return null;
 
-    if (user.Subscription) {
-      const customer = (await stripeClient.customers.retrieve(
-        user.Subscription.customerId,
-        {
-          expand: [
-            "subscriptions",
-            "subscriptions.data.plan",
-            "subscriptions.data.plan.product",
-          ],
-        }
-      )) as unknown as Stripe.Customer & {
+    if (user.customerId) {
+      const customer = (await stripeClient.customers.retrieve(user.customerId, {
+        expand: [
+          "subscriptions",
+          "subscriptions.data.plan",
+          "subscriptions.data.plan.product",
+        ],
+      })) as unknown as Stripe.Customer & {
         subscriptions: Stripe.Subscription[] & {
           plan: Stripe.Plan;
         };
@@ -49,29 +45,6 @@ export const userRouter = createTRPCRouter({
       subscription,
     };
   }),
-  subscription: protectedProcedure
-    .input(z.string().optional())
-    .query(async ({ ctx, input }) => {
-      const userSubscription = await prisma.subscription.findUnique({
-        where: {
-          userId: ctx.session.user.id,
-        },
-      });
-      if (!input || !userSubscription?.subscriptionId) {
-        return null;
-      }
-
-      const subscription = await stripeClient.subscriptions.retrieve(
-        userSubscription.subscriptionId,
-        {
-          expand: ["plan", "plan.product"],
-        }
-      );
-
-      return subscription as Stripe.Response<Stripe.Subscription> & {
-        plan: Stripe.Plan & { product: Stripe.Product };
-      };
-    }),
   saveProfile: protectedProcedure
     .input(saveProfileSchema)
     .mutation(async ({ ctx, input }) => {

@@ -16,9 +16,14 @@ import {
 import { getStorySelectList } from "~/utils";
 
 const Tags = () => {
+  const apiContext = api.useContext();
   const [opened, { open, close }] = useDisclosure(false);
   const approvedStories = api.story.getApprovedList.useQuery();
-  const tagMutation = api.tag.save.useMutation();
+  const tagMutation = api.tag.save.useMutation({
+    onSuccess: () => {
+      apiContext.tag.all.invalidate();
+    },
+  });
   const tagQuery = api.tag.all.useQuery();
 
   const form = useForm({

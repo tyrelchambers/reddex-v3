@@ -15,8 +15,15 @@ interface Props {
 }
 
 const ApprovedItemActions = ({ postId }: Props) => {
+  const [opened, { open, close }] = useDisclosure(false);
+
   const apiContext = api.useContext();
-  const tagMutation = api.tag.add.useMutation();
+  const tagMutation = api.tag.add.useMutation({
+    onSuccess: () => {
+      apiContext.tag.all.invalidate();
+      close();
+    },
+  });
   const tagQuery = api.tag.all.useQuery();
   const formattedTags =
     tagQuery.data?.map((tag) => ({
@@ -35,7 +42,6 @@ const ApprovedItemActions = ({ postId }: Props) => {
       apiContext.story.getApprovedList.invalidate();
     },
   });
-  const [opened, { open, close }] = useDisclosure(false);
 
   const addTagHandler = (e: FormEvent) => {
     e.preventDefault();

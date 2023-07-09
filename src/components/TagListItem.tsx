@@ -29,19 +29,7 @@ const TagListItem = ({ tag }: Props) => {
         </p>
       </header>
 
-      <div className="flex flex-1 p-3">
-        {tag.TagsOnStories.length ? (
-          <p className="text-sm text-gray-700">
-            {tag.TagsOnStories.map((tag) => tag.RedditPost.title).join(", ")}
-          </p>
-        ) : (
-          <p className="text-sm italic text-gray-400">
-            No stories attached to this tag
-          </p>
-        )}
-      </div>
-
-      <footer className="flex justify-end border-t-[1px] border-border p-2 px-4">
+      <footer className="flex justify-end p-2 px-4">
         <Button onClick={() => deleteTag.mutate(tag.id)}>Delete</Button>
       </footer>
     </div>

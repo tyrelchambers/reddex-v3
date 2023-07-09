@@ -16,6 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
+import { useRouter } from "next/router";
+import { routes } from "~/routes";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -33,10 +35,15 @@ const MyApp: AppType<MyAppProps> = ({
   const { colorScheme } = useTheme();
   const userStore = useUserStore();
   const userQuery = api.user.me.useQuery();
+  const router = useRouter();
 
   useEffect(() => {
     if (userQuery.data) {
       userStore.setUser(userQuery.data);
+    }
+
+    if (!userQuery.data?.email) {
+      router.push(routes.ACCOUNT_CHECK);
     }
   }, [userQuery.data]);
 

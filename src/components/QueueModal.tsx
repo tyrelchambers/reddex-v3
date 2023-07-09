@@ -140,7 +140,11 @@ const QueueModal = ({ close }: Props) => {
           <Button variant="secondary" onClick={removeFromQueue}>
             Remove from queue
           </Button>
-          <Button variant="secondary" onClick={saveContactHandler}>
+          <Button
+            variant="secondary"
+            onClick={saveContactHandler}
+            className="break-all"
+          >
             Add {currentPost?.author} to contacts
           </Button>
         </div>
@@ -164,7 +168,7 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
         <p className="text-xs font-normal uppercase text-card-foreground">
           Subject
         </p>
-        <p className="mt-1 text-xl font-bold text-card-foreground">
+        <p className="mt-1 break-all text-xl font-bold text-card-foreground">
           {post.title}
         </p>
       </div>
@@ -173,7 +177,7 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
         <p className="text-xs font-normal uppercase text-card-foreground">
           Author
         </p>
-        <p className="mt-1 text-xl font-bold text-card-foreground">
+        <p className="mt-1 break-all text-xl font-bold text-card-foreground">
           {post.author} {contact && <Badge>Is a contact</Badge>}
         </p>
       </div>

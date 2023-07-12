@@ -11,9 +11,7 @@ const BodyWithLoader = ({ isLoading, loadingMessage, children }: Props) => {
   if (isLoading) return <Spinner message={loadingMessage} />;
 
   return (
-    <section className="flex w-full max-w-2xl flex-col px-4 lg:px-0">
-      {children}
-    </section>
+    <section className="flex w-full max-w-2xl flex-col">{children}</section>
   );
 };
 

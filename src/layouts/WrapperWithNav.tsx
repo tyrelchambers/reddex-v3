@@ -6,6 +6,8 @@ import { Tab } from "~/types";
 import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
 import { useSubscribed } from "~/hooks/useSubscribed";
+import { useViewportSize } from "@mantine/hooks";
+import { breakpoints } from "~/constants";
 
 interface Props {
   children: React.ReactNode[] | React.ReactNode;
@@ -16,11 +18,11 @@ interface Props {
 
 const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
   useSubscribed();
-
+  const { width } = useViewportSize();
   return (
     <>
       <Header />
-      <DashNav />
+      {width >= breakpoints.tablet && <DashNav />}
       <AuthenticationBoundary>
         <main className="mx-auto my-6 flex w-full max-w-screen-2xl flex-col gap-8 lg:flex-row lg:gap-14">
           {tabs && (

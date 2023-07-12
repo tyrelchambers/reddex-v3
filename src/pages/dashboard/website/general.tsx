@@ -27,7 +27,6 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { Button } from "~/components/ui/button";
 import { mantineInputClasses } from "~/lib/styles";
-import { useUserStore } from "~/stores/useUserStore";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,

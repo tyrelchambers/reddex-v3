@@ -12,11 +12,11 @@ export const useSubscribed = () => {
   const isOnAllowedRoute = routeWhitelist.includes(router.asPath);
 
   useEffect(() => {
-    if (!activeSub && !isOnAllowedRoute) {
+    if (router.isReady && !activeSub && !isOnAllowedRoute) {
       router.push(routes.SETTINGS_ACCOUNT);
       toast.warn("You must be subscribed to continue");
     }
-  }, [userStore.user]);
+  }, [userStore.user, router.isReady]);
 
   return {
     activeSub,

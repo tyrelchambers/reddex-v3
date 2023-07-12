@@ -1,56 +1,15 @@
-import {
-  faBrowser,
-  faCog,
-  faInbox,
-  faLayerGroup,
-  faTag,
-  faUser,
-} from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { routes } from "~/routes";
-
-const _routes = [
-  {
-    label: "Stories",
-    slug: routes.APPROVED,
-    icon: faLayerGroup,
-  },
-  {
-    label: "Tags",
-    slug: routes.TAGS,
-    icon: faTag,
-  },
-  {
-    label: "Contacts",
-    slug: routes.CONTACTS,
-    icon: faUser,
-  },
-  {
-    label: "Inbox",
-    slug: routes.INBOX,
-    icon: faInbox,
-  },
-  {
-    label: "Website",
-    slug: routes.WEBSITE_GENERAL,
-    icon: faBrowser,
-  },
-  {
-    label: "Settings",
-    slug: routes.SETTINGS_PROFILE,
-    icon: faCog,
-  },
-];
+import { dashNavRoutes } from "~/routes";
 
 const DashNav = () => {
   const pathname = useRouter().pathname;
   return (
     <nav className=" w-full overflow-x-auto bg-foreground/5 p-3">
       <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
-        {_routes.map((r) => (
+        {dashNavRoutes.map((r) => (
           <li key={r.label}>
             <Link
               href={r.slug}

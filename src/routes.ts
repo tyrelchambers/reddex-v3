@@ -1,14 +1,18 @@
 import {
   faBrowser,
   faCog,
+  faInbox,
   faInboxIn,
+  faLayerGroup,
   faPalette,
   faPenNib,
   faPuzzlePiece,
   faRectangleHistory,
   faRectangleList,
+  faTag,
   faUser,
 } from "@fortawesome/pro-light-svg-icons";
+
 import { Tab } from "./types";
 
 export const routes = {
@@ -33,6 +37,40 @@ export const routes = {
   SEARCH: "/search",
   STUDIO: "/dashboard/studio",
 };
+
+export const dashNavRoutes = [
+  {
+    label: "Stories",
+    slug: routes.APPROVED,
+    icon: faLayerGroup,
+  },
+  {
+    label: "Tags",
+    slug: routes.TAGS,
+    icon: faTag,
+  },
+  {
+    label: "Contacts",
+    slug: routes.CONTACTS,
+    icon: faUser,
+  },
+  {
+    label: "Inbox",
+    slug: routes.INBOX,
+    icon: faInbox,
+  },
+  {
+    label: "Website",
+    slug: routes.WEBSITE_GENERAL,
+    icon: faBrowser,
+  },
+  {
+    label: "Settings",
+    slug: routes.SETTINGS_PROFILE,
+    icon: faCog,
+  },
+];
+
 export const websiteTabItems = [
   {
     label: "General",

@@ -1,4 +1,15 @@
-import { faRightFromBracket } from "@fortawesome/pro-light-svg-icons";
+import {
+  faBrowser,
+  faCog,
+  faHome,
+  faInbox,
+  faList,
+  faListCheck,
+  faMoneyBill,
+  faRightFromBracket,
+  faSearch,
+  faUser,
+} from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider } from "@mantine/core";
 import { User } from "@prisma/client";
@@ -8,6 +19,57 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import { routes } from "~/routes";
+
+const commonRoutes = [
+  {
+    label: "Home",
+    slug: routes.HOME,
+    icon: faHome,
+  },
+  {
+    label: "Search",
+    slug: routes.SEARCH,
+    icon: faSearch,
+  },
+  {
+    label: "Pricing",
+    slug: routes.PRICING,
+    icon: faMoneyBill,
+  },
+];
+
+const authRoutes = [
+  {
+    label: "Approved stories",
+    slug: routes.APPROVED,
+    icon: faListCheck,
+  },
+  {
+    label: "Completed stories",
+    slug: routes.COMPLETED,
+    icon: faList,
+  },
+  {
+    label: "Inbox",
+    slug: routes.INBOX,
+    icon: faInbox,
+  },
+  {
+    label: "Website",
+    slug: routes.WEBSITE_GENERAL,
+    icon: faBrowser,
+  },
+  {
+    label: "Profile",
+    slug: routes.SETTINGS_PROFILE,
+    icon: faUser,
+  },
+  {
+    label: "Account",
+    slug: routes.SETTINGS_ACCOUNT,
+    icon: faCog,
+  },
+];
 
 interface Props {
   user: User | undefined;
@@ -26,75 +88,32 @@ const MobileNav = ({ user }: Props) => {
 
   return (
     <div className="fixed inset-0 z-10 flex h-full w-full flex-col overflow-y-auto bg-background">
-      <section className="mt-20 px-8">
+      <section className="mt-20 px-4">
         <nav className="flex flex-col gap-4">
-          <Link
-            className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-            href={routes.HOME}
-          >
-            Home
-          </Link>
-
-          <Link
-            className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-            href={routes.SEARCH}
-          >
-            Search
-          </Link>
-
-          <Link
-            className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-            href={routes.PRICING}
-          >
-            Pricing
-          </Link>
+          {commonRoutes.map((r) => (
+            <Link
+              key={r.label}
+              className=" text-sm text-foreground hover:text-accent"
+              href={r.slug}
+            >
+              <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
+            </Link>
+          ))}
         </nav>
 
         <Divider className="my-6 border-border" />
 
         {user ? (
           <nav className="flex flex-col gap-4">
-            <Link
-              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-              href={routes.APPROVED}
-            >
-              Approved
-            </Link>
-
-            <Link
-              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-              href={routes.COMPLETED}
-            >
-              Completed
-            </Link>
-
-            <Link
-              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-              href={routes.INBOX}
-            >
-              Inbox
-            </Link>
-
-            <Link
-              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-              href={routes.WEBSITE_GENERAL}
-            >
-              Website
-            </Link>
-
-            <Link
-              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-              href={routes.SETTINGS_PROFILE}
-            >
-              Profile
-            </Link>
-
-            <Link
-              className="rounded-md border-[1px] border-border p-2 text-sm text-foreground"
-              href={routes.SETTINGS_ACCOUNT}
-            >
-              Account
-            </Link>
+            {authRoutes.map((r) => (
+              <Link
+                key={r.label}
+                className=" text-sm text-foreground hover:text-accent"
+                href={r.slug}
+              >
+                <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
+              </Link>
+            ))}
 
             <Button variant="link" className="w-fit" onClick={logoutHandler}>
               <FontAwesomeIcon icon={faRightFromBracket} className="mr-4" />

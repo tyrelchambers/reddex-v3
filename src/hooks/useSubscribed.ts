@@ -14,7 +14,9 @@ export const useSubscribed = () => {
   useEffect(() => {
     if (router.isReady && !activeSub && !isOnAllowedRoute) {
       router.push(routes.SETTINGS_ACCOUNT);
-      toast.warn("You must be subscribed to continue");
+      toast.warn("You must be subscribed to continue", {
+        toastId: "not-subscribed",
+      });
     }
   }, [userStore.user, router.isReady]);
 

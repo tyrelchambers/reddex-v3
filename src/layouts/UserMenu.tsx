@@ -22,7 +22,7 @@ const UserMenu = () => {
       shadow="md"
       width={200}
       classNames={{
-        dropdown: "bg-card border-border",
+        dropdown: "bg-background border-border",
         item: "hover:bg-card-foreground/20 text-foreground",
       }}
     >

@@ -196,7 +196,7 @@ const Search = () => {
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
-          <FilterSelections filtersFromUrl={router.query} />
+          <FilterSelections filters={appliedFilters} />
         </Modal>
 
         <Modal

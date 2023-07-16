@@ -1,20 +1,20 @@
 import { NumberInput, TextInput, Switch, Select } from "@mantine/core";
-import React, { FormEvent, useEffect, useMemo } from "react";
+import React, { FormEvent, useEffect } from "react";
 import {
   mantineInputClasses,
   mantineNumberClasses,
   mantineSelectClasses,
   mantineSwitchStyles,
 } from "~/lib/styles";
-import { FilterState, FilterAction } from "~/reducers/filterReducer";
 import { Button } from "./ui/button";
-import { ParsedUrlQuery } from "querystring";
 import { buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
+import { ParsedQuery } from "query-string";
+import { FilterState } from "~/types";
 
 interface FilterSelectionProps {
-  filtersFromUrl: ParsedUrlQuery;
+  filters: Partial<FilterState>;
 }
 
 export interface FormProps {
@@ -31,7 +31,7 @@ export interface FormProps {
   excludeSeries: boolean | undefined | null;
 }
 
-const FilterSelections = ({ filtersFromUrl }: FilterSelectionProps) => {
+const FilterSelections = ({ filters }: FilterSelectionProps) => {
   const router = useRouter();
   const form = useForm<FormProps>({
     initialValues: {
@@ -50,22 +50,33 @@ const FilterSelections = ({ filtersFromUrl }: FilterSelectionProps) => {
   });
 
   useEffect(() => {
-    const values = parseQuery(filtersFromUrl);
-
     form.setValues({
       upvotes: {
-        qualifier: values.upvotes?.qualifier || "Over",
-        value: Number(values.upvotes?.value) || undefined,
+        qualifier: filters.upvotes?.qualifier || "Over",
+        value: Number(filters.upvotes?.value) || undefined,
       },
       readingTime: {
-        qualifier: values.readingTime?.qualifier || "Over",
-        value: Number(values.readingTime?.value) || undefined,
+        qualifier: filters.readingTime?.qualifier || "Over",
+        value: Number(filters.readingTime?.value) || undefined,
       },
-      excludeSeries: values.excludeSeries,
-      keywords: values.keywords,
-      seriesOnly: values.seriesOnly,
+      excludeSeries: Boolean(filters.excludeSeries),
+      keywords: filters.keywords,
+      seriesOnly: Boolean(filters.seriesOnly),
     });
-  }, []);
+    console.log({
+      upvotes: {
+        qualifier: filters.upvotes?.qualifier || "Over",
+        value: Number(filters.upvotes?.value) || undefined,
+      },
+      readingTime: {
+        qualifier: filters.readingTime?.qualifier || "Over",
+        value: Number(filters.readingTime?.value) || undefined,
+      },
+      excludeSeries: Boolean(filters.excludeSeries),
+      keywords: filters.keywords,
+      seriesOnly: Boolean(filters.seriesOnly),
+    });
+  }, [filters]);
 
   const qualifiers = ["Over", "Under", "Equals"];
 
@@ -133,12 +144,16 @@ const FilterSelections = ({ filtersFromUrl }: FilterSelectionProps) => {
       <Switch
         label="Series only"
         classNames={mantineSwitchStyles}
-        {...form.getInputProps("seriesOnly")}
+        {...form.getInputProps("seriesOnly", {
+          type: "checkbox",
+        })}
       />
       <Switch
         label="Exclude series"
         classNames={mantineSwitchStyles}
-        {...form.getInputProps("excludeSeries")}
+        {...form.getInputProps("excludeSeries", {
+          type: "checkbox",
+        })}
       />
 
       <Button type="submit">Apply filters</Button>

@@ -63,19 +63,6 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
       keywords: filters.keywords,
       seriesOnly: Boolean(filters.seriesOnly),
     });
-    console.log({
-      upvotes: {
-        qualifier: filters.upvotes?.qualifier || "Over",
-        value: Number(filters.upvotes?.value) || undefined,
-      },
-      readingTime: {
-        qualifier: filters.readingTime?.qualifier || "Over",
-        value: Number(filters.readingTime?.value) || undefined,
-      },
-      excludeSeries: Boolean(filters.excludeSeries),
-      keywords: filters.keywords,
-      seriesOnly: Boolean(filters.seriesOnly),
-    });
   }, [filters]);
 
   const qualifiers = ["Over", "Under", "Equals"];

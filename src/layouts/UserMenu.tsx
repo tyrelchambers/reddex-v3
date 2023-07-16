@@ -1,12 +1,14 @@
 import { Menu } from "@mantine/core";
 import React from "react";
-import UserChip from "./UserChip";
 import Link from "next/link";
 import { routes } from "~/routes";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { api } from "~/utils/api";
 
 const UserMenu = () => {
+  const userQuery = api.user.me.useQuery();
+  const user = userQuery.data;
   const router = useRouter();
   const logoutHandler = () => {
     try {
@@ -27,8 +29,11 @@ const UserMenu = () => {
       }}
     >
       <Menu.Target>
-        <button type="button">
-          <UserChip />
+        <button
+          type="button"
+          className="text-foreground underline hover:text-accent"
+        >
+          {user?.name}
         </button>
       </Menu.Target>
 

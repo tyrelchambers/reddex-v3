@@ -1,5 +1,5 @@
 import { NumberInput, TextInput, Switch, Select } from "@mantine/core";
-import React from "react";
+import React, { FormEvent, useEffect, useMemo } from "react";
 import {
   mantineInputClasses,
   mantineNumberClasses,
@@ -8,48 +8,96 @@ import {
 } from "~/lib/styles";
 import { FilterState, FilterAction } from "~/reducers/filterReducer";
 import { Button } from "./ui/button";
+import { ParsedUrlQuery } from "querystring";
+import { buildParams, parseQuery } from "~/utils";
+import { useRouter } from "next/router";
+import { useForm } from "@mantine/form";
 
 interface FilterSelectionProps {
-  filters: FilterState;
-  dispatch: (data: FilterAction) => void;
-  setAppliedFilters: (data: FilterState) => void;
+  filtersFromUrl: ParsedUrlQuery;
 }
 
-const FilterSelections = ({
-  filters,
-  dispatch,
-  setAppliedFilters,
-}: FilterSelectionProps) => {
+export interface FormProps {
+  upvotes?: {
+    qualifier: string | undefined | null;
+    value: number | undefined | null;
+  };
+  readingTime?: {
+    qualifier: string | undefined | null;
+    value: number | undefined | null;
+  };
+  keywords: string | undefined | null;
+  seriesOnly: boolean | undefined | null;
+  excludeSeries: boolean | undefined | null;
+}
+
+const FilterSelections = ({ filtersFromUrl }: FilterSelectionProps) => {
+  const router = useRouter();
+  const form = useForm<FormProps>({
+    initialValues: {
+      upvotes: {
+        qualifier: "Over",
+        value: 0,
+      },
+      readingTime: {
+        qualifier: "Over",
+        value: 0,
+      },
+      keywords: undefined,
+      seriesOnly: false,
+      excludeSeries: false,
+    },
+  });
+
+  useEffect(() => {
+    const values = parseQuery(filtersFromUrl);
+
+    form.setValues({
+      upvotes: {
+        qualifier: values.upvotes?.qualifier || "Over",
+        value: Number(values.upvotes?.value) || undefined,
+      },
+      readingTime: {
+        qualifier: values.readingTime?.qualifier || "Over",
+        value: Number(values.readingTime?.value) || undefined,
+      },
+      excludeSeries: values.excludeSeries,
+      keywords: values.keywords,
+      seriesOnly: values.seriesOnly,
+    });
+  }, []);
+
   const qualifiers = ["Over", "Under", "Equals"];
 
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+    updateFilterValueFromUrl(form.values);
+  };
+  const updateFilterValueFromUrl = async (appliedFilters: FormProps | null) => {
+    if (!appliedFilters) return;
+
+    const query = buildParams(appliedFilters);
+
+    await router.replace(router.asPath, {
+      query,
+    });
+  };
+
   return (
-    <section className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={submitHandler}>
       <div className="flex flex-col">
         <p className="text-sm text-foreground">Upvotes</p>
         <div className="mt-1 flex gap-2">
           <Select
             data={qualifiers}
             classNames={mantineSelectClasses}
-            onChange={(e) =>
-              dispatch({
-                type: "UPDATE_FILTER",
-                filter: "upvotes",
-                payload: { qualifier: e },
-              })
-            }
+            {...form.getInputProps("upvotes.qualifier")}
           />{" "}
           <NumberInput
             className="flex-1"
             min={0}
             classNames={mantineNumberClasses}
-            onChange={(e) =>
-              dispatch({
-                type: "UPDATE_FILTER",
-                filter: "upvotes",
-                payload: { value: Number(e) },
-              })
-            }
-            value={Number(filters.upvotes?.value || 0)}
+            {...form.getInputProps("upvotes.value")}
           />
         </div>
       </div>
@@ -60,26 +108,13 @@ const FilterSelections = ({
           <Select
             data={qualifiers}
             classNames={mantineSelectClasses}
-            onChange={(e) =>
-              dispatch({
-                type: "UPDATE_FILTER",
-                filter: "readingTime",
-                payload: { qualifier: e },
-              })
-            }
+            {...form.getInputProps("readingTime.qualifier")}
           />{" "}
           <NumberInput
             className="flex-1"
             min={0}
             classNames={mantineNumberClasses}
-            onChange={(e) =>
-              dispatch({
-                type: "UPDATE_FILTER",
-                filter: "readingTime",
-                payload: { value: Number(e) },
-              })
-            }
-            value={Number(filters.readingTime?.value || 0)}
+            {...form.getInputProps("readingTime.value")}
           />
         </div>
       </div>
@@ -91,34 +126,23 @@ const FilterSelections = ({
           className="mt-1"
           placeholder="Enter a comma separate list of keywords to search for"
           classNames={mantineInputClasses}
-          onChange={(e) =>
-            dispatch({ type: "KEYWORDS", payload: e.currentTarget.value })
-          }
-          defaultValue={filters.keywords}
+          {...form.getInputProps("keywords")}
         />
       </div>
 
       <Switch
         label="Series only"
-        onChange={(e) =>
-          dispatch({ type: "SERIES_ONLY", payload: e.currentTarget.checked })
-        }
         classNames={mantineSwitchStyles}
-        defaultChecked={filters.seriesOnly}
+        {...form.getInputProps("seriesOnly")}
       />
       <Switch
         label="Exclude series"
-        onChange={(e) =>
-          dispatch({ type: "EXCLUDE_SERIES", payload: e.currentTarget.checked })
-        }
         classNames={mantineSwitchStyles}
-        defaultChecked={filters.excludeSeries}
+        {...form.getInputProps("excludeSeries")}
       />
 
-      <Button type="button" onClick={() => setAppliedFilters(filters)}>
-        Apply filters
-      </Button>
-    </section>
+      <Button type="submit">Apply filters</Button>
+    </form>
   );
 };
 

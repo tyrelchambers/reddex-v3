@@ -112,3 +112,50 @@ export interface SelectValue {
 }
 
 export type GenerateTypes = "title" | "description" | "tags";
+
+export interface FilterState {
+  upvotes: Filter;
+  readingTime: Filter;
+  keywords: string | undefined;
+  seriesOnly: boolean;
+  excludeSeries: boolean;
+}
+
+export type FilterQualifier = "Over" | "Under" | "Equals";
+
+type Filter =
+  | {
+      qualifier: string | FilterQualifier;
+      value: number;
+    }
+  | {
+      qualifier?: string | FilterQualifier;
+      value: number;
+    }
+  | { qualifier: string | FilterQualifier | null; value?: number };
+
+export type FilterAction =
+  | {
+      type: "UPDATE_FILTER";
+      payload: Filter;
+      filter: "upvotes" | "readingTime";
+    }
+  | {
+      type: "KEYWORDS";
+      payload: string;
+    }
+  | {
+      type: "SERIES_ONLY";
+      payload: boolean;
+    }
+  | {
+      type: "EXCLUDE_SERIES";
+      payload: boolean;
+    }
+  | {
+      type: "REMOVE_FILTER";
+      payload: string;
+    }
+  | {
+      type: "RESET";
+    };

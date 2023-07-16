@@ -1,17 +1,17 @@
+"use client";
 import { Drawer, Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
 import { useDisclosure } from "@mantine/hooks";
-import { type FilterState, filterReducer } from "~/reducers/filterReducer";
 import { api } from "~/utils/api";
 import SubredditSearchItem from "~/components/SubredditSearchItem";
 import QueueBanner from "~/components/QueueBanner";
 import FilterSelections from "~/components/FilterSelections";
 import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
-import { PostFromReddit } from "~/types";
+import { FilterState, PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
 import {
   mantineDrawerClasses,
@@ -22,14 +22,20 @@ import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
-import { addLastSearchedOrUpdate } from "~/utils";
+import { addLastSearchedOrUpdate, parseQuery } from "~/utils";
 import { useSubscribed } from "~/hooks/useSubscribed";
+import { useRouter } from "next/router";
+import queryString from "query-string";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
 }
 
 const Search = () => {
+  const router = useRouter();
+  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
+    {}
+  );
   const [activePage, setPage] = useState(1);
   const session = useSession();
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
@@ -62,11 +68,6 @@ const Search = () => {
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
 
-  const [filters, dispatch] = useReducer(filterReducer, {} as FilterState);
-  const [appliedFilters, setAppliedFilters] = useState<FilterState | null>(
-    null
-  );
-
   const PAGINATION_LIMIT_PER_PAGE = 15;
   const PAGINATION_TOTAL_PAGES =
     filterPosts(
@@ -94,6 +95,11 @@ const Search = () => {
     };
   }, [subredditSearch.isSuccess]);
 
+  useEffect(() => {
+    const search = queryString.parse(window.location.search);
+    setAppliedFilters({ ...parseQuery(search) });
+  }, [router.query]);
+
   const searchHandler = (data: SearchHandlerProps) => {
     subredditSearch.mutate(data);
   };
@@ -103,9 +109,6 @@ const Search = () => {
     if (!filterClone) return;
 
     delete filterClone[filter.value as keyof FilterState];
-
-    setAppliedFilters(filterClone);
-    dispatch({ type: "REMOVE_FILTER", payload: filter.value });
   };
 
   return (
@@ -134,10 +137,7 @@ const Search = () => {
           <ActiveFilterList
             filters={appliedFilters}
             removeFilter={removeFilter}
-            reset={() => {
-              dispatch({ type: "RESET" });
-              setAppliedFilters(null);
-            }}
+            reset={() => null}
           />
 
           <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
@@ -196,11 +196,7 @@ const Search = () => {
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
-          <FilterSelections
-            filters={filters}
-            dispatch={dispatch}
-            setAppliedFilters={setAppliedFilters}
-          />
+          <FilterSelections filtersFromUrl={router.query} />
         </Modal>
 
         <Modal
@@ -240,7 +236,7 @@ const paginatedSlice = (
 };
 
 const filterPosts = (
-  filters: FilterState | null,
+  filters: Partial<FilterState> | null,
   posts: PostFromReddit[],
   profileReadingTime: number | undefined | null
 ) => {
@@ -252,6 +248,8 @@ const filterPosts = (
     const post = new FilterPosts(posts[index], filters);
     const acceptance: boolean[] = [];
     const element = posts[index];
+
+    if (element?.author.includes("[deleted]")) continue;
 
     const obj: {
       [k in keyof FilterState as string]: () => boolean | undefined | null;

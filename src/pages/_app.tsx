@@ -8,7 +8,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
 import { Poppins } from "next/font/google";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
@@ -18,6 +18,9 @@ import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
 import { useRouter } from "next/router";
 import { routes } from "~/routes";
+import { hasActiveSubscription } from "~/utils";
+import Link from "next/link";
+import { useBanner } from "~/hooks/useBanner";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -35,15 +38,29 @@ const MyApp: AppType<MyAppProps> = ({
   const { colorScheme } = useTheme();
   const userStore = useUserStore();
   const userQuery = api.user.me.useQuery();
-  const router = useRouter();
+  const activeSub = hasActiveSubscription(userStore.user);
+  const { hideBanner } = useBanner();
+
+  // const router = useRouter();
 
   useEffect(() => {
     if (userQuery.data) {
       userStore.setUser(userQuery.data);
     }
 
-    if (!userQuery.data?.email) {
-      router.push(routes.ACCOUNT_CHECK);
+    if (!activeSub) {
+      toast.warn(
+        <p>
+          Your subscription is inactive. Please go to your account and update
+          your details.
+        </p>,
+        {
+          autoClose: false,
+          toastId: "no-subscription",
+          position: "bottom-right",
+          className: "!rounded-xl",
+        }
+      );
     }
   }, [userQuery.data]);
 

@@ -119,7 +119,7 @@ const Header = ({ openDrawer }: Props) => {
               )}
             </div>
           )}
-          {router.asPath === routes.SEARCH && (
+          {!opened && (
             <button
               type="button"
               onClick={openDrawer}
@@ -147,7 +147,7 @@ const Header = ({ openDrawer }: Props) => {
               className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
             />
           </button>
-          {router.asPath === routes.SEARCH && !opened && (
+          {!opened && (
             <button
               type="button"
               onClick={openDrawer}
@@ -157,7 +157,7 @@ const Header = ({ openDrawer }: Props) => {
                 icon={faSearch}
                 className="mr-2 text-xs text-accent-foreground"
               />
-              <p className="text-sm text-accent-foreground">Search</p>
+              Search
             </button>
           )}
           <Burger

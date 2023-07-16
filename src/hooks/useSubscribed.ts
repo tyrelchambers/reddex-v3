@@ -11,14 +11,14 @@ export const useSubscribed = () => {
   const activeSub = hasActiveSubscription(userStore.user);
   const isOnAllowedRoute = routeWhitelist.includes(router.asPath);
 
-  useEffect(() => {
-    if (router.isReady && !activeSub && !isOnAllowedRoute) {
-      router.push(routes.SETTINGS_ACCOUNT);
-      toast.warn("You must be subscribed to continue", {
-        toastId: "not-subscribed",
-      });
-    }
-  }, [userStore.user, router.isReady]);
+  // useEffect(() => {
+  //   if (router.isReady && !activeSub && !isOnAllowedRoute) {
+  //     router.push(routes.SETTINGS_ACCOUNT);
+  //     toast.warn("You must be subscribed to continue", {
+  //       toastId: "not-subscribed",
+  //     });
+  //   }
+  // }, [userStore.user, router.isReady, router.asPath]);
 
   return {
     activeSub,

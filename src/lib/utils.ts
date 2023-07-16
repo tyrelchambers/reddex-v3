@@ -15,7 +15,7 @@ export const FilterPosts = class FilterClass {
   post: Partial<PostFromReddit> = {};
   filters: Partial<FilterState> = {};
 
-  constructor(post: PostFromReddit | undefined, filters: FilterState) {
+  constructor(post: PostFromReddit | undefined, filters: Partial<FilterState>) {
     if (post) {
       this.post = post;
     }

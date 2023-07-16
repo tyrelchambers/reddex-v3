@@ -1,11 +1,17 @@
 import { Account, RedditPost, User } from "@prisma/client";
 import { format } from "date-fns";
-import { FilterState } from "~/reducers/filterReducer";
 import { prisma } from "~/server/db";
 import { db } from "./dexie";
-import { FormattedMessagesList, RedditInboxMessage } from "~/types";
+import {
+  FilterState,
+  FormattedMessagesList,
+  RedditInboxMessage,
+} from "~/types";
 import { getAccessToken } from "./getTokens";
 import Stripe from "stripe";
+import queryString, { ParsedQuery } from "query-string";
+import { FormProps } from "~/components/FilterSelections";
+import { ParsedUrlQuery } from "querystring";
 
 export const addLastSearchedOrUpdate = async () => {
   const exists = await db.lastSearched.get(1);
@@ -17,7 +23,7 @@ export const addLastSearchedOrUpdate = async () => {
   await db.lastSearched.update(1, { time: new Date(Date.now()) });
 };
 
-export const activeFilters = (filters: FilterState | null) => {
+export const activeFilters = (filters: Partial<FilterState> | null) => {
   if (!filters) return [];
 
   const active = [];
@@ -129,4 +135,59 @@ export const hasActiveSubscription = (
     return false;
 
   return true;
+};
+
+export const isFilter = (value: any): value is TFilter => {
+  if (typeof value !== "object") return false;
+
+  if (!("qualifier" in value) && !("value" in value)) return false;
+
+  return true;
+};
+
+export const buildParams = (appliedFilters: FormProps) => {
+  const flattenedFilters = () => {
+    const filters: Partial<FormProps> = {};
+
+    let key: keyof FilterState;
+    for (key in appliedFilters) {
+      const value = appliedFilters[key];
+
+      if (
+        value &&
+        typeof value === "object" &&
+        value.value !== undefined &&
+        value.value !== 0
+      ) {
+        filters[key] = Object.values(value);
+      } else if (value && typeof value !== "object") {
+        filters[key] = value;
+      }
+    }
+
+    return queryString.stringify(filters, {
+      arrayFormat: "comma",
+    });
+  };
+
+  return flattenedFilters();
+};
+
+export const parseQuery = (query: ParsedQuery) => {
+  const parsed: Partial<FilterState> = {};
+
+  for (const key in query) {
+    const value = query[key];
+
+    if (value?.includes(",")) {
+      parsed[key] = {
+        qualifier: value.split(",")[0],
+        value: value.split(",")[1],
+      };
+    } else {
+      parsed[key] = value;
+    }
+  }
+
+  return parsed;
 };

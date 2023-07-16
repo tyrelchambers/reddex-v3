@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge } from "@mantine/core";
 import React from "react";
 import { mantineBadgeClasses } from "~/lib/styles";
-import { FilterState } from "~/reducers/filterReducer";
 import { Button } from "./ui/button";
 import { activeFilters } from "~/utils";
+import { FilterState } from "~/types";
 
 interface Props {
-  filters: FilterState | null;
+  filters: Partial<FilterState> | null;
   removeFilter: (filter: { label: string; value: string }) => void;
   reset: () => void;
 }
@@ -20,7 +20,7 @@ const ActiveFilterList = ({ filters, removeFilter, reset }: Props) => {
           {activeFilters(filters).map((filter) => (
             <li
               key={filter.label}
-              className="flex w-fit cursor-pointer items-center gap-2 rounded-full border-[1px] border-border p-1"
+              className="flex w-fit cursor-pointer items-center gap-2  p-1"
               onClick={() => removeFilter(filter)}
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card p-1 text-card-foreground">

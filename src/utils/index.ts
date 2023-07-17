@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { prisma } from "~/server/db";
 import { db } from "./dexie";
 import {
+  Filter,
   FilterState,
   FormattedMessagesList,
   RedditInboxMessage,
@@ -137,7 +138,7 @@ export const hasActiveSubscription = (
   return true;
 };
 
-export const isFilter = (value: any): value is TFilter => {
+export const isFilterWithQualifier = (value: any): value is Filter => {
   if (typeof value !== "object") return false;
 
   if (!("qualifier" in value) && !("value" in value)) return false;
@@ -145,44 +146,49 @@ export const isFilter = (value: any): value is TFilter => {
   return true;
 };
 
-export const buildParams = (appliedFilters: FormProps) => {
+export const buildParams = <
+  T extends Partial<FilterState> | Partial<FormProps>
+>(
+  appliedFilters: T
+) => {
   const flattenedFilters = () => {
-    const filters: Partial<FormProps> = {};
+    const filters: Partial<T> = {};
 
-    let key: keyof FilterState;
-    for (key in appliedFilters) {
-      const value = appliedFilters[key];
+    for (const key in appliedFilters) {
+      const element = appliedFilters[key];
 
       if (
-        value &&
-        typeof value === "object" &&
-        value.value !== undefined &&
-        value.value !== 0
+        element &&
+        typeof element === "object" &&
+        element.value !== undefined &&
+        element.value !== 0
       ) {
-        filters[key] = Object.values(value);
-      } else if (value && typeof value !== "object") {
-        filters[key] = value;
+        filters[key] = Object.values(element);
+      } else if (element && typeof element !== "object") {
+        filters[key] = element;
       }
     }
 
-    return queryString.stringify(filters, {
-      arrayFormat: "comma",
-    });
+    return filters;
   };
 
-  return flattenedFilters();
+  return queryString.stringify(flattenedFilters(), {
+    arrayFormat: "comma",
+  });
 };
 
 export const parseQuery = (query: ParsedQuery) => {
-  const parsed: Partial<FilterState> = {};
+  const parsed: Partial<FilterState> & {
+    [key: string]: FilterState[keyof FilterState];
+  } = {};
 
   for (const key in query) {
-    const value = query[key];
+    const value = query[key] as string;
 
     if (value?.includes(",")) {
       parsed[key] = {
-        qualifier: value.split(",")[0],
-        value: value.split(",")[1],
+        qualifier: value.split(",")[0] || null,
+        value: Number(value.split(",")[1]) || undefined,
       };
     } else {
       parsed[key] = value;

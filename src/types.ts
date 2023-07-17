@@ -123,7 +123,7 @@ export interface FilterState {
 
 export type FilterQualifier = "Over" | "Under" | "Equals";
 
-type Filter =
+export type Filter =
   | {
       qualifier: string | FilterQualifier;
       value: number;

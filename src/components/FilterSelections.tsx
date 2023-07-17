@@ -7,14 +7,13 @@ import {
   mantineSwitchStyles,
 } from "~/lib/styles";
 import { Button } from "./ui/button";
-import { buildParams, parseQuery } from "~/utils";
+import { buildParams } from "~/utils";
 import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
-import { ParsedQuery } from "query-string";
 import { FilterState } from "~/types";
 
 interface FilterSelectionProps {
-  filters: Partial<FilterState>;
+  filters: Partial<FilterState> | null;
 }
 
 export interface FormProps {
@@ -50,19 +49,21 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
   });
 
   useEffect(() => {
-    form.setValues({
-      upvotes: {
-        qualifier: filters.upvotes?.qualifier || "Over",
-        value: Number(filters.upvotes?.value) || undefined,
-      },
-      readingTime: {
-        qualifier: filters.readingTime?.qualifier || "Over",
-        value: Number(filters.readingTime?.value) || undefined,
-      },
-      excludeSeries: Boolean(filters.excludeSeries),
-      keywords: filters.keywords,
-      seriesOnly: Boolean(filters.seriesOnly),
-    });
+    if (filters) {
+      form.setValues({
+        upvotes: {
+          qualifier: filters.upvotes?.qualifier || "Over",
+          value: Number(filters.upvotes?.value) || undefined,
+        },
+        readingTime: {
+          qualifier: filters.readingTime?.qualifier || "Over",
+          value: Number(filters.readingTime?.value) || undefined,
+        },
+        excludeSeries: Boolean(filters.excludeSeries),
+        keywords: filters.keywords,
+        seriesOnly: Boolean(filters.seriesOnly),
+      });
+    }
   }, [filters]);
 
   const qualifiers = ["Over", "Under", "Equals"];
@@ -74,7 +75,7 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
   const updateFilterValueFromUrl = async (appliedFilters: FormProps | null) => {
     if (!appliedFilters) return;
 
-    const query = buildParams(appliedFilters);
+    const query = buildParams<Partial<FormProps>>(appliedFilters);
 
     await router.replace(router.asPath, {
       query,

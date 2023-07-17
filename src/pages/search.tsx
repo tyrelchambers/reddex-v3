@@ -1,7 +1,7 @@
 "use client";
 import { Drawer, Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
 import { useDisclosure } from "@mantine/hooks";
@@ -22,7 +22,7 @@ import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
-import { addLastSearchedOrUpdate, parseQuery } from "~/utils";
+import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
 import { useSubscribed } from "~/hooks/useSubscribed";
 import { useRouter } from "next/router";
 import queryString from "query-string";
@@ -33,9 +33,8 @@ interface SearchHandlerProps {
 
 const Search = () => {
   const router = useRouter();
-  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
-    {}
-  );
+  const [appliedFilters, setAppliedFilters] =
+    useState<Partial<FilterState> | null>(null);
   const [activePage, setPage] = useState(1);
   const session = useSession();
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
@@ -109,6 +108,14 @@ const Search = () => {
     if (!filterClone) return;
 
     delete filterClone[filter.value as keyof FilterState];
+
+    const query = buildParams<Partial<FilterState>>(filterClone);
+    router.replace(router.asPath, { query });
+  };
+
+  const resetFilters = () => {
+    setAppliedFilters({});
+    router.replace(router.asPath, { query: {} });
   };
 
   return (
@@ -137,7 +144,7 @@ const Search = () => {
           <ActiveFilterList
             filters={appliedFilters}
             removeFilter={removeFilter}
-            reset={() => null}
+            reset={resetFilters}
           />
 
           <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
@@ -245,9 +252,12 @@ const filterPosts = (
   const newArray: PostFromReddit[] = [];
 
   for (let index = 0; index < posts.length; index++) {
-    const post = new FilterPosts(posts[index], filters);
-    const acceptance: boolean[] = [];
     const element = posts[index];
+
+    if (!element) continue;
+
+    const post = new FilterPosts(element, filters);
+    const acceptance: boolean[] = [];
 
     if (element?.author.includes("[deleted]")) continue;
 

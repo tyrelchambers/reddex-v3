@@ -65,14 +65,12 @@ export const inboxRouter = createTRPCRouter({
       body.set("text", input.message);
       body.set("return_rtjson", "true");
 
-      await axios
-        .post(url, body, {
-          headers: {
-            Authorization: `bearer ${accessToken}`,
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        })
-        .catch(console.log);
+      await axios.post(url, body, {
+        headers: {
+          Authorization: `bearer ${accessToken}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
     }),
   search: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const query = input.toLowerCase();

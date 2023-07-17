@@ -1,7 +1,6 @@
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { FilterState } from "~/reducers/filterReducer";
-import { PostFromReddit } from "~/types";
+import { FilterState, PostFromReddit } from "~/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,34 +11,33 @@ export const calculateReadingTime = (text: string, time: number) => {
 };
 
 export const FilterPosts = class FilterClass {
-  post: Partial<PostFromReddit> = {};
+  post: PostFromReddit;
   filters: Partial<FilterState> = {};
 
-  constructor(post: PostFromReddit | undefined, filters: Partial<FilterState>) {
-    if (post) {
-      this.post = post;
-    }
+  constructor(post: PostFromReddit, filters: Partial<FilterState>) {
+    this.post = post;
+
     this.filters = filters;
   }
 
   upvotes() {
-    if (!this.post.ups) return null;
-
-    if (
-      this.filters.upvotes?.value &&
-      this.filters.upvotes.qualifier === "Over"
-    ) {
-      return this.post.ups >= this.filters.upvotes.value;
-    } else if (
-      this.filters.upvotes?.value &&
-      this.filters.upvotes.qualifier === "Under"
-    ) {
-      return this.post.ups <= this.filters.upvotes.value;
-    } else if (
-      this.filters.upvotes?.value &&
-      this.filters.upvotes.qualifier === "Equals"
-    ) {
-      return this.post.ups === this.filters.upvotes.value;
+    if (this.filters.upvotes) {
+      if (
+        this.filters.upvotes?.value &&
+        this.filters.upvotes.qualifier === "Over"
+      ) {
+        return this.post.ups >= this.filters.upvotes.value;
+      } else if (
+        this.filters.upvotes?.value &&
+        this.filters.upvotes.qualifier === "Under"
+      ) {
+        return this.post.ups <= this.filters.upvotes.value;
+      } else if (
+        this.filters.upvotes?.value &&
+        this.filters.upvotes.qualifier === "Equals"
+      ) {
+        return this.post.ups === this.filters.upvotes.value;
+      }
     }
   }
 

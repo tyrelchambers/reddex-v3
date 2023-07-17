@@ -38,29 +38,26 @@ const MyApp: AppType<MyAppProps> = ({
   const { colorScheme } = useTheme();
   const userStore = useUserStore();
   const userQuery = api.user.me.useQuery();
-  const activeSub = hasActiveSubscription(userStore.user);
-  const { hideBanner } = useBanner();
-
-  // const router = useRouter();
 
   useEffect(() => {
     if (userQuery.data) {
+      const activeSub = hasActiveSubscription(userQuery.data);
       userStore.setUser(userQuery.data);
-    }
 
-    if (!activeSub) {
-      toast.warn(
-        <p>
-          Your subscription is inactive. Please go to your account and update
-          your details.
-        </p>,
-        {
-          autoClose: false,
-          toastId: "no-subscription",
-          position: "bottom-right",
-          className: "!rounded-xl",
-        }
-      );
+      if (!activeSub) {
+        toast.warn(
+          <p>
+            Your subscription is inactive. Please go to your account and update
+            your details.
+          </p>,
+          {
+            autoClose: false,
+            toastId: "no-subscription",
+            position: "bottom-right",
+            className: "!rounded-xl",
+          }
+        );
+      }
     }
   }, [userQuery.data]);
 

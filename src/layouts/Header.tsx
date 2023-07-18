@@ -9,14 +9,11 @@ import UserMenu from "./UserMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSearch, faSun } from "@fortawesome/pro-solid-svg-icons";
 import { useTheme } from "~/hooks/useTheme";
-import { Burger, Tooltip, clsx } from "@mantine/core";
+import { Burger, clsx } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";
 import { User } from "@prisma/client";
-import { useRouter } from "next/router";
-import { useSubscribed } from "~/hooks/useSubscribed";
-import { faWarning } from "@fortawesome/pro-light-svg-icons";
 
 const _routes = [
   {
@@ -35,12 +32,10 @@ interface Props {
 }
 
 const Header = ({ openDrawer }: Props) => {
-  const router = useRouter();
   const session = useSession();
   const { isDark, toggleTheme } = useTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const { width } = useViewportSize();
-  const { activeSub } = useSubscribed();
   const label = opened ? "Close navigation" : "Open navigation";
 
   useEffect(() => {
@@ -87,17 +82,6 @@ const Header = ({ openDrawer }: Props) => {
 
       {width > breakpoints.tablet && (
         <div className="flex items-center gap-6">
-          {!activeSub && (
-            <div>
-              <Tooltip
-                closeDelay={500}
-                label="Your subscription isn't active. Please renew your
-                    subscription in your account settings"
-              >
-                <FontAwesomeIcon icon={faWarning} className="text-warning" />
-              </Tooltip>
-            </div>
-          )}
           <button
             type="button"
             onClick={toggleTheme}

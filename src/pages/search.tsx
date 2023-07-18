@@ -100,6 +100,8 @@ const Search = () => {
   }, [router.query]);
 
   const searchHandler = (data: SearchHandlerProps) => {
+    if (!data.subreddit) return;
+
     subredditSearch.mutate(data);
   };
 

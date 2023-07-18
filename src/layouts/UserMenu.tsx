@@ -2,12 +2,15 @@ import { Menu } from "@mantine/core";
 import React from "react";
 import Link from "next/link";
 import { routes } from "~/routes";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 
 const UserMenu = () => {
-  const userQuery = api.user.me.useQuery();
+  const session = useSession();
+  const userQuery = api.user.me.useQuery(undefined, {
+    enabled: session.status === "authenticated",
+  });
   const user = userQuery.data;
   const router = useRouter();
   const logoutHandler = () => {

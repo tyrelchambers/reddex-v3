@@ -16,11 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
-import { useRouter } from "next/router";
-import { routes } from "~/routes";
 import { hasActiveSubscription } from "~/utils";
-import Link from "next/link";
-import { useBanner } from "~/hooks/useBanner";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -37,7 +33,9 @@ const MyApp: AppType<MyAppProps> = ({
 }) => {
   const { colorScheme } = useTheme();
   const userStore = useUserStore();
-  const userQuery = api.user.me.useQuery();
+  const userQuery = api.user.me.useQuery(undefined, {
+    retry: false,
+  });
 
   useEffect(() => {
     if (userQuery.data) {

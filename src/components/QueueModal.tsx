@@ -7,6 +7,7 @@ import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
+import { useSession } from "next-auth/react";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
@@ -18,7 +19,10 @@ interface Props {
 }
 
 const QueueModal = ({ close }: Props) => {
-  const userQuery = api.user.me.useQuery();
+  const session = useSession();
+  const userQuery = api.user.me.useQuery(undefined, {
+    enabled: session.status === "authenticated",
+  });
   const queueStore = useQueueStore();
   const currentPost = queueStore.queue[0];
   const apiContext = api.useContext();

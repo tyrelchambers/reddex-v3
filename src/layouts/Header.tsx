@@ -84,6 +84,19 @@ const Header = ({ openDrawer }: Props) => {
 
       {width > breakpoints.tablet && (
         <div className="flex items-center gap-6">
+          {router.pathname === routes.SEARCH && !opened && (
+            <button
+              type="button"
+              onClick={openDrawer}
+              className="flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
+            >
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="mr-2 text-xs text-accent-foreground"
+              />
+              <p className="text-sm text-accent-foreground">Search</p>
+            </button>
+          )}
           <button
             type="button"
             onClick={toggleTheme}
@@ -104,19 +117,6 @@ const Header = ({ openDrawer }: Props) => {
                 </Link>
               )}
             </div>
-          )}
-          {router.pathname === routes.SEARCH && !opened && (
-            <button
-              type="button"
-              onClick={openDrawer}
-              className="flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
-            >
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="mr-2 text-xs text-accent-foreground"
-              />
-              <p className="text-sm text-accent-foreground">Search</p>
-            </button>
           )}
         </div>
       )}

@@ -15,6 +15,7 @@ import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";
 import { User } from "@prisma/client";
 import { useRouter } from "next/router";
+import { Button } from "~/components/ui/button";
 
 const _routes = [
   {
@@ -84,19 +85,6 @@ const Header = ({ openDrawer }: Props) => {
 
       {width > breakpoints.tablet && (
         <div className="flex items-center gap-6">
-          {router.pathname === routes.SEARCH && !opened && (
-            <button
-              type="button"
-              onClick={openDrawer}
-              className="flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
-            >
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="mr-2 text-xs text-accent-foreground"
-              />
-              <p className="text-sm text-accent-foreground">Search</p>
-            </button>
-          )}
           <button
             type="button"
             onClick={toggleTheme}
@@ -112,11 +100,23 @@ const Header = ({ openDrawer }: Props) => {
               {session.status === "authenticated" ? (
                 <UserMenu />
               ) : (
-                <Link href={routes.LOGIN} className="button main">
-                  Get Started
+                <Link href={routes.LOGIN}>
+                  <Button variant="outline" size="sm">
+                    Get Started
+                  </Button>
                 </Link>
               )}
             </div>
+          )}
+
+          {router.pathname === routes.SEARCH && !opened && (
+            <Button type="button" size="sm" onClick={openDrawer}>
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="mr-2 text-xs text-accent-foreground"
+              />
+              <p className="text-sm text-accent-foreground">Search</p>
+            </Button>
           )}
         </div>
       )}

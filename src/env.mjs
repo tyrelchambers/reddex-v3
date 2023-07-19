@@ -33,6 +33,9 @@ const server = z.object({
   STRIPE_WEBHOOK_SECRET: z.string(),
   OPEN_AI_KEY: z.string(),
   OPEN_AI_ORG: z.string(),
+  SENDGRID_API_KEY: z.string(),
+  IBM_API_KEY: z.string(),
+  IBM_URL: z.string(),
 });
 
 /**
@@ -70,6 +73,9 @@ const processEnv = {
   NEXT_URL: process.env.NEXT_URL,
   OPEN_AI_KEY: process.env.OPEN_AI_KEY,
   OPEN_AI_ORG: process.env.OPEN_AI_ORG,
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+  IBM_API_KEY: process.env.IBM_API_KEY,
+  IBM_URL: process.env.IBM_URL,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

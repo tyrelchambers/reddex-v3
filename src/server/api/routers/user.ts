@@ -4,6 +4,8 @@ import { stripeClient } from "~/utils/stripe";
 import { z } from "zod";
 import { saveProfileSchema } from "~/server/schemas";
 import Stripe from "stripe";
+import { sendEmail } from "~/utils/sendgrid";
+import { emailTemplates } from "~/constants";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -49,23 +51,35 @@ export const userRouter = createTRPCRouter({
     .input(saveProfileSchema)
     .mutation(async ({ ctx, input }) => {
       if (!input.email) throw new Error("No email provided.");
-      const user = await prisma.user.update({
-        where: {
-          id: ctx.session.user.id,
-        },
-        data: {
-          email: input.email,
 
-          Profile: {
-            update: {
-              words_per_minute: input.words_per_minute,
-              greeting: input.greeting,
-              recurring: input.recurring,
+      try {
+        const user = await prisma.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            email: input.email,
+
+            Profile: {
+              update: {
+                words_per_minute: input.words_per_minute,
+                greeting: input.greeting,
+                recurring: input.recurring,
+              },
             },
           },
-        },
-      });
-      return user;
+        });
+
+        sendEmail({
+          to: input.email,
+          subject: "Your email has been changed",
+          template: "confirmEmail",
+        });
+
+        return user;
+      } catch (error) {
+        throw error;
+      }
     }),
   contactedWriters: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.contactedWriters.findMany({

@@ -19,6 +19,7 @@ interface Props {
 const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
   useSubscribed();
   const { width } = useViewportSize();
+
   return (
     <>
       <Header />

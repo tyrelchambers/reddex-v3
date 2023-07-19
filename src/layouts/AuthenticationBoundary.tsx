@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { routes } from "~/routes";
 
 interface Props {
@@ -8,19 +8,23 @@ interface Props {
 }
 
 const AuthenticationBoundary = ({ children }: Props) => {
+  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 
   const { status } = useSession();
 
-  if (status !== "loading" && status === "unauthenticated") {
-    router.push(routes.LOGIN);
-  }
+  useEffect(() => {
+    if (status !== "loading" && status === "unauthenticated") {
+      router.push(routes.LOGIN);
+    }
+    if (status !== "loading" && status === "authenticated") {
+      setLoading(false);
+    }
+  }, []);
 
-  if (status !== "loading" && status === "authenticated") {
-    return children;
-  }
+  console.log(status);
 
-  return null;
+  return loading ? null : children;
 };
 
 export default AuthenticationBoundary;

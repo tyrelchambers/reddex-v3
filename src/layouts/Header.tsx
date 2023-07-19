@@ -14,6 +14,7 @@ import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";
 import { User } from "@prisma/client";
+import { useRouter } from "next/router";
 
 const _routes = [
   {
@@ -36,6 +37,7 @@ const Header = ({ openDrawer }: Props) => {
   const { isDark, toggleTheme } = useTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const { width } = useViewportSize();
+  const router = useRouter();
   const label = opened ? "Close navigation" : "Open navigation";
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const Header = ({ openDrawer }: Props) => {
               )}
             </div>
           )}
-          {!opened && (
+          {router.pathname === routes.SEARCH && !opened && (
             <button
               type="button"
               onClick={openDrawer}

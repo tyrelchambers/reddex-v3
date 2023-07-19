@@ -20,9 +20,7 @@ const AuthenticationBoundary = ({ children }: Props) => {
     if (status !== "loading" && status === "authenticated") {
       setLoading(false);
     }
-  }, []);
-
-  console.log(status);
+  }, [status]);
 
   return loading ? null : children;
 };

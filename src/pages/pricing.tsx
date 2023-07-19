@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@mantine/hooks";
+import { useSessionStorage } from "@mantine/hooks";
 import Link from "next/link";
 import React from "react";
 import PricingFrequencySelect from "~/components/PricingFrequencySelect";
@@ -10,7 +10,7 @@ const Pricing = () => {
   const [frequency, setFrequency] = React.useState<"yearly" | "monthly">(
     "yearly"
   );
-  const [, setValue] = useLocalStorage({
+  const [, setValue] = useSessionStorage({
     key: "selected-plan",
   });
 

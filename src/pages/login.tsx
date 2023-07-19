@@ -14,7 +14,7 @@ import { Divider, List } from "@mantine/core";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import PricingChip from "~/components/PricingChip";
 import PricingFrequencySelect from "~/components/PricingFrequencySelect";
-import { useLocalStorage } from "@mantine/hooks";
+import { useSessionStorage } from "@mantine/hooks";
 
 interface Props {
   providers: ClientSafeProvider[];
@@ -30,12 +30,14 @@ const Login = ({ providers }: Props) => {
   const [selectedFrequency, setSelectedFrequency] = React.useState<
     "yearly" | "monthly"
   >("yearly");
-  const [selectedPlan, setSelectedPlan] = useLocalStorage({
+  const [selectedPlan, setSelectedPlan] = useSessionStorage({
     key: "selected-plan",
   });
 
   const router = useRouter();
   const plan = (router.query.plan as string | undefined) || selectedPlan;
+
+  console.log(plan);
 
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
     await signIn(p.id, {

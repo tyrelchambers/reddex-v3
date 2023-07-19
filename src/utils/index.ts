@@ -1,6 +1,5 @@
-import { Account, RedditPost, User } from "@prisma/client";
+import { RedditPost, User } from "@prisma/client";
 import { format } from "date-fns";
-import { prisma } from "~/server/db";
 import { db } from "./dexie";
 import {
   Filter,
@@ -8,11 +7,9 @@ import {
   FormattedMessagesList,
   RedditInboxMessage,
 } from "~/types";
-import { getAccessToken } from "./getTokens";
 import Stripe from "stripe";
 import queryString, { ParsedQuery } from "query-string";
 import { FormProps } from "~/components/FilterSelections";
-import { ParsedUrlQuery } from "querystring";
 
 export const addLastSearchedOrUpdate = async () => {
   const exists = await db.lastSearched.get(1);

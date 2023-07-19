@@ -28,7 +28,7 @@ const UserMenu = () => {
       width={200}
       classNames={{
         dropdown: "bg-background border-border",
-        item: "hover:bg-card-foreground/20 text-foreground",
+        item: "hover:bg-card-foreground/10 text-foreground",
       }}
     >
       <Menu.Target>

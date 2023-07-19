@@ -13,7 +13,7 @@ const StatusBanner = ({ type = "primary", title, subtitle, action }: Props) => {
       <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-accent p-4 shadow-lg">
         <div className="flex flex-col">
           <p className="text-accent-foreground">{title}</p>
-          <p className="text-sm font-thin text-foreground">{subtitle}</p>
+          <p className="text-sm font-thin text-accent-foreground">{subtitle}</p>
         </div>
 
         {action}

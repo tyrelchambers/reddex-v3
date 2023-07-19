@@ -36,6 +36,7 @@ const server = z.object({
   SENDGRID_API_KEY: z.string(),
   IBM_API_KEY: z.string(),
   IBM_URL: z.string(),
+  NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
 /**
@@ -76,7 +77,7 @@ const processEnv = {
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   IBM_API_KEY: process.env.IBM_API_KEY,
   IBM_URL: process.env.IBM_URL,
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
 };
 
 // Don't touch the part below

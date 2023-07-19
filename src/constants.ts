@@ -1,3 +1,5 @@
+import { env } from "./env.mjs";
+
 export interface Plan {
   name: string;
   desc: string;
@@ -12,10 +14,32 @@ export interface Plan {
   isMostPop: boolean;
   features: string[];
 }
-export const plans = [
-  {
-    name: "Pro",
-    desc: "You want organization with a custom website and to receive submissions",
+
+const testPrices = {
+  pro: {
+    monthly: {
+      price: 20,
+      productId: "price_1NVdCwI8C7KcVoSyV9DX54pu",
+    },
+    yearly: {
+      price: 200,
+      productId: "price_1NVdCeI8C7KcVoSypm1bJDsd",
+    },
+  },
+  basic: {
+    monthly: {
+      price: 15,
+      productId: "price_1NVdDlI8C7KcVoSyl5pPerfx",
+    },
+    yearly: {
+      price: 150,
+      productId: "price_1NVdDeI8C7KcVoSy03ZN2GGT",
+    },
+  },
+};
+
+const livePrices = {
+  pro: {
     monthly: {
       price: 20,
       productId: "price_1KHc14I8C7KcVoSyCHwBi3aX",
@@ -24,6 +48,26 @@ export const plans = [
       price: 200,
       productId: "price_1NQejQI8C7KcVoSyAeORTi6T",
     },
+  },
+  basic: {
+    monthly: {
+      price: 15,
+      productId: "price_1K64RzI8C7KcVoSyJ6MjuR8i",
+    },
+    yearly: {
+      price: 150,
+      productId: "price_1K64eWI8C7KcVoSyvxqt7X0y",
+    },
+  },
+};
+
+export const plans = [
+  {
+    name: "Pro",
+    desc: "You want organization with a custom website and to receive submissions",
+    ...(env.NEXT_PUBLIC_NODE_ENV === "production"
+      ? livePrices.pro
+      : testPrices.pro),
     isMostPop: true,
     features: [
       "Customize your reading list",
@@ -39,14 +83,9 @@ export const plans = [
   {
     name: "Basic",
     desc: "You want organization from stories to contacts, but don't need a custom website",
-    monthly: {
-      price: 15,
-      productId: "price_1K64RzI8C7KcVoSyJ6MjuR8i",
-    },
-    yearly: {
-      price: 150,
-      productId: "price_1K64eWI8C7KcVoSyvxqt7X0y",
-    },
+    ...(env.NEXT_PUBLIC_NODE_ENV === "production"
+      ? livePrices.basic
+      : testPrices.basic),
     isMostPop: false,
     features: [
       "Customize your reading list",

@@ -1,6 +1,6 @@
 import { TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useLocalStorage } from "@mantine/hooks";
+import { useLocalStorage, useSessionStorage } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { FormEvent } from "react";
@@ -18,7 +18,7 @@ const AccountSetup = () => {
   const updateUser = api.user.saveProfile.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
   const paymentLink = api.stripe.createCheckout.useMutation();
-  const [selectedPlan] = useLocalStorage({
+  const [selectedPlan] = useSessionStorage({
     key: "selected-plan",
   });
 
@@ -69,7 +69,7 @@ const AccountSetup = () => {
 
     if (link) {
       window.open(link, "_self", "rel=noopener,noreferrer");
-      window.localStorage.removeItem("selected-plan");
+      window.sessionStorage.removeItem("selected-plan");
     }
 
     setLoading(false);

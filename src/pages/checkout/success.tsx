@@ -9,9 +9,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { routes } from "~/routes";
+import { formatCurrency, formatStripeTime } from "~/utils";
 import { api } from "~/utils/api";
-import { formatCurrency } from "~/utils/formatCurrency";
-import { formatStripeTime } from "~/utils/formatStripeTime";
 
 const Success = () => {
   const router = useRouter();

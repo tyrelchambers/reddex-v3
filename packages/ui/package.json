@@ -1,0 +1,21 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tsconfig": "*",
+    "eslint-config-custom": "*",
+    "react": "^18.2.0",
+    "@radix-ui/react-select": "^1.2.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.6.0",
+    "clsx": "^1.2.1"
+  }
+}

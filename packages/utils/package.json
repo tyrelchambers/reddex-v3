@@ -1,0 +1,8 @@
+{
+  "name": "utils",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "ui": "*"
+  }
+}

@@ -7,6 +7,7 @@ import React, { FormEvent } from "react";
 import { Button } from "~/components/ui/button";
 import { mantineInputClasses } from "~/lib/styles";
 import { routes } from "~/routes";
+import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
 
 const AccountSetup = () => {
@@ -17,10 +18,6 @@ const AccountSetup = () => {
   });
   const updateUser = api.user.saveProfile.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
-  const paymentLink = api.stripe.createCheckout.useMutation();
-  const [selectedPlan] = useSessionStorage({
-    key: "selected-plan",
-  });
 
   const router = useRouter();
   const user = userQuery.data;
@@ -61,18 +58,9 @@ const AccountSetup = () => {
 
     const customerId = await createCustomer.mutateAsync(form.values.email);
 
-    const link = await paymentLink.mutateAsync({
-      customerEmail: form.values.email,
-      plan: selectedPlan,
-      customerId: customerId,
-    });
+    if (!customerId) throw new Error("Missing customer ID");
 
-    if (link) {
-      window.open(link, "_self", "rel=noopener,noreferrer");
-      window.sessionStorage.removeItem("selected-plan");
-    }
-
-    setLoading(false);
+    router.push(routes.CREATE_SUBSCRIPTION);
   };
 
   return (

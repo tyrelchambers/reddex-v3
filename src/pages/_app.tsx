@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
 import { hasActiveSubscription } from "~/utils";
+import SubscriptionBoundary from "~/layouts/SubscriptionBoundary";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -77,9 +78,11 @@ const MyApp: AppType<MyAppProps> = ({
         }}
         withCSSVariables
       >
-        <main className={font.className}>
-          <Component {...pageProps} />
-        </main>
+        <SubscriptionBoundary>
+          <main className={font.className}>
+            <Component {...pageProps} />
+          </main>
+        </SubscriptionBoundary>
       </MantineProvider>
       <ToastContainer
         position="top-right"

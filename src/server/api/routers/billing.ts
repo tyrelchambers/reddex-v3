@@ -14,9 +14,9 @@ interface BillingInfo {
 export const billingRouter = createTRPCRouter({
   createCustomer: protectedProcedure
     .input(z.string())
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       try {
-        const existingCustomer = await stripeClient.customers
+        const existingStripeCustomer = await stripeClient.customers
           .search({
             query: `email:\'${input}\'`,
             limit: 1,
@@ -24,15 +24,34 @@ export const billingRouter = createTRPCRouter({
           .then((res) => res.data[0])
           .catch(() => null);
 
-        if (existingCustomer) {
-          return existingCustomer.id;
-        }
-
-        const customer = await stripeClient.customers.create({
-          email: input,
+        const user = await prisma.user.findFirst({
+          where: {
+            id: ctx.session.user.id,
+          },
         });
 
-        return customer.id;
+        if (existingStripeCustomer && user?.customerId) {
+          return existingStripeCustomer.id;
+        }
+
+        if (!user?.customerId) {
+          const customer = existingStripeCustomer
+            ? existingStripeCustomer
+            : await stripeClient.customers.create({
+                email: input,
+              });
+
+          await prisma.user.update({
+            where: {
+              id: ctx.session.user.id,
+            },
+            data: {
+              customerId: customer.id,
+            },
+          });
+
+          return customer.id;
+        }
       } catch (error) {
         console.log(error);
         throw error;

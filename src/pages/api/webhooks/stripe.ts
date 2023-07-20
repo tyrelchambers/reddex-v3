@@ -33,6 +33,28 @@ export default async function handler(
   }
 
   if (eventType === "checkout.session.completed") {
+    const { customer, subscription, id, metadata } =
+      data.object as Stripe.Checkout.Session;
+
+    const userId = metadata?.userId;
+
+    const line_items = await stripeClient.checkout.sessions.listLineItems(id);
+
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!line_items?.data[0]?.price?.id) {
+      return res.send(400);
+    }
+
+    if (!user) {
+      console.log(`⚠️  User not found.`);
+      return res.send(400);
+    }
+
     console.log(`🔔  Payment received!`);
   }
 

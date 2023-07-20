@@ -70,11 +70,11 @@ export const userRouter = createTRPCRouter({
           },
         });
 
-        sendEmail({
-          to: input.email,
-          subject: "Your email has been changed",
-          template: "confirmEmail",
-        });
+        // sendEmail({
+        //   to: input.email,
+        //   subject: "Your email has been changed",
+        //   template: "confirmEmail",
+        // });
 
         return user;
       } catch (error) {

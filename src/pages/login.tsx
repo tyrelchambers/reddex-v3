@@ -41,7 +41,8 @@ const Login = ({ providers }: Props) => {
 
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
     await signIn(p.id, {
-      callbackUrl: routes.ACCOUNT_CHECK + "?redirectTo=" + routes.HOME,
+      callbackUrl:
+        routes.ACCOUNT_CHECK + "?redirectTo=" + routes.CREATE_SUBSCRIPTION,
     });
   };
 

@@ -36,6 +36,7 @@ export const routes = {
   SETTINGS_ACCOUNT: "/dashboard/settings/account",
   SEARCH: "/search",
   STUDIO: "/dashboard/studio",
+  CREATE_SUBSCRIPTION: "/create-subscription",
 };
 
 export const dashNavRoutes = [

@@ -188,7 +188,13 @@ export const parseQuery = (query: ParsedQuery) => {
         value: Number(value.split(",")[1]) || undefined,
       };
     } else {
-      parsed[key] = value;
+      if (value === "true") {
+        parsed[key] = true;
+      } else if (value === "false") {
+        parsed[key] = false;
+      } else {
+        parsed[key] = value;
+      }
     }
   }
 

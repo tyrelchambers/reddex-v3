@@ -216,7 +216,7 @@ describe("activeFilters", () => {
 });
 
 describe("IndexedDb", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     db = new DexieInstance("TestDatabase", {
       indexedDB: indexedDB,
       IDBKeyRange: IDBKeyRange,

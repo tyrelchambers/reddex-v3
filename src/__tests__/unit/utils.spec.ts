@@ -9,12 +9,12 @@ import {
   hasProPlan,
   isFilterWithQualifier,
   parseQuery,
-} from "../../src/utils";
+} from "~/utils";
 import { User } from "@prisma/client";
 import Stripe from "stripe";
-import { FilterState } from "../../src/types";
+import { FilterState } from "~/types";
 import queryString from "query-string";
-import { DexieInstance } from "../../src/utils/dexie";
+import { DexieInstance } from "~/utils/dexie";
 import { indexedDB, IDBKeyRange } from "fake-indexeddb";
 import { addMinutes } from "date-fns";
 

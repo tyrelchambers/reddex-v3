@@ -1,13 +1,11 @@
 import { TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useLocalStorage, useSessionStorage } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { FormEvent } from "react";
 import { Button } from "~/components/ui/button";
 import { mantineInputClasses } from "~/lib/styles";
 import { routes } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
 
 const AccountSetup = () => {

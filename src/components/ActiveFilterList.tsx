@@ -8,7 +8,7 @@ import { activeFilters } from "~/utils";
 import { FilterState } from "~/types";
 
 interface Props {
-  filters: Partial<FilterState> | null;
+  filters: Partial<FilterState>;
   removeFilter: (filter: { label: string; value: string }) => void;
   reset: () => void;
 }
@@ -32,7 +32,7 @@ const ActiveFilterList = ({ filters, removeFilter, reset }: Props) => {
         </ul>
       </div>
 
-      {filters && (
+      {Object.keys(filters).length > 0 && (
         <Button variant="outline" onClick={reset}>
           Reset filters
         </Button>

@@ -2,7 +2,6 @@ import { useSessionStorage } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { routes } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
 
 const CreateSubscription = () => {

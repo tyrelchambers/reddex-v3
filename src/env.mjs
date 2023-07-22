@@ -22,10 +22,6 @@ const server = z.object({
 
   REDDIT_CLIENT_ID: z.string(),
   REDDIT_CLIENT_SECRET: z.string(),
-  AWS_ACCESS_KEY: z.string(),
-  AWS_BUCKET: z.string(),
-  AWS_REGION: z.string(),
-  AWS_SECRET_KEY: z.string(),
   BUNNY_PASSWORD: z.string(),
   STRIPE_TEST_KEY: z.string(),
   STRIPE_LIVE_KEY: z.string(),
@@ -36,6 +32,8 @@ const server = z.object({
   SENDGRID_API_KEY: z.string(),
   IBM_API_KEY: z.string(),
   IBM_URL: z.string(),
+  SENTRY_DSN: z.string(),
+  NEXT_PUBLIC_SENTRY_DSN: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
@@ -61,10 +59,6 @@ const processEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   REDDIT_CLIENT_ID: process.env.REDDIT_CLIENT_ID,
   REDDIT_CLIENT_SECRET: process.env.REDDIT_CLIENT_SECRET,
-  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
-  AWS_BUCKET: process.env.AWS_BUCKET,
-  AWS_REGION: process.env.AWS_REGION,
-  AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
   BUNNY_PASSWORD: process.env.BUNNY_PASSWORD,
   STRIPE_TEST_KEY: process.env.STRIPE_TEST_KEY,
   STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
@@ -78,6 +72,8 @@ const processEnv = {
   IBM_API_KEY: process.env.IBM_API_KEY,
   IBM_URL: process.env.IBM_URL,
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
 };
 
 // Don't touch the part below

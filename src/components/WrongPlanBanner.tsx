@@ -7,7 +7,11 @@ import React from "react";
 import { api } from "~/utils/api";
 
 const WrongPlanBanner = () => {
-  const updateLink = api.billing.updateLink.useQuery();
+  const updateLink = api.billing.updateLink.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
 
   if (updateLink.isLoading) {
     return null;

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type NextPage } from "next";
 import Head from "next/head";
 import Header from "~/layouts/Header";
@@ -104,7 +103,7 @@ const Stats = ({ stats }: Props) => {
       desc: "Narrators using Reddex",
     },
     {
-      data: stats.posts,
+      data: stats.posts ?? 0,
       desc: "Total search results",
     },
     {

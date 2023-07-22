@@ -1,5 +1,6 @@
 import React from "react";
 import Spinner from "~/components/Spinner";
+import WrongPlanBanner from "~/components/WrongPlanBanner";
 
 interface Props {
   isLoading: boolean;
@@ -11,7 +12,10 @@ const BodyWithLoader = ({ isLoading, loadingMessage, children }: Props) => {
   if (isLoading) return <Spinner message={loadingMessage} />;
 
   return (
-    <section className="flex w-full max-w-2xl flex-col">{children}</section>
+    <div className="flex w-full max-w-2xl flex-col">
+      <WrongPlanBanner />
+      {children}
+    </div>
   );
 };
 

@@ -33,8 +33,9 @@ interface SearchHandlerProps {
 
 const Search = () => {
   const router = useRouter();
-  const [appliedFilters, setAppliedFilters] =
-    useState<Partial<FilterState> | null>(null);
+  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
+    {}
+  );
   const [activePage, setPage] = useState(1);
   const session = useSession();
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =

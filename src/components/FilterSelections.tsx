@@ -86,7 +86,7 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
     <form className="flex flex-col gap-4" onSubmit={submitHandler}>
       <div className="flex flex-col">
         <p className="text-sm text-foreground">Upvotes</p>
-        <div className="mt-1 flex gap-2">
+        <div className="mt-1 flex flex-col gap-2 md:flex-row">
           <Select
             data={qualifiers}
             classNames={mantineSelectClasses}
@@ -103,7 +103,7 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
 
       <div className="flex flex-col">
         <p className="text-sm text-foreground">Reading time in minutes</p>
-        <div className="mt-1 flex h-8 gap-2">
+        <div className="mt-1 flex flex-col gap-2 md:flex-row">
           <Select
             data={qualifiers}
             classNames={mantineSelectClasses}

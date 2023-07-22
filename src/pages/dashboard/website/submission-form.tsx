@@ -134,14 +134,12 @@ const SubmissionForm = () => {
               variant="filled"
               label="Page title"
               classNames={mantineInputClasses}
-              disabled={!proPlan}
               {...form.getInputProps("name")}
             />
             <TextInput
               variant="filled"
               label="Page subtitle"
               classNames={mantineInputClasses}
-              disabled={!proPlan}
               {...form.getInputProps("subtitle")}
             />
             <Textarea
@@ -150,7 +148,6 @@ const SubmissionForm = () => {
               description="List any rules for submissions or any information you want people to know"
               minRows={8}
               classNames={mantineInputClasses}
-              disabled={!proPlan}
               {...form.getInputProps("description")}
             />
 

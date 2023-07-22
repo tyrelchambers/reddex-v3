@@ -51,13 +51,8 @@ export const activeFilters = (filters: Partial<FilterState> | null) => {
   return active;
 };
 
-export const formatCurrency = (
-  amount?: number | null,
-  currency?: string | null
-) => {
-  if (!amount || !currency) return null;
-
-  return new Intl.NumberFormat(undefined, {
+export const formatCurrency = (amount: number, currency: string) => {
+  return new Intl.NumberFormat(currency, {
     style: "currency",
     currency,
     currencyDisplay: "symbol",

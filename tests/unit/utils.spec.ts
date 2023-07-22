@@ -180,10 +180,6 @@ describe("formatCurrency", () => {
 
     expect(formatCurrency(amount, "usd")).toEqual("$1.00");
   });
-
-  test("should return null if amount or currency is null", () => {
-    expect(formatCurrency(null, null)).toEqual(null);
-  });
 });
 
 describe("activeFilters", () => {

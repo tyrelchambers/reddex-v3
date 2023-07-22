@@ -162,7 +162,7 @@ export type FilterAction =
     };
 
 export type StripeSubscription = Stripe.Subscription & {
-  plan: Stripe.Plan & {
-    product: Stripe.Product;
+  plan?: Stripe.Plan & {
+    product?: Stripe.Product;
   };
 };

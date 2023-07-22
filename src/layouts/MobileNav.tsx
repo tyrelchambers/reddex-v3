@@ -88,8 +88,8 @@ const MobileNav = ({ user }: Props) => {
 
   return (
     <div className="fixed inset-0 z-10 flex h-full w-full flex-col overflow-y-auto bg-background">
-      <section className="mt-20 px-4">
-        <nav className="flex flex-col gap-4">
+      <section className="mt-20 px-4 pb-6">
+        <nav className="flex flex-col gap-6">
           {commonRoutes.map((r) => (
             <Link
               key={r.label}
@@ -104,7 +104,7 @@ const MobileNav = ({ user }: Props) => {
         <Divider className="my-6 border-border" />
 
         {user ? (
-          <nav className="flex flex-col gap-4">
+          <nav className="flex flex-col gap-6">
             {authRoutes.map((r) => (
               <Link
                 key={r.label}
@@ -114,6 +114,8 @@ const MobileNav = ({ user }: Props) => {
                 <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
               </Link>
             ))}
+
+            <Divider className="my-2 border-border" />
 
             <Button variant="link" className="w-fit" onClick={logoutHandler}>
               <FontAwesomeIcon icon={faRightFromBracket} className="mr-4" />

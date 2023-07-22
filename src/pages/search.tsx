@@ -202,6 +202,7 @@ const Search = () => {
           onClose={close}
           title="Add filters"
           classNames={mantineModalClasses}
+          zIndex={1000}
         >
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.

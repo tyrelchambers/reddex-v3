@@ -134,17 +134,18 @@ const Header = ({ openDrawer }: Props) => {
             />
           </button>
           {!opened && (
-            <button
+            <Button
               type="button"
+              size="sm"
+              className="mx-3"
               onClick={openDrawer}
-              className="mr-4 flex items-center justify-center rounded-full bg-accent px-3 py-2 shadow-sm"
             >
               <FontAwesomeIcon
                 icon={faSearch}
                 className="mr-2 text-xs text-accent-foreground"
               />
-              Search
-            </button>
+              <p className="text-sm text-accent-foreground">Search</p>
+            </Button>
           )}
           <Burger
             opened={opened}

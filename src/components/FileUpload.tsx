@@ -17,9 +17,10 @@ registerPlugin(
 interface Props {
   type: "thumbnail" | "banner";
   uploadRef: Ref<FilePond>;
+  disabled?: boolean;
 }
 
-const FileUpload = ({ type, uploadRef }: Props) => {
+const FileUpload = ({ type, uploadRef, disabled }: Props) => {
   const resizeTo = {
     banner: {
       height: 200,
@@ -46,6 +47,7 @@ const FileUpload = ({ type, uploadRef }: Props) => {
       imageResizeTargetWidth={resizeTo[type].width}
       instantUpload={false}
       allowProcess={false}
+      disabled={disabled}
     />
   );
 };

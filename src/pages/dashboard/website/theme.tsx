@@ -6,11 +6,15 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineSelectClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
+import { useUserStore } from "~/stores/useUserStore";
+import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 
 const themes = ["light", "dark"];
 
 const Theme = () => {
+  const userStore = useUserStore();
+  const proPlan = hasProPlan(userStore.user?.subscription);
   const saveTheme = api.website.saveTheme.useMutation();
   const websiteSettings = api.website.settings.useQuery();
 
@@ -80,7 +84,9 @@ const Theme = () => {
                 {...form.getInputProps("colour")}
               />
             </div>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" disabled={!proPlan}>
+              Save changes
+            </Button>
           </form>
         </BodyWithLoader>
       </main>

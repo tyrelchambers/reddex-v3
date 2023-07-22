@@ -226,7 +226,11 @@ const General = () => {
                 Optimal image size 200 x 200
               </p>
               {!websiteSettings.data?.thumbnail ? (
-                <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
+                <FileUpload
+                  uploadRef={thumbnailRef}
+                  type="thumbnail"
+                  disabled={!proPlan}
+                />
               ) : (
                 <div className="flex flex-col">
                   <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
@@ -260,7 +264,11 @@ const General = () => {
                 Optimal image size 1500 x 500
               </p>
               {!websiteSettings.data?.banner ? (
-                <FileUpload uploadRef={bannerRef} type="banner" />
+                <FileUpload
+                  uploadRef={bannerRef}
+                  type="banner"
+                  disabled={!proPlan}
+                />
               ) : (
                 <div className="flex flex-col">
                   <div className="overflow-hidden rounded-xl">
@@ -339,7 +347,9 @@ const General = () => {
             </section>
             <Divider className="my-4" />
 
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" disabled={!proPlan}>
+              Save changes
+            </Button>
           </form>
         </BodyWithLoader>
       </main>

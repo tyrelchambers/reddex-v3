@@ -24,7 +24,7 @@ export const mantineInputClasses: Partial<
   Record<TextInputStylesNames, string>
 > = {
   input:
-    "bg-input text-foreground placeholder:text-foreground/50 border-muted w-full rounded-md placeholder:italic px-3",
+    "bg-input text-foreground placeholder:text-foreground/50 border-muted w-full rounded-md placeholder:italic px-3 disabled:opacity-50 disabled:cursor-not-allowed",
   wrapper: " box-border flex-1",
   label: "text-card-foreground",
   description: "text-muted-foreground",
@@ -34,14 +34,15 @@ export const mantineInputClasses: Partial<
 export const mantineCheckBoxClasses: Partial<
   Record<CheckboxStylesNames, string>
 > = {
-  label: "text-card-foreground",
+  label: "text-card-foreground disabled:opacity-50 disabled:cursor-not-allowed",
   description: "text-muted-foreground",
 };
 
 export const mantineNumberClasses: Partial<
   Record<NumberInputStylesNames, string>
 > = {
-  input: "bg-input text-foreground border-muted w-full rounded-md h-full",
+  input:
+    "bg-input text-foreground border-muted w-full rounded-md h-full disabled:opacity-50 disabled:cursor-not-allowed",
   wrapper: "h-fit box-border",
   label: "text-card-foreground",
   description: "text-muted-foreground",

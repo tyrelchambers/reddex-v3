@@ -58,8 +58,8 @@ export default async function handler(
       })) as Stripe.Price & { product: Stripe.Product };
 
       const product = price.product.name;
-// test this as it doesn't reach IF
-      console.log(product);
+      // test this as it doesn't reach IF
+      console.log(product === "Pro", userFromCustomer);
       if (product === "Pro") {
         await prisma.website.update({
           where: {
@@ -105,8 +105,8 @@ export default async function handler(
       }
 
       console.log(`🔔  Payment received!`);
-    } catch (error) {}
     }
+  } catch (error) {}
 
   res.send(202);
 }

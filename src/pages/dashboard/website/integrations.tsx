@@ -8,9 +8,13 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
+import { useUserStore } from "~/stores/useUserStore";
+import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 
 const Integrations = () => {
+  const userStore = useUserStore();
+  const proPlan = hasProPlan(userStore.user?.subscription);
   const saveIntegrations = api.website.saveIntegrations.useMutation();
   const websiteSettings = api.website.settings.useQuery();
 
@@ -62,7 +66,9 @@ const Integrations = () => {
               {...form.getInputProps("youtubeIntegrationId")}
             />
 
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" disabled={!proPlan}>
+              Save changes
+            </Button>
           </form>
         </BodyWithLoader>
       </main>

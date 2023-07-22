@@ -1,3 +1,4 @@
+import { faExternalLink } from "@fortawesome/pro-solid-svg-icons";
 import {
   faReceipt,
   faSquareArrowUpRight,
@@ -86,7 +87,7 @@ const Settings = () => {
                 on {formatStripeTime(subscription.current_period_end)}
               </p>
             )}
-            <p className="text-sm text-card-foreground/60">
+            <p className="break-all text-sm text-card-foreground/60">
               <span className="font-semibold text-card-foreground">
                 Subscription ID:
               </span>{" "}
@@ -136,6 +137,15 @@ const Settings = () => {
         size="xl"
         classNames={mantineModalClasses}
       >
+        <Link
+          href="https://dashboard.stripe.com/invoices"
+          className="text-sm text-accent underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View all invoices{" "}
+          <FontAwesomeIcon className="ml-2" icon={faExternalLink} />
+        </Link>
         {invoices && <InvoicesList invoices={invoices.data} />}
       </Modal>
     </WrapperWithNav>

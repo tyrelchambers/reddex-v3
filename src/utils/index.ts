@@ -51,7 +51,12 @@ export const activeFilters = (filters: Partial<FilterState> | null) => {
   return active;
 };
 
-export const formatCurrency = (amount: number, currency: string) => {
+export const formatCurrency = (
+  amount?: number | null,
+  currency?: string | null
+) => {
+  if (amount === null || amount === undefined || !currency) return null;
+
   return new Intl.NumberFormat(currency, {
     style: "currency",
     currency,
@@ -201,7 +206,7 @@ export const parseQuery = (query: ParsedQuery) => {
 export const hasProPlan = (
   subscription: StripeSubscription | undefined | null
 ) => {
-  if (!subscription) return false;
+  if (!subscription?.plan) return false;
 
   const lineItem = subscription.plan.product.name;
 

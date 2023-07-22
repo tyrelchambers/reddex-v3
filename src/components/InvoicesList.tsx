@@ -35,7 +35,7 @@ const InvoicesList = ({ invoices }: Props) => {
   ));
 
   return (
-    <div>
+    <div className="mt-4">
       <Table highlightOnHover>
         <thead>
           <tr>

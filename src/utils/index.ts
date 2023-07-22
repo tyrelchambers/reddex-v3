@@ -6,10 +6,12 @@ import {
   FilterState,
   FormattedMessagesList,
   RedditInboxMessage,
+  StripeSubscription,
 } from "~/types";
 import Stripe from "stripe";
 import queryString, { ParsedQuery } from "query-string";
 import { FormProps } from "~/components/FilterSelections";
+import { isDeletedCustomer, isStripeCustomer } from "./typeguards";
 
 export const addLastSearchedOrUpdate = async () => {
   const exists = await db.lastSearched.get(1);
@@ -199,4 +201,22 @@ export const parseQuery = (query: ParsedQuery) => {
   }
 
   return parsed;
+};
+
+export const hasProPlan = (
+  subscription: StripeSubscription | undefined | null
+) => {
+  if (!subscription) return false;
+
+  const lineItem = subscription.plan.product.name;
+
+  return lineItem === "Pro";
+};
+
+export const getCustomerId = (
+  customer: string | Stripe.Customer | Stripe.DeletedCustomer
+) => {
+  if (typeof customer === "string") return customer;
+  if (isStripeCustomer(customer)) return customer.id;
+  if (isDeletedCustomer(customer)) return null;
 };

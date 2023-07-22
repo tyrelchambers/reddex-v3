@@ -6,14 +6,20 @@ interface Props {
   isLoading: boolean;
   loadingMessage: string;
   children: React.ReactNode | React.ReactNode[];
+  hasProPlan?: boolean;
 }
 
-const BodyWithLoader = ({ isLoading, loadingMessage, children }: Props) => {
+const BodyWithLoader = ({
+  isLoading,
+  loadingMessage,
+  children,
+  hasProPlan,
+}: Props) => {
   if (isLoading) return <Spinner message={loadingMessage} />;
 
   return (
     <div className="flex w-full max-w-2xl flex-col">
-      <WrongPlanBanner />
+      {!hasProPlan && <WrongPlanBanner />}
       {children}
     </div>
   );

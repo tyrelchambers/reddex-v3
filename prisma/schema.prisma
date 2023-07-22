@@ -163,6 +163,7 @@ model Website {
   userId               String         @unique
   submissionPageId     String         @unique
   youtubeIntegrationId String?
+  canBeEnabled         Boolean?
   submissionPage       SubmissionPage @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
   user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

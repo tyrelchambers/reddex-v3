@@ -27,6 +27,8 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { Button } from "~/components/ui/button";
 import { mantineInputClasses } from "~/lib/styles";
+import { useUserStore } from "~/stores/useUserStore";
+import { hasProPlan } from "~/utils";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -37,6 +39,9 @@ registerPlugin(
 
 const General = () => {
   const apiContext = api.useContext();
+  const userStore = useUserStore();
+  const proPlan = hasProPlan(userStore.user?.subscription);
+
   const websiteSave = api.website.saveGeneral.useMutation({
     onSuccess: () => {
       apiContext.website.invalidate();
@@ -143,6 +148,7 @@ const General = () => {
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website settings..."
+          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">General</h1>
           {websiteVisibility.data?.hidden ? (
@@ -150,7 +156,12 @@ const General = () => {
               title="Enable Website"
               subtitle="Enable your website to be seen by the public."
               action={
-                <Button variant="defaultInvert" onClick={showWebsiteHandler}>
+                <Button
+                  variant="defaultInvert"
+                  onClick={showWebsiteHandler}
+                  disabled={!proPlan}
+                  title={!proPlan ? "Pro plan required" : undefined}
+                >
                   Make website public{" "}
                 </Button>
               }

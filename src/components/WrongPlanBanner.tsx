@@ -1,4 +1,7 @@
-import { faSquareArrowUpRight } from "@fortawesome/pro-light-svg-icons";
+import {
+  faSquareArrowUpRight,
+  faWarning,
+} from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { api } from "~/utils/api";
@@ -12,7 +15,10 @@ const WrongPlanBanner = () => {
 
   return (
     <div className="mb-4 rounded-2xl bg-warning p-4">
-      <p className="mb-2 text-warning-foreground">Insufficient plan</p>
+      <p className="mb-2 text-warning-foreground">
+        <FontAwesomeIcon icon={faWarning} className="mr-3" />
+        Insufficient plan
+      </p>
       <p className="text-sm font-thin text-warning-foreground">
         You&apos;ll need to{" "}
         <a

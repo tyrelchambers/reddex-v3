@@ -6,12 +6,13 @@ import {
   formatStripeTime,
   formatSubject,
   hasActiveSubscription,
+  hasProPlan,
   isFilterWithQualifier,
   parseQuery,
-} from "../../src/utils/index";
+} from "../../src/utils";
 import { User } from "@prisma/client";
 import Stripe from "stripe";
-import { FilterState } from "~/types";
+import { FilterState } from "../../src/types";
 import queryString from "query-string";
 import { DexieInstance } from "../../src/utils/dexie";
 import { indexedDB, IDBKeyRange } from "fake-indexeddb";
@@ -177,7 +178,7 @@ describe("formatCurrency", () => {
   test("should format currency", () => {
     const amount = 100;
 
-    expect(formatCurrency(amount, "usd")).toEqual("US$1.00");
+    expect(formatCurrency(amount, "usd")).toEqual("$1.00");
   });
 
   test("should return null if amount or currency is null", () => {
@@ -279,5 +280,33 @@ describe("IndexedDb", () => {
     const exists = await db.lastSearched.get(1);
 
     expect(exists).toEqual({ Did: 1, time: updatedTime });
+  });
+});
+
+describe("hasProPlan", () => {
+  test("should return true if plan is pro", () => {
+    const subscription = {
+      plan: {
+        product: {
+          name: "Pro",
+        },
+      },
+    } as Stripe.Subscription & {
+      plan: Stripe.Plan & { product: Stripe.Product };
+    };
+    expect(hasProPlan(subscription)).toBe(true);
+  });
+
+  test("should return false if plan is basic", () => {
+    const subscription = {
+      plan: {
+        product: {
+          name: "Basic",
+        },
+      },
+    } as Stripe.Subscription & {
+      plan: Stripe.Plan & { product: Stripe.Product };
+    };
+    expect(hasProPlan(subscription)).toBe(false);
   });
 });

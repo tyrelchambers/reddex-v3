@@ -1,5 +1,6 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { RedditPost, SubmissionFormModule } from "@prisma/client";
+import Stripe from "stripe";
 
 export interface RedditPostWithText extends RedditPost {
   selftext: string;
@@ -159,3 +160,9 @@ export type FilterAction =
   | {
       type: "RESET";
     };
+
+export type StripeSubscription = Stripe.Subscription & {
+  plan: Stripe.Plan & {
+    product: Stripe.Product;
+  };
+};

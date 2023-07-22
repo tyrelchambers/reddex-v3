@@ -4,6 +4,8 @@ import { env } from "~/env.mjs";
 import { stripeClient } from "~/utils/stripe";
 import { buffer } from "micro";
 import { prisma } from "~/server/db";
+import { StripeSubscription } from "~/types";
+import { getCustomerId } from "~/utils";
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,31 +34,79 @@ export default async function handler(
     return res.send(400);
   }
 
-  if (eventType === "checkout.session.completed") {
-    const { customer, subscription, id, metadata } =
-      data.object as Stripe.Checkout.Session;
+  try {
+    if (eventType === "customer.subscription.updated") {
+      // purpose is to auto hide their website if they switch from pro to basic
+      const subscription = data.object as StripeSubscription;
 
-    const userId = metadata?.userId;
+      if (!subscription) throw new Error("No subscription provided in webhook");
 
-    const line_items = await stripeClient.checkout.sessions.listLineItems(id);
+      const customerId = getCustomerId(subscription.customer);
 
-    const user = await prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
+      const userFromCustomer = await prisma.user.findFirst({
+        where: {
+          customerId,
+        },
+      });
 
-    if (!line_items?.data[0]?.price?.id) {
-      return res.send(400);
+      if (!userFromCustomer) throw new Error("No customer found from ID");
+
+      const priceId = subscription.plan.id;
+
+      const price = (await stripeClient.prices.retrieve(priceId, {
+        expand: ["product"],
+      })) as Stripe.Price & { product: Stripe.Product };
+
+      const product = price.product.name;
+// test this as it doesn't reach IF
+      console.log(product);
+      if (product === "Pro") {
+        await prisma.website.update({
+          where: {
+            userId: userFromCustomer.id,
+          },
+          data: {
+            canBeEnabled: true,
+          },
+        });
+      } else {
+        await prisma.website.update({
+          where: {
+            userId: userFromCustomer.id,
+          },
+          data: {
+            canBeEnabled: false,
+          },
+        });
+      }
     }
 
-    if (!user) {
-      console.log(`⚠️  User not found.`);
-      return res.send(400);
-    }
+    if (eventType === "checkout.session.completed") {
+      const { customer, subscription, id, metadata } =
+        data.object as Stripe.Checkout.Session;
 
-    console.log(`🔔  Payment received!`);
-  }
+      const userId = metadata?.userId;
+
+      const line_items = await stripeClient.checkout.sessions.listLineItems(id);
+
+      const user = await prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!line_items?.data[0]?.price?.id) {
+        return res.send(400);
+      }
+
+      if (!user) {
+        console.log(`⚠️  User not found.`);
+        return res.send(400);
+      }
+
+      console.log(`🔔  Payment received!`);
+    } catch (error) {}
+    }
 
   res.send(202);
 }

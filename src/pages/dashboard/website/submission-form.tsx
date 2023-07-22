@@ -7,6 +7,8 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
+import { useUserStore } from "~/stores/useUserStore";
+import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 
 interface Module {
@@ -25,6 +27,9 @@ interface SubmissionFormProps {
 
 const SubmissionForm = () => {
   const apiContext = api.useContext();
+  const userStore = useUserStore();
+  const proPlan = hasProPlan(userStore.user?.subscription);
+
   const submissionFormSave = api.website.saveSubmissionForm.useMutation();
   const websiteSettings = api.website.settings.useQuery();
   const saveSubmissionFormVisibility =
@@ -92,6 +97,7 @@ const SubmissionForm = () => {
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading submission form settings..."
+          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Submission form</h1>
 
@@ -100,7 +106,12 @@ const SubmissionForm = () => {
               title="Enable Submission Page"
               subtitle="Enable this submission form to allow visitors to email you their own stories."
               action={
-                <Button variant="defaultInvert" onClick={visibilityHandler}>
+                <Button
+                  variant="defaultInvert"
+                  onClick={visibilityHandler}
+                  disabled={!proPlan}
+                  title={!proPlan ? "Pro plan required" : undefined}
+                >
                   Enable submission form
                 </Button>
               }

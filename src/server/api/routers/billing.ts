@@ -90,7 +90,7 @@ export const billingRouter = createTRPCRouter({
       invoices,
     } as BillingInfo;
   }),
-  updateLink: protectedProcedure.query(async ({ ctx }) => {
+  updateLink: protectedProcedure.mutation(async ({ ctx }) => {
     const user = await prisma.user.findUnique({
       where: {
         id: ctx.session.user.id,

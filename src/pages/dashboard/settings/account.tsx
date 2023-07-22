@@ -18,7 +18,13 @@ import { api } from "~/utils/api";
 
 const Settings = () => {
   const subscriptionQuery = api.billing.info.useQuery();
-  const updateLink = api.billing.updateLink.useQuery();
+  const updateLink = api.billing.updateLink.useMutation({
+    onSuccess: (res) => {
+      if (res) {
+        window.open(res, "_blank");
+      }
+    },
+  });
 
   const subscription = subscriptionQuery.data?.customer.subscriptions
     ?.data[0] as Stripe.Subscription & {
@@ -101,19 +107,13 @@ const Settings = () => {
                   <FontAwesomeIcon icon={faReceipt} className="ml-2" />
                 </Button>
               )}
-              {updateLink.data && (
-                <Link
-                  href={updateLink.data}
-                  className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
-                  target="_blank"
-                >
-                  Manage subscription{" "}
-                  <FontAwesomeIcon
-                    icon={faSquareArrowUpRight}
-                    className="ml-2"
-                  />
-                </Link>
-              )}
+              <button
+                className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
+                type="button"
+              >
+                Manage subscription{" "}
+                <FontAwesomeIcon icon={faSquareArrowUpRight} className="ml-2" />
+              </button>
             </footer>
           </div>
         </div>

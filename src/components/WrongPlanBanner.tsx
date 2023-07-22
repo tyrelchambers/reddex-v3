@@ -7,15 +7,13 @@ import React from "react";
 import { api } from "~/utils/api";
 
 const WrongPlanBanner = () => {
-  const updateLink = api.billing.updateLink.useQuery(undefined, {
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
+  const updateLink = api.billing.updateLink.useMutation({
+    onSuccess: (res) => {
+      if (res) {
+        window.open(res, "_blank");
+      }
+    },
   });
-
-  if (updateLink.isLoading) {
-    return null;
-  }
 
   return (
     <div className="mb-4 rounded-2xl bg-warning p-4">
@@ -25,17 +23,17 @@ const WrongPlanBanner = () => {
       </p>
       <p className="text-sm font-thin text-warning-foreground">
         You&apos;ll need to{" "}
-        <a
-          href={updateLink.data}
+        <button
+          onClick={() => updateLink.mutate()}
           className="text-accent underline"
-          target="_blank"
+          type="button"
         >
           upgrade your plan{" "}
           <FontAwesomeIcon
             icon={faSquareArrowUpRight}
             className="text-accent"
           />
-        </a>{" "}
+        </button>{" "}
         to the Pro plan in order to use this feature. In the meantime, if you
         had a website created, it will be hidden until your plan is upgraded.
       </p>

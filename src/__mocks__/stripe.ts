@@ -1,17 +1,19 @@
 import { mockStripeCustomer } from "~/mockData/mockData";
 import { vi } from "vitest";
-import { Stripe as _Stripe } from "stripe";
+import Stripe from "stripe";
 
-class Stripe {
-  customers: Pick<_Stripe.CustomersResource, "search">;
-
-  constructor() {
-    this.customers = {
-      search: vi.fn().mockResolvedValue({ data: [mockStripeCustomer] }),
-    };
-  }
+interface MockStripeProps {
+  customers: {
+    search: () => Stripe.ApiSearchResultPromise<Stripe.Customer>;
+  };
 }
-const stripe = vi.fn(() => new Stripe());
 
-export default stripe;
-export { Stripe };
+vi.mock("stripe", () => {
+  return vi.fn(() => {
+    return {
+      customers: {
+        search: () => Promise.resolve({ data: [mockStripeCustomer] }),
+      },
+    } as MockStripeProps;
+  });
+});

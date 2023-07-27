@@ -1,4 +1,3 @@
-import { useSessionStorage } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { routes } from "~/routes";
@@ -7,9 +6,7 @@ import { api } from "~/utils/api";
 const CreateSubscription = () => {
   const router = useRouter();
   const paymentLink = api.stripe.createCheckout.useMutation();
-  const [selectedPlan] = useSessionStorage({
-    key: "selected-plan",
-  });
+
   const userQuery = api.user.me.useQuery();
 
   useEffect(() => {
@@ -21,9 +18,14 @@ const CreateSubscription = () => {
       }
 
       const fn = async () => {
+        const selectedPlan = new URLSearchParams(window.location.search).get(
+          "plan"
+        );
         try {
           if (!user.email || !user.customerId)
             throw new Error("Missing user email or customer id");
+
+          if (!selectedPlan) return router.push(routes.PRICING);
 
           const link = await paymentLink.mutateAsync({
             customerEmail: user.email,

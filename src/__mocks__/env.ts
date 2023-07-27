@@ -1,4 +1,4 @@
-const env = {
+const mockEnv = {
   DATABASE_URL: "xxx",
   NODE_ENV: "xxx",
   NEXTAUTH_SECRET: "xxx",
@@ -21,4 +21,4 @@ const env = {
   NEXT_PUBLIC_SENTRY_DSN: "xxx",
 };
 
-export default env;
+export default mockEnv;

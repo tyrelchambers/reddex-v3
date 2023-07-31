@@ -1,9 +1,10 @@
 import { searchSchema } from "~/server/schemas";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import axios from "axios";
-import { PostFromReddit } from "~/types";
+import { MixpanelEvents, PostFromReddit } from "~/types";
 import { prisma } from "~/server/db";
 import { captureException } from "@sentry/nextjs";
+import { trackEvent } from "~/utils/mixpanel";
 
 interface SubredditResponse {
   data: {
@@ -66,6 +67,8 @@ export const subredditSearchRouter = createTRPCRouter({
           console.error(error);
           throw new Error("Failed to fetch posts from Reddit");
         }
+
+        trackEvent(MixpanelEvents.SUBREDDIT_SEARCH);
 
         return posts.map((p) => p.data);
       } catch (error) {

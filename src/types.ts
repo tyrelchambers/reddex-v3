@@ -176,3 +176,14 @@ export type FindUserResponse = Prisma.UserArgs["include"] extends {
 }
   ? { accounts: Account }
   : object;
+
+export enum MixpanelEvents {
+  "SUBREDDIT_SEARCH" = "SUBREDDIT_SEARCH",
+  "ADD_TO_QUEUE" = "ADD_TO_QUEUE",
+  "REMOVE_FROM_QUEUE" = "REMOVE_FROM_QUEUE",
+  "TOGGLE_THEME" = "TOGGLE_THEME",
+  "GET_STARTED" = "GET_STARTED",
+  "OPEN_SEARCH_DRAWER" = "OPEN_SEARCH_DRAWER",
+  "OPEN_USER_MENU" = "OPEN_USER_MENU",
+  "LOGOUT" = "LOGOUT",
+}

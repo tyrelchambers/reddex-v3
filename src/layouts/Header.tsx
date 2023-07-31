@@ -16,6 +16,8 @@ import { breakpoints } from "~/constants";
 import { User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Button } from "~/components/ui/button";
+import { trackUiEvent } from "~/utils/mixpanelClient";
+import { MixpanelEvents } from "~/types";
 
 const _routes = [
   {
@@ -87,7 +89,12 @@ const Header = ({ openDrawer }: Props) => {
         <div className="flex items-center gap-6">
           <button
             type="button"
-            onClick={toggleTheme}
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.TOGGLE_THEME, {
+                theme: isDark ? "dark" : "light",
+              });
+              toggleTheme();
+            }}
             className="z-20 mr-4 lg:mr-0"
           >
             <FontAwesomeIcon
@@ -100,7 +107,12 @@ const Header = ({ openDrawer }: Props) => {
               {session.status === "authenticated" ? (
                 <UserMenu />
               ) : (
-                <Link href={routes.LOGIN}>
+                <Link
+                  href={routes.LOGIN}
+                  onClick={() => {
+                    trackUiEvent(MixpanelEvents.GET_STARTED);
+                  }}
+                >
                   <Button variant="outline" size="sm">
                     Get Started
                   </Button>
@@ -110,7 +122,14 @@ const Header = ({ openDrawer }: Props) => {
           )}
 
           {router.pathname === routes.SEARCH && !opened && (
-            <Button type="button" size="sm" onClick={openDrawer}>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                trackUiEvent(MixpanelEvents.OPEN_SEARCH_DRAWER);
+                openDrawer?.();
+              }}
+            >
               <FontAwesomeIcon
                 icon={faSearch}
                 className="mr-2 text-xs text-accent-foreground"
@@ -125,7 +144,12 @@ const Header = ({ openDrawer }: Props) => {
         <div className="flex items-center">
           <button
             type="button"
-            onClick={toggleTheme}
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.TOGGLE_THEME, {
+                theme: isDark ? "dark" : "light",
+              });
+              toggleTheme();
+            }}
             className="z-20 mr-4 lg:mr-0"
           >
             <FontAwesomeIcon
@@ -138,7 +162,10 @@ const Header = ({ openDrawer }: Props) => {
               type="button"
               size="sm"
               className="mx-3"
-              onClick={openDrawer}
+              onClick={() => {
+                trackUiEvent(MixpanelEvents.OPEN_SEARCH_DRAWER);
+                openDrawer?.();
+              }}
             >
               <FontAwesomeIcon
                 icon={faSearch}

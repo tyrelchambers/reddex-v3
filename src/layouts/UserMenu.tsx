@@ -5,6 +5,8 @@ import { routes } from "~/routes";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
+import { MixpanelEvents } from "~/types";
 
 const UserMenu = () => {
   const session = useSession();
@@ -35,6 +37,7 @@ const UserMenu = () => {
         <button
           type="button"
           className="text-foreground underline hover:text-accent"
+          onClick={() => trackUiEvent(MixpanelEvents.OPEN_USER_MENU)}
         >
           {user?.name}
         </button>
@@ -74,7 +77,14 @@ const UserMenu = () => {
 
         <Menu.Divider className="border-border" />
 
-        <Menu.Item onClick={logoutHandler}>Logout</Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            trackUiEvent(MixpanelEvents.LOGOUT);
+            logoutHandler();
+          }}
+        >
+          Logout
+        </Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );

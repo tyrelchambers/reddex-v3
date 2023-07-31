@@ -38,6 +38,7 @@ const server = z.object({
   TEST_DATABASE_URL: z.string().url(),
   TEST_USERNAME: z.string(),
   TEST_PASSWORD: z.string(),
+  MIXPANEL_TOKEN: z.string(),
 });
 
 /**
@@ -47,6 +48,7 @@ const server = z.object({
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
   NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK: z.string(),
+  NEXT_PUBLIC_MIXPANEL_TOKEN: z.string(),
 });
 
 /**
@@ -80,6 +82,8 @@ const processEnv = {
   TEST_DATABASE_URL: process.env.TEST_DATABASE_URL,
   TEST_USERNAME: process.env.TEST_USERNAME,
   TEST_PASSWORD: process.env.TEST_PASSWORD,
+  MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN,
+  NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
 };
 
 // Don't touch the part below

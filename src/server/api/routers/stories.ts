@@ -6,6 +6,7 @@ import axios from "axios";
 import { COMPOSE_MESSAGE_URL } from "~/url.constants";
 import { formatSubject } from "~/utils";
 import { refreshAccessToken } from "~/utils/getTokens";
+import { captureException } from "@sentry/nextjs";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -41,16 +42,21 @@ export const storyRouter = createTRPCRouter({
           message: "Post not found. Unable to add to approved list.",
         };
       } else {
-        return await prisma.redditPost.updateMany({
-          where: {
-            id: input,
-            userId: ctx.session.user.id,
-          },
-          data: {
-            permission: true,
-            read: false,
-          },
-        });
+        try {
+          return await prisma.redditPost.updateMany({
+            where: {
+              id: input,
+              userId: ctx.session.user.id,
+            },
+            data: {
+              permission: true,
+              read: false,
+            },
+          });
+        } catch (error) {
+          captureException(error);
+          throw error;
+        }
       }
     }),
   addToCompleted: protectedProcedure
@@ -70,56 +76,61 @@ export const storyRouter = createTRPCRouter({
   save: protectedProcedure
     .input(postSchema)
     .mutation(async ({ ctx, input }) => {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
-        include: {
-          accounts: true,
-        },
-      });
-      const redditAccount = user?.accounts.find(
-        (acc) => acc.provider === "reddit"
-      );
+      try {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: ctx.session.user.id,
+          },
+          include: {
+            accounts: true,
+          },
+        });
+        const redditAccount = user?.accounts.find(
+          (acc) => acc.provider === "reddit"
+        );
 
-      if (!redditAccount) return;
+        if (!redditAccount) return;
 
-      const accessToken = await refreshAccessToken(redditAccount);
-      // env.NODE_ENV === "production" &&
-      if (accessToken) {
-        const body = new FormData();
-        // body.set("to", input.author);
-        body.set("to", "StoriesAfterMidnight");
-        body.set("subject", formatSubject(input.title));
-        body.set("text", input.message);
+        const accessToken = await refreshAccessToken(redditAccount);
+        // env.NODE_ENV === "production" &&
+        if (accessToken) {
+          const body = new FormData();
+          // body.set("to", input.author);
+          body.set("to", "StoriesAfterMidnight");
+          body.set("subject", formatSubject(input.title));
+          body.set("text", input.message);
 
-        await axios
-          .post(COMPOSE_MESSAGE_URL, body, {
-            headers: {
-              Authorization: `bearer ${accessToken}`,
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          })
-          .then(async () => {
-            const { message, ...rest } = input;
-            await prisma.redditPost.create({
-              data: {
-                ...rest,
-                flair: input.flair ?? undefined,
-                userId: ctx.session.user.id,
+          await axios
+            .post(COMPOSE_MESSAGE_URL, body, {
+              headers: {
+                Authorization: `bearer ${accessToken}`,
+                "Content-Type": "application/x-www-form-urlencoded",
               },
-            });
+            })
+            .then(async () => {
+              const { message, ...rest } = input;
+              await prisma.redditPost.create({
+                data: {
+                  ...rest,
+                  flair: input.flair ?? undefined,
+                  userId: ctx.session.user.id,
+                },
+              });
 
-            await prisma.contactedWriters.create({
-              data: {
-                name: input.author,
-                userId: ctx.session.user.id,
-              },
+              await prisma.contactedWriters.create({
+                data: {
+                  name: input.author,
+                  userId: ctx.session.user.id,
+                },
+              });
             });
-          });
+        }
+
+        return true;
+      } catch (error) {
+        captureException(error);
+        throw error;
       }
-
-      return true;
     }),
   getUsedPostIds: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.redditPost.findMany({
@@ -192,18 +203,23 @@ export const storyRouter = createTRPCRouter({
   importStory: protectedProcedure
     .input(postSchema)
     .mutation(async ({ ctx, input }) => {
-      const { message, ...rest } = input;
+      try {
+        const { message, ...rest } = input;
 
-      return await prisma.redditPost.create({
-        data: {
-          ...rest,
-          content: input.content,
-          flair: input.flair ?? undefined,
-          userId: ctx.session.user.id,
-          permission: true,
-          read: false,
-        },
-      });
+        return await prisma.redditPost.create({
+          data: {
+            ...rest,
+            content: input.content,
+            flair: input.flair ?? undefined,
+            userId: ctx.session.user.id,
+            permission: true,
+            read: false,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   removeAllFromCompletedList: protectedProcedure.mutation(async ({ ctx }) => {
     return prisma.redditPost.deleteMany({

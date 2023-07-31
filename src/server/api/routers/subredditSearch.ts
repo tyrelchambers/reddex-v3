@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import axios from "axios";
 import { PostFromReddit } from "~/types";
 import { prisma } from "~/server/db";
+import { captureException } from "@sentry/nextjs";
 
 interface SubredditResponse {
   data: {
@@ -20,52 +21,57 @@ export const subredditSearchRouter = createTRPCRouter({
   search: publicProcedure
     .input(searchSchema)
     .mutation(async ({ ctx, input }) => {
-      const url = `https://www.reddit.com/r/${input.subreddit.toLowerCase()}/${input.category.toLowerCase()}.json?limit=100`;
-      let posts = [] as {
-        kind: string;
-        data: PostFromReddit;
-      }[];
-      let after = ``;
+      try {
+        const url = `https://www.reddit.com/r/${input.subreddit.toLowerCase()}/${input.category.toLowerCase()}.json?limit=100`;
+        let posts = [] as {
+          kind: string;
+          data: PostFromReddit;
+        }[];
+        let after = ``;
 
-      const userProfile = await prisma.profile.findUnique({
-        where: {
-          userId: ctx.session?.user.id,
-        },
-        include: {
-          searches: true,
-        },
-      });
-      const recentlySearchedMap =
-        userProfile?.searches.map((s) => s.text) || null;
-
-      if (
-        userProfile &&
-        recentlySearchedMap &&
-        !recentlySearchedMap.includes(input.subreddit)
-      ) {
-        await prisma.recentlySearched.create({
-          data: {
-            text: input.subreddit,
-            profileId: userProfile.id,
+        const userProfile = await prisma.profile.findUnique({
+          where: {
+            userId: ctx.session?.user.id,
+          },
+          include: {
+            searches: true,
           },
         });
-      }
+        const recentlySearchedMap =
+          userProfile?.searches.map((s) => s.text) || null;
 
-      try {
-        for (let i = 0; i < 10 && after !== null; i++) {
-          await axios
-            .get(`${url}&after=${after}`)
-            .then((res: SubredditResponse) => {
-              after = res.data.data.after;
-              posts = posts.concat(res.data.data.children);
-            });
+        if (
+          userProfile &&
+          recentlySearchedMap &&
+          !recentlySearchedMap.includes(input.subreddit)
+        ) {
+          await prisma.recentlySearched.create({
+            data: {
+              text: input.subreddit,
+              profileId: userProfile.id,
+            },
+          });
         }
-      } catch (error) {
-        console.error(error);
-        throw new Error("Failed to fetch posts from Reddit");
-      }
 
-      return posts.map((p) => p.data);
+        try {
+          for (let i = 0; i < 10 && after !== null; i++) {
+            await axios
+              .get(`${url}&after=${after}`)
+              .then((res: SubredditResponse) => {
+                after = res.data.data.after;
+                posts = posts.concat(res.data.data.children);
+              });
+          }
+        } catch (error) {
+          console.error(error);
+          throw new Error("Failed to fetch posts from Reddit");
+        }
+
+        return posts.map((p) => p.data);
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
 });
 

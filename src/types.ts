@@ -1,7 +1,11 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { RedditPost, SubmissionFormModule } from "@prisma/client";
+import {
+  Account,
+  Prisma,
+  RedditPost,
+  SubmissionFormModule,
+} from "@prisma/client";
 import Stripe from "stripe";
-
 export interface RedditPostWithText extends RedditPost {
   selftext: string;
 }
@@ -166,3 +170,9 @@ export type StripeSubscription = Stripe.Subscription & {
     product?: Stripe.Product;
   };
 };
+
+export type FindUserResponse = Prisma.UserArgs["include"] extends {
+  accounts: true;
+}
+  ? { accounts: Account }
+  : object;

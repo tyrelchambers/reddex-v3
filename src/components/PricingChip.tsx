@@ -21,6 +21,7 @@ const PricingChip = ({
             : plan.monthly.productId
         )
       }
+      data-testid={`pricing-chip-${plan.name}`}
     >
       <div className="rounded-2xl border-2 border-transparent bg-background p-4 text-start shadow-xl hover:border-accent">
         <p className="text-xl text-foreground">{plan.name}</p>

@@ -35,6 +35,9 @@ const server = z.object({
   SENTRY_DSN: z.string(),
   NEXT_PUBLIC_SENTRY_DSN: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
+  TEST_DATABASE_URL: z.string().url(),
+  TEST_USERNAME: z.string(),
+  TEST_PASSWORD: z.string(),
 });
 
 /**
@@ -74,6 +77,9 @@ const processEnv = {
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
   SENTRY_DSN: process.env.SENTRY_DSN,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  TEST_DATABASE_URL: process.env.TEST_DATABASE_URL,
+  TEST_USERNAME: process.env.TEST_USERNAME,
+  TEST_PASSWORD: process.env.TEST_PASSWORD,
 };
 
 // Don't touch the part below

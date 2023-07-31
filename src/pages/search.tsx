@@ -126,13 +126,7 @@ const Search = () => {
       <Head>
         <title>Reddex | Search</title>
       </Head>
-      <button
-        onClick={() => {
-          throw new Error("Eeeeeek!");
-        }}
-      >
-        Break the world
-      </button>
+
       <main>
         <Header openDrawer={openDrawer} />
 

@@ -2,25 +2,30 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import { contactSchema } from "~/server/schemas";
+import { captureException } from "@sentry/nextjs";
 
 export const contactRouter = createTRPCRouter({
   save: protectedProcedure
     .input(contactSchema)
     .mutation(async ({ ctx, input }) => {
-      const existingContact = await prisma.contact.findFirst({
-        where: {
-          name: input.name,
-        },
-      });
+      try {
+        const existingContact = await prisma.contact.findFirst({
+          where: {
+            name: input.name,
+          },
+        });
 
-      if (existingContact) return;
+        if (existingContact) return;
 
-      return await prisma.contact.create({
-        data: {
-          ...input,
-          userId: ctx.session.user.id,
-        },
-      });
+        return await prisma.contact.create({
+          data: {
+            ...input,
+            userId: ctx.session.user.id,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+      }
     }),
   getByName: protectedProcedure
     .input(z.string().optional())

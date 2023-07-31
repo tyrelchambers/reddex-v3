@@ -4,48 +4,55 @@ import { stripeClient } from "~/utils/stripe";
 import { z } from "zod";
 import { saveProfileSchema } from "~/server/schemas";
 import Stripe from "stripe";
-import { sendEmail } from "~/utils/sendgrid";
-import { emailTemplates } from "~/constants";
+import { captureException } from "@sentry/nextjs";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-      include: {
-        Profile: {
-          include: {
-            searches: true,
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+        include: {
+          Profile: {
+            include: {
+              searches: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    let subscription = null;
+      let subscription = null;
 
-    if (!user) return null;
+      if (!user) return null;
 
-    if (user.customerId) {
-      const customer = (await stripeClient.customers.retrieve(user.customerId, {
-        expand: [
-          "subscriptions",
-          "subscriptions.data.plan",
-          "subscriptions.data.plan.product",
-        ],
-      })) as unknown as Stripe.Customer & {
-        subscriptions: Stripe.Subscription[] & {
-          plan: Stripe.Plan;
+      if (user.customerId) {
+        const customer = (await stripeClient.customers.retrieve(
+          user.customerId,
+          {
+            expand: [
+              "subscriptions",
+              "subscriptions.data.plan",
+              "subscriptions.data.plan.product",
+            ],
+          }
+        )) as unknown as Stripe.Customer & {
+          subscriptions: Stripe.Subscription[] & {
+            plan: Stripe.Plan;
+          };
         };
+
+        subscription = customer.subscriptions.data[0] ?? null;
+      }
+
+      return {
+        ...user,
+        subscription,
       };
-
-      subscription = customer.subscriptions.data[0] ?? null;
+    } catch (error) {
+      captureException(error);
+      throw error;
     }
-
-    return {
-      ...user,
-      subscription,
-    };
   }),
   saveProfile: protectedProcedure
     .input(saveProfileSchema)
@@ -70,14 +77,9 @@ export const userRouter = createTRPCRouter({
           },
         });
 
-        // sendEmail({
-        //   to: input.email,
-        //   subject: "Your email has been changed",
-        //   template: "confirmEmail",
-        // });
-
         return user;
       } catch (error) {
+        captureException(error);
         throw error;
       }
     }),
@@ -91,17 +93,22 @@ export const userRouter = createTRPCRouter({
   removeSearch: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const userProfile = await prisma.profile.findUnique({
-        where: {
-          userId: ctx.session.user.id,
-        },
-      });
-      return await prisma.recentlySearched.deleteMany({
-        where: {
-          id: input,
-          profileId: userProfile?.id,
-        },
-      });
+      try {
+        const userProfile = await prisma.profile.findUnique({
+          where: {
+            userId: ctx.session.user.id,
+          },
+        });
+        return await prisma.recentlySearched.deleteMany({
+          where: {
+            id: input,
+            profileId: userProfile?.id,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   // deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {}),
 });

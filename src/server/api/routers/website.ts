@@ -10,6 +10,7 @@ import {
 } from "~/server/schemas";
 import axios, { AxiosError } from "axios";
 import { env } from "process";
+import { captureException } from "@sentry/nextjs";
 
 export const websiteRouter = createTRPCRouter({
   checkAvailableSubdomain: protectedProcedure
@@ -79,127 +80,166 @@ export const websiteRouter = createTRPCRouter({
   saveGeneral: protectedProcedure
     .input(websiteGeneralSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.website.update({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        data: {
-          ...input,
-        },
-      });
+      try {
+        return await prisma.website.update({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          data: {
+            ...input,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   saveTheme: protectedProcedure
     .input(websiteThemeSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.website.update({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        data: {
-          ...input,
-        },
-      });
+      try {
+        return await prisma.website.update({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          data: {
+            ...input,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   saveSubmissionForm: protectedProcedure
     .input(websiteSubmissionSchema)
     .mutation(async ({ ctx, input }) => {
-      const existingWebsite = await prisma.website.findFirst({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        include: {
-          submissionPage: true,
-        },
-      });
+      try {
+        const existingWebsite = await prisma.website.findFirst({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          include: {
+            submissionPage: true,
+          },
+        });
 
-      await prisma.submissionPage.update({
-        where: {
-          id: existingWebsite?.submissionPageId,
-        },
-        data: {
-          description: input.description,
-          name: input.name,
-          subtitle: input.subtitle,
-        },
-      });
+        await prisma.submissionPage.update({
+          where: {
+            id: existingWebsite?.submissionPageId,
+          },
+          data: {
+            description: input.description,
+            name: input.name,
+            subtitle: input.subtitle,
+          },
+        });
 
-      for (let index = 0; index < input.submissionFormModules.length; index++) {
-        const element = input.submissionFormModules[index];
+        for (
+          let index = 0;
+          index < input.submissionFormModules.length;
+          index++
+        ) {
+          const element = input.submissionFormModules[index];
 
-        if (element) {
-          await prisma.submissionFormModule.updateMany({
-            where: {
-              id: element.id,
-            },
-            data: {
-              enabled: element.enabled,
-              required: element.required,
-            },
-          });
+          if (element) {
+            await prisma.submissionFormModule.updateMany({
+              where: {
+                id: element.id,
+              },
+              data: {
+                enabled: element.enabled,
+                required: element.required,
+              },
+            });
+          }
         }
+      } catch (error) {
+        captureException(error);
+        throw error;
       }
     }),
   saveIntegrations: protectedProcedure
     .input(websiteIntegrationsSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.website.update({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        data: {
-          youtubeIntegrationId: input.youtubeIntegrationId,
-        },
-      });
+      try {
+        return await prisma.website.update({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          data: {
+            youtubeIntegrationId: input.youtubeIntegrationId,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   saveSettings: protectedProcedure
     .input(websiteSubmissionSchema)
     .mutation(async ({ ctx, input }) => {
-      return await prisma.website.update({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        data: {
-          ...input,
-        },
-      });
+      try {
+        return await prisma.website.update({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          data: {
+            ...input,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   setVisibility: protectedProcedure
     .input(z.boolean())
     .mutation(async ({ ctx, input }) => {
-      return await prisma.website.update({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        data: {
-          hidden: input,
-        },
-      });
+      try {
+        return await prisma.website.update({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          data: {
+            hidden: input,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
   removeImage: protectedProcedure
     .input(removeImageSchema)
     .mutation(async ({ ctx, input }) => {
-      return await axios
-        .delete(input.url, {
-          headers: {
-            "content-type": "application/octet-stream",
-            AccessKey: env.BUNNY_PASSWORD,
-          },
-        })
-        .then(async () => {
-          await prisma.website.update({
-            where: {
-              userId: ctx.session.user.id,
+      try {
+        return await axios
+          .delete(input.url, {
+            headers: {
+              "content-type": "application/octet-stream",
+              AccessKey: env.BUNNY_PASSWORD,
             },
-            data: {
-              banner: input.type === "banner" ? null : undefined,
-              thumbnail: input.type === "thumbnail" ? null : undefined,
-            },
+          })
+          .then(async () => {
+            await prisma.website.update({
+              where: {
+                userId: ctx.session.user.id,
+              },
+              data: {
+                banner: input.type === "banner" ? null : undefined,
+                thumbnail: input.type === "thumbnail" ? null : undefined,
+              },
+            });
+          })
+          .catch((err: AxiosError) => {
+            if (err) {
+              throw new Error(err.message);
+            }
           });
-        })
-        .catch((err: AxiosError) => {
-          if (err) {
-            throw new Error(err.message);
-          }
-        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
 });

@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { stripeClient } from "~/utils/stripe";
 import { prisma } from "~/server/db";
 import Stripe from "stripe";
+import { captureException } from "@sentry/nextjs";
 
 interface BillingInfo {
   customer: Stripe.Customer & {
@@ -54,57 +55,65 @@ export const billingRouter = createTRPCRouter({
         }
       } catch (error) {
         console.log(error);
-        throw error;
+        captureException(error);
       }
     }),
 
   info: protectedProcedure.query(async ({ ctx }) => {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-    });
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+      });
 
-    if (!user?.customerId) {
-      return null;
-    }
+      if (!user?.customerId) {
+        return null;
+      }
 
-    const customer = (await stripeClient.customers.retrieve(user.customerId, {
-      expand: [
-        "subscriptions",
-        "subscriptions.data.plan",
-        "subscriptions.data.plan.product",
-      ],
-    })) as unknown as Stripe.Customer & {
-      subscriptions: Stripe.Subscription[] & {
-        plan: Stripe.Plan;
+      const customer = (await stripeClient.customers.retrieve(user.customerId, {
+        expand: [
+          "subscriptions",
+          "subscriptions.data.plan",
+          "subscriptions.data.plan.product",
+        ],
+      })) as unknown as Stripe.Customer & {
+        subscriptions: Stripe.Subscription[] & {
+          plan: Stripe.Plan;
+        };
       };
-    };
 
-    const invoices = await stripeClient.invoices.list({
-      customer: customer.id,
-    });
+      const invoices = await stripeClient.invoices.list({
+        customer: customer.id,
+      });
 
-    return {
-      customer,
-      invoices,
-    } as BillingInfo;
+      return {
+        customer,
+        invoices,
+      } as BillingInfo;
+    } catch (error) {
+      captureException(error);
+    }
   }),
   updateLink: protectedProcedure.mutation(async ({ ctx }) => {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-    });
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.session.user.id,
+        },
+      });
 
-    if (!user?.customerId) {
-      return;
+      if (!user?.customerId) {
+        return;
+      }
+
+      const session = await stripeClient.billingPortal.sessions.create({
+        customer: user.customerId,
+      });
+
+      return session.url;
+    } catch (error) {
+      captureException(error);
     }
-
-    const session = await stripeClient.billingPortal.sessions.create({
-      customer: user.customerId,
-    });
-
-    return session.url;
   }),
 });

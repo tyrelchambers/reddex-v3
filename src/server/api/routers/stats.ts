@@ -43,7 +43,3 @@ export const statsRouter = createTRPCRouter({
     });
   }),
 });
-
-// stories submitted
-// posts retreived
-// narrator count

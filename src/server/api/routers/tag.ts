@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import { tagOnPostSchema, tagSaveSchema } from "~/server/schemas";
+import { captureException } from "@sentry/nextjs";
 
 export const tagRouter = createTRPCRouter({
   add: protectedProcedure.input(tagOnPostSchema).mutation(async ({ input }) => {
@@ -15,22 +16,27 @@ export const tagRouter = createTRPCRouter({
   save: protectedProcedure
     .input(tagSaveSchema)
     .mutation(async ({ ctx, input }) => {
-      const tag = await prisma.tag.create({
-        data: {
-          tag: input.tag,
-          userId: ctx.session.user.id,
-        },
-      });
-
-      if (input.storyId) {
-        await prisma.tagsOnStories.create({
+      try {
+        const tag = await prisma.tag.create({
           data: {
-            RedditPostId: input.storyId,
-            tagId: tag.id,
+            tag: input.tag,
+            userId: ctx.session.user.id,
           },
         });
+
+        if (input.storyId) {
+          await prisma.tagsOnStories.create({
+            data: {
+              RedditPostId: input.storyId,
+              tagId: tag.id,
+            },
+          });
+        }
+        return;
+      } catch (error) {
+        captureException(error);
+        throw error;
       }
-      return;
     }),
   all: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.tag.findMany({
@@ -50,11 +56,15 @@ export const tagRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      return await prisma.tag.deleteMany({
-        where: {
-          id: input,
-          userId: ctx.session.user.id,
-        },
-      });
+      try {
+        return await prisma.tag.deleteMany({
+          where: {
+            id: input,
+            userId: ctx.session.user.id,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+      }
     }),
 });

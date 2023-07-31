@@ -30,10 +30,10 @@ const Login = ({ providers }: Props) => {
       <main>
         <Header />
 
-        <section className="mx-auto my-20 flex max-w-screen-lg flex-col-reverse gap-4 px-4 lg:flex-row">
-          <div className="flex flex-col lg:w-1/2">
+        <section className="mx-auto my-20 flex max-w-screen-sm flex-col-reverse gap-4 rounded-2xl bg-card p-6 px-4 lg:flex-row">
+          <div className="flex flex-col">
             <h1 className="text-2xl text-foreground">Login to Reddex</h1>
-            <p className=" text-foreground/70">
+            <p className=" text-foreground/50">
               Login with Reddit to create an account if you don&apos;t have one,
               or login to an existing account.
             </p>

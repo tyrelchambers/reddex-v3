@@ -1,6 +1,6 @@
 const mockEnv = {
   DATABASE_URL: "xxx",
-  NODE_ENV: "xxx",
+  NODE_ENV: "test",
   NEXTAUTH_SECRET: "xxx",
   NEXTAUTH_URL: "xxx",
   REDDIT_CLIENT_ID: "xxx",
@@ -16,7 +16,7 @@ const mockEnv = {
   SENDGRID_API_KEY: "xxx",
   IBM_API_KEY: "xxx",
   IBM_URL: "xxx",
-  NEXT_PUBLIC_NODE_ENV: "xxx",
+  NEXT_PUBLIC_NODE_ENV: "test",
   SENTRY_DSN: "xxx",
   NEXT_PUBLIC_SENTRY_DSN: "xxx",
 };

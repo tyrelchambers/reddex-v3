@@ -33,7 +33,7 @@ const AccountSetup = () => {
   >("yearly");
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const router = useRouter();
-  const user = userQuery.data;
+  const user = userQuery?.data;
 
   const form = useForm({
     initialValues: {

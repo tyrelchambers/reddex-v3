@@ -44,10 +44,6 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
-    redirect: (params) => {
-      console.log(params);
-      return params.url;
-    },
   },
   adapter: PrismaAdapter(prisma),
   events: {

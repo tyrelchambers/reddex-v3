@@ -14,6 +14,8 @@ import {
   mantineSelectClasses,
 } from "~/lib/styles";
 import { getStorySelectList } from "~/utils";
+import { trackUiEvent } from "~/utils/mixpanelClient";
+import { MixpanelEvents } from "~/types";
 
 const Tags = () => {
   const apiContext = api.useContext();
@@ -37,6 +39,7 @@ const Tags = () => {
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
+    trackUiEvent(MixpanelEvents.CREATE_TAG);
     tagMutation.mutate(form.values);
   };
 
@@ -47,7 +50,13 @@ const Tags = () => {
       <main className="mx-auto my-6 max-w-screen-2xl px-4 lg:px-0">
         <header className="flex justify-between">
           <h1 className="text-2xl text-foreground">Tags</h1>
-          <Button variant="secondary" onClick={open}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL);
+              open();
+            }}
+          >
             Create tag
           </Button>
         </header>

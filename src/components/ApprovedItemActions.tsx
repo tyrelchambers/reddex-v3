@@ -9,12 +9,17 @@ import { mantineModalClasses, mantineSelectClasses } from "~/lib/styles";
 import EmptyState from "./EmptyState";
 import Link from "next/link";
 import { routes } from "~/routes";
+import { useSession } from "next-auth/react";
+import { trackUiEvent } from "~/utils/mixpanelClient";
+import { MixpanelEvents } from "~/types";
 
 interface Props {
   postId: RedditPost["id"];
 }
 
 const ApprovedItemActions = ({ postId }: Props) => {
+  const { data } = useSession();
+
   const [opened, { open, close }] = useDisclosure(false);
 
   const apiContext = api.useContext();
@@ -54,17 +59,38 @@ const ApprovedItemActions = ({ postId }: Props) => {
 
   return (
     <div className="flex flex-wrap gap-3">
-      <Button variant="outline" type="button" onClick={open}>
+      <Button
+        variant="outline"
+        type="button"
+        onClick={() => {
+          trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL, {
+            userId: data?.user.id,
+          });
+          open();
+        }}
+      >
         Add tags
       </Button>
       <Button
         variant="outline"
-        onClick={() => addToCompleted.mutate(postId)}
+        onClick={() => {
+          trackUiEvent(MixpanelEvents.MARK_AS_READ, {
+            userId: data?.user.id,
+          });
+          addToCompleted.mutate(postId);
+        }}
         type="button"
       >
         Mark as read
       </Button>
-      <Link href={routes.STUDIO + `/${postId}`}>
+      <Link
+        href={routes.STUDIO + `/${postId}`}
+        onClick={() =>
+          trackUiEvent(MixpanelEvents.VIEW_IN_STUDIO, {
+            userId: data?.user.id,
+          })
+        }
+      >
         <Button>View in Studio</Button>
       </Link>
 
@@ -90,6 +116,11 @@ const ApprovedItemActions = ({ postId }: Props) => {
             className="w-full"
             type="submit"
             disabled={!formattedTags.length}
+            onClick={() =>
+              trackUiEvent(MixpanelEvents.ADD_TAG_TO_STORY, {
+                userId: data?.user.id,
+              })
+            }
           >
             Add tag to story
           </Button>

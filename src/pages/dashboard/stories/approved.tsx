@@ -2,6 +2,7 @@ import { faSearch } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
@@ -9,9 +10,12 @@ import ImportStoryForm from "~/forms/ImportStoryForm";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { storiesTabs } from "~/routes";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Approved = () => {
+  const { data } = useSession();
   const approvedListQuery = api.story.getApprovedList.useQuery();
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -37,7 +41,15 @@ const Approved = () => {
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
 
-          <Button variant="secondary" onClick={open}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.IMPORT_STORY, {
+                userId: data?.user.id,
+              });
+              open();
+            }}
+          >
             Import story
           </Button>
         </div>

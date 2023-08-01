@@ -12,7 +12,7 @@ import { Divider, Image, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import React, { FormEvent, useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
-import { GeneralSettings } from "~/types";
+import { GeneralSettings, MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
@@ -29,6 +29,7 @@ import { Button } from "~/components/ui/button";
 import { mantineInputClasses } from "~/lib/styles";
 import { useUserStore } from "~/stores/useUserStore";
 import { hasProPlan } from "~/utils";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -114,6 +115,7 @@ const General = () => {
     if (hasErrors) return;
 
     if (thumbnail) {
+      trackUiEvent(MixpanelEvents.PROCESS_THUMBNAIL);
       const url = await thumbnailRef.current?.processFile();
       if (url?.serverId) {
         payload["thumbnail"] = url.serverId;
@@ -121,12 +123,16 @@ const General = () => {
     }
 
     if (banner) {
+      trackUiEvent(MixpanelEvents.PROCESS_BANNER);
       const url = await bannerRef.current?.processFile();
       if (url?.serverId) {
         payload["banner"] = url.serverId;
       }
     }
 
+    trackUiEvent(MixpanelEvents.SAVE_WEBSITE_SETTINGS, {
+      userId: userStore.user?.id,
+    });
     websiteSave.mutate({
       ...form.values,
       ...payload,
@@ -135,10 +141,12 @@ const General = () => {
 
   // handler to hide the website from public
   const hideWebsiteHandler = () => {
+    trackUiEvent(MixpanelEvents.HIDE_WEBSITE);
     hideWebsite.mutate(true);
   };
 
   const showWebsiteHandler = () => {
+    trackUiEvent(MixpanelEvents.SHOW_WEBSITE);
     hideWebsite.mutate(false);
   };
 

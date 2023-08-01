@@ -8,8 +8,10 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { useUserStore } from "~/stores/useUserStore";
+import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 interface Module {
   id?: string;
@@ -74,6 +76,7 @@ const SubmissionForm = () => {
 
     if (hasErrors) return;
 
+    trackUiEvent(MixpanelEvents.SAVE_SUBMISSION_FORM);
     submissionFormSave.mutate({
       name,
       subtitle,
@@ -84,6 +87,8 @@ const SubmissionForm = () => {
 
   const visibilityHandler = () => {
     if (!websiteSettings.data?.submissionPage) return;
+
+    trackUiEvent(MixpanelEvents.HIDE_SUBMISSION_FORM);
 
     saveSubmissionFormVisibility.mutate({
       hidden: !websiteSettings.data?.submissionPage.hidden,

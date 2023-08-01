@@ -3,17 +3,65 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal, TextInput, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Contact } from "@prisma/client";
-import React from "react";
+import React, { FormEvent, useEffect } from "react";
 import { Button } from "./ui/button";
 import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
+import { trackUiEvent } from "~/utils/mixpanelClient";
+import { MixpanelEvents } from "~/types";
+import { useForm } from "@mantine/form";
+import { api } from "~/utils/api";
 
 interface Props {
   contact: Contact;
 }
 
 const ContactItem = ({ contact }: Props) => {
-  const [opened, { open, close }] = useDisclosure(false);
+  const apiContext = api.useContext();
 
+  const contactQuery = api.contact.getContactById.useQuery(contact.id, {
+    enabled: !!contact.id,
+  });
+  const deleteContact = api.contact.deleteContact.useMutation({
+    onSuccess: () => {
+      apiContext.contact.invalidate();
+    },
+  });
+  const updateContact = api.contact.updateContact.useMutation({
+    onSuccess: () => {
+      apiContext.contact.invalidate();
+    },
+  });
+  const [opened, { open, close }] = useDisclosure(false);
+  const forms = useForm({
+    initialValues: {
+      name: "",
+      notes: "",
+    },
+  });
+
+  useEffect(() => {
+    if (contactQuery.data) {
+      forms.setValues({
+        name: contactQuery.data.name,
+        notes: contactQuery.data.notes ?? undefined,
+      });
+    }
+  }, [contact]);
+
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+    trackUiEvent(MixpanelEvents.SAVE_EDIT_CONTACT_FORM);
+    updateContact.mutate({
+      id: contact.id,
+      name: forms.values.name,
+      notes: forms.values.notes,
+    });
+  };
+
+  const deleteHandler = () => {
+    trackUiEvent(MixpanelEvents.DELETE_CONTACT);
+    deleteContact.mutate(contact.id);
+  };
   return (
     <div
       key={contact.id}
@@ -33,7 +81,13 @@ const ContactItem = ({ contact }: Props) => {
       )}
 
       <footer className="flex justify-end p-2 px-4">
-        <Button variant="secondary" onClick={open}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            trackUiEvent(MixpanelEvents.OPEN_EDIT_CONTACT_MODAL);
+            open();
+          }}
+        >
           Edit
         </Button>
       </footer>
@@ -44,24 +98,24 @@ const ContactItem = ({ contact }: Props) => {
         title="Editing contact"
         classNames={mantineModalClasses}
       >
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={submitHandler}>
           <TextInput
-            value={contact.name}
             label="Name"
             variant="filled"
             classNames={mantineInputClasses}
+            {...forms.getInputProps("name")}
           />
           <Textarea
-            value={contact?.notes || undefined}
             label="Notes"
             variant="filled"
             classNames={mantineInputClasses}
+            {...forms.getInputProps("notes")}
           />
           <footer className="flex justify-between gap-3">
-            <button className="button simple !text-red-500">
+            <Button variant="link" onClick={deleteHandler}>
               Delete contact
-            </button>
-            <button className="button main">Save</button>
+            </Button>
+            <Button>Save</Button>
           </footer>
         </form>
       </Modal>

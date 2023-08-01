@@ -7,8 +7,10 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineSelectClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { useUserStore } from "~/stores/useUserStore";
+import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const themes = ["light", "dark"];
 
@@ -41,6 +43,7 @@ const Theme = () => {
 
     if (hasErrors) return;
 
+    trackUiEvent(MixpanelEvents.SAVE_THEME_SETTINGS);
     saveTheme.mutate(form.values);
   };
 

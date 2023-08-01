@@ -1,11 +1,15 @@
+import { useSession } from "next-auth/react";
 import React from "react";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { storiesTabs } from "~/routes";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Completed = () => {
+  const { data } = useSession();
   const apiContext = api.useContext();
   const completedListQuery = api.story.getCompletedList.useQuery();
   const removeAll = api.story.removeAllFromCompletedList.useMutation({
@@ -28,7 +32,12 @@ const Completed = () => {
           <Button
             variant="secondary"
             className="mt-4 lg:mt-0"
-            onClick={() => removeAll.mutate()}
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.REMOVE_ALL_COMPLETED_STORIES, {
+                userId: data?.user?.id,
+              });
+              removeAll.mutate();
+            }}
           >
             Remove all
           </Button>

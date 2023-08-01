@@ -6,8 +6,9 @@ import { toast } from "react-toastify";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineSelectClasses } from "~/lib/styles";
-import { GenerateTypes } from "~/types";
+import { GenerateTypes, MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 interface FormProps {
   title: string;
@@ -108,7 +109,10 @@ const StudioId = () => {
                 variant="outline"
                 type="button"
                 className="flex-1"
-                onClick={() => copyToClipboard("title")}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.COPY_GENERATED_TITLE);
+                  copyToClipboard("title");
+                }}
                 disabled={!form.values.title}
               >
                 Copy
@@ -116,7 +120,10 @@ const StudioId = () => {
               <Button
                 className="flex-1"
                 type="button"
-                onClick={() => generateHandler("title", storyQuery.data?.id)}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.GENERATE_STUDIO_TITLE);
+                  generateHandler("title", storyQuery.data?.id);
+                }}
                 disabled={loadingStates.title}
               >
                 {loadingStates.title ? "Generating..." : "Generate title"}
@@ -138,7 +145,10 @@ const StudioId = () => {
                 variant="outline"
                 type="button"
                 className="flex-1"
-                onClick={() => copyToClipboard("description")}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.COPY_GENERATED_DESCRIPTION);
+                  copyToClipboard("description");
+                }}
                 disabled={!form.values.description}
               >
                 Copy
@@ -146,9 +156,10 @@ const StudioId = () => {
               <Button
                 className="flex-1"
                 type="button"
-                onClick={() =>
-                  generateHandler("description", storyQuery.data?.id)
-                }
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.GENERATE_STUDIO_DESCRIPTION);
+                  generateHandler("description", storyQuery.data?.id);
+                }}
                 disabled={loadingStates.description}
               >
                 {loadingStates.description
@@ -172,7 +183,10 @@ const StudioId = () => {
                 variant="outline"
                 type="button"
                 className="flex-1"
-                onClick={() => copyToClipboard("tags")}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.COPY_GENERATED_TAGS);
+                  copyToClipboard("tags");
+                }}
                 disabled={!form.values.tags}
               >
                 Copy
@@ -180,7 +194,10 @@ const StudioId = () => {
               <Button
                 className="flex-1"
                 type="button"
-                onClick={() => generateHandler("tags", storyQuery.data?.id)}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.GENERATE_STUDIO_TAGS);
+                  generateHandler("tags", storyQuery.data?.id);
+                }}
                 disabled={loadingStates.tags}
               >
                 {loadingStates.tags ? "Generating..." : "Generate tags"}

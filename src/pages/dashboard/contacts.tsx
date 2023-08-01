@@ -8,7 +8,9 @@ import { Button } from "~/components/ui/button";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
 import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Contacts = () => {
   const apiContext = api.useContext();
@@ -30,6 +32,7 @@ const Contacts = () => {
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
 
+    trackUiEvent(MixpanelEvents.SAVE_CONTACT_FORM);
     saveContact.mutate(form.values);
   };
 
@@ -41,7 +44,13 @@ const Contacts = () => {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl text-foreground">Contacts</h1>
 
-          <Button variant="secondary" onClick={open}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.OPEN_ADD_CONTACT_MODAL);
+              open();
+            }}
+          >
             Add contact
           </Button>
         </header>

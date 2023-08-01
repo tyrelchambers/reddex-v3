@@ -18,6 +18,8 @@ import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
 import { hasActiveSubscription } from "~/utils";
 import SubscriptionBoundary from "~/layouts/SubscriptionBoundary";
+import mixpanel from "mixpanel-browser";
+import { env } from "~/env.mjs";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -27,6 +29,12 @@ const font = Poppins({
 type MyAppProps = {
   session: Session | null;
 };
+
+mixpanel.init(env.NEXT_PUBLIC_MIXPANEL_TOKEN, {
+  debug: true,
+  track_pageview: true,
+  persistence: "localStorage",
+});
 
 const MyApp: AppType<MyAppProps> = ({
   Component,

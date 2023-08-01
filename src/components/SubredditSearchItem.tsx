@@ -14,10 +14,11 @@ import Link from "next/link";
 import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useQueueStore } from "~/stores/queueStore";
-import { PostFromReddit } from "~/types";
+import { MixpanelEvents, PostFromReddit } from "~/types";
 import { Tooltip, clsx } from "@mantine/core";
 import { Button } from "./ui/button";
 import { calculateReadingTime } from "~/lib/utils";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 interface Props {
   post: PostFromReddit;
@@ -130,7 +131,10 @@ const SubredditSearchItem = ({
               <Button
                 variant="default"
                 size="xs"
-                onClick={() => queueStore.remove(post)}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.REMOVE_FROM_QUEUE);
+                  queueStore.remove(post);
+                }}
               >
                 Remove from queue
               </Button>
@@ -138,7 +142,10 @@ const SubredditSearchItem = ({
               <Button
                 variant="outline"
                 size="xs"
-                onClick={() => queueStore.add(post)}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.ADD_TO_QUEUE);
+                  queueStore.add(post);
+                }}
               >
                 <FontAwesomeIcon icon={faAdd} className="mr-2" />
                 Add to Queue

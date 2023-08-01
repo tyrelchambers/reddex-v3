@@ -5,7 +5,9 @@ import React from "react";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineBadgeClasses } from "~/lib/styles";
 import { storiesTabs } from "~/routes";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Submitted = () => {
   const submittedStories = api.story.submittedList.useQuery();
@@ -32,6 +34,7 @@ const Submitted = () => {
         <Link
           href={"/story/" + story.id}
           className="rounded-full border-[1px] border-border px-5 py-1 text-muted-foreground  hover:bg-gray-200 hover:text-background"
+          onClick={() => trackUiEvent(MixpanelEvents.VIEW_SUBMITTED_STORY)}
         >
           View
         </Link>

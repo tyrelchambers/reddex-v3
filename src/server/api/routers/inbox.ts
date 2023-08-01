@@ -1,11 +1,16 @@
 import axios from "axios";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { prisma } from "~/server/db";
-import { RedditInboxMessage, RedditInboxResponse } from "~/types";
+import {
+  MixpanelEvents,
+  RedditInboxMessage,
+  RedditInboxResponse,
+} from "~/types";
 import { sendMessageSchema } from "~/server/schemas";
 import { z } from "zod";
 import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
+import { trackEvent } from "~/utils/mixpanel";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -134,6 +139,8 @@ export const inboxRouter = createTRPCRouter({
             post.subject.toLowerCase().includes(query) ||
             post.dest.toLowerCase().includes(query)
         );
+
+      trackEvent(MixpanelEvents.SEARCH_INBOX);
 
       return found;
     } catch (error) {

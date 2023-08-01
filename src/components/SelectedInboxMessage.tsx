@@ -8,7 +8,11 @@ import { Divider, Textarea } from "@mantine/core";
 import { fromUnixTime } from "date-fns";
 import { format } from "date-fns";
 import React, { FormEvent, useMemo } from "react";
-import { FormattedMessagesList, RedditInboxMessage } from "~/types";
+import {
+  FormattedMessagesList,
+  MixpanelEvents,
+  RedditInboxMessage,
+} from "~/types";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
@@ -16,6 +20,7 @@ import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
 import { useViewportSize } from "@mantine/hooks";
 import { formatInboxMessagesToList } from "~/utils";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 interface Props {
   message: RedditInboxMessage | undefined;
@@ -64,6 +69,8 @@ const SelectedInboxMessage = ({ message }: Props) => {
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
 
+    trackUiEvent(MixpanelEvents.SEND_INBOX_MESSAGE);
+
     messageMutation.mutate({
       thing_id: message.name,
       message: form.values.message,
@@ -71,11 +78,13 @@ const SelectedInboxMessage = ({ message }: Props) => {
   };
 
   const addToContacts = (name: string) => {
+    trackUiEvent(MixpanelEvents.ADD_INBOX_CONTACT_TO_CONTACTS);
     addContact.mutate({ name });
   };
 
   const addStoryToReadingList = () => {
     if (post) {
+      trackUiEvent(MixpanelEvents.ADD_STORY_TO_READING_LIST);
       stories.mutate(post.id);
     }
   };

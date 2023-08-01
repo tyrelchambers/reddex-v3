@@ -2,7 +2,8 @@ import { format, fromUnixTime } from "date-fns";
 import { NextRouter } from "next/router";
 import React from "react";
 import { routes } from "~/routes";
-import { RedditInboxMessage } from "~/types";
+import { MixpanelEvents, RedditInboxMessage } from "~/types";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 interface Props {
   messages: RedditInboxMessage[];
@@ -23,6 +24,7 @@ const InboxMessageList = ({
         <button
           key={m.id}
           onClick={() => {
+            trackUiEvent(MixpanelEvents.SELECT_INBOX_MESSAGE);
             setSelectedMessageId(m.id);
             router.push(routes.INBOX, {
               search: `message=${m.id}`,

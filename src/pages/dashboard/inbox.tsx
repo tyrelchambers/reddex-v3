@@ -11,7 +11,9 @@ import { Button } from "~/components/ui/button";
 import { breakpoints } from "~/constants";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Inbox = () => {
   const searchRef = useRef<HTMLInputElement>(null);
@@ -45,6 +47,7 @@ const Inbox = () => {
   }, [router.query, router.isReady]);
 
   const resetSearch = () => {
+    trackUiEvent(MixpanelEvents.RESET_SEARCH_INPUT);
     setSearch("");
     if (searchRef.current) {
       searchRef.current.value = "";

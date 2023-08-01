@@ -9,8 +9,10 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { useUserStore } from "~/stores/useUserStore";
+import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Integrations = () => {
   const userStore = useUserStore();
@@ -39,6 +41,8 @@ const Integrations = () => {
     const { hasErrors } = form.validate();
 
     if (hasErrors) return;
+
+    trackUiEvent(MixpanelEvents.SAVE_INTERGRATIONS_SETTINGS);
 
     saveIntegrations.mutate(form.values);
   };

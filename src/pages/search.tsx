@@ -1,4 +1,3 @@
-"use client";
 import { Drawer, Loader, Modal, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
@@ -11,7 +10,7 @@ import QueueBanner from "~/components/QueueBanner";
 import FilterSelections from "~/components/FilterSelections";
 import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
-import { FilterState, PostFromReddit } from "~/types";
+import { FilterState, MixpanelEvents, PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
 import {
   mantineDrawerClasses,
@@ -26,6 +25,7 @@ import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
 import { useSubscribed } from "~/hooks/useSubscribed";
 import { useRouter } from "next/router";
 import queryString from "query-string";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -102,6 +102,10 @@ const Search = () => {
 
   const searchHandler = (data: SearchHandlerProps) => {
     if (!data.subreddit) return;
+
+    trackUiEvent(MixpanelEvents.SUBREDDIT_SEARCH, {
+      subreddit: data.subreddit,
+    });
 
     subredditSearch.mutate(data);
   };

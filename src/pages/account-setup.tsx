@@ -2,7 +2,6 @@ import { faCheckCircle } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, List, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useSessionStorage } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { FormEvent, useState } from "react";

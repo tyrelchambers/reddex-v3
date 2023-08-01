@@ -1,8 +1,11 @@
 import mixpanel, { Dict } from "mixpanel-browser";
+import { env } from "~/env.mjs";
 
 export const trackUiEvent = <T extends Dict>(
   name: string,
   props?: Record<string, number | string> | T
 ) => {
-  mixpanel.track(name, { ...props });
+  if (env.NEXT_PUBLIC_NODE_ENV === "production") {
+    mixpanel.track(name, { ...props });
+  }
 };

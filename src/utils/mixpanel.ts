@@ -10,6 +10,13 @@ const getMixpanel = () => {
     console.warn("Mixpanel is not configured, app will not track metrics.");
     return;
   }
+
+  if (env.NODE_ENV === "development" || env.NODE_ENV === "test") {
+    console.warn(
+      "Mixpanel is not being run in production. Not tracking metrics."
+    );
+    return;
+  }
   memo.mixpanel = Mixpanel.init(token);
   return memo.mixpanel;
 };

@@ -2,7 +2,6 @@ import { faCheckCircle } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, List, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { FormEvent, useState } from "react";
 import PricingChip from "~/components/PricingChip";
@@ -10,7 +9,6 @@ import PricingFrequencySelect from "~/components/PricingFrequencySelect";
 import { Button } from "~/components/ui/button";
 import { plans } from "~/constants";
 import { mantineInputClasses } from "~/lib/styles";
-import { routes } from "~/routes";
 import { api } from "~/utils/api";
 
 interface NoSelectedPlanProps {
@@ -20,19 +18,15 @@ interface NoSelectedPlanProps {
 }
 
 const AccountSetup = () => {
-  const [loading, setLoading] = React.useState(false);
-  const session = useSession();
-  const userQuery = api.user.me.useQuery(undefined, {
-    enabled: session.status === "authenticated",
-  });
+  const [loading, setLoading] = useState(false);
+
   const updateUser = api.user.saveProfile.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
-  const [selectedFrequency, setSelectedFrequency] = React.useState<
+  const [selectedFrequency, setSelectedFrequency] = useState<
     "yearly" | "monthly"
   >("yearly");
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const router = useRouter();
-  const user = userQuery?.data;
 
   const form = useForm({
     initialValues: {
@@ -43,24 +37,13 @@ const AccountSetup = () => {
     },
   });
 
-  React.useEffect(() => {
-    const redirectTo = (router.query.redirectTo as string) || routes.APPROVED;
-    if (user) {
-      if (user.email && user.customerId) {
-        router.push(redirectTo);
-      } else if (!userQuery.isLoading && !userQuery.data) {
-        router.push("/");
-      } else if (!userQuery.isLoading && userQuery.data) {
-        setLoading(false);
-      }
-    }
-  }, [user, userQuery.data]);
-
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     const { hasErrors } = form.validate();
+    const params = new URLSearchParams(window.location.search);
+    const customerId = await createCustomer.mutateAsync(form.values.email);
 
     if (hasErrors) {
       return setLoading(false);
@@ -70,26 +53,31 @@ const AccountSetup = () => {
       email: form.values.email,
     });
 
-    const customerId = await createCustomer.mutateAsync(form.values.email);
-
     if (!customerId) throw new Error("Missing customer ID");
 
-    router.push(routes.CREATE_SUBSCRIPTION, {
-      query: { plan: selectedPlan },
-    });
+    params.set("step", "2");
   };
 
   const setSelectedPlanHandler = (plan: string) => {
+    if (!plan) return;
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("plan", plan);
+
     setSelectedPlan(plan);
+
     router.push(router.asPath, {
-      query: { plan },
+      query: params.toString(),
     });
   };
 
   const clearPlan = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("plan");
+
     setSelectedPlan(null);
     router.push(router.asPath, {
-      query: {},
+      query: params.toString(),
     });
   };
 

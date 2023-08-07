@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "~/server/auth";
 import { routes } from "~/routes";
+import { captureException } from "@sentry/nextjs";
 
 interface Props {
   providers: ClientSafeProvider[];
@@ -66,6 +67,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const providers = (await getProviders()) || {};
+
+  if (!providers) {
+    captureException(new Error("No providers"), {
+      extra: {
+        providers,
+      },
+    });
+  }
 
   return {
     props: { providers: Object.values(providers) ?? [] },

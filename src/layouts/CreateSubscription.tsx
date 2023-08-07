@@ -1,12 +1,16 @@
+import { captureException } from "@sentry/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { routes } from "~/routes";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const CreateSubscription = () => {
   const router = useRouter();
   const paymentLink = api.stripe.createCheckout.useMutation();
-
+  const session = useSession();
   const userQuery = api.user.me.useQuery();
 
   useEffect(() => {
@@ -38,6 +42,12 @@ const CreateSubscription = () => {
           }
         } catch (error) {
           console.log(error);
+          trackUiEvent(MixpanelEvents.CREATE_SUBSCRIPTION_FAILED, {
+            plan: selectedPlan,
+            userId: session.data?.user.id,
+            step: "1",
+          });
+          captureException(error);
         }
       };
 

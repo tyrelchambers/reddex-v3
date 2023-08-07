@@ -2,6 +2,8 @@ import { faCheckCircle } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, List, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
+import { captureException } from "@sentry/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { FormEvent, useState } from "react";
 import PricingChip from "~/components/PricingChip";
@@ -9,7 +11,9 @@ import PricingFrequencySelect from "~/components/PricingFrequencySelect";
 import { Button } from "~/components/ui/button";
 import { plans } from "~/constants";
 import { mantineInputClasses } from "~/lib/styles";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 interface NoSelectedPlanProps {
   setSelectedPlanHandler: (id: string) => void;
@@ -18,6 +22,7 @@ interface NoSelectedPlanProps {
 }
 
 const AccountSetup = () => {
+  const session = useSession();
   const [loading, setLoading] = useState(false);
 
   const updateUser = api.user.saveProfile.useMutation();
@@ -39,23 +44,32 @@ const AccountSetup = () => {
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const { hasErrors } = form.validate();
-    const params = new URLSearchParams(window.location.search);
-    const customerId = await createCustomer.mutateAsync(form.values.email);
+      const { hasErrors } = form.validate();
+      const params = new URLSearchParams(window.location.search);
+      const customerId = await createCustomer.mutateAsync(form.values.email);
 
-    if (hasErrors) {
-      return setLoading(false);
+      if (hasErrors) {
+        return setLoading(false);
+      }
+
+      await updateUser.mutateAsync({
+        email: form.values.email,
+      });
+
+      if (!customerId) throw new Error("Missing customer ID");
+
+      params.set("step", "2");
+    } catch (error) {
+      captureException(error);
+      trackUiEvent(MixpanelEvents.ONBOARDING_STEP_1_FAILED, {
+        plan: selectedPlan,
+        userId: session.data?.user.id,
+        step: "1",
+      });
     }
-
-    await updateUser.mutateAsync({
-      email: form.values.email,
-    });
-
-    if (!customerId) throw new Error("Missing customer ID");
-
-    params.set("step", "2");
   };
 
   const setSelectedPlanHandler = (plan: string) => {

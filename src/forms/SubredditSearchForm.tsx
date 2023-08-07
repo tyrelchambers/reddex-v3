@@ -75,8 +75,8 @@ const SubredditSearchForm = ({
               icon={faSpinnerThird}
               spin
               style={{
-                "--fa-primary-color": "#fff",
-                "--fa-secondary-color": "#1b3055",
+                ["--fa-primary-color" as string]: "#fff",
+                ["--fa-secondary-color" as string]: "#1b3055",
               }}
             />
           ) : (

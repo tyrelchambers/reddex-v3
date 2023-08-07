@@ -18,7 +18,6 @@ import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
-import { useViewportSize } from "@mantine/hooks";
 import { formatInboxMessagesToList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 

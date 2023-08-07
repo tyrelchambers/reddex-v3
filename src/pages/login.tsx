@@ -8,7 +8,6 @@ import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "~/server/auth";
 import { routes } from "~/routes";
-import { captureException } from "@sentry/nextjs";
 
 interface Props {
   providers: ClientSafeProvider[];
@@ -17,7 +16,7 @@ interface Props {
 const Login = ({ providers }: Props) => {
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
     await signIn(p.id, {
-      callbackUrl: routes.ACCOUNT_CHECK,
+      callbackUrl: routes.ONBOARDING,
     });
   };
 

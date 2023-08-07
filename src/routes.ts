@@ -31,12 +31,11 @@ export const routes = {
   APPROVED: "/dashboard/stories/approved",
   WEBSITE_GENERAL: "/dashboard/website/general",
   SUBSCRIPTION_CHECK: "/subscription-check",
-  ACCOUNT_CHECK: "/account-setup",
   SETTINGS_PROFILE: "/dashboard/settings/profile",
   SETTINGS_ACCOUNT: "/dashboard/settings/account",
   SEARCH: "/search",
   STUDIO: "/dashboard/studio",
-  CREATE_SUBSCRIPTION: "/create-subscription",
+  ONBOARDING: "/onboarding",
 };
 
 export const dashNavRoutes = [

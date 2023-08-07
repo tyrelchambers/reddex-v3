@@ -68,16 +68,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const providers = (await getProviders()) || null;
 
-  if (!providers) {
-    captureException(new Error("No providers"), {
-      extra: {
-        providers,
-      },
-    });
-  }
-
-  console.log(providers);
-
   return {
     props: { providers: providers ? Object.values(providers) : [] },
   };

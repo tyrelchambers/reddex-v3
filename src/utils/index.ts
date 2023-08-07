@@ -10,7 +10,6 @@ import {
 } from "~/types";
 import Stripe from "stripe";
 import queryString, { ParsedQuery } from "query-string";
-import { FormProps } from "~/components/FilterSelections";
 import { isDeletedCustomer, isStripeCustomer } from "./typeguards";
 
 export const addLastSearchedOrUpdate = async () => {
@@ -145,13 +144,9 @@ export const isFilterWithQualifier = (value: any): value is Filter => {
   return true;
 };
 
-export const buildParams = <
-  T extends Partial<FilterState> | Partial<FormProps>
->(
-  appliedFilters: T
-) => {
+export const buildParams = <T>(appliedFilters: T) => {
   const flattenedFilters = () => {
-    const filters: Partial<T> = {};
+    const filters: Partial<Record<keyof T, unknown>> = {};
 
     for (const key in appliedFilters) {
       const element = appliedFilters[key];
@@ -159,6 +154,7 @@ export const buildParams = <
       if (
         element &&
         typeof element === "object" &&
+        "value" in element &&
         element.value !== undefined &&
         element.value !== 0
       ) {

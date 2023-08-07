@@ -66,7 +66,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/" } };
   }
 
-  const providers = (await getProviders()) || {};
+  const providers = (await getProviders()) || null;
 
   if (!providers) {
     captureException(new Error("No providers"), {
@@ -77,7 +77,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { providers: Object.values(providers) ?? [] },
+    props: { providers: providers ? Object.values(providers) : [] },
   };
 }
 

@@ -5,7 +5,6 @@ import DashNav from "./DashNav";
 import { Tab } from "~/types";
 import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
-import { useSubscribed } from "~/hooks/useSubscribed";
 import { useViewportSize } from "@mantine/hooks";
 import { breakpoints } from "~/constants";
 
@@ -17,7 +16,6 @@ interface Props {
 }
 
 const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
-  useSubscribed();
   const { width } = useViewportSize();
 
   return (

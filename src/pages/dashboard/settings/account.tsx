@@ -111,6 +111,7 @@ const Settings = () => {
               <button
                 className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
                 type="button"
+                onClick={() => updateLink.mutate()}
               >
                 Manage subscription{" "}
                 <FontAwesomeIcon icon={faSquareArrowUpRight} className="ml-2" />

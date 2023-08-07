@@ -51,7 +51,9 @@ export default async function handler(
 
       if (!userFromCustomer) throw new Error("No customer found from ID");
 
-      const priceId = subscription.plan.id;
+      const priceId = subscription.plan?.id;
+
+      if (!priceId) throw new Error("No price ID found");
 
       const price = (await stripeClient.prices.retrieve(priceId, {
         expand: ["product"],

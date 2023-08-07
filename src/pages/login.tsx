@@ -76,6 +76,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     });
   }
 
+  console.log(providers);
+
   return {
     props: { providers: providers ? Object.values(providers) : [] },
   };

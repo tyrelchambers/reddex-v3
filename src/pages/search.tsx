@@ -22,7 +22,6 @@ import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
 import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
-import { useSubscribed } from "~/hooks/useSubscribed";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { trackUiEvent } from "~/utils/mixpanelClient";
@@ -41,7 +40,6 @@ const Search = () => {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [opened, { open, close }] = useDisclosure(false);
-  const { activeSub } = useSubscribed();
   const statsUpdate = api.stats.set.useMutation();
   const currentUser = api.user.me.useQuery(undefined, {
     enabled: session.status === "authenticated",
@@ -179,9 +177,8 @@ const Search = () => {
                     usersWordsPerMinute={
                       currentUser.data?.Profile?.words_per_minute
                     }
-                    canAddToQueue={
-                      session.status === "authenticated" && activeSub
-                    }
+                    // fix
+                    canAddToQueue={session.status === "authenticated" && false}
                   />
                 ))) ||
               null}

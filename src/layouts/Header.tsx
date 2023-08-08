@@ -104,7 +104,7 @@ const Header = ({ openDrawer }: Props) => {
           </button>
           {session.status !== "loading" && (
             <div className="flex">
-              {session.status === "authenticated" ? (
+              {session.data?.user ? (
                 <UserMenu />
               ) : (
                 <Link

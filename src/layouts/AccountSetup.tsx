@@ -21,7 +21,10 @@ interface NoSelectedPlanProps {
   setFrequency: React.Dispatch<React.SetStateAction<"yearly" | "monthly">>;
 }
 
-const AccountSetup = () => {
+interface Props {
+  setStep: (step: string) => void;
+}
+const AccountSetup = ({ setStep }: Props) => {
   const session = useSession();
   const [loading, setLoading] = useState(false);
 
@@ -62,6 +65,11 @@ const AccountSetup = () => {
       if (!customerId) throw new Error("Missing customer ID");
 
       params.set("step", "2");
+
+      setStep("2");
+      router.push(router.asPath, {
+        query: params.toString(),
+      });
     } catch (error) {
       captureException(error);
       trackUiEvent(MixpanelEvents.ONBOARDING_STEP_1_FAILED, {
@@ -97,63 +105,57 @@ const AccountSetup = () => {
 
   return (
     <main className="mx-auto max-w-screen-md py-20">
-      {loading ? (
-        <div>
-          <h1>Checking your account setup. Just a second...</h1>
-        </div>
-      ) : (
-        <>
-          <h1 className="text-foreground">
-            Let&apos;s finish setting up your account.
-          </h1>
-          <p className="text-foreground/70">
-            We just need to add a thing or two to your accont, then you&apos;ll
-            be all set!
-          </p>
-          <form
-            className="mt-4 rounded-2xl border-[1px] border-border p-4"
-            onSubmit={submitHandler}
-          >
-            <TextInput
-              label="Email"
-              placeholder="Email"
-              required
-              type="email"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("email")}
-            />
-            <section className="my-4">
-              {selectedPlan ? (
-                <SelectedPlan plan={selectedPlan} />
-              ) : (
-                <NoSelectedPlan
-                  setSelectedPlanHandler={setSelectedPlanHandler}
-                  frequency={selectedFrequency}
-                  setFrequency={setSelectedFrequency}
-                />
-              )}
-              <div className="flex w-full justify-end">
-                <Button
-                  variant="outline"
-                  className="mt-2"
-                  type="button"
-                  onClick={clearPlan}
-                >
-                  Change plan
-                </Button>
-              </div>
-            </section>
+      <>
+        <h1 className="text-foreground">
+          Let&apos;s finish setting up your account.
+        </h1>
+        <p className="text-foreground/70">
+          We just need to add a thing or two to your accont, then you&apos;ll be
+          all set!
+        </p>
+        <form
+          className="mt-4 rounded-2xl border-[1px] border-border p-4"
+          onSubmit={submitHandler}
+        >
+          <TextInput
+            label="Email"
+            placeholder="Email"
+            required
+            type="email"
+            classNames={mantineInputClasses}
+            {...form.getInputProps("email")}
+          />
+          <section className="my-4">
+            {selectedPlan ? (
+              <SelectedPlan plan={selectedPlan} />
+            ) : (
+              <NoSelectedPlan
+                setSelectedPlanHandler={setSelectedPlanHandler}
+                frequency={selectedFrequency}
+                setFrequency={setSelectedFrequency}
+              />
+            )}
+            <div className="flex w-full justify-end">
+              <Button
+                variant="outline"
+                className="mt-2"
+                type="button"
+                onClick={clearPlan}
+              >
+                Change plan
+              </Button>
+            </div>
+          </section>
 
-            <Button
-              type="submit"
-              disabled={loading || !selectedPlan || !form.values.email}
-              className="mt-4"
-            >
-              {loading ? "Saving..." : "Continue"}
-            </Button>
-          </form>
-        </>
-      )}
+          <Button
+            type="submit"
+            disabled={loading || !selectedPlan || !form.values.email}
+            className="mt-4"
+          >
+            {loading ? "Saving..." : "Continue"}
+          </Button>
+        </form>
+      </>
     </main>
   );
 };

@@ -21,12 +21,10 @@ interface NoSelectedPlanProps {
   setFrequency: React.Dispatch<React.SetStateAction<"yearly" | "monthly">>;
 }
 
-interface Props {
-  setStep: (step: string) => void;
-}
-const AccountSetup = ({ setStep }: Props) => {
+const AccountSetup = () => {
   const session = useSession();
   const [loading, setLoading] = useState(false);
+  const paymentLink = api.stripe.createCheckout.useMutation();
 
   const updateUser = api.user.saveProfile.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
@@ -51,7 +49,6 @@ const AccountSetup = ({ setStep }: Props) => {
       setLoading(true);
 
       const { hasErrors } = form.validate();
-      const params = new URLSearchParams(window.location.search);
       const customerId = await createCustomer.mutateAsync(form.values.email);
 
       if (hasErrors) {
@@ -64,18 +61,31 @@ const AccountSetup = ({ setStep }: Props) => {
 
       if (!customerId) throw new Error("Missing customer ID");
 
-      params.set("step", "2");
+      const selectedPlan = new URLSearchParams(window.location.search).get(
+        "plan"
+      );
+      if (!form.values.email || !customerId)
+        throw new Error("Missing user email or customer id");
 
-      setStep("2");
-      router.push(router.asPath, {
-        query: params.toString(),
+      if (!selectedPlan) throw new Error("Missing selected plan");
+
+      const link = await paymentLink.mutateAsync({
+        customerEmail: form.values.email,
+        plan: selectedPlan,
+        customerId,
       });
+
+      if (link) {
+        window.open(link, "_self", "rel=noopener,noreferrer");
+        window.sessionStorage.removeItem("selected-plan");
+      } else {
+        throw new Error("Missing payment link link");
+      }
     } catch (error) {
       captureException(error);
-      trackUiEvent(MixpanelEvents.ONBOARDING_STEP_1_FAILED, {
+      trackUiEvent(MixpanelEvents.ONBOARDING, {
         plan: selectedPlan,
         userId: session.data?.user.id,
-        step: "1",
       });
     }
   };

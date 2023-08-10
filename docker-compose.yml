@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: prisma
       POSTGRES_DB: tests
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - test_postgres_data:/var/lib/postgresql/data/
     ports:
       - "6432:5432"
 networks:
@@ -27,3 +27,4 @@ networks:
     name: reddex_v3
 volumes:
   postgres_data:
+  test_postgres_data:

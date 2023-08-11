@@ -6,20 +6,13 @@ import { captureException } from "@sentry/nextjs";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { FormEvent, useState } from "react";
-import PricingChip from "~/components/PricingChip";
-import PricingFrequencySelect from "~/components/PricingFrequencySelect";
+import NoSelectedPlan from "~/components/NoSelectedPlan";
 import { Button } from "~/components/ui/button";
 import { plans } from "~/constants";
 import { mantineInputClasses } from "~/lib/styles";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
-
-interface NoSelectedPlanProps {
-  setSelectedPlanHandler: (id: string) => void;
-  frequency: "yearly" | "monthly";
-  setFrequency: React.Dispatch<React.SetStateAction<"yearly" | "monthly">>;
-}
 
 const AccountSetup = () => {
   const session = useSession();
@@ -79,7 +72,7 @@ const AccountSetup = () => {
         window.open(link, "_self", "rel=noopener,noreferrer");
         window.sessionStorage.removeItem("selected-plan");
       } else {
-        throw new Error("Missing payment link link");
+        throw new Error("Missing payment link");
       }
     } catch (error) {
       captureException(error);
@@ -204,40 +197,6 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
             </List.Item>
           ))}
         </List>
-      </div>
-    </div>
-  );
-};
-
-const NoSelectedPlan = ({
-  setSelectedPlanHandler,
-  frequency,
-  setFrequency,
-}: NoSelectedPlanProps) => {
-  return (
-    <div className="flex flex-col rounded-2xl bg-card p-8">
-      <p className="mb-2 text-2xl text-card-foreground">
-        Looks like we haven&apos;t chosen a plan yet!
-      </p>
-      <p className="text-card-foreground/70">
-        That&apos;s okay, just select one below and we will get started.
-      </p>
-      <Divider className="my-8" />
-
-      <div className="flex flex-col gap-6">
-        <PricingFrequencySelect
-          frequency={frequency}
-          setFrequency={setFrequency}
-        />
-
-        {plans.map((item) => (
-          <PricingChip
-            plan={item}
-            setSelectedPlanHandler={setSelectedPlanHandler}
-            frequency={frequency}
-            key={item.name}
-          />
-        ))}
       </div>
     </div>
   );

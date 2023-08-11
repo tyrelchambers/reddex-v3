@@ -42,7 +42,7 @@ export const userRouter = createTRPCRouter({
           };
         };
 
-        subscription = customer.subscriptions.data[0] ?? null;
+        subscription = customer?.subscriptions?.data[0] ?? null;
       }
 
       return {

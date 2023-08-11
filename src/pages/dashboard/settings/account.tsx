@@ -1,32 +1,29 @@
 import { faExternalLink } from "@fortawesome/pro-solid-svg-icons";
-import {
-  faReceipt,
-  faSquareArrowUpRight,
-} from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, Divider, Modal } from "@mantine/core";
+import { Divider, Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import Stripe from "stripe";
 import InvoicesList from "~/components/InvoicesList";
-import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineModalClasses } from "~/lib/styles";
+import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
-import { formatCurrency, formatStripeTime } from "~/utils";
 import { api } from "~/utils/api";
+import SubscriptionCard from "~/components/SubscriptionCard";
+import NoSelectedPlan from "~/components/NoSelectedPlan";
+import { Button } from "~/components/ui/button";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { useUserStore } from "~/stores/useUserStore";
+import { captureException } from "@sentry/nextjs";
 
 const Settings = () => {
+  const currentUser = useUserStore();
   const subscriptionQuery = api.billing.info.useQuery();
-  const updateLink = api.billing.updateLink.useMutation({
-    onSuccess: (res) => {
-      if (res) {
-        window.open(res, "_blank");
-      }
-    },
-  });
-
+  const [selectedFrequency, setSelectedFrequency] = useState<
+    "yearly" | "monthly"
+  >("yearly");
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const subscription = subscriptionQuery.data?.customer.subscriptions
     ?.data[0] as Stripe.Subscription & {
     plan: Stripe.Plan & {
@@ -34,9 +31,58 @@ const Settings = () => {
     };
   };
   const invoices = subscriptionQuery.data?.invoices;
+  const paymentLink = api.stripe.createCheckout.useMutation();
+  const createCustomer = api.billing.createCustomer.useMutation();
+
   const [opened, { open, close }] = useDisclosure(false);
 
+  const form = useForm({
+    initialValues: {
+      email: "",
+    },
+    validate: {
+      email: isNotEmpty(),
+    },
+  });
+
   const isLoading = subscriptionQuery.isLoading;
+
+  const createSubscriptionHandler = async () => {
+    try {
+      const { hasErrors } = form.validate();
+
+      if (hasErrors) {
+        return;
+      }
+
+      const customerEmail = currentUser.user?.email || form.values.email;
+
+      const customerId =
+        currentUser.user?.customerId ||
+        (await createCustomer.mutateAsync(customerEmail));
+
+      if (!customerId) {
+        throw new Error("Missing customer ID");
+      }
+
+      if (!selectedPlan) throw new Error("Missing selected plan");
+
+      const link = await paymentLink.mutateAsync({
+        customerEmail,
+        plan: selectedPlan,
+        customerId,
+      });
+
+      if (link) {
+        window.open(link, "_self", "rel=noopener,noreferrer");
+        window.sessionStorage.removeItem("selected-plan");
+      } else {
+        throw new Error("Missing payment link");
+      }
+    } catch (error) {
+      captureException(error);
+    }
+  };
 
   return (
     <WrapperWithNav
@@ -58,66 +104,41 @@ const Settings = () => {
             update your billing information, cancel or update your plan.
           </p>
 
-          <div className="mt-4 flex flex-col gap-2 rounded-xl border-[1px] border-border p-4">
-            <header className="flex justify-between text-card-foreground">
-              <p className="text-sm">
-                <span className="font-semibold">Your plan:</span>{" "}
-                {subscription?.plan.product.name}
+          {subscription ? (
+            <SubscriptionCard
+              subscription={subscription}
+              open={open}
+              invoices={invoices}
+            />
+          ) : (
+            <div className="mt-4 rounded-xl border-[1px] border-border p-4">
+              <p className="mb-4">
+                Please add an email to your account before we proceed.
               </p>
+              <TextInput
+                label="Email"
+                placeholder="Email"
+                required
+                type="email"
+                classNames={mantineInputClasses}
+                {...form.getInputProps("email")}
+              />
+              <NoSelectedPlan
+                setSelectedPlanHandler={setSelectedPlan}
+                frequency={selectedFrequency}
+                setFrequency={setSelectedFrequency}
+                selectedPlan={selectedPlan}
+              />
 
-              <p className="text-sm font-semibold text-card-foreground">
-                {formatCurrency(
-                  subscription?.plan.amount,
-                  subscription?.plan.currency
-                )}
-                <span className="text-sm font-thin text-card-foreground/60">
-                  /{subscription?.plan.interval}
-                </span>
-              </p>
-            </header>
-            {subscription?.current_period_end && (
-              <p className="text-sm text-card-foreground/60">
-                <span className="font-semibold text-card-foreground">
-                  Next invoice:
-                </span>{" "}
-                {formatCurrency(
-                  subscription?.plan.amount,
-                  subscription?.plan.currency
-                )}{" "}
-                on {formatStripeTime(subscription.current_period_end)}
-              </p>
-            )}
-            <p className="break-all text-sm text-card-foreground/60">
-              <span className="font-semibold text-card-foreground">
-                Subscription ID:
-              </span>{" "}
-              {subscription?.id}
-            </p>
-            <Badge
-              variant="dot"
-              className="my-2 w-fit text-foreground"
-              color="green"
-            >
-              {subscription?.status === "active" ? "active" : "inactive"}
-            </Badge>
-
-            <footer className="mt-2 flex flex-col justify-end gap-4 border-t-[1px] border-t-border pt-3 md:flex-row">
-              {invoices && (
-                <Button variant="ghost" onClick={open}>
-                  View invoices{" "}
-                  <FontAwesomeIcon icon={faReceipt} className="ml-2" />
-                </Button>
-              )}
-              <button
-                className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
-                type="button"
-                onClick={() => updateLink.mutate()}
+              <Button
+                disabled={!selectedPlan || !form.values.email}
+                className="w-full"
+                onClick={createSubscriptionHandler}
               >
-                Manage subscription{" "}
-                <FontAwesomeIcon icon={faSquareArrowUpRight} className="ml-2" />
-              </button>
-            </footer>
-          </div>
+                Setup subscription
+              </Button>
+            </div>
+          )}
         </div>
 
         <Divider className="border-border" />

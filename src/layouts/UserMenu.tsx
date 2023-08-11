@@ -13,7 +13,8 @@ const UserMenu = () => {
   const userQuery = api.user.me.useQuery(undefined, {
     enabled: session.status === "authenticated",
   });
-  const user = userQuery.data;
+
+  const user = userQuery?.data;
   const router = useRouter();
   const logoutHandler = () => {
     try {

@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 import { Plan } from "~/constants";
 
@@ -5,11 +6,13 @@ interface NoSelectedPlanProps {
   setSelectedPlanHandler: (id: string) => void;
   frequency: "yearly" | "monthly";
   plan: Plan;
+  isSelected: boolean;
 }
 const PricingChip = ({
   setSelectedPlanHandler,
   frequency,
   plan,
+  isSelected,
 }: NoSelectedPlanProps) => {
   return (
     <button
@@ -23,7 +26,14 @@ const PricingChip = ({
       }
       data-testid={`pricing-chip-${plan.name}`}
     >
-      <div className="rounded-2xl border-2 border-transparent bg-background p-4 text-start shadow-xl hover:border-accent">
+      <div
+        className={clsx(
+          "rounded-2xl border-2 border-transparent bg-background p-4 text-start shadow-xl hover:border-accent",
+          {
+            "!border-accent !bg-accent/10": isSelected,
+          }
+        )}
+      >
         <p className="text-xl text-foreground">{plan.name}</p>
         <p className="text-sm text-foreground/70">{plan.desc}</p>
         <div className="mt-4 text-3xl font-semibold text-accent">

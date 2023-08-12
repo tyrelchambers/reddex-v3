@@ -1,25 +1,25 @@
-name: Build Reddex API
-on:
-  push:
-    branches:
-      - main
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH into droplet
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          script: |
-            cd ~/reddex/client
-            git pull origin main
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh 
-            npm install
-            npm run build
-            pm2 start client
-            echo 'Deployment to DigitalOcean: successful'
+# name: Build Reddex API
+# on:
+#   push:
+#     branches:
+#       - main
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: SSH into droplet
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USER }}
+#           key: ${{ secrets.SSH_KEY }}
+#           passphrase: ${{ secrets.SSH_PASSPHRASE }}
+#           script: |
+#             cd ~/reddex/client
+#             git pull origin main
+#             export NVM_DIR=~/.nvm
+#             source ~/.nvm/nvm.sh
+#             npm install
+#             npm run build
+#             pm2 start client
+#             echo 'Deployment to DigitalOcean: successful'

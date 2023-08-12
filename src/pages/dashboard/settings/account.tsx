@@ -1,4 +1,4 @@
-import { faExternalLink } from "@fortawesome/pro-solid-svg-icons";
+import { faExternalLink, faSpinner } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider, Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -34,6 +34,8 @@ const Settings = () => {
   const paymentLink = api.stripe.createCheckout.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
 
+  const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
+
   const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
@@ -49,11 +51,7 @@ const Settings = () => {
 
   const createSubscriptionHandler = async () => {
     try {
-      const { hasErrors } = form.validate();
-
-      if (hasErrors) {
-        return;
-      }
+      setLoadingPaymentLink(true);
 
       const customerEmail = currentUser.user?.email || form.values.email;
 
@@ -79,6 +77,8 @@ const Settings = () => {
       } else {
         throw new Error("Missing payment link");
       }
+
+      setLoadingPaymentLink(false);
     } catch (error) {
       captureException(error, {
         extra: {
@@ -117,17 +117,21 @@ const Settings = () => {
             />
           ) : (
             <div className="mt-4 rounded-xl border-[1px] border-border p-4">
-              <p className="mb-4">
-                Please add an email to your account before we proceed.
-              </p>
-              <TextInput
-                label="Email"
-                placeholder="Email"
-                required
-                type="email"
-                classNames={mantineInputClasses}
-                {...form.getInputProps("email")}
-              />
+              {currentUser.user?.email && (
+                <>
+                  <p className="mb-4">
+                    Please add an email to your account before we proceed.
+                  </p>
+                  <TextInput
+                    label="Email"
+                    placeholder="Email"
+                    required
+                    type="email"
+                    classNames={mantineInputClasses}
+                    {...form.getInputProps("email")}
+                  />
+                </>
+              )}
               <NoSelectedPlan
                 setSelectedPlanHandler={setSelectedPlan}
                 frequency={selectedFrequency}
@@ -136,11 +140,18 @@ const Settings = () => {
               />
 
               <Button
-                disabled={!selectedPlan || !form.values.email}
+                disabled={!selectedPlan || loadingPaymentLink}
                 className="w-full"
                 onClick={createSubscriptionHandler}
               >
-                Setup subscription
+                {loadingPaymentLink ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />{" "}
+                    Loading...
+                  </>
+                ) : (
+                  "Continue"
+                )}
               </Button>
             </div>
           )}

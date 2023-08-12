@@ -17,7 +17,6 @@ import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
 import { hasActiveSubscription } from "~/utils";
-import SubscriptionBoundary from "~/layouts/SubscriptionBoundary";
 import mixpanel from "mixpanel-browser";
 import { env } from "~/env.mjs";
 
@@ -86,11 +85,9 @@ const MyApp: AppType<MyAppProps> = ({
         }}
         withCSSVariables
       >
-        <SubscriptionBoundary>
-          <main className={font.className}>
-            <Component {...pageProps} />
-          </main>
-        </SubscriptionBoundary>
+        <main className={font.className}>
+          <Component {...pageProps} />
+        </main>
       </MantineProvider>
       <ToastContainer
         position="top-right"

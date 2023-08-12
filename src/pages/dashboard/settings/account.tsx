@@ -80,7 +80,12 @@ const Settings = () => {
         throw new Error("Missing payment link");
       }
     } catch (error) {
-      captureException(error);
+      captureException(error, {
+        extra: {
+          userId: currentUser.user?.id,
+          plan: selectedPlan,
+        },
+      });
     }
   };
 

@@ -19,7 +19,7 @@ jobs:
             git pull origin main
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh 
-            npm run install
+            npm install
             npm run build
             npm run start
             echo 'Deployment to DigitalOcean: successful'

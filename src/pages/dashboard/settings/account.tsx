@@ -33,6 +33,7 @@ const Settings = () => {
   const invoices = subscriptionQuery.data?.invoices;
   const paymentLink = api.stripe.createCheckout.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
+  const updateUser = api.user.saveProfile.useMutation();
 
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
 
@@ -53,17 +54,21 @@ const Settings = () => {
     try {
       setLoadingPaymentLink(true);
 
+      if (!selectedPlan) throw new Error("Missing selected plan");
+
       const customerEmail = currentUser.user?.email || form.values.email;
 
       const customerId =
         currentUser.user?.customerId ||
         (await createCustomer.mutateAsync(customerEmail));
 
+      await updateUser.mutateAsync({
+        email: form.values.email,
+      });
+
       if (!customerId) {
         throw new Error("Missing customer ID");
       }
-
-      if (!selectedPlan) throw new Error("Missing selected plan");
 
       const link = await paymentLink.mutateAsync({
         customerEmail,

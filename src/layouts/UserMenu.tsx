@@ -58,6 +58,10 @@ const UserMenu = () => {
         <Link href={routes.COMPLETED}>
           <Menu.Item>Completed</Menu.Item>
         </Link>
+
+        <Link href={routes.SUBMITTED}>
+          <Menu.Item>Submitted</Menu.Item>
+        </Link>
         <Menu.Divider className="border-border" />
 
         <Menu.Label>Website</Menu.Label>

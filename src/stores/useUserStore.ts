@@ -1,11 +1,20 @@
-import { User } from "@prisma/client";
+import { Profile, User } from "@prisma/client";
 import { create } from "zustand";
 import { StripeSubscription } from "~/types";
 
 interface Props {
-  user: (User & { subscription: StripeSubscription | null }) | null;
+  user:
+    | (User & {
+        subscription: StripeSubscription | null;
+        Profile?: Profile | null;
+      })
+    | null;
   setUser: (
-    user: (User & { subscription: StripeSubscription | null }) | null
+    user:
+      | (User & {
+          subscription: StripeSubscription | null;
+        })
+      | null
   ) => void;
 }
 

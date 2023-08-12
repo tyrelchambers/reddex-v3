@@ -17,6 +17,8 @@ jobs:
           script: |
             cd ~/reddex/client
             git pull origin main
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh 
             npm run install
             npm run build
             npm run start

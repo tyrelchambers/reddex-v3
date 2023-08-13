@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -8,8 +8,8 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-RUN npm i
-
+COPY prisma ./
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc --mount=type=secret,id=env,target=/app/.env npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder

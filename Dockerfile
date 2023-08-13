@@ -25,7 +25,7 @@ COPY . .
 # RUN yarn build
 
 # If using npm comment out above and use below instead
-RUN npm run build
+RUN --mount=type=secret,id=env,target=/app/.env npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -40,7 +40,7 @@ RUN adduser --system --uid 1001 nextjs
 
 USER nextjs
 
-COPY --from=builder /app/public ./public
+COPY --from=builder /app ./
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -48,4 +48,6 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
+
+CMD ["npm", "run", "start"]
 

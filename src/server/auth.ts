@@ -113,6 +113,7 @@ export const authOptions: NextAuthOptions = {
         params: {
           duration: "permanent",
           scope: "privatemessages identity",
+          redirect_uri: `${env.NEXTAUTH_URL}/api/auth/callback/reddit`,
         },
       },
       profile(profile: {

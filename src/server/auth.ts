@@ -84,6 +84,26 @@ export const authOptions: NextAuthOptions = {
           },
         });
     },
+    async signIn(message) {
+      const { user, account, isNewUser } = message;
+
+      if (account && !isNewUser) {
+        await prisma.account.updateMany({
+          where: {
+            providerAccountId: account.providerAccountId,
+            userId: user.id,
+            provider: "reddit",
+          },
+          data: {
+            access_token: account.access_token,
+            refresh_token: account.refresh_token,
+            expires_at: account.expires_at,
+            token_type: account.token_type,
+            scope: account.scope,
+          },
+        });
+      }
+    },
   },
   providers: [
     RedditProvider({

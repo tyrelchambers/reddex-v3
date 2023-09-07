@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: SSH into droplet
+      - name: SSH into droplet and build
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -17,9 +17,6 @@ jobs:
           script: |
             cd ~/reddex/client
             git pull origin main
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            npm install
-            npm run build
-            pm2 start client
+            cd ../
+            docker compose up --build
             echo 'Deployment to DigitalOcean: successful'

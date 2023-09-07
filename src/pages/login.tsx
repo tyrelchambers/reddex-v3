@@ -8,12 +8,16 @@ import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "~/server/auth";
 import { routes } from "~/routes";
-
+import Logo from "../../public/images/reddex-dark.svg";
+import LogoLight from "../../public/images/reddex-light.svg";
+import { useTheme } from "~/hooks/useTheme";
 interface Props {
   providers: ClientSafeProvider[];
 }
 
 const Login = ({ providers }: Props) => {
+  const { isDark } = useTheme();
+
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
     await signIn(p.id, {
       callbackUrl: routes.ONBOARDING,
@@ -30,19 +34,26 @@ const Login = ({ providers }: Props) => {
       <main>
         <Header />
 
-        <section className="mx-auto my-20 flex max-w-screen-sm flex-col-reverse gap-4 rounded-2xl bg-card p-6 px-4 lg:flex-row">
+        <section className="mx-auto my-20 flex max-w-md flex-col-reverse gap-4 rounded-2xl border-[1px] border-border p-6 px-4  lg:flex-row">
           <div className="flex flex-col">
-            <h1 className="text-2xl text-foreground">Login to Reddex</h1>
-            <p className=" text-foreground/50">
-              Login with Reddit to create an account if you don&apos;t have one,
-              or login to an existing account.
+            {isDark ? (
+              <LogoLight alt="" className="z-0 w-12" />
+            ) : (
+              <Logo alt="" className="z-0 w-12" />
+            )}
+            <h1 className="mb-2 mt-4 text-2xl text-foreground">
+              Welcome back!
+            </h1>
+            <p className="text-sm font-light text-foreground/70">
+              Get started with Reddex by signing in with your Reddit account. If
+              you don&apos;t have an account, one will be made for you!
             </p>
 
             {redditProvider && (
               <button
                 type="button"
                 onClick={() => signInHandler(redditProvider)}
-                className="mt-6 flex items-center justify-center rounded-xl border-[1px] border-orange-400 p-2 font-bold text-orange-600 transition-all hover:bg-orange-600 hover:text-white"
+                className="mt-6 flex items-center justify-center rounded-xl bg-card p-2 font-bold text-orange-600 transition-all hover:bg-orange-600 hover:text-white"
               >
                 <FontAwesomeIcon icon={faReddit} className="mr-4 text-3xl" />
                 Login with {redditProvider.name}

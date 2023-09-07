@@ -112,7 +112,7 @@ const Header = ({ openDrawer }: Props) => {
                     trackUiEvent(MixpanelEvents.GET_STARTED);
                   }}
                 >
-                  <Button variant="outline" size="sm">
+                  <Button variant="default" size="sm">
                     Get Started
                   </Button>
                 </Link>

@@ -1,6 +1,7 @@
 import { ColorPicker, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
+import { toast } from "react-toastify";
 import { Button } from "~/components/ui/button";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
@@ -15,9 +16,15 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 const themes = ["light", "dark"];
 
 const Theme = () => {
+  const apiContext = api.useContext();
   const userStore = useUserStore();
   const proPlan = hasProPlan(userStore.user?.subscription);
-  const saveTheme = api.website.saveTheme.useMutation();
+  const saveTheme = api.website.saveTheme.useMutation({
+    onSuccess: () => {
+      apiContext.website.invalidate();
+      toast.success("Theme saved");
+    },
+  });
   const websiteSettings = api.website.settings.useQuery();
 
   const form = useForm({
@@ -53,6 +60,7 @@ const Theme = () => {
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website theme settings..."
+          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Theme</h1>
 

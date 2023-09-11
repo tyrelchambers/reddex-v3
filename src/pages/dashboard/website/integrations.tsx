@@ -53,6 +53,7 @@ const Integrations = () => {
         <BodyWithLoader
           isLoading={websiteSettings.isLoading}
           loadingMessage="Loading website integrations..."
+          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Integrations</h1>
           <p className="text-sm text-muted-foreground">

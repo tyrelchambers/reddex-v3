@@ -30,6 +30,7 @@ import { mantineInputClasses } from "~/lib/styles";
 import { useUserStore } from "~/stores/useUserStore";
 import { hasProPlan } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import { toast } from "react-toastify";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -46,6 +47,7 @@ const General = () => {
   const websiteSave = api.website.saveGeneral.useMutation({
     onSuccess: () => {
       apiContext.website.invalidate();
+      toast.success("General settings saved");
     },
   });
   const hideWebsite = api.website.setVisibility.useMutation({

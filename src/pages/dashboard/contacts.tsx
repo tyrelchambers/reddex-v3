@@ -7,6 +7,7 @@ import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
 import DashNav from "~/layouts/DashNav";
 import Header from "~/layouts/Header";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
@@ -37,10 +38,8 @@ const Contacts = () => {
   };
 
   return (
-    <>
-      <Header />
-      <DashNav />
-      <main className="mx-auto my-6 max-w-screen-2xl px-4 lg:px-0">
+    <WrapperWithNav>
+      <main className="mx-auto max-w-screen-2xl px-4 lg:px-0">
         <header className="flex items-center justify-between">
           <h1 className="text-2xl text-foreground">Contacts</h1>
 
@@ -91,7 +90,7 @@ const Contacts = () => {
           </form>
         </Modal>
       </main>
-    </>
+    </WrapperWithNav>
   );
 };
 

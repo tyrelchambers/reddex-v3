@@ -10,6 +10,8 @@ export const stripeRouter = createTRPCRouter({
   createCheckout: protectedProcedure
     .input(createCheckoutSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log(input);
+
       try {
         const link = await stripeClient.checkout.sessions.create({
           line_items: [
@@ -25,6 +27,14 @@ export const stripeRouter = createTRPCRouter({
           expand: ["line_items"],
           metadata: {
             userId: ctx.session?.user.id,
+          },
+          subscription_data: {
+            trial_period_days: 14,
+            trial_settings: {
+              end_behavior: {
+                missing_payment_method: "cancel",
+              },
+            },
           },
         });
 

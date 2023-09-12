@@ -6,7 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { api } from "~/utils/api";
 
-const WrongPlanBanner = () => {
+interface Props {
+  title: string;
+  text: string;
+  actions?: React.ReactNode | React.ReactNode[];
+  type?: "upgrade_plan";
+}
+
+const WrongPlanBanner = ({ title, text, actions, type }: Props) => {
   const updateLink = api.billing.updateLink.useMutation({
     onSuccess: (res) => {
       if (res) {
@@ -16,27 +23,28 @@ const WrongPlanBanner = () => {
   });
 
   return (
-    <div className="mb-4 rounded-2xl bg-warning p-4">
+    <div className="mx-auto my-10 mb-4 w-full max-w-screen-2xl rounded-2xl bg-warning p-4">
       <p className="mb-2 text-warning-foreground">
         <FontAwesomeIcon icon={faWarning} className="mr-3" />
-        Insufficient plan
+        {title}
       </p>
-      <p className="text-sm font-thin text-warning-foreground">
-        You&apos;ll need to{" "}
+      <p className="text-sm font-thin text-warning-foreground">{text}</p>
+
+      {actions}
+
+      {type === "upgrade_plan" && (
         <button
           onClick={() => updateLink.mutate()}
           className="text-accent underline"
           type="button"
         >
-          upgrade your plan{" "}
+          Upgrade your plan{" "}
           <FontAwesomeIcon
             icon={faSquareArrowUpRight}
-            className="text-accent"
+            className="ml-2 text-accent"
           />
-        </button>{" "}
-        to the Pro plan in order to use this feature. In the meantime, if you
-        had a website created, it will be hidden until your plan is upgraded.
-      </p>
+        </button>
+      )}
     </div>
   );
 };

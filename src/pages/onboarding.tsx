@@ -23,7 +23,8 @@ const Onboarding = () => {
       if (
         user.email &&
         user.customerId &&
-        user.subscription?.status === "active"
+        (user.subscription?.status === "active" ||
+          user.subscription?.status === "trialing")
       ) {
         router.push(redirectTo);
       } else if (!userQuery.isLoading && !userQuery.data) {

@@ -3,11 +3,12 @@ import {
   faSquareArrowUpRight,
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, Button } from "@mantine/core";
+import { Badge } from "@mantine/core";
 import React from "react";
 import Stripe from "stripe";
 import { formatCurrency, formatStripeTime } from "~/utils";
 import { api } from "~/utils/api";
+import { Button } from "./ui/button";
 
 interface Props {
   subscription: Stripe.Subscription & {
@@ -65,7 +66,10 @@ const SubscriptionCard = ({ subscription, open, invoices }: Props) => {
         {subscription?.id}
       </p>
       <Badge variant="dot" className="my-2 w-fit text-foreground" color="green">
-        {subscription?.status === "active" ? "active" : "inactive"}
+        {subscription?.status === "active" ||
+        subscription?.status === "trialing"
+          ? "active"
+          : "inactive"}
       </Badge>
 
       <footer className="mt-2 flex flex-col justify-end gap-4 border-t-[1px] border-t-border pt-3 md:flex-row">

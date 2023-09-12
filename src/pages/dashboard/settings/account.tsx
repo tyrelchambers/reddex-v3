@@ -38,6 +38,8 @@ const Settings = () => {
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
 
   const [opened, { open, close }] = useDisclosure(false);
+  const [planOpened, { open: openPlanModal, close: closePlanModal }] =
+    useDisclosure(false);
 
   const form = useForm({
     initialValues: {
@@ -57,6 +59,8 @@ const Settings = () => {
       if (!selectedPlan) throw new Error("Missing selected plan");
 
       const customerEmail = currentUser.user?.email || form.values.email;
+
+      console.log(customerEmail);
 
       const customerId =
         currentUser.user?.customerId ||
@@ -109,7 +113,7 @@ const Settings = () => {
             Your plan is managed with Stripe.
           </p>
 
-          <p className="mt-2 text-sm font-thin text-muted-foreground">
+          <p className="mt-2 text-sm text-muted-foreground">
             You can manage your subscription through Stripe. There you can
             update your billing information, cancel or update your plan.
           </p>
@@ -121,44 +125,9 @@ const Settings = () => {
               invoices={invoices}
             />
           ) : (
-            <div className="mt-4 rounded-xl border-[1px] border-border p-4">
-              {currentUser.user?.email && (
-                <>
-                  <p className="mb-4">
-                    Please add an email to your account before we proceed.
-                  </p>
-                  <TextInput
-                    label="Email"
-                    placeholder="Email"
-                    required
-                    type="email"
-                    classNames={mantineInputClasses}
-                    {...form.getInputProps("email")}
-                  />
-                </>
-              )}
-              <NoSelectedPlan
-                setSelectedPlanHandler={setSelectedPlan}
-                frequency={selectedFrequency}
-                setFrequency={setSelectedFrequency}
-                selectedPlan={selectedPlan}
-              />
-
-              <Button
-                disabled={!selectedPlan || loadingPaymentLink}
-                className="w-full"
-                onClick={createSubscriptionHandler}
-              >
-                {loadingPaymentLink ? (
-                  <>
-                    <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />{" "}
-                    Loading...
-                  </>
-                ) : (
-                  "Continue"
-                )}
-              </Button>
-            </div>
+            <Button className="mt-4" onClick={openPlanModal}>
+              Choose a plan
+            </Button>
           )}
         </div>
 
@@ -190,6 +159,53 @@ const Settings = () => {
           <FontAwesomeIcon className="ml-2" icon={faExternalLink} />
         </Link>
         {invoices && <InvoicesList invoices={invoices.data} />}
+      </Modal>
+
+      <Modal
+        opened={planOpened}
+        onClose={closePlanModal}
+        title="Select plan"
+        classNames={mantineModalClasses}
+        size="xl"
+      >
+        <div className="mt-4">
+          {!currentUser.user?.email && (
+            <>
+              <p className="mb-4">
+                Please add an email to your account before we proceed.
+              </p>
+              <TextInput
+                label="Email"
+                placeholder="Email"
+                required
+                type="email"
+                classNames={mantineInputClasses}
+                {...form.getInputProps("email")}
+              />
+            </>
+          )}
+          <NoSelectedPlan
+            setSelectedPlanHandler={setSelectedPlan}
+            frequency={selectedFrequency}
+            setFrequency={setSelectedFrequency}
+            selectedPlan={selectedPlan}
+          />
+
+          <Button
+            disabled={!selectedPlan || loadingPaymentLink}
+            className="w-full"
+            onClick={createSubscriptionHandler}
+          >
+            {loadingPaymentLink ? (
+              <>
+                <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />{" "}
+                Loading...
+              </>
+            ) : (
+              "Continue"
+            )}
+          </Button>
+        </div>
       </Modal>
     </WrapperWithNav>
   );

@@ -19,7 +19,13 @@ const BodyWithLoader = ({
 
   return (
     <div className="flex w-full max-w-2xl flex-col">
-      {!hasProPlan && <WrongPlanBanner />}
+      {!hasProPlan && (
+        <WrongPlanBanner
+          title="Insufficient plan"
+          text="You'll need to upgrade to the Pro plan in order to use this feature. In the meantime, if you had a website created, it will be hidden until your plan is upgraded."
+          type="upgrade_plan"
+        />
+      )}
       {children}
     </div>
   );

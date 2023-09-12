@@ -16,6 +16,7 @@ import {
 import { getStorySelectList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
+import WrapperWithNav from "~/layouts/WrapperWithNav";
 
 const Tags = () => {
   const apiContext = api.useContext();
@@ -44,7 +45,7 @@ const Tags = () => {
   };
 
   return (
-    <>
+    <WrapperWithNav>
       <Header />
       <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl px-4 lg:px-0">
@@ -99,7 +100,7 @@ const Tags = () => {
           </Button>
         </form>
       </Modal>
-    </>
+    </WrapperWithNav>
   );
 };
 

@@ -17,10 +17,11 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 const AccountSetup = () => {
   const session = useSession();
   const [loading, setLoading] = useState(false);
-  const paymentLink = api.stripe.createCheckout.useMutation();
 
+  const paymentLink = api.stripe.createCheckout.useMutation();
   const updateUser = api.user.saveProfile.useMutation();
   const createCustomer = api.billing.createCustomer.useMutation();
+
   const [selectedFrequency, setSelectedFrequency] = useState<
     "yearly" | "monthly"
   >("yearly");
@@ -138,16 +139,18 @@ const AccountSetup = () => {
                 setFrequency={setSelectedFrequency}
               />
             )}
-            <div className="flex w-full justify-end">
-              <Button
-                variant="outline"
-                className="mt-2"
-                type="button"
-                onClick={clearPlan}
-              >
-                Change plan
-              </Button>
-            </div>
+            {selectedPlan && (
+              <div className="flex w-full justify-end">
+                <Button
+                  variant="outline"
+                  className="mt-2"
+                  type="button"
+                  onClick={clearPlan}
+                >
+                  Change plan
+                </Button>
+              </div>
+            )}
           </section>
 
           <Button

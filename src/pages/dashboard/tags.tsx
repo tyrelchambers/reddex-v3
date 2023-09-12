@@ -46,8 +46,6 @@ const Tags = () => {
 
   return (
     <WrapperWithNav>
-      <Header />
-      <DashNav />
       <main className="mx-auto my-6 max-w-screen-2xl px-4 lg:px-0">
         <header className="flex justify-between">
           <h1 className="text-2xl text-foreground">Tags</h1>

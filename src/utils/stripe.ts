@@ -5,5 +5,5 @@ const stripeKey =
   env.NODE_ENV === "production" ? env.STRIPE_LIVE_KEY : env.STRIPE_TEST_KEY;
 
 export const stripeClient = new Stripe(stripeKey, {
-  apiVersion: "2022-11-15",
+  apiVersion: "2023-08-16",
 });

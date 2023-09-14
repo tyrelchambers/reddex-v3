@@ -1,6 +1,7 @@
 import { Checkbox, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
+import { toast } from "react-toastify";
 import StatusBanner from "~/components/StatusBanner";
 import { Button } from "~/components/ui/button";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
@@ -32,7 +33,11 @@ const SubmissionForm = () => {
   const userStore = useUserStore();
   const proPlan = hasProPlan(userStore.user?.subscription);
 
-  const submissionFormSave = api.website.saveSubmissionForm.useMutation();
+  const submissionFormSave = api.website.saveSubmissionForm.useMutation({
+    onSuccess: () => {
+      toast.success("Submission form saved");
+    },
+  });
   const websiteSettings = api.website.settings.useQuery();
   const saveSubmissionFormVisibility =
     api.website.submissionFormVisibility.useMutation({

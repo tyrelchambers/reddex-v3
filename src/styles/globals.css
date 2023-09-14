@@ -97,6 +97,10 @@
   #svg-empty {
     scale: 0.25;
   }
+  .required:after {
+    content: " *";
+    color: red;
+  }
 }
 
 @layer base {

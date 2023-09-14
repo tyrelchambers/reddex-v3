@@ -92,6 +92,9 @@ const General = () => {
     }
   );
 
+  const DISABLE_SUBMIT_BUTTON =
+    !proPlan || !form.values.subdomain || !form.values.name;
+
   useEffect(() => {
     if (websiteSettings.data) {
       form.setValues({ ...websiteSettings.data });
@@ -186,7 +189,7 @@ const General = () => {
           )}
           <form className="form my-10" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
-              <p className="label text-foreground">Subdomain</p>
+              <p className="label required text-foreground">Subdomain</p>
               <div className="flex h-fit items-center rounded-lg bg-input p-1">
                 <span className="hidden px-3 text-gray-500 md:flex">
                   http://
@@ -216,6 +219,7 @@ const General = () => {
                 label="Site name"
                 classNames={mantineInputClasses}
                 placeholder="Name of your site"
+                required
                 {...form.getInputProps("name")}
               />
             </div>
@@ -357,7 +361,7 @@ const General = () => {
             </section>
             <Divider className="my-4" />
 
-            <Button type="submit" disabled={!proPlan}>
+            <Button type="submit" disabled={DISABLE_SUBMIT_BUTTON}>
               Save changes
             </Button>
           </form>

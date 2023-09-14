@@ -8,7 +8,6 @@ import AuthenticationBoundary from "./AuthenticationBoundary";
 import { useViewportSize } from "@mantine/hooks";
 import { breakpoints } from "~/constants";
 import { useUserStore } from "~/stores/useUserStore";
-import { hasActiveSubscription } from "~/utils";
 import WrongPlanBanner from "~/components/WrongPlanBanner";
 import { routes } from "~/routes";
 import { useRouter } from "next/router";

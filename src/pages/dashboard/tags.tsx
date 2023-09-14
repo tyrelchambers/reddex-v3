@@ -1,8 +1,6 @@
 import { Modal, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
 import { useForm } from "@mantine/form";
 import TagListItem from "~/components/TagListItem";

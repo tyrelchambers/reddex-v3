@@ -61,7 +61,6 @@ export default async function handler(
 
       const product = price.product.name;
       // test this as it doesn't reach IF
-      console.log(product === "Pro", userFromCustomer);
       if (product === "Pro") {
         await prisma.website.update({
           where: {
@@ -84,8 +83,7 @@ export default async function handler(
     }
 
     if (eventType === "checkout.session.completed") {
-      const { customer, subscription, id, metadata } =
-        data.object as Stripe.Checkout.Session;
+      const { id, metadata } = data.object as Stripe.Checkout.Session;
 
       const userId = metadata?.userId;
 

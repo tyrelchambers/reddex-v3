@@ -8,18 +8,19 @@ import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineNumberClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
+import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
 
 const Profile = () => {
   const apiContext = api.useContext();
   const saveProfile = api.user.saveProfile.useMutation();
-  const userQuery = api.user.me.useQuery();
+  const { user } = useUserStore();
   const deleteSearched = api.user.removeSearch.useMutation({
     onSuccess: () => {
       apiContext.user.invalidate();
     },
   });
-  const currentUser = userQuery.data;
+  const currentUser = user;
 
   const profileForm = useForm({
     initialValues: {
@@ -38,18 +39,18 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    if (userQuery.data) {
+    if (currentUser) {
       profileForm.setValues({
-        email: userQuery.data.email || "",
-        words_per_minute: userQuery.data.Profile?.words_per_minute || 150,
+        email: currentUser.email || "",
+        words_per_minute: currentUser.Profile?.words_per_minute || 150,
       });
 
       messagesForm.setValues({
-        greeting: userQuery.data.Profile?.greeting || "",
-        recurring: userQuery.data.Profile?.recurring || "",
+        greeting: currentUser.Profile?.greeting || "",
+        recurring: currentUser.Profile?.recurring || "",
       });
     }
-  }, [userQuery.data]);
+  }, [currentUser]);
 
   const saveProfileHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ const Profile = () => {
           {currentUser?.Profile?.searches &&
           currentUser?.Profile?.searches.length > 0 ? (
             <div className="flex gap-4">
-              {currentUser?.Profile?.searches.map((s, id) => (
+              {currentUser?.Profile?.searches?.map((s, id) => (
                 <button
                   key={`${s.text}_${id}`}
                   className="flex w-fit items-center gap-4 rounded-full bg-card p-2"

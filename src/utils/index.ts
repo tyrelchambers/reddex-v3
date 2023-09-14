@@ -128,14 +128,11 @@ export const getStorySelectList = (stories: RedditPost[] | undefined) => {
 };
 
 export const hasActiveSubscription = (
-  user: (User & { subscription: Stripe.Subscription | null }) | null
+  subscription: Stripe.Subscription | null
 ) => {
-  if (!user || !user.subscription) return false;
+  if (!subscription) return false;
 
-  if (
-    user.subscription?.status !== "active" &&
-    user.subscription?.status !== "trialing"
-  )
+  if (subscription?.status !== "active" && subscription?.status !== "trialing")
     return false;
 
   return true;

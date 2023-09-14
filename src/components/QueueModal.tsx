@@ -7,7 +7,7 @@ import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
-import { useSession } from "next-auth/react";
+import { useUserStore } from "~/stores/useUserStore";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
@@ -19,10 +19,7 @@ interface Props {
 }
 
 const QueueModal = ({ close }: Props) => {
-  const session = useSession();
-  const userQuery = api.user.me.useQuery(undefined, {
-    enabled: session.status === "authenticated",
-  });
+  const { user } = useUserStore();
   const queueStore = useQueueStore();
   const currentPost = queueStore.queue[0];
   const apiContext = api.useContext();
@@ -59,9 +56,9 @@ const QueueModal = ({ close }: Props) => {
 
     if (currentPostAuthor) {
       if (contactedAuthors && contactedAuthors.includes(currentPostAuthor)) {
-        form.setValues({ message: userQuery.data?.Profile?.recurring || "" });
+        form.setValues({ message: user?.Profile?.recurring || "" });
       } else {
-        form.setValues({ message: userQuery.data?.Profile?.greeting || "" });
+        form.setValues({ message: user?.Profile?.greeting || "" });
       }
     }
   }, [currentPost]);
@@ -116,15 +113,13 @@ const QueueModal = ({ close }: Props) => {
           <div className="flex gap-4">
             <Button
               variant="link"
-              onClick={() =>
-                fillWithMessage(userQuery.data?.Profile?.recurring)
-              }
+              onClick={() => fillWithMessage(user?.Profile?.recurring)}
             >
               Initial greeting
             </Button>
             <Button
               variant="link"
-              onClick={() => fillWithMessage(userQuery.data?.Profile?.greeting)}
+              onClick={() => fillWithMessage(user?.Profile?.greeting)}
             >
               Recurring greeting
             </Button>

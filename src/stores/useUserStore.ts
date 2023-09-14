@@ -1,26 +1,20 @@
-import { Profile, User } from "@prisma/client";
+import { Profile, RecentlySearched, User } from "@prisma/client";
 import { create } from "zustand";
 import { StripeSubscription } from "~/types";
 
+type Data =
+  | (User & {
+      Profile?: (Profile & { searches: RecentlySearched[] | null }) | null;
+    }) & {
+      hasActiveSubscription: boolean;
+      subscription: StripeSubscription | null;
+    };
 interface Props {
-  user:
-    | (User & {
-        hasActiveSubscription: boolean;
-        subscription: StripeSubscription | null;
-        Profile?: Profile | null;
-      })
-    | null;
-  setUser: (
-    user:
-      | (User & {
-          subscription: StripeSubscription | null;
-          hasActiveSubscription: boolean;
-        })
-      | null
-  ) => void;
+  user: Data | undefined;
+  setUser: (user: Data | undefined) => void;
 }
 
 export const useUserStore = create<Props>((set) => ({
-  user: null,
+  user: undefined,
   setUser: (user) => set({ user }),
 }));

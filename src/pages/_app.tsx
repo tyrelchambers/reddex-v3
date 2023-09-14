@@ -16,7 +16,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
-import { hasActiveSubscription } from "~/utils";
 import mixpanel from "mixpanel-browser";
 import { env } from "~/env.mjs";
 
@@ -47,7 +46,7 @@ const MyApp: AppType<MyAppProps> = ({
 
   useEffect(() => {
     if (userQuery.data) {
-      const activeSub = hasActiveSubscription(userQuery.data);
+      const activeSub = userQuery.data.hasActiveSubscription;
       userStore.setUser(userQuery.data);
 
       if (!activeSub) {

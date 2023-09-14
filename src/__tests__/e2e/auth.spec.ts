@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import { PrismaClient } from "@prisma/client";
-import { exec } from "child_process";
 import { env } from "~/env.mjs";
 import { stripeClient } from "~/utils/stripe";
 

@@ -46,9 +46,7 @@ export const userRouter = createTRPCRouter({
         subscription = customer?.subscriptions?.data[0] ?? null;
       }
 
-      user.subscription = subscription;
-
-      const hasSubscription = hasActiveSubscription(user);
+      const hasSubscription = hasActiveSubscription(subscription);
 
       return {
         ...user,

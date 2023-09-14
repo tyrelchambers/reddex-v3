@@ -5,8 +5,6 @@ import React, { FormEvent } from "react";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
-import DashNav from "~/layouts/DashNav";
-import Header from "~/layouts/Header";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { MixpanelEvents } from "~/types";

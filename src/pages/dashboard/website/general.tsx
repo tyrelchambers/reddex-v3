@@ -318,42 +318,42 @@ const General = () => {
                 <TextInput
                   variant="filled"
                   classNames={mantineInputClasses}
-                  placeholder="Twitter"
+                  placeholder="@username"
                   icon={<FontAwesomeIcon icon={faTwitter} />}
                   {...form.getInputProps("twitter")}
                 />
                 <TextInput
                   variant="filled"
                   classNames={mantineInputClasses}
-                  placeholder="Facebook"
+                  placeholder="Facebook link"
                   icon={<FontAwesomeIcon icon={faFacebook} />}
                   {...form.getInputProps("facebook")}
                 />
                 <TextInput
                   variant="filled"
                   classNames={mantineInputClasses}
-                  placeholder="Instagram"
+                  placeholder="@username"
                   icon={<FontAwesomeIcon icon={faInstagram} />}
                   {...form.getInputProps("instagram")}
                 />
                 <TextInput
                   variant="filled"
                   classNames={mantineInputClasses}
-                  placeholder="Patreon"
+                  placeholder="Patreon link"
                   icon={<FontAwesomeIcon icon={faPatreon} />}
                   {...form.getInputProps("patreon")}
                 />
                 <TextInput
                   variant="filled"
                   classNames={mantineInputClasses}
-                  placeholder="Youtube"
+                  placeholder="Youtube link"
                   icon={<FontAwesomeIcon icon={faYoutube} />}
                   {...form.getInputProps("youtube")}
                 />
                 <TextInput
                   variant="filled"
                   classNames={mantineInputClasses}
-                  placeholder="Podcast"
+                  placeholder="Podcast link"
                   icon={<FontAwesomeIcon icon={faPodcast} />}
                   {...form.getInputProps("podcast")}
                 />

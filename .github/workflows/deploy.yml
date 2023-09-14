@@ -18,5 +18,6 @@ jobs:
             cd ~/reddex/client
             git pull origin main
             cd ../
+            docker system prune -f
             docker compose up --build
             echo 'Deployment to DigitalOcean: successful'

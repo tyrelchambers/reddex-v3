@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import React from "react";
+import EmptyState from "~/components/EmptyState";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
@@ -43,11 +44,15 @@ const Completed = () => {
           </Button>
         </header>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          {completedListQuery.data?.map((item) => (
-            <StoryListItem key={item.id} story={item} list="completed" />
-          )) || null}
-        </div>
+        {completedListQuery.data && completedListQuery.data.length > 0 ? (
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            {completedListQuery.data?.map((item) => (
+              <StoryListItem key={item.id} story={item} list="completed" />
+            )) || null}
+          </div>
+        ) : (
+          <EmptyState label="completed stories" />
+        )}
       </section>
     </WrapperWithNav>
   );

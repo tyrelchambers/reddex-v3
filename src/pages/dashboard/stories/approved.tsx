@@ -4,6 +4,7 @@ import { Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
+import EmptyState from "~/components/EmptyState";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
 import ImportStoryForm from "~/forms/ImportStoryForm";
@@ -55,15 +56,19 @@ const Approved = () => {
         </div>
       </header>
 
-      <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
-        {approvedListQuery.data
-          ?.filter(
-            (item) => item.title.match(regex) || item.author.match(regex)
-          )
-          ?.map((item) => (
-            <StoryListItem key={item.id} story={item} list="approved" />
-          )) || null}
-      </div>
+      {approvedListQuery.data && approvedListQuery.data.length > 0 ? (
+        <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          {approvedListQuery.data
+            .filter(
+              (item) => item.title.match(regex) || item.author.match(regex)
+            )
+            ?.map((item) => (
+              <StoryListItem key={item.id} story={item} list="approved" />
+            )) || null}
+        </div>
+      ) : (
+        <EmptyState label="approved stories" />
+      )}
 
       <Modal
         opened={opened}

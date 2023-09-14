@@ -5,6 +5,7 @@ import { z } from "zod";
 import { saveProfileSchema } from "~/server/schemas";
 import Stripe from "stripe";
 import { captureException } from "@sentry/nextjs";
+import { hasActiveSubscription } from "~/utils";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -45,9 +46,14 @@ export const userRouter = createTRPCRouter({
         subscription = customer?.subscriptions?.data[0] ?? null;
       }
 
+      user.subscription = subscription;
+
+      const hasSubscription = hasActiveSubscription(user);
+
       return {
         ...user,
         subscription,
+        hasActiveSubscription: hasSubscription,
       };
     } catch (error) {
       captureException(error);

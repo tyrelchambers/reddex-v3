@@ -5,6 +5,7 @@ import { StripeSubscription } from "~/types";
 interface Props {
   user:
     | (User & {
+        hasActiveSubscription: boolean;
         subscription: StripeSubscription | null;
         Profile?: Profile | null;
       })
@@ -13,6 +14,7 @@ interface Props {
     user:
       | (User & {
           subscription: StripeSubscription | null;
+          hasActiveSubscription: boolean;
         })
       | null
   ) => void;

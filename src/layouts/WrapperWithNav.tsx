@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TabsList from "~/components/TabsList";
 import Header from "./Header";
 import DashNav from "./DashNav";
@@ -21,25 +21,33 @@ interface Props {
 }
 
 const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
+  const [loadDashboardOrBanner, setLoadDashboardOrBanner] = useState<
+    boolean | undefined
+  >(undefined);
+
   const { width } = useViewportSize();
   const { user } = useUserStore();
   const router = useRouter();
-  const hasSubscription = hasActiveSubscription(user);
 
   const allowedRoutesWithoutPlan = [
     routes.SETTINGS_ACCOUNT,
     routes.SETTINGS_PROFILE,
   ];
 
-  const isCurrentPathAllowed = (path: string) => {
-    return allowedRoutesWithoutPlan.includes(path);
-  };
+  useEffect(() => {
+    if (user) {
+      setLoadDashboardOrBanner(
+        user.hasActiveSubscription ||
+          allowedRoutesWithoutPlan.includes(router.asPath)
+      );
+    }
+  }, [user, router.asPath]);
 
   return (
     <>
       <Header />
       {width >= breakpoints.tablet && <DashNav />}
-      {hasSubscription || isCurrentPathAllowed(router.asPath) ? (
+      {loadDashboardOrBanner === undefined ? null : loadDashboardOrBanner ? (
         <AuthenticationBoundary>
           <main className="mx-auto my-6 flex w-full max-w-screen-2xl flex-col gap-8 lg:flex-row lg:gap-14">
             {tabs && (

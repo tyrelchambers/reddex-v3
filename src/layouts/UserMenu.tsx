@@ -45,11 +45,6 @@ const UserMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>App</Menu.Label>
-        <Link href={routes.INBOX}>
-          <Menu.Item>Inbox</Menu.Item>
-        </Link>
-
         <Menu.Label>Reading list</Menu.Label>
         <Link href={routes.APPROVED}>
           <Menu.Item>Approved</Menu.Item>
@@ -62,6 +57,29 @@ const UserMenu = () => {
         <Link href={routes.SUBMITTED}>
           <Menu.Item>Submitted</Menu.Item>
         </Link>
+
+        <Menu.Divider className="border-border" />
+        <Menu.Label>Tags</Menu.Label>
+
+        <Link href={routes.TAGS}>
+          <Menu.Item>Tags</Menu.Item>
+        </Link>
+
+        <Menu.Divider className="border-border" />
+
+        <Menu.Label>Contacts</Menu.Label>
+
+        <Link href={routes.CONTACTS}>
+          <Menu.Item>Contacts</Menu.Item>
+        </Link>
+
+        <Menu.Divider className="border-border" />
+
+        <Menu.Label>Inbox</Menu.Label>
+        <Link href={routes.INBOX}>
+          <Menu.Item>Inbox</Menu.Item>
+        </Link>
+
         <Menu.Divider className="border-border" />
 
         <Menu.Label>Website</Menu.Label>

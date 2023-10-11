@@ -95,8 +95,8 @@ export const storyRouter = createTRPCRouter({
         // env.NODE_ENV === "production" &&
         if (accessToken) {
           const body = new FormData();
-          // body.set("to", input.author);
-          body.set("to", "StoriesAfterMidnight");
+          body.set("to", input.author);
+          // body.set("to", "StoriesAfterMidnight");
           body.set("subject", formatSubject(input.title));
           body.set("text", input.message);
 

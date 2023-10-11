@@ -78,12 +78,17 @@ const StudioId = () => {
 
   return (
     <WrapperWithNav>
-      <header className="w-full max-w-2xl">
+      <header className="w-full ">
         <h1 className="text-2xl text-foreground">Story Studio</h1>
         <p className="font-light text-foreground/70">
           Here you can prep your Youtube video or even podcast episode by using
           OpenAI&apos;s Chat-GPT. Use it to generate a description, a title, or
           even tags.
+        </p>
+        <p className="mt-2 rounded-lg bg-card p-3 text-sm font-light">
+          Please keep in mind that the results generated here may be hit or
+          miss, or require some tweaking. The goal is to give you a headstart
+          when uploading your videos.
         </p>
       </header>
 

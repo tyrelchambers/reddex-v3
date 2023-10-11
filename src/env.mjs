@@ -47,7 +47,6 @@ const server = z.object({
  */
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
-  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK: z.string(),
   NEXT_PUBLIC_MIXPANEL_TOKEN: z.string(),
 });
 
@@ -68,8 +67,6 @@ const processEnv = {
   STRIPE_TEST_KEY: process.env.STRIPE_TEST_KEY,
   STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK:
-    process.env.NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK,
   NEXT_URL: process.env.NEXT_URL,
   OPEN_AI_KEY: process.env.OPEN_AI_KEY,
   OPEN_AI_ORG: process.env.OPEN_AI_ORG,

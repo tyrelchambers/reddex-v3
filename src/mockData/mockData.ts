@@ -41,7 +41,6 @@ export const mockEnv = {
   STRIPE_TEST_KEY: "xxx",
   STRIPE_LIVE_KEY: "xxx",
   STRIPE_WEBHOOK_SECRET: "xxx",
-  NEXT_PUBLIC_STRIPE_BILLING_PORTAL_TEST_LINK: "xxx",
   NEXT_URL: "xxx",
   OPEN_AI_KEY: "xxx",
   OPEN_AI_ORG: "xxx",

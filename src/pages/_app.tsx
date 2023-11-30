@@ -13,7 +13,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import { useUserStore } from "~/stores/useUserStore";
 import mixpanel from "mixpanel-browser";

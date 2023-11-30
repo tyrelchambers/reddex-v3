@@ -9,7 +9,9 @@ export default class _Document extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <link rel="icon" href="/images/reddex-dark.svg" />
+        </Head>
         <body className="bg-background">
           <Main />
           <NextScript />

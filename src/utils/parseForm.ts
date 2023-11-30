@@ -26,8 +26,6 @@ export const parseForm = async (
     );
     const uploadType = req.headers["upload-type"];
 
-    console.log("directory exists: ", existsSync(uploadDir));
-
     const form = formidable({
       multiples: false,
       maxFiles: 1,

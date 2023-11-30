@@ -39,7 +39,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 RUN mkdir /uploads
-RUN chmod 777 /app/uploads
+RUN chmod 777 /uploads
 
 USER nextjs
 

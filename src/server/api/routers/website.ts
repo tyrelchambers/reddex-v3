@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { prisma } from "~/server/db";
 import {
   removeImageSchema,
+  submitSchema,
   websiteGeneralSchema,
   websiteIntegrationsSchema,
   websiteSubmissionSchema,
@@ -11,6 +12,7 @@ import {
 import axios, { AxiosError } from "axios";
 import { env } from "process";
 import { captureException } from "@sentry/nextjs";
+import { sendEmail } from "~/utils/sendMail";
 
 export const websiteRouter = createTRPCRouter({
   checkAvailableSubdomain: protectedProcedure
@@ -242,4 +244,43 @@ export const websiteRouter = createTRPCRouter({
         throw error;
       }
     }),
+  submit: publicProcedure.input(submitSchema).mutation(async ({ input }) => {
+    const website = await prisma.website.findUnique({
+      where: {
+        id: input.siteId,
+      },
+      include: {
+        user: true,
+      },
+    });
+    const siteOwner = website?.user;
+
+    if (!siteOwner) {
+      throw new Error("Site not found");
+    }
+
+    await prisma.submittedStory.create({
+      data: {
+        email: input.email,
+        author: input.author,
+        title: input.title,
+        body: input.story,
+        sent_to_others: input.sent_to_others,
+        userId: siteOwner.id,
+      },
+    });
+
+    if (siteOwner.email) {
+      sendEmail({
+        to: siteOwner.email,
+        subject: "New Story Submission",
+        template: "storySubmission",
+        dynamics: {
+          host: `Reddex`,
+          title: input.title || "* No title provided *",
+          author: input.author || "* No author provided *",
+        },
+      });
+    }
+  }),
 });

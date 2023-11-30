@@ -5,6 +5,15 @@ export const searchSchema = z.object({
   category: z.string(),
 });
 
+export const submitSchema = z.object({
+  email: z.string().optional(),
+  author: z.string().optional(),
+  title: z.string().optional(),
+  story: z.string(),
+  siteId: z.string(),
+  sent_to_others: z.boolean().optional(),
+});
+
 export const postSchema = z.object({
   author: z.string(),
   flair: z.string().nullable(),

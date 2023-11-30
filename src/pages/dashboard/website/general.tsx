@@ -192,8 +192,9 @@ const General = () => {
               <p className="label required text-foreground">Subdomain</p>
               <div className="flex h-fit items-center rounded-lg bg-input p-1">
                 <span className="hidden px-3 text-gray-500 md:flex">
-                  http://
+                  http://reddex.app/
                 </span>
+
                 <TextInput
                   variant="filled"
                   placeholder="Your custom subdomain"
@@ -203,7 +204,6 @@ const General = () => {
                   }}
                   {...form.getInputProps("subdomain")}
                 />
-                <span className="px-3 text-gray-500">.reddex.app</span>
               </div>
               {form.values.subdomain && subdomainAvailable && (
                 <span className="mt-2 flex items-center gap-2 text-sm text-green-500">

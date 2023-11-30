@@ -119,3 +119,6 @@ export const contactLists = {
 };
 
 export const sendGridApiUrl = "https://api.sendgrid.com/v3";
+
+export const YOUTUBE_URL = (channelId: string) =>
+  `https://www.googleapis.com/youtube/v3/search?channelId=${channelId}&key=${env.YOUTUBE_API_KEY}&part=snippet&maxResults=6&type=video&order=date`;

@@ -294,3 +294,4 @@ const filterPosts = (
 };
 
 export default Search;
+

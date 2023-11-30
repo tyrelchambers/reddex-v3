@@ -39,6 +39,7 @@ const server = z.object({
   TEST_USERNAME: z.string(),
   TEST_PASSWORD: z.string(),
   MIXPANEL_TOKEN: z.string(),
+  YOUTUBE_API_KEY: z.string(),
 });
 
 /**
@@ -81,6 +82,7 @@ const processEnv = {
   TEST_PASSWORD: process.env.TEST_PASSWORD,
   MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN,
   NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
+  YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
 };
 
 // Don't touch the part below

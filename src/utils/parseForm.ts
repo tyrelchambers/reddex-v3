@@ -2,7 +2,7 @@ import type { NextApiRequest } from "next";
 import path from "path";
 import formidable from "formidable";
 import { mkdir, readFile, stat } from "fs/promises";
-import { existsSync, rmSync } from "fs";
+import { existsSync, readdirSync, rmSync } from "fs";
 import axios from "axios";
 import {
   BANNER_UPLOAD_URL,
@@ -11,7 +11,6 @@ import {
 } from "~/url.constants";
 import { env } from "~/env.mjs";
 import queryString from "query-string";
-import { readDirAsync } from "@sentry/node/types/integrations/context";
 
 export const parseForm = async (
   req: NextApiRequest
@@ -54,9 +53,9 @@ export const parseForm = async (
       },
     });
 
-    console.log(readDirAsync(uploadDir));
-
     form.parse(req, async function (err, fields, files) {
+      console.log(readdirSync(uploadDir));
+
       console.log(files);
 
       try {

@@ -216,6 +216,8 @@ export const websiteRouter = createTRPCRouter({
     .input(removeImageSchema)
     .mutation(async ({ ctx, input }) => {
       try {
+        console.log(input.url);
+
         return await axios
           .delete(input.url, {
             headers: {
@@ -235,6 +237,8 @@ export const websiteRouter = createTRPCRouter({
             });
           })
           .catch((err: AxiosError) => {
+            console.log(err);
+
             if (err) {
               throw new Error(err.message);
             }

@@ -5,6 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log("uploading");
+
   const { url } = await parseForm(req);
 
   res.status(200).send(url);

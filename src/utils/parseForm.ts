@@ -26,12 +26,16 @@ export const parseForm = async (
     );
     const uploadType = req.headers["upload-type"];
 
+    console.log("directory exists: ", existsSync(uploadDir));
+
     const form = formidable({
       multiples: false,
       maxFiles: 1,
       maxFileSize: 2 * 1024 * 1024,
       uploadDir,
       filename: (_name, _ext, part) => {
+        console.log(part);
+
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
         const filename = `${uniqueSuffix}-${
           part.originalFilename || "unknown"
@@ -40,6 +44,8 @@ export const parseForm = async (
         return filename;
       },
       filter: (part) => {
+        console.log(part);
+
         return (
           part.name === "filepond" &&
           (part.mimetype?.includes("image") || false)

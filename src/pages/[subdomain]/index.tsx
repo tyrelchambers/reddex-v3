@@ -92,45 +92,32 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   if (!subdomain) return { props: {} };
 
-  const website = await prisma.website
-    .findUnique({
-      where: {
-        subdomain,
-      },
+  const website = await prisma.website.findUnique({
+    where: {
+      subdomain,
+    },
 
-      include: {
-        submissionPage: true,
-        user: {
-          select: {
-            customerId: true,
-          },
+    include: {
+      submissionPage: true,
+      user: {
+        select: {
+          customerId: true,
         },
       },
-    })
-    .then(async (res) => {
-      const user = res?.user;
+    },
+  });
 
-      if (!user) {
-        throw new Error("User not found");
-      }
+  const user = website?.user;
 
-      const hasProSubscription = await checkForProperSubscription(
-        user.customerId
-      );
-
-      if (!hasProSubscription) {
-        return null;
-      }
-
-      return res;
-    });
-
-  if (!website)
+  if (!user) {
     return {
       notFound: true,
     };
+  }
 
-  if (website.hidden)
+  const hasProSubscription = await checkForProperSubscription(user.customerId);
+
+  if (website?.hidden || !hasProSubscription || !website)
     return {
       notFound: true,
     };
@@ -145,8 +132,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         })
         .then((res) => res.data.items)
     : null;
-
-  console.log(website);
 
   return {
     props: {

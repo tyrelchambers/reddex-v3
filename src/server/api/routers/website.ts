@@ -215,11 +215,16 @@ export const websiteRouter = createTRPCRouter({
   removeImage: protectedProcedure
     .input(removeImageSchema)
     .mutation(async ({ ctx, input }) => {
-      try {
-        console.log(input.url, env.BUNNY_PASSWORD);
+      // we do this because there's a url for cdn images and a url for managing files
+      // this sucks and is dirty, but ok for now
+      const url = input.url.replace(
+        "reddex.b-cdn.net",
+        "storage.bunnycdn.com/reddex-images"
+      );
 
+      try {
         return await axios
-          .delete(input.url, {
+          .delete(url, {
             headers: {
               "content-type": "application/octet-stream",
               AccessKey: env.BUNNY_PASSWORD,
@@ -243,6 +248,7 @@ export const websiteRouter = createTRPCRouter({
               throw new Error(err.message);
             }
           });
+        return;
       } catch (error) {
         captureException(error);
         throw error;

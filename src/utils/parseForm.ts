@@ -32,8 +32,6 @@ export const parseForm = async (
       maxFileSize: 2 * 1024 * 1024,
       uploadDir,
       filename: (_name, _ext, part) => {
-        console.log(part);
-
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
         const filename = `${uniqueSuffix}-${
           part.originalFilename || "unknown"
@@ -42,8 +40,6 @@ export const parseForm = async (
         return filename;
       },
       filter: (part) => {
-        console.log(part);
-
         return (
           part.name === "filepond" &&
           (part.mimetype?.includes("image") || false)
@@ -52,9 +48,6 @@ export const parseForm = async (
     });
 
     form.parse(req, async function (err, fields, files) {
-      console.log(readdirSync(uploadDir));
-
-      console.log(files);
       if (err) {
         console.log(err);
 

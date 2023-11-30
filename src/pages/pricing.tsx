@@ -31,13 +31,6 @@ const Pricing = () => {
             <p className="text-3xl font-semibold  sm:text-4xl">
               Choose the plan that best suits you.
             </p>
-            <div className="max-w-xl">
-              <p className="text-muted-foreground">
-                Take back your time and become a more efficient creator. No
-                credit card required until the trial is over. No commitments. No
-                hidden fees.
-              </p>
-            </div>
           </div>
           <div className="mt-6">
             <PricingFrequencySelect

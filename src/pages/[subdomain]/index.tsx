@@ -139,6 +139,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
           },
         })
         .then((res) => res.data.items)
+        .catch((err) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          if (err instanceof Error) {
+            console.log(err.message);
+          } else {
+            console.log(err);
+          }
+        })
     : null;
 
   return {

@@ -57,6 +57,11 @@ export const parseForm = async (
       console.log(readdirSync(uploadDir));
 
       console.log(files);
+      if (err) {
+        console.log(err);
+
+        reject(err);
+      }
 
       try {
         if (Array.isArray(files.filepond)) {

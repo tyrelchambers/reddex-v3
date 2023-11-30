@@ -15,7 +15,7 @@ import queryString from "query-string";
 export const parseForm = async (
   req: NextApiRequest
 ): Promise<{ url: string }> => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const uploadDir = path.resolve(
       __dirname,
       "../",
@@ -25,10 +25,6 @@ export const parseForm = async (
       "uploads"
     );
     const uploadType = req.headers["upload-type"];
-
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
 
     const form = formidable({
       multiples: false,

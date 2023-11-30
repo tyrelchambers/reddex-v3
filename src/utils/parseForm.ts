@@ -2,7 +2,7 @@ import type { NextApiRequest } from "next";
 import path from "path";
 import formidable from "formidable";
 import { mkdir, readFile, stat } from "fs/promises";
-import { rmSync } from "fs";
+import { existsSync, rmSync } from "fs";
 import axios from "axios";
 import {
   BANNER_UPLOAD_URL,
@@ -15,7 +15,7 @@ import queryString from "query-string";
 export const parseForm = async (
   req: NextApiRequest
 ): Promise<{ url: string }> => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const uploadDir = path.resolve(
       __dirname,
       "../",
@@ -26,21 +26,9 @@ export const parseForm = async (
     );
     const uploadType = req.headers["upload-type"];
 
-    // try {
-    //   await stat(uploadDir);
-    // } catch (e: unknown) {
-    //   console.error(e);
-    //   if (e instanceof Error) {
-    //     if ("code" in e && e.code === "ENOENT") {
-    //       await mkdir(uploadDir, { recursive: true });
-    //     } else {
-    //       console.error(e);
-    //       reject(e);
-    //       return;
-    //     }
-    //   }
-    //   reject(e);
-    // }
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true });
+    }
 
     const form = formidable({
       multiples: false,

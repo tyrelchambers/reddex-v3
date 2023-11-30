@@ -216,7 +216,7 @@ export const websiteRouter = createTRPCRouter({
     .input(removeImageSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        console.log(input.url);
+        console.log(input.url, env.BUNNY_PASSWORD);
 
         return await axios
           .delete(input.url, {

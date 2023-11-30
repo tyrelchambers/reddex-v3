@@ -48,6 +48,8 @@ const FileUpload = ({ type, uploadRef, disabled }: Props) => {
       instantUpload={false}
       allowProcess={false}
       disabled={disabled}
+      name="filepond"
+      maxFileSize={"2MB"}
     />
   );
 };

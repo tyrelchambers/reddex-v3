@@ -7,8 +7,6 @@ export default async function handler(
 ) {
   const { url } = await parseForm(req);
 
-  console.log(url);
-
   res.status(200).send(url);
 }
 

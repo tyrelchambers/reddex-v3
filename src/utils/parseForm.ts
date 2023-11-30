@@ -48,6 +48,8 @@ export const parseForm = async (
     });
 
     form.parse(req, async function (err, fields, files) {
+      console.log(files);
+
       try {
         if (Array.isArray(files.filepond)) {
           if (files.filepond[0]) {

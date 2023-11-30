@@ -38,21 +38,11 @@ const MyApp: AppType<MyAppProps> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const [subdomain, setSubdomain] = useState<string | null>(null);
   const { colorScheme } = useTheme();
   const userStore = useUserStore();
   const userQuery = api.user.me.useQuery(undefined, {
     retry: false,
   });
-
-  useEffect(() => {
-    const regex = /^(?:www\.)?([^.:]+)\./;
-    const subdomain = window.location.hostname.match(regex)?.[1];
-
-    if (subdomain) {
-      setSubdomain(subdomain);
-    }
-  }, []);
 
   useEffect(() => {
     if (userQuery.data) {

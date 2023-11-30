@@ -20,7 +20,6 @@ const Home: NextPage = () => {
           name="description"
           content="Helping YouTube narrators find the best stories."
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto max-w-screen-2xl">
         <Header />

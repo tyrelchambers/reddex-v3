@@ -117,7 +117,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const hasProSubscription = await checkForProperSubscription(user.customerId);
 
-  console.log(website?.hidden, !hasProSubscription, !website);
+  console.log(
+    website?.hidden,
+    !hasProSubscription,
+    !website,
+    process.env.NODE_ENV,
+    user
+  );
 
   if (website?.hidden || !hasProSubscription || !website)
     return {

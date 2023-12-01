@@ -156,7 +156,7 @@ const Header = ({ openDrawer }: Props) => {
               className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
             />
           </button>
-          {!opened && (
+          {!opened && router.pathname === routes.SEARCH && (
             <Button
               type="button"
               size="sm"

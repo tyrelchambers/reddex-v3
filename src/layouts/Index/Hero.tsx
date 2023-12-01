@@ -5,19 +5,19 @@ import Link from "next/link";
 import { routes } from "~/routes";
 
 const Hero = () => (
-  <section className="hero flex w-full max-w-screen-md  flex-col items-center justify-center gap-10 px-2 md:mx-auto">
+  <section className="hero mb-20 flex w-full  max-w-screen-lg flex-col items-center justify-center gap-10 px-2 md:mx-auto">
     <Badge className="w-fit" classNames={mantineBadgeClasses} color="rose">
       Thousands of stories read
     </Badge>
     <div className="relative">
-      <h1 className="text-center text-5xl font-semibold text-foreground">
+      <h1 className="text-center font-semibold text-foreground lg:text-7xl">
         We help Narrators like you save time and effort
       </h1>
-      <span className="absolute right-[11%] ">
+      <span className="absolute right-[5%] ">
         <Squiggly id="svg-squig" />
       </span>
     </div>
-    <p className="relative z-10 mt-4 text-center text-2xl font-thin text-muted-foreground">
+    <p className=" relative z-10 mt-4 max-w-3xl text-center text-foreground/60 lg:text-2xl lg:leading-9">
       Reddex is a tool designed to help you find the next best Reddit story in
       no-time at all. Save hours searching for stories and requesting
       permission. Reddex helps you do all that in a matter of minutes.

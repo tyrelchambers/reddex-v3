@@ -1,10 +1,9 @@
 import React from "react";
-import logo from "../../public/images/reddex-dark.svg";
-import logoLight from "../../public/images/reddex-light.svg";
+import Logo from "../../public/images/reddex-dark.svg";
+import LogoLight from "../../public/images/reddex-light.svg";
 import { useTheme } from "~/hooks/useTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
-import Image from "next/image";
 import { routes } from "~/routes";
 
 const footerNavs = [
@@ -33,11 +32,11 @@ const Footer = () => {
   return (
     <footer className="w-full bg-card">
       <div className="mx-auto mt-8 max-w-screen-xl px-4 py-5 text-gray-500 md:px-8">
-        <div className="flex max-w-lg flex-col items-center sm:mx-auto sm:text-center">
+        <div className="flex max-w-3xl flex-col items-center sm:mx-auto sm:text-center">
           {isDark ? (
-            <Image src={logoLight as string} alt="" className=" w-12" />
+            <LogoLight className="h-12 w-12" />
           ) : (
-            <Image src={logo as string} alt="" className=" w-12" />
+            <Logo className="h-12 w-12" />
           )}
           <p className="mt-2 text-[15px] leading-relaxed text-card-foreground/70">
             Discover the Best of Reddit, Effortlessly. Reddex empowers you to
@@ -47,15 +46,9 @@ const Footer = () => {
             minutes.
           </p>
         </div>
-        <ul className="mt-8 items-center justify-center space-y-5 sm:flex sm:space-x-4 sm:space-y-0">
-          {footerNavs.map((item, idx) => (
-            <li className=" hover:text-gray-800" key={idx}>
-              <a href={item.href}>{item.name}</a>
-            </li>
-          ))}
-        </ul>
+
         <div className="mt-8 items-center justify-between sm:flex">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="mt-4 text-sm sm:mt-0">
               &copy; {currentYear} Reddex All rights reserved.
             </div>

@@ -14,16 +14,13 @@ const usedBy = [
 const UsedBy = () => {
   return (
     <section className="mx-2 xl:mx-0">
-      <p className="text-center font-bold text-muted-foreground">
+      <p className="mb-8 text-center text-3xl font-bold text-foreground">
         Trusted by these great narrators
       </p>
 
       <ul className="mt-4 flex flex-wrap justify-center gap-3">
         {usedBy.map((u) => (
-          <li
-            key={u}
-            className="text-xl font-black text-foreground xl:text-3xl"
-          >
+          <li key={u} className="text-xl text-foreground/60 xl:text-3xl">
             {u}
           </li>
         ))}

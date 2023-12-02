@@ -25,6 +25,12 @@ import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import { Sheet, SheetContent, SheetHeader } from "~/src/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+} from "~/src/components/ui/dialog";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -129,113 +135,103 @@ const Search = () => {
         <title>Reddex | Search</title>
       </Head>
 
-      <main>
-        <Header openDrawer={openDrawer} />
+      <Header openDrawer={openDrawer} />
 
-        {!loading && !posts.length && (
-          <section className="mx-auto max-w-screen-2xl">
-            <EmptyState label="subreddit posts" />
-          </section>
+      {!loading && !posts.length && (
+        <section className="mx-auto max-w-screen-2xl">
+          <EmptyState label="subreddit posts" />
+        </section>
+      )}
+
+      <div className=" relative flex flex-col p-4">
+        <QueueBanner openQueue={openQueue} />
+
+        {loading && (
+          <div className="my-6 flex justify-center">
+            <Loader color="pink" />
+          </div>
         )}
 
-        <div className=" relative flex flex-col p-4">
-          <QueueBanner openQueue={openQueue} />
+        <ActiveFilterList
+          filters={appliedFilters}
+          removeFilter={removeFilter}
+          reset={resetFilters}
+        />
 
-          {loading && (
-            <div className="my-6 flex justify-center">
-              <Loader color="pink" />
-            </div>
-          )}
-
-          <ActiveFilterList
-            filters={appliedFilters}
-            removeFilter={removeFilter}
-            reset={resetFilters}
-          />
-
-          <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-            {(!loading &&
-              paginatedSlice(
-                filterPosts(
-                  appliedFilters,
-                  posts,
-                  currentUser.data?.Profile?.words_per_minute
-                ),
-                PAGINATION_LIMIT_PER_PAGE,
-                activePage
-              )
-                .sort((a, b) => b.created - a.created)
-                .map((item) => (
-                  <SubredditSearchItem
-                    key={item.id}
-                    post={item}
-                    hasBeenUsed={
-                      !!usedPostIdsQuery.data?.find(
-                        (id) => id.post_id === item.id
-                      )
-                    }
-                    usersWordsPerMinute={
-                      currentUser.data?.Profile?.words_per_minute
-                    }
-                    // fix
-                    canAddToQueue={session.status === "authenticated" && false}
-                  />
-                ))) ||
-              null}
-          </div>
-          <div className="my-6 flex flex-col justify-between lg:flex-row">
-            {lastSearched && (
-              <p className="mb-4 text-sm text-foreground/70 lg:mb-0">
-                Last searched:{" "}
-                {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
-              </p>
-            )}
-            <Pagination
-              classNames={mantinePaginationStyles}
-              value={activePage}
-              onChange={setPage}
-              total={PAGINATION_TOTAL_PAGES}
-            />
-          </div>
+        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+          {(!loading &&
+            paginatedSlice(
+              filterPosts(
+                appliedFilters,
+                posts,
+                currentUser.data?.Profile?.words_per_minute
+              ),
+              PAGINATION_LIMIT_PER_PAGE,
+              activePage
+            )
+              .sort((a, b) => b.created - a.created)
+              .map((item) => (
+                <SubredditSearchItem
+                  key={item.id}
+                  post={item}
+                  hasBeenUsed={
+                    !!usedPostIdsQuery.data?.find(
+                      (id) => id.post_id === item.id
+                    )
+                  }
+                  usersWordsPerMinute={
+                    currentUser.data?.Profile?.words_per_minute
+                  }
+                  // fix
+                  canAddToQueue={session.status === "authenticated" && false}
+                />
+              ))) ||
+            null}
         </div>
+        <div className="my-6 flex flex-col justify-between lg:flex-row">
+          {lastSearched && (
+            <p className="mb-4 text-sm text-foreground/70 lg:mb-0">
+              Last searched:{" "}
+              {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
+            </p>
+          )}
+          <Pagination
+            classNames={mantinePaginationStyles}
+            value={activePage}
+            onChange={setPage}
+            total={PAGINATION_TOTAL_PAGES}
+          />
+        </div>
+      </div>
 
-        <Modal
-          opened={opened}
-          onClose={close}
-          title="Add filters"
-          classNames={mantineModalClasses}
-          zIndex={1000}
-        >
+      <Dialog open={opened}>
+        <DialogContent onClose={close}>
+          <DialogHeader className="text-foreground">Apply filters</DialogHeader>
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
           <FilterSelections filters={appliedFilters} />
-        </Modal>
+        </DialogContent>
+      </Dialog>
 
-        <Modal
-          opened={queueModalOpened}
-          onClose={closeQueue}
-          size="xl"
-          title="Story queue"
-          classNames={mantineModalClasses}
-        >
+      <Dialog open={queueModalOpened}>
+        <DialogContent onClose={closeQueue}>
+          <DialogHeader>Story queue</DialogHeader>
           <QueueModal close={closeQueue} />
-        </Modal>
-        <Drawer
-          opened={drawerOpened}
-          onClose={closeDrawer}
-          title="Search Reddit"
-          position="right"
-          classNames={mantineDrawerClasses}
-        >
+        </DialogContent>
+      </Dialog>
+
+      <Sheet open={drawerOpened}>
+        <SheetContent side="right" onClose={closeDrawer}>
+          <SheetHeader className="text-foreground">Search Reddit</SheetHeader>
           <SubredditSearchForm
             open={open}
             searchHandler={searchHandler}
             disableSearch={subredditSearch.isLoading}
             searches={currentUser.data?.Profile?.searches}
           />
-        </Drawer>
-      </main>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };
@@ -294,4 +290,3 @@ const filterPosts = (
 };
 
 export default Search;
-

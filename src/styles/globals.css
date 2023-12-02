@@ -117,6 +117,9 @@
     --border: 214.3 31.8% 91.4%;
     --input: 240 4% 96%;
 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
     --primary: 350 89% 60%;
     --primary-foreground: 222.2 47.4% 100%;
 
@@ -157,6 +160,9 @@
     --border: 240 4% 16%;
     --input: 240 4% 16%;
 
+    --popover: 0 0% 20%;
+    --popover-foreground: 222.2 47.4% 97.2%;
+
     /* Primary colors for <Button /> */
     --primary: 350 89% 60%;
     --primary-foreground: 222.2 47.4% 100%;
@@ -191,6 +197,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

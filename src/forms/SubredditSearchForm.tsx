@@ -1,10 +1,17 @@
 import { faSpinnerThird } from "@fortawesome/pro-duotone-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Select, TextInput } from "@mantine/core";
 import { RecentlySearched } from "@prisma/client";
+import { Portal } from "@radix-ui/react-popover";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { mantineInputClasses, mantineSelectClasses } from "~/lib/styles";
+import { Input } from "~/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
@@ -30,7 +37,7 @@ const SubredditSearchForm = ({
   });
 
   return (
-    <div className="flex flex-col p-3">
+    <div className="mt-8 flex flex-col">
       <form
         className="flex w-full flex-col items-end gap-3 "
         onSubmit={(e) => {
@@ -38,27 +45,34 @@ const SubredditSearchForm = ({
           searchHandler(state);
         }}
       >
-        <TextInput
-          variant="filled"
-          placeholder="subreddit"
-          icon="r/"
+        <Input
+          placeholder="r/subreddit"
           className="w-full flex-1"
-          classNames={mantineInputClasses}
           onChange={(e) =>
             setState({ ...state, subreddit: e.currentTarget.value })
           }
           value={state.subreddit}
         />
+
         <Select
-          defaultValue={categories[0]}
-          data={categories}
-          onChange={(e) => setState({ ...state, category: e as string })}
-          classNames={mantineSelectClasses}
-          className="w-full "
-        />
+          onValueChange={(e) => setState({ ...state, category: e })}
+          defaultValue="Hot"
+        >
+          <SelectTrigger className="w-full text-foreground">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((c) => (
+              <SelectItem key={c} value={c}>
+                {c}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Button
           type="button"
-          variant="outline"
+          variant="secondary"
           className="w-full "
           onClick={open}
         >

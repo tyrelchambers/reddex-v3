@@ -11,6 +11,7 @@ import { buildParams } from "~/utils";
 import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
 import { FilterState } from "~/types";
+import { Input } from "./ui/input";
 
 interface FilterSelectionProps {
   filters: Partial<FilterState> | null;
@@ -42,7 +43,7 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
         qualifier: "Over",
         value: 0,
       },
-      keywords: undefined,
+      keywords: "",
       seriesOnly: false,
       excludeSeries: false,
     },
@@ -120,11 +121,9 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
 
       <div className="flex flex-col">
         <p className="text-sm text-foreground">Keywords</p>
-        <TextInput
-          variant="filled"
+        <Input
           className="mt-1"
           placeholder="Enter a comma separate list of keywords to search for"
-          classNames={mantineInputClasses}
           {...form.getInputProps("keywords")}
         />
       </div>

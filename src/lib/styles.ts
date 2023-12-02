@@ -57,8 +57,7 @@ export const mantineBadgeClasses: Partial<Record<BadgeStylesNames, string>> = {
 
 export const mantineModalClasses: Partial<Record<ModalStylesNames, string>> = {
   header: "bg-background text-foreground pb-3",
-  content: "bg-background rounded-3xl px-3",
-  body: "p-6",
+  content: "bg-background rounded-3xl p-6",
 };
 
 export const mantineSwitchStyles: Partial<Record<SwitchStylesNames, string>> = {

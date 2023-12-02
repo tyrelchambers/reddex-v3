@@ -31,6 +31,8 @@ const Submit = ({ website }: Props) => {
   const authorModule = modules.find((module) => module.name === "author");
   const emailModule = modules.find((module) => module.name === "email");
 
+  console.log(website, modules);
+
   const form = useForm({
     initialValues: {
       title: "",

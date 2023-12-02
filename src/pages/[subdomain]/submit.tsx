@@ -27,11 +27,15 @@ interface Props {
 const Submit = ({ website }: Props) => {
   const submitStory = api.website.submit.useMutation();
   const modules = website?.submissionPage.submissionFormModules || [];
-  const titleModule = modules.find((module) => module.name === "title");
-  const authorModule = modules.find((module) => module.name === "author");
-  const emailModule = modules.find((module) => module.name === "email");
-
-  console.log(website, modules);
+  const titleModule = modules.find(
+    (module) => module.name.toLowerCase() === "title"
+  );
+  const authorModule = modules.find(
+    (module) => module.name.toLowerCase() === "author"
+  );
+  const emailModule = modules.find(
+    (module) => module.name.toLowerCase() === "email"
+  );
 
   const form = useForm({
     initialValues: {

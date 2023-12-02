@@ -13,7 +13,7 @@ const Index = () => {
     } else if (status !== "loading" && status === "authenticated") {
       router.push(routes.APPROVED);
     }
-  }, [status]);
+  }, [status, router.isReady]);
 
   return null;
 };

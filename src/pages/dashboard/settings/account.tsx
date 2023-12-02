@@ -14,11 +14,10 @@ import SubscriptionCard from "~/components/SubscriptionCard";
 import NoSelectedPlan from "~/components/NoSelectedPlan";
 import { Button } from "~/components/ui/button";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useUserStore } from "~/stores/useUserStore";
 import { captureException } from "@sentry/nextjs";
 
 const Settings = () => {
-  const currentUser = useUserStore();
+  const { data: currentUser } = api.user.me.useQuery();
   const subscriptionQuery = api.billing.info.useQuery();
   const [selectedFrequency, setSelectedFrequency] = useState<
     "yearly" | "monthly"
@@ -58,12 +57,12 @@ const Settings = () => {
 
       if (!selectedPlan) throw new Error("Missing selected plan");
 
-      const customerEmail = currentUser.user?.email || form.values.email;
+      const customerEmail = currentUser?.email || form.values.email;
 
       console.log(customerEmail);
 
       const customerId =
-        currentUser.user?.customerId ||
+        currentUser?.customerId ||
         (await createCustomer.mutateAsync(customerEmail));
 
       await updateUser.mutateAsync({
@@ -91,7 +90,7 @@ const Settings = () => {
     } catch (error) {
       captureException(error, {
         extra: {
-          userId: currentUser.user?.id,
+          userId: currentUser?.id,
           plan: selectedPlan,
         },
       });
@@ -169,7 +168,7 @@ const Settings = () => {
         size="xl"
       >
         <div className="mt-4">
-          {!currentUser.user?.email && (
+          {!currentUser?.email && (
             <>
               <p className="mb-4">
                 Please add an email to your account before we proceed.

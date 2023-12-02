@@ -183,7 +183,7 @@ const Search = () => {
                     currentUser.data?.Profile?.words_per_minute
                   }
                   // fix
-                  canAddToQueue={session.status === "authenticated" && false}
+                  canAddToQueue={session.status === "authenticated" || false}
                 />
               ))) ||
             null}
@@ -216,7 +216,7 @@ const Search = () => {
 
       <Dialog open={queueModalOpened}>
         <DialogContent onClose={closeQueue}>
-          <DialogHeader>Story queue</DialogHeader>
+          <DialogHeader className="text-foreground">Story queue</DialogHeader>
           <QueueModal close={closeQueue} />
         </DialogContent>
       </Dialog>

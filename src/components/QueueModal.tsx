@@ -7,7 +7,6 @@ import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { mantineInputClasses } from "~/lib/styles";
-import { useUserStore } from "~/stores/useUserStore";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
@@ -19,7 +18,7 @@ interface Props {
 }
 
 const QueueModal = ({ close }: Props) => {
-  const { user } = useUserStore();
+  const { data: user } = api.user.me.useQuery();
   const queueStore = useQueueStore();
   const currentPost = queueStore.queue[0];
   const apiContext = api.useContext();
@@ -53,6 +52,7 @@ const QueueModal = ({ close }: Props) => {
     const contactedAuthors = contactedWritersQuery.data?.map(
       (item) => item.name
     );
+    console.log(user?.Profile);
 
     if (currentPostAuthor) {
       if (contactedAuthors && contactedAuthors.includes(currentPostAuthor)) {
@@ -113,15 +113,15 @@ const QueueModal = ({ close }: Props) => {
           <div className="flex gap-4">
             <Button
               variant="link"
-              onClick={() => fillWithMessage(user?.Profile?.recurring)}
+              onClick={() => fillWithMessage(user?.Profile?.greeting)}
             >
-              Initial greeting
+              Initial
             </Button>
             <Button
               variant="link"
-              onClick={() => fillWithMessage(user?.Profile?.greeting)}
+              onClick={() => fillWithMessage(user?.Profile?.recurring)}
             >
-              Recurring greeting
+              Recurring
             </Button>
           </div>
         </div>

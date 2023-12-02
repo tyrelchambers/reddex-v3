@@ -7,7 +7,6 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineSelectClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
@@ -17,8 +16,8 @@ const themes = ["light", "dark"];
 
 const Theme = () => {
   const apiContext = api.useContext();
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
   const saveTheme = api.website.saveTheme.useMutation({
     onSuccess: () => {
       apiContext.website.invalidate();

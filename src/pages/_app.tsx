@@ -13,9 +13,8 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
-import { useUserStore } from "~/stores/useUserStore";
 import mixpanel from "mixpanel-browser";
 import { env } from "~/env.mjs";
 
@@ -39,7 +38,6 @@ const MyApp: AppType<MyAppProps> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const { colorScheme } = useTheme();
-  const userStore = useUserStore();
   const userQuery = api.user.me.useQuery(undefined, {
     retry: false,
   });
@@ -47,7 +45,6 @@ const MyApp: AppType<MyAppProps> = ({
   useEffect(() => {
     if (userQuery.data) {
       const activeSub = userQuery.data.hasActiveSubscription;
-      userStore.setUser(userQuery.data);
 
       if (!activeSub) {
         toast.warn(

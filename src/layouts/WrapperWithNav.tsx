@@ -7,10 +7,11 @@ import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
 import { useViewportSize } from "@mantine/hooks";
 import { breakpoints } from "~/constants";
-import { useUserStore } from "~/stores/useUserStore";
 import WrongPlanBanner from "~/components/WrongPlanBanner";
 import { routes } from "~/routes";
 import { useRouter } from "next/router";
+import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 
 interface Props {
   children: React.ReactNode[] | React.ReactNode;
@@ -25,13 +26,22 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
   >(undefined);
 
   const { width } = useViewportSize();
-  const { user } = useUserStore();
+  const { data: user } = api.user.me.useQuery();
   const router = useRouter();
+  const { status } = useSession();
 
   const allowedRoutesWithoutPlan = [
     routes.SETTINGS_ACCOUNT,
     routes.SETTINGS_PROFILE,
   ];
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push(routes.HOME);
+    } else if (status === "authenticated") {
+      router.push(routes.APPROVED);
+    }
+  }, [status, router.isReady]);
 
   useEffect(() => {
     if (user) {
@@ -41,6 +51,8 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
       );
     }
   }, [user, router.asPath]);
+
+  if (status === "unauthenticated") return null;
 
   return (
     <>

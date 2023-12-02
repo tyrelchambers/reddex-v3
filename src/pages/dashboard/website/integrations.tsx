@@ -8,15 +8,14 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Integrations = () => {
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
   const saveIntegrations = api.website.saveIntegrations.useMutation();
   const websiteSettings = api.website.settings.useQuery();
 

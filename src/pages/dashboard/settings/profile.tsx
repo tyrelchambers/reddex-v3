@@ -4,17 +4,25 @@ import { Divider, NumberInput, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { RecentlySearched } from "@prisma/client";
 import React, { FormEvent, useEffect } from "react";
+import { toast } from "react-toastify";
 import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineNumberClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
 
 const Profile = () => {
   const apiContext = api.useContext();
-  const saveProfile = api.user.saveProfile.useMutation();
-  const { user } = useUserStore();
+  const saveProfile = api.user.saveProfile.useMutation({
+    onSuccess: () => {
+      apiContext.user.invalidate();
+      toast.success("Profile saved");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+  const { data: user } = api.user.me.useQuery();
   const deleteSearched = api.user.removeSearch.useMutation({
     onSuccess: () => {
       apiContext.user.invalidate();

@@ -7,6 +7,7 @@ import { COMPOSE_MESSAGE_URL } from "~/url.constants";
 import { formatSubject } from "~/utils";
 import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
+import { env } from "~/env.mjs";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -92,11 +93,9 @@ export const storyRouter = createTRPCRouter({
         if (!redditAccount) return;
 
         const accessToken = await refreshAccessToken(redditAccount);
-        // env.NODE_ENV === "production" &&
-        if (accessToken) {
+        if (env.NODE_ENV === "production" && accessToken) {
           const body = new FormData();
           body.set("to", input.author);
-          // body.set("to", "StoriesAfterMidnight");
           body.set("subject", formatSubject(input.title));
           body.set("text", input.message);
 

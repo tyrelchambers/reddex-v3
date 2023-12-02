@@ -8,7 +8,6 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
@@ -30,8 +29,8 @@ interface SubmissionFormProps {
 
 const SubmissionForm = () => {
   const apiContext = api.useContext();
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
 
   const submissionFormSave = api.website.saveSubmissionForm.useMutation({
     onSuccess: () => {

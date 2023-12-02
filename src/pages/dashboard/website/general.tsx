@@ -41,8 +41,8 @@ registerPlugin(
 
 const General = () => {
   const apiContext = api.useContext();
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
 
   const websiteSave = api.website.saveGeneral.useMutation({
     onSuccess: () => {
@@ -136,7 +136,7 @@ const General = () => {
     }
 
     trackUiEvent(MixpanelEvents.SAVE_WEBSITE_SETTINGS, {
-      userId: userStore.user?.id,
+      userId: user?.id,
     });
     websiteSave.mutate({
       ...form.values,

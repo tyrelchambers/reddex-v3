@@ -51,7 +51,7 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
         {website.description && (
           <div className="my-8 max-w-3xl text-foreground">
             <Title size="h3">Welcome!</Title>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-gray-500">
+            <p className="mt-2 whitespace-pre-wrap text-sm leading-loose text-foreground/70">
               {website.description}
             </p>
           </div>

@@ -88,12 +88,12 @@ const Submit = ({ website }: Props) => {
       <main className="mx-auto mt-10 w-full max-w-screen-md p-4">
         <header className="flex flex-col gap-3 text-foreground">
           <Title>{website?.submissionPage.name}</Title>
-          <Text color="gray" size="lg">
+          <p className="whitespace-pre-wrap text-foreground">
             {website?.submissionPage.subtitle}
-          </Text>
-          <Text color="dimmed" fw="lighter" className="whitespace-pre-wrap">
+          </p>
+          <p className="whitespace-pre-wrap text-sm leading-loose text-foreground/70">
             {website?.submissionPage.description}
-          </Text>
+          </p>
         </header>
 
         <Divider className="my-6 border-border" />
@@ -103,7 +103,7 @@ const Submit = ({ website }: Props) => {
           onSubmit={submitHandler}
         >
           <Title order={2} size="h3">
-            Paste your story
+            What&apos;s your story?
           </Title>
           {titleModule?.enabled && (
             <TextInput

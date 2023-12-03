@@ -1,4 +1,4 @@
-import { Drawer, Loader, Modal, Pagination } from "@mantine/core";
+import { Loader, Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
@@ -12,11 +12,7 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { FilterState, MixpanelEvents, PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import {
-  mantineDrawerClasses,
-  mantineModalClasses,
-  mantinePaginationStyles,
-} from "~/lib/styles";
+import { mantinePaginationStyles } from "~/lib/styles";
 import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
@@ -25,12 +21,8 @@ import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { trackUiEvent } from "~/utils/mixpanelClient";
-import { Sheet, SheetContent, SheetHeader } from "~/src/components/ui/sheet";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-} from "~/src/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader } from "~/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -182,7 +174,6 @@ const Search = () => {
                   usersWordsPerMinute={
                     currentUser.data?.Profile?.words_per_minute
                   }
-                  // fix
                   canAddToQueue={session.status === "authenticated" || false}
                 />
               ))) ||

@@ -1,8 +1,8 @@
 import type { NextApiRequest } from "next";
 import path from "path";
 import formidable from "formidable";
-import { mkdir, readFile, stat } from "fs/promises";
-import { existsSync, readdirSync, rmSync } from "fs";
+import { readFile } from "fs/promises";
+import { rmSync } from "fs";
 import axios from "axios";
 import {
   BANNER_UPLOAD_URL,

@@ -1,7 +1,6 @@
-import { NumberInput, TextInput, Switch, Select } from "@mantine/core";
+import { NumberInput, Switch, Select } from "@mantine/core";
 import React, { FormEvent, useEffect } from "react";
 import {
-  mantineInputClasses,
   mantineNumberClasses,
   mantineSelectClasses,
   mantineSwitchStyles,

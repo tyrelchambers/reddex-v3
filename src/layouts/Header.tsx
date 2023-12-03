@@ -111,7 +111,7 @@ const Header = ({ openDrawer }: Props) => {
                 openDrawer?.();
               }}
             >
-              <FontAwesomeIcon icon={faSearch} className="mr-2" />
+              <FontAwesomeIcon icon={faSearch} className="mr-4" />
               Search
             </Button>
           )}
@@ -160,7 +160,7 @@ const Header = ({ openDrawer }: Props) => {
             >
               <FontAwesomeIcon
                 icon={faSearch}
-                className="mr-2 text-xs text-accent-foreground"
+                className="mr-4 text-xs text-accent-foreground"
               />
               <p className="text-sm text-accent-foreground">Search</p>
             </Button>

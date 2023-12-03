@@ -38,8 +38,6 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push(routes.HOME);
-    } else if (status === "authenticated") {
-      router.push(routes.APPROVED);
     }
   }, [status, router.isReady]);
 

@@ -4,26 +4,6 @@ import LogoLight from "../../public/images/reddex-light.svg";
 import { useTheme } from "~/hooks/useTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { routes } from "~/routes";
-
-const footerNavs = [
-  {
-    href: routes.HOME,
-    name: "Home",
-  },
-  {
-    href: routes.PRICING,
-    name: "Pricing",
-  },
-  {
-    href: routes.SEARCH,
-    name: "Search",
-  },
-  {
-    href: routes.LOGIN,
-    name: "Login",
-  },
-];
 
 const Footer = () => {
   const { isDark } = useTheme();

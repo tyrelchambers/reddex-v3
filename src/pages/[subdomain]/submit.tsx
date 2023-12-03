@@ -1,4 +1,4 @@
-import { Divider, Text, TextInput, Title } from "@mantine/core";
+import { Divider, TextInput, Title } from "@mantine/core";
 import { SubmissionFormModule, SubmissionPage, Website } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import React, { FormEvent } from "react";

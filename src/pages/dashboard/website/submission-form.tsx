@@ -9,7 +9,7 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
+import { mantineCheckBoxClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";

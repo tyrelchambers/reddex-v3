@@ -1,12 +1,14 @@
-import { Modal, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
@@ -37,7 +39,7 @@ const Contacts = () => {
 
   return (
     <WrapperWithNav>
-      <main className="mx-auto max-w-screen-2xl px-4 lg:px-0">
+      <section className="mx-auto max-w-screen-2xl px-4 lg:px-0">
         <header className="flex items-center justify-between">
           <h1 className="text-2xl text-foreground">Contacts</h1>
 
@@ -62,32 +64,32 @@ const Contacts = () => {
           <EmptyState label="contacts" />
         )}
 
-        <Modal
-          opened={opened}
-          onClose={close}
-          title="Add contact"
-          classNames={mantineModalClasses}
-        >
-          <form onSubmit={submitHandler} className="flex flex-col gap-4">
-            <TextInput
-              variant="filled"
-              label="Name"
-              placeholder="Add your contact's name"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("name")}
-            />
-            <Textarea
-              label="Notes"
-              {...form.getInputProps("notes")}
-              variant="filled"
-              classNames={mantineInputClasses}
-            />
-            <Button type="submit" className="mt-6 w-full">
-              Save
-            </Button>
-          </form>
-        </Modal>
-      </main>
+        <Dialog open={opened}>
+          <DialogContent onClose={close}>
+            <DialogHeader>Add contact</DialogHeader>
+            <form onSubmit={submitHandler} className="flex flex-col gap-4">
+              <div className="flex flex-col">
+                <Label>Name</Label>
+                <Input
+                  placeholder="Add your contact's name"
+                  {...form.getInputProps("name")}
+                />
+              </div>
+              <div className="flex flex-col">
+                <Label>Notes</Label>
+
+                <Textarea
+                  placeholder="Add notes about this contact"
+                  {...form.getInputProps("notes")}
+                />
+              </div>
+              <Button type="submit" className="mt-6 w-full">
+                Save
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </section>
     </WrapperWithNav>
   );
 };

@@ -120,11 +120,7 @@ export const getStorySelectList = (stories: RedditPost[] | undefined) => {
       value: s.id,
     })) || [];
 
-  const storiesList = [
-    { label: "Select a story", value: "" },
-    ...formattedApprovedStories,
-  ];
-  return storiesList;
+  return formattedApprovedStories;
 };
 
 export const hasActiveSubscription = (

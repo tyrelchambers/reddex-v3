@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import EmptyState from "~/components/EmptyState";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
+import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
 import ImportStoryForm from "~/forms/ImportStoryForm";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
@@ -34,13 +36,13 @@ const Approved = () => {
         </div>
 
         <div className="flex w-full max-w-md flex-col gap-3 lg:flex-row">
-          <TextInput
-            placeholder="Search by keywords"
-            icon={<FontAwesomeIcon icon={faSearch} />}
-            value={query}
-            classNames={mantineInputClasses}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-          />
+          <div className="flex flex-1 flex-col">
+            <Input
+              placeholder="Search by keywords"
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
+          </div>
 
           <Button
             variant="secondary"
@@ -70,14 +72,12 @@ const Approved = () => {
         <EmptyState label="approved stories" />
       )}
 
-      <Modal
-        opened={opened}
-        onClose={close}
-        title="Import story"
-        classNames={mantineModalClasses}
-      >
-        <ImportStoryForm />
-      </Modal>
+      <Dialog open={opened}>
+        <DialogContent onClose={close}>
+          <DialogHeader>Import a story</DialogHeader>
+          <ImportStoryForm />
+        </DialogContent>
+      </Dialog>
     </WrapperWithNav>
   );
 };

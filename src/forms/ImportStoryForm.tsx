@@ -3,6 +3,8 @@ import { useForm } from "@mantine/form";
 import axios from "axios";
 import React, { FormEvent } from "react";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { mantineInputClasses } from "~/lib/styles";
 import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
@@ -50,15 +52,19 @@ const ImportStoryForm = () => {
   };
 
   return (
-    <form>
-      <TextInput
-        classNames={mantineInputClasses}
-        label="Story URL"
-        description="This imports a story without asking for permission. In case you are given permission outside Reddex, for example."
-        placeholder="https://www.reddit.com/r/"
-        name="storyUrl"
-        {...form.getInputProps("url")}
-      />
+    <form className="mt-4">
+      <div className="flex flex-col">
+        <Label>Story URL</Label>
+        <p className="mb-2 text-sm text-muted-foreground">
+          This imports a story without asking for permission. In case you are
+          given permission outside Reddex, for example.
+        </p>
+        <Input
+          placeholder="https://www.reddit.com/r/"
+          name="storyUrl"
+          {...form.getInputProps("url")}
+        />
+      </div>
 
       <Button className="mt-4 w-full" onClick={submitHandler}>
         Import

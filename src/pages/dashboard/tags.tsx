@@ -1,4 +1,3 @@
-import { Modal, Select, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
 import { api } from "~/utils/api";
@@ -15,6 +14,16 @@ import { getStorySelectList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 const Tags = () => {
   const apiContext = api.useContext();
@@ -68,34 +77,45 @@ const Tags = () => {
           <EmptyState label="tags" />
         )}
       </main>
-      <Modal
-        opened={opened}
-        onClose={close}
-        title="Create tag"
-        classNames={mantineModalClasses}
-      >
-        <form onSubmit={submitHandler} className="flex flex-col gap-4">
-          <TextInput
-            variant="filled"
-            label="Name"
-            placeholder="A name for your tag"
-            classNames={mantineInputClasses}
-            {...form.getInputProps("tag")}
-          />
+      <Dialog open={opened}>
+        <DialogContent onClose={close}>
+          <DialogHeader>Create a tag</DialogHeader>
+          <form onSubmit={submitHandler} className="flex flex-col gap-4">
+            <div className="flex flex-col">
+              <Label>Name</Label>
+              <Input
+                placeholder="A name for your tag"
+                {...form.getInputProps("tag")}
+              />
+            </div>
 
-          {storiesList && (
-            <Select
-              data={storiesList}
-              label="Add to an approved story"
-              classNames={mantineSelectClasses}
-              {...form.getInputProps("storyId")}
-            />
-          )}
-          <Button className="mt-6 w-full" type="submit" onClick={submitHandler}>
-            Save tag
-          </Button>
-        </form>
-      </Modal>
+            <div className="flex flex-col">
+              <Label>Story list</Label>
+              {storiesList && (
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {storiesList.map((story) => (
+                      <SelectItem key={story.value} value={story.value}>
+                        {story.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+            <Button
+              className="mt-6 w-full"
+              type="submit"
+              onClick={submitHandler}
+            >
+              Save tag
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </WrapperWithNav>
   );
 };

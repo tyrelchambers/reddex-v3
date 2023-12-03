@@ -130,15 +130,15 @@ const Settings = () => {
           )}
         </div>
 
-        <Divider className="border-border" />
-        <div className="flex flex-col">
+        {/* <Divider className="border-border" /> */}
+        {/* <div className="flex flex-col">
           <h2 className=" text-xl text-foreground">Delete account</h2>
           <p className="text-sm text-muted-foreground">
             To delete your account, manage your subscription and cancel your
             membership. Your account will be deleted once your membership is
             cancelled and the billing cycle ends.
           </p>
-        </div>
+        </div> */}
       </section>
 
       <Modal

@@ -1,9 +1,12 @@
-import { Checkbox, TextInput, Textarea } from "@mantine/core";
+import { Checkbox } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import { toast } from "react-toastify";
 import StatusBanner from "~/components/StatusBanner";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
@@ -139,26 +142,21 @@ const SubmissionForm = () => {
           )}
 
           <form onSubmit={submitHandler} className="form mt-4">
-            <TextInput
-              variant="filled"
-              label="Page title"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("name")}
-            />
-            <TextInput
-              variant="filled"
-              label="Page subtitle"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("subtitle")}
-            />
-            <Textarea
-              variant="filled"
-              label="Description"
-              description="List any rules for submissions or any information you want people to know"
-              minRows={8}
-              classNames={mantineInputClasses}
-              {...form.getInputProps("description")}
-            />
+            <div className="flex flex-col">
+              <Label>Page title</Label>
+              <Input {...form.getInputProps("name")} />
+            </div>
+            <div className="flex flex-col">
+              <Label>Page subtitle</Label>
+              <Input {...form.getInputProps("subtitle")} />
+            </div>
+            <div className="flex flex-col">
+              <Label>Description</Label>
+              <Textarea
+                placeholder="List any rules for submissions or any information you want people to know"
+                {...form.getInputProps("description")}
+              />
+            </div>
 
             <section className="flex flex-col gap-4">
               <p className="text-xl text-foreground">Customize modules</p>

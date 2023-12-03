@@ -14,7 +14,7 @@ import { BaseSelectStylesNames } from "@mantine/core/lib/Select/types";
 export const mantineSelectClasses: Partial<
   Record<BaseSelectStylesNames, string>
 > = {
-  input: "bg-input text-foreground border-input hover:border-accent",
+  input: "bg-backround text-foreground border-input hover:border-accent",
   dropdown: "bg-muted shadow-xl border-muted",
   item: "text-foreground hover:bg-accent hover:text-foreground active:bg-accent",
   label: "text-foreground",
@@ -42,7 +42,7 @@ export const mantineNumberClasses: Partial<
   Record<NumberInputStylesNames, string>
 > = {
   input:
-    "bg-input text-foreground border-muted w-full rounded-md h-full disabled:opacity-50 disabled:cursor-not-allowed",
+    "bg-background text-foreground border-muted w-full rounded-md h-full disabled:opacity-50 disabled:cursor-not-allowed",
   wrapper: "h-fit box-border",
   label: "text-card-foreground",
   description: "text-muted-foreground",

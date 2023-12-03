@@ -1,11 +1,15 @@
 import { faTimes } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, NumberInput, TextInput, Textarea } from "@mantine/core";
+import { NumberInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { RecentlySearched } from "@prisma/client";
 import React, { FormEvent, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Separator } from "~/components/ui/separator";
+import { Textarea } from "~/components/ui/textarea";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses, mantineNumberClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
@@ -89,7 +93,7 @@ const Profile = () => {
       <div className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
         <h1 className="text-3xl text-foreground">Profile</h1>
         <form className=" form" onSubmit={saveProfileHandler}>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <NumberInput
               variant="filled"
               classNames={mantineNumberClasses}
@@ -99,17 +103,17 @@ const Profile = () => {
               {...profileForm.getInputProps("words_per_minute")}
             />
 
-            <TextInput
-              variant="filled"
-              label="Email"
-              placeholder="Add your email"
-              classNames={mantineInputClasses}
-              {...profileForm.getInputProps("email")}
-            />
+            <div className="flex flex-col">
+              <Label>Add your email</Label>
+              <Input
+                placeholder="Add your email"
+                {...profileForm.getInputProps("email")}
+              />
+            </div>
           </div>
           <Button type="submit">Save profile</Button>
         </form>
-        <Divider className="border-border" />
+        <Separator />
 
         <div className="flex flex-col">
           <h2 className="mb-4 text-xl text-foreground">Recent searches</h2>
@@ -139,27 +143,26 @@ const Profile = () => {
             </div>
           )}
         </div>
-        <Divider className="border-border" />
+        <Separator />
         <div className="flex flex-col gap-3">
           <h2 className="mb-4 text-xl text-foreground">Messages</h2>
 
           <form action="" className="form" onSubmit={saveMessagesHandler}>
-            <Textarea
-              variant="filled"
-              label="Greeting"
-              description="This message is used when you haven't messaged an author before. Think of it as an initial greeting. Say hello, introduce yourself, go from there."
-              minRows={10}
-              classNames={mantineInputClasses}
-              {...messagesForm.getInputProps("greeting")}
-            />
-            <Textarea
-              variant="filled"
-              label="Recurring"
-              description="This is used when you've already messaged an author. It's useful so users don't feel like they're just getting copy and pasted messages."
-              minRows={10}
-              classNames={mantineInputClasses}
-              {...messagesForm.getInputProps("recurring")}
-            />
+            <div className="flex flex-col">
+              <Label>Greeting message</Label>
+              <Textarea
+                placeholder="This message is used when you haven't messaged an author before. Think of it as an initial greeting. Say hello, introduce yourself, go from there."
+                {...messagesForm.getInputProps("greeting")}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Label>Recurring message</Label>
+
+              <Textarea
+                placeholder="This is used when you've already messaged an author. It's useful so users don't feel like they're just getting copy and pasted messages."
+                {...messagesForm.getInputProps("recurring")}
+              />
+            </div>
             <Button className=" mt-3" type="submit">
               Save messages
             </Button>

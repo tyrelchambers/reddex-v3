@@ -1,12 +1,10 @@
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
@@ -60,15 +58,13 @@ const Integrations = () => {
             website.
           </p>
           <form onSubmit={submitHandler} className="form mt-10">
-            <TextInput
-              variant="filled"
-              label="Youtube"
-              classNames={mantineInputClasses}
-              description="Show the last 5 videos on your website."
-              placeholder="Youtube channel ID"
-              icon={<FontAwesomeIcon icon={faYoutube} />}
-              {...form.getInputProps("youtubeIntegrationId")}
-            />
+            <div className="flex flex-col">
+              <Label>Youtube</Label>
+              <Input
+                placeholder="Youtube channel ID"
+                {...form.getInputProps("youtubeIntegrationId")}
+              />
+            </div>
 
             <Button type="submit" disabled={!proPlan}>
               Save changes

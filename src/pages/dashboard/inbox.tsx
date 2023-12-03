@@ -8,6 +8,7 @@ import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import Spinner from "~/components/Spinner";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { breakpoints } from "~/constants";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { mantineInputClasses } from "~/lib/styles";
@@ -73,10 +74,9 @@ const Inbox = () => {
           )}
           <h1 className="text-2xl text-foreground">Inbox</h1>
           <div className="flex w-full max-w-lg gap-4">
-            <TextInput
+            <Input
               ref={searchRef}
               placeholder="Search for a message via author or subject"
-              classNames={mantineInputClasses}
               onChange={(e) => setSearch(e.target.value)}
             />
             <Button variant="secondary" onClick={resetSearch}>

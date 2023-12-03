@@ -8,7 +8,6 @@ import {
 import { faPodcast } from "@fortawesome/pro-light-svg-icons";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, Image, TextInput, Textarea } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import React, { FormEvent, useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
@@ -26,10 +25,16 @@ import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { Button } from "~/components/ui/button";
-import { mantineInputClasses } from "~/lib/styles";
 import { hasProPlan } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { toast } from "react-toastify";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
+import Image from "next/image";
+import { Separator } from "~/components/ui/separator";
+import { Badge } from "~/components/ui/badge";
+import Link from "next/link";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -188,22 +193,20 @@ const General = () => {
           )}
           <form className="form my-10" onSubmit={submitHandler}>
             <div className="flex w-full flex-col">
-              <p className="label required text-foreground">Subdomain</p>
-              <div className="flex h-fit items-center rounded-lg bg-input p-1">
-                <span className="hidden px-3 text-gray-500 md:flex">
-                  http://reddex.app/
-                </span>
-
-                <TextInput
-                  variant="filled"
-                  placeholder="Your custom subdomain"
-                  classNames={{
-                    ...mantineInputClasses,
-                    input: `${mantineInputClasses.input || ""} !border-0`,
-                  }}
-                  {...form.getInputProps("subdomain")}
-                />
-              </div>
+              <Label>Subdomain</Label>
+              <Input
+                placeholder="Your custom subdomain"
+                {...form.getInputProps("subdomain")}
+              />
+              <Link
+                href={`https://reddex.app/${
+                  websiteSettings.data?.subdomain ?? form.values.subdomain ?? ""
+                }`}
+              >
+                <Badge className="mt-2 w-fit" variant="outline">
+                  https://reddex.app/{form.values.subdomain}
+                </Badge>
+              </Link>
               {form.values.subdomain && subdomainAvailable && (
                 <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
                   <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
@@ -212,23 +215,18 @@ const General = () => {
               )}
             </div>
 
-            <div className="flex">
-              <TextInput
-                variant="filled"
-                label="Site name"
-                classNames={mantineInputClasses}
+            <div className="flex flex-col">
+              <Label>Name of your site</Label>
+              <Input
                 placeholder="Name of your site"
                 required
                 {...form.getInputProps("name")}
               />
             </div>
-            <div className="flex h-fit">
+            <div className="flex flex-col">
+              <Label>Site description</Label>
               <Textarea
-                variant="filled"
-                classNames={mantineInputClasses}
-                label="Site description"
-                description="Let people know who you are"
-                minRows={8}
+                placeholder="Let people know who you are"
                 {...form.getInputProps("description")}
               />
             </div>
@@ -250,8 +248,8 @@ const General = () => {
                     <Image
                       src={websiteSettings.data.thumbnail}
                       alt=""
-                      w={200}
-                      h={200}
+                      width={200}
+                      height={200}
                     />
                   </div>
                   <Button
@@ -285,7 +283,12 @@ const General = () => {
               ) : (
                 <div className="flex flex-col">
                   <div className="overflow-hidden rounded-xl">
-                    <Image src={websiteSettings.data.banner} alt="" />
+                    <Image
+                      src={websiteSettings.data.banner}
+                      alt=""
+                      width={672}
+                      height={200}
+                    />
                   </div>
                   <Button
                     variant="secondary"
@@ -303,62 +306,90 @@ const General = () => {
                 </div>
               )}
             </div>
-            <Divider className="my-4" />
+            <Separator className="my-4" />
 
             <section className="flex flex-col">
               <h2 className="text-xl text-foreground">Social media</h2>
-              <p className="font-thin text-muted-foreground">
+              <p className="font-thin text-foreground/70">
                 The links below will appear as social icons on your site. These
                 are not required, and the icons will not appear on your site if
                 you leave them blank.
               </p>
 
               <div className="mt-6 flex flex-col gap-3">
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="@username"
-                  icon={<FontAwesomeIcon icon={faTwitter} />}
-                  {...form.getInputProps("twitter")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Facebook link"
-                  icon={<FontAwesomeIcon icon={faFacebook} />}
-                  {...form.getInputProps("facebook")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="@username"
-                  icon={<FontAwesomeIcon icon={faInstagram} />}
-                  {...form.getInputProps("instagram")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Patreon link"
-                  icon={<FontAwesomeIcon icon={faPatreon} />}
-                  {...form.getInputProps("patreon")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Youtube link"
-                  icon={<FontAwesomeIcon icon={faYoutube} />}
-                  {...form.getInputProps("youtube")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Podcast link"
-                  icon={<FontAwesomeIcon icon={faPodcast} />}
-                  {...form.getInputProps("podcast")}
-                />
+                <div className="flex items-center gap-4">
+                  <FontAwesomeIcon
+                    className="text-foreground/70"
+                    icon={faTwitter}
+                  />
+                  <Input
+                    placeholder="@username"
+                    {...form.getInputProps("twitter")}
+                  />
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <FontAwesomeIcon
+                    className="text-foreground/70"
+                    icon={faFacebook}
+                  />
+
+                  <Input
+                    placeholder="Facebook link"
+                    {...form.getInputProps("facebook")}
+                  />
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <FontAwesomeIcon
+                    className="text-foreground/70"
+                    icon={faInstagram}
+                  />
+
+                  <Input
+                    placeholder="@username"
+                    {...form.getInputProps("instagram")}
+                  />
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <FontAwesomeIcon
+                    className="text-foreground/70"
+                    icon={faPatreon}
+                  />
+
+                  <Input
+                    placeholder="Patreon link"
+                    {...form.getInputProps("patreon")}
+                  />
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <FontAwesomeIcon
+                    className="text-foreground/70"
+                    icon={faYoutube}
+                  />
+
+                  <Input
+                    placeholder="Youtube link"
+                    {...form.getInputProps("youtube")}
+                  />
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <FontAwesomeIcon
+                    className="text-foreground/70"
+                    icon={faPodcast}
+                  />
+
+                  <Input
+                    placeholder="Podcast link"
+                    {...form.getInputProps("podcast")}
+                  />
+                </div>
               </div>
             </section>
-            <Divider className="my-4" />
+            <Separator className="my-4" />
 
             <Button type="submit" disabled={DISABLE_SUBMIT_BUTTON}>
               Save changes

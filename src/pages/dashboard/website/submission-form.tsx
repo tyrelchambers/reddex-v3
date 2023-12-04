@@ -1,9 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import React, { FormEvent, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { z } from "zod";
 import StatusBanner from "~/components/StatusBanner";
 import { Button } from "~/components/ui/button";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
@@ -16,22 +19,24 @@ import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
-interface Module {
-  id?: string;
-  name: string;
-  enabled: boolean;
-  required: boolean;
-}
-
-interface SubmissionFormProps {
-  name: string | null;
-  subtitle: string | null;
-  description: string | null;
-  submissionFormModules: Module[];
-}
+const formSchema = z.object({
+  name: z.string().optional(),
+  subtitle: z.string().optional(),
+  description: z.string().optional(),
+  submissionFormModules: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string(),
+        enabled: z.boolean(),
+        required: z.boolean(),
+      })
+    )
+    .optional(),
+});
 
 const SubmissionForm = () => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const { data: user } = api.user.me.useQuery();
   const proPlan = hasProPlan(user?.subscription);
 
@@ -55,8 +60,9 @@ const SubmissionForm = () => {
       }
     );
 
-  const form = useForm<SubmissionFormProps>({
-    initialValues: {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       name: "",
       subtitle: "",
       description: "",
@@ -66,30 +72,17 @@ const SubmissionForm = () => {
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.setValues({
-        ...websiteSettings.data.submissionPage,
-        submissionFormModules:
-          websiteSettings.data.submissionPage.submissionFormModules,
-      });
+      form.reset();
+      form.setValue(
+        "submissionFormModules",
+        websiteSettings.data.submissionPage.submissionFormModules
+      );
     }
   }, [websiteSettings.data]);
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = form.validate();
-
-    const { name, subtitle, description, submissionFormModules } = form.values;
-
-    if (hasErrors) return;
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_SUBMISSION_FORM);
-    submissionFormSave.mutate({
-      name,
-      subtitle,
-      description,
-      submissionFormModules,
-    });
+    submissionFormSave.mutate(data);
   };
 
   const visibilityHandler = () => {
@@ -141,69 +134,87 @@ const SubmissionForm = () => {
             />
           )}
 
-          <form onSubmit={submitHandler} className="form mt-4">
-            <div className="flex flex-col">
-              <Label>Page title</Label>
-              <Input {...form.getInputProps("name")} />
-            </div>
-            <div className="flex flex-col">
-              <Label>Page subtitle</Label>
-              <Input {...form.getInputProps("subtitle")} />
-            </div>
-            <div className="flex flex-col">
-              <Label>Description</Label>
-              <Textarea
-                placeholder="List any rules for submissions or any information you want people to know"
-                {...form.getInputProps("description")}
+          <Form {...form}>
+            <form onSubmit={form.onSubmit(submitHandler)} className="form mt-4">
+              <FormField
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Page title</FormLabel>
+                    <Input {...field} />
+                  </FormItem>
+                )}
               />
-            </div>
+              <FormField
+                name="subtitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Page subtitle</Label>
+                    <Input {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <section className="flex flex-col gap-4">
-              <p className="text-xl text-foreground">Customize modules</p>
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <Textarea
+                      placeholder="List any rules for submissions or any information you want people to know"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
 
-              {websiteSettings.data?.submissionPage.submissionFormModules.map(
-                (mod, id) => (
-                  <div
-                    key={mod.id}
-                    className="flex flex-col rounded-xl bg-card p-4"
-                  >
-                    <p className="label font-bold capitalize text-card-foreground">
-                      {mod.name}
-                    </p>
+              <section className="flex flex-col gap-4">
+                <p className="text-xl text-foreground">Customize modules</p>
 
-                    <div className="mt-2 flex gap-4">
-                      <Checkbox
-                        label="Enabled"
-                        description="Show this module on your submission page"
-                        classNames={mantineCheckBoxClasses}
-                        {...form.getInputProps(
-                          `submissionFormModules.${id}.enabled`,
-                          {
-                            type: "checkbox",
-                          }
-                        )}
-                      />
-                      <Checkbox
-                        label="Required"
-                        description="Make this field required"
-                        classNames={mantineCheckBoxClasses}
-                        {...form.getInputProps(
-                          `submissionFormModules.${id}.required`,
-                          {
-                            type: "checkbox",
-                          }
-                        )}
-                      />
-                    </div>
-                  </div>
-                )
-              )}
-            </section>
+                {websiteSettings.data?.submissionPage.submissionFormModules.map(
+                  (mod, id) => (
+                    <FormItem
+                      key={mod.id}
+                      className="flex flex-col rounded-xl bg-card p-4"
+                    >
+                      <p className="label font-bold capitalize text-card-foreground">
+                        {mod.name}
+                      </p>
 
-            <Button type="submit" disabled={!proPlan}>
-              Save changes
-            </Button>
-          </form>
+                      <div className="mt-2 flex gap-4">
+                        <Checkbox
+                          label="Enabled"
+                          description="Show this module on your submission page"
+                          classNames={mantineCheckBoxClasses}
+                          {...form.getInputProps(
+                            `submissionFormModules.${id}.enabled`,
+                            {
+                              type: "checkbox",
+                            }
+                          )}
+                        />
+                        <Checkbox
+                          label="Required"
+                          description="Make this field required"
+                          classNames={mantineCheckBoxClasses}
+                          {...form.getInputProps(
+                            `submissionFormModules.${id}.required`,
+                            {
+                              type: "checkbox",
+                            }
+                          )}
+                        />
+                      </div>
+                    </FormItem>
+                  )
+                )}
+              </section>
+
+              <Button type="submit" disabled={!proPlan}>
+                Save changes
+              </Button>
+            </form>
+          </Form>
         </BodyWithLoader>
       </main>
     </WrapperWithNav>

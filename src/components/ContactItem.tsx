@@ -6,17 +6,25 @@ import React, { FormEvent, useEffect } from "react";
 import { Button } from "./ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
-import { useForm } from "@mantine/form";
 import { api } from "~/utils/api";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField, FormItem, FormLabel } from "./ui/form";
 
 interface Props {
   contact: Contact;
 }
+
+const formSchema = z.object({
+  name: z.string(),
+  notes: z.string().optional(),
+});
 
 const ContactItem = ({ contact }: Props) => {
   const apiContext = api.useUtils();
@@ -36,8 +44,9 @@ const ContactItem = ({ contact }: Props) => {
     },
   });
   const [opened, { open, close }] = useDisclosure(false);
-  const forms = useForm({
-    initialValues: {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       name: "",
       notes: "",
     },
@@ -45,20 +54,15 @@ const ContactItem = ({ contact }: Props) => {
 
   useEffect(() => {
     if (contactQuery.data) {
-      forms.setValues({
-        name: contactQuery.data.name,
-        notes: contactQuery.data.notes ?? undefined,
-      });
+      form.reset();
     }
   }, [contact]);
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_EDIT_CONTACT_FORM);
     updateContact.mutate({
       id: contact.id,
-      name: forms.values.name,
-      notes: forms.values.notes,
+      ...data,
     });
   };
 
@@ -99,23 +103,38 @@ const ContactItem = ({ contact }: Props) => {
       <Dialog open={opened}>
         <DialogContent onClose={close}>
           <DialogHeader>Editing contact</DialogHeader>
-          <form className="flex flex-col gap-4" onSubmit={submitHandler}>
-            <div className="flex flex-col">
-              <Label>Name</Label>
-              <Input {...forms.getInputProps("name")} />
-            </div>
+          <Form {...form}>
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={form.handleSubmit(submitHandler)}
+            >
+              <FormField
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <Input placeholder="Contact name" {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <div className="flex flex-col">
-              <Label>Notes</Label>
-              <Textarea {...forms.getInputProps("notes")} />
-            </div>
-            <footer className="flex justify-between gap-3">
-              <Button variant="link" onClick={deleteHandler}>
-                Delete contact
-              </Button>
-              <Button>Save</Button>
-            </footer>
-          </form>
+              <FormField
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes</FormLabel>
+                    <Textarea {...field} />
+                  </FormItem>
+                )}
+              />
+              <footer className="flex justify-between gap-3">
+                <Button variant="link" onClick={deleteHandler}>
+                  Delete contact
+                </Button>
+                <Button>Save</Button>
+              </footer>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </div>

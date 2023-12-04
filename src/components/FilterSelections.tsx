@@ -1,46 +1,50 @@
-import { NumberInput, Switch, Select } from "@mantine/core";
-import React, { FormEvent, useEffect } from "react";
-import {
-  mantineNumberClasses,
-  mantineSelectClasses,
-  mantineSwitchStyles,
-} from "~/lib/styles";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { buildParams } from "~/utils";
 import { useRouter } from "next/router";
-import { useForm } from "@mantine/form";
 import { FilterState } from "~/types";
 import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem } from "./ui/select";
+import { Switch } from "./ui/switch";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 
 interface FilterSelectionProps {
   filters: Partial<FilterState> | null;
 }
 
-export interface FormProps {
-  upvotes?: {
-    qualifier: string | undefined | null;
-    value: number | undefined | null;
-  };
-  readingTime?: {
-    qualifier: string | undefined | null;
-    value: number | undefined | null;
-  };
-  keywords: string | undefined | null;
-  seriesOnly: boolean | undefined | null;
-  excludeSeries: boolean | undefined | null;
-}
+const formSchema = z.object({
+  upvotes: z
+    .object({
+      qualifier: z.string().optional(),
+      value: z.union([z.string(), z.literal("")]).optional(),
+    })
+    .optional(),
+  readingTime: z
+    .object({
+      qualifier: z.string().optional(),
+      value: z.union([z.string(), z.literal("")]).optional(),
+    })
+    .optional(),
+  keywords: z.string().optional(),
+  seriesOnly: z.boolean().default(false),
+  excludeSeries: z.boolean().default(false),
+});
 
 const FilterSelections = ({ filters }: FilterSelectionProps) => {
   const router = useRouter();
-  const form = useForm<FormProps>({
-    initialValues: {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       upvotes: {
         qualifier: "Over",
-        value: 0,
+        value: "0",
       },
       readingTime: {
         qualifier: "Over",
-        value: 0,
+        value: "0",
       },
       keywords: "",
       seriesOnly: false,
@@ -50,32 +54,19 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
 
   useEffect(() => {
     if (filters) {
-      form.setValues({
-        upvotes: {
-          qualifier: filters.upvotes?.qualifier || "Over",
-          value: Number(filters.upvotes?.value) || undefined,
-        },
-        readingTime: {
-          qualifier: filters.readingTime?.qualifier || "Over",
-          value: Number(filters.readingTime?.value) || undefined,
-        },
-        excludeSeries: Boolean(filters.excludeSeries),
-        keywords: filters.keywords,
-        seriesOnly: Boolean(filters.seriesOnly),
-      });
+      form.reset();
     }
   }, [filters]);
 
   const qualifiers = ["Over", "Under", "Equals"];
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-    updateFilterValueFromUrl(form.values);
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
+    updateFilterValueFromUrl(data);
   };
-  const updateFilterValueFromUrl = async (appliedFilters: FormProps | null) => {
-    if (!appliedFilters) return;
+  const updateFilterValueFromUrl = async (data: z.infer<typeof formSchema>) => {
+    if (!data) return;
 
-    const query = buildParams<Partial<FormProps>>(appliedFilters);
+    const query = buildParams<Partial<z.infer<typeof formSchema>>>(data);
 
     await router.replace(router.asPath, {
       query,
@@ -83,67 +74,121 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
   };
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={submitHandler}>
-      <div className="flex flex-col">
-        <p className="text-sm text-foreground">Upvotes</p>
-        <div className="mt-1 flex flex-col gap-2 md:flex-row">
-          <Select
-            data={qualifiers}
-            classNames={mantineSelectClasses}
-            {...form.getInputProps("upvotes.qualifier")}
-          />{" "}
-          <NumberInput
-            className="flex-1"
-            min={0}
-            classNames={mantineNumberClasses}
-            {...form.getInputProps("upvotes.value")}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col">
-        <p className="text-sm text-foreground">Reading time in minutes</p>
-        <div className="mt-1 flex flex-col gap-2 md:flex-row">
-          <Select
-            data={qualifiers}
-            classNames={mantineSelectClasses}
-            {...form.getInputProps("readingTime.qualifier")}
-          />{" "}
-          <NumberInput
-            className="flex-1"
-            min={0}
-            classNames={mantineNumberClasses}
-            {...form.getInputProps("readingTime.value")}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col">
-        <p className="text-sm text-foreground">Keywords</p>
-        <Input
-          className="mt-1"
-          placeholder="Enter a comma separate list of keywords to search for"
-          {...form.getInputProps("keywords")}
+    <Form {...form}>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(submitHandler)}
+      >
+        <FormField
+          name="upvotes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Upvotes</FormLabel>
+              <div className="mt-1 flex flex-col gap-2 md:flex-row">
+                <Select
+                  {...field}
+                  onValueChange={(v) => {
+                    form.setValue("upvotes.qualifier", v);
+                  }}
+                >
+                  <SelectContent>
+                    {qualifiers.map((q) => (
+                      <SelectItem key={q} value={q}>
+                        {q}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  className="flex-1"
+                  min={0}
+                  type="number"
+                  {...field}
+                  onChange={(v) => {
+                    form.setValue("upvotes.value", v.target.value);
+                  }}
+                />
+              </div>
+            </FormItem>
+          )}
         />
-      </div>
 
-      <Switch
-        label="Series only"
-        classNames={mantineSwitchStyles}
-        {...form.getInputProps("seriesOnly", {
-          type: "checkbox",
-        })}
-      />
-      <Switch
-        label="Exclude series"
-        classNames={mantineSwitchStyles}
-        {...form.getInputProps("excludeSeries", {
-          type: "checkbox",
-        })}
-      />
+        <FormField
+          name="readingTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Reading time in minutes</FormLabel>
+              <div className="mt-1 flex flex-col gap-2 md:flex-row">
+                <Select
+                  {...field}
+                  onValueChange={(v) =>
+                    form.setValue("readingTime.qualifier", v)
+                  }
+                >
+                  <SelectContent>
+                    {qualifiers.map((q) => (
+                      <SelectItem key={q} value={q}>
+                        {q}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  className="flex-1"
+                  min={0}
+                  type="number"
+                  {...field}
+                  onChange={(v) => {
+                    form.setValue("readingTime.value", v.target.value);
+                  }}
+                />
+              </div>
+            </FormItem>
+          )}
+        />
 
-      <Button type="submit">Apply filters</Button>
-    </form>
+        <FormField
+          name="keywords"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Keywords</FormLabel>
+              <Input
+                className="mt-1"
+                placeholder="Enter a comma separate list of keywords to search for"
+                {...field}
+              />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="seriesOnly"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Series only</FormLabel>
+              <FormControl>
+                <Switch checked={field.value} onChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="excludeSeries"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Exclude series</FormLabel>
+              <FormControl>
+                <Switch checked={field.value} onChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit">Apply filters</Button>
+      </form>
+    </Form>
   );
 };
 

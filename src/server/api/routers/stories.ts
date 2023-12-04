@@ -93,6 +93,7 @@ export const storyRouter = createTRPCRouter({
         if (!redditAccount) return;
 
         const accessToken = await refreshAccessToken(redditAccount);
+
         if (env.NODE_ENV === "production" && accessToken) {
           const body = new FormData();
           body.set("to", input.author);

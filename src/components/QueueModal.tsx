@@ -1,12 +1,15 @@
-import { Badge, Loader, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { Contact } from "@prisma/client";
 import React, { useEffect } from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
-import { mantineInputClasses } from "~/lib/styles";
+import { useForm } from "react-hook-form";
+import { Form, FormField } from "./ui/form";
+import { Textarea } from "./ui/textarea";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLoader } from "@fortawesome/pro-light-svg-icons";
+import { Badge } from "./ui/badge";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
@@ -21,7 +24,7 @@ const QueueModal = ({ close }: Props) => {
   const { data: user } = api.user.me.useQuery();
   const queueStore = useQueueStore();
   const currentPost = queueStore.queue[0];
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const contactedWritersQuery = api.user.contactedWriters.useQuery();
 
   const redditPost = api.story.save.useMutation({
@@ -42,7 +45,7 @@ const QueueModal = ({ close }: Props) => {
   });
 
   const form = useForm({
-    initialValues: {
+    defaultValues: {
       message: "",
     },
   });
@@ -55,9 +58,9 @@ const QueueModal = ({ close }: Props) => {
 
     if (currentPostAuthor) {
       if (contactedAuthors && contactedAuthors.includes(currentPostAuthor)) {
-        form.setValues({ message: user?.Profile?.recurring || "" });
+        form.setValue("message", user?.Profile?.recurring || "");
       } else {
-        form.setValues({ message: user?.Profile?.greeting || "" });
+        form.setValue("message", user?.Profile?.greeting || "");
       }
     }
   }, [currentPost]);
@@ -79,7 +82,7 @@ const QueueModal = ({ close }: Props) => {
       flair: currentPost.link_flair_text,
       post_id: currentPost.id,
       reading_time: Math.round(currentPost.selftext.length / 200),
-      message: form.values.message,
+      message: form.getValues().message,
     });
   };
 
@@ -96,66 +99,67 @@ const QueueModal = ({ close }: Props) => {
   };
 
   const fillWithMessage = (message: string | null | undefined) => {
-    form.setValues({
-      message: message ?? "",
-    });
+    form.setValue("message", message ?? "");
   };
 
   return (
-    <section>
-      <ActiveQueueItem post={currentPost} contact={contactQuery.data} />
+    <Form {...form}>
+      <form>
+        <ActiveQueueItem post={currentPost} contact={contactQuery.data} />
 
-      <div className="mt-10 flex flex-col">
-        <div className="flex flex-col items-baseline gap-4 lg:flex-row">
-          <p className="font-bold text-foreground">Message</p>
+        <div className="mt-10 flex flex-col">
+          <div className="flex flex-col items-baseline gap-4 lg:flex-row">
+            <p className="font-bold text-foreground">Message</p>
 
-          <div className="flex gap-4">
-            <Button
-              variant="link"
-              onClick={() => fillWithMessage(user?.Profile?.greeting)}
-            >
-              Initial
+            <div className="flex gap-4">
+              <Button
+                variant="link"
+                onClick={() => fillWithMessage(user?.Profile?.greeting)}
+              >
+                Initial
+              </Button>
+              <Button
+                variant="link"
+                onClick={() => fillWithMessage(user?.Profile?.recurring)}
+              >
+                Recurring
+              </Button>
+            </div>
+          </div>
+          <FormField
+            name="message"
+            render={({ field }) => <Textarea className="mt-2" {...field} />}
+          />
+        </div>
+
+        <footer className="mt-6 flex flex-col justify-between gap-3 lg:flex-row">
+          <div className="flex flex-col gap-3 lg:flex-row">
+            <Button variant="secondary" onClick={removeFromQueue}>
+              Remove from queue
             </Button>
             <Button
-              variant="link"
-              onClick={() => fillWithMessage(user?.Profile?.recurring)}
+              variant="secondary"
+              onClick={saveContactHandler}
+              className="break-all"
             >
-              Recurring
+              Add {currentPost?.author} to contacts
             </Button>
           </div>
-        </div>
-        <Textarea
-          className="mt-2"
-          variant="filled"
-          minRows={8}
-          classNames={mantineInputClasses}
-          {...form.getInputProps("message")}
-        />
-      </div>
 
-      <footer className="mt-6 flex flex-col justify-between gap-3 lg:flex-row">
-        <div className="flex flex-col gap-3 lg:flex-row">
-          <Button variant="secondary" onClick={removeFromQueue}>
-            Remove from queue
-          </Button>
           <Button
-            variant="secondary"
-            onClick={saveContactHandler}
-            className="break-all"
+            type="button"
+            onClick={sendHandler}
+            disabled={redditPost.isLoading}
           >
-            Add {currentPost?.author} to contacts
+            {redditPost.isLoading ? (
+              <FontAwesomeIcon icon={faLoader} spin />
+            ) : (
+              "Send message"
+            )}
           </Button>
-        </div>
-
-        <Button
-          type="button"
-          onClick={sendHandler}
-          disabled={redditPost.isLoading}
-        >
-          {redditPost.isLoading ? <Loader size="sm" /> : "Send message"}
-        </Button>
-      </footer>
-    </section>
+        </footer>
+      </form>
+    </Form>
   );
 };
 
@@ -166,7 +170,7 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
         <p className="text-xs font-normal uppercase text-card-foreground">
           Subject
         </p>
-        <p className="mt-1 break-all text-xl font-bold text-card-foreground">
+        <p className="mt-1  text-xl font-bold text-card-foreground">
           {post.title}
         </p>
       </div>
@@ -175,9 +179,9 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
         <p className="text-xs font-normal uppercase text-card-foreground">
           Author
         </p>
-        <p className="mt-1 break-all text-xl font-bold text-card-foreground">
-          {post.author} {contact && <Badge>Is a contact</Badge>}
-        </p>
+        <div className="mt-1 flex items-center  gap-4 break-all text-xl font-bold text-card-foreground">
+          <p>{post.author}</p> {contact && <Badge>Is a contact</Badge>}
+        </div>
       </div>
     </header>
   );

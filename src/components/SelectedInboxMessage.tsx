@@ -4,22 +4,29 @@ import {
   faUserCircle,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, Textarea } from "@mantine/core";
 import { fromUnixTime } from "date-fns";
 import { format } from "date-fns";
-import React, { FormEvent, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   FormattedMessagesList,
   MixpanelEvents,
   RedditInboxMessage,
 } from "~/types";
 import { api } from "~/utils/api";
-import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
-import { mantineInputClasses } from "~/lib/styles";
 import { formatInboxMessagesToList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField, FormItem, FormLabel } from "./ui/form";
+import { Separator } from "./ui/separator";
+import { Textarea } from "./ui/textarea";
+
+const formSchema = z.object({
+  message: z.string(),
+});
 
 interface Props {
   message: RedditInboxMessage | undefined;
@@ -63,7 +70,8 @@ const SelectedInboxMessage = ({ message }: Props) => {
   const isAContact = contactquery.data;
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       message: "",
     },
   });
@@ -72,14 +80,12 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
   const formattedMessages = formatInboxMessagesToList(message);
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SEND_INBOX_MESSAGE);
 
     messageMutation.mutate({
       thing_id: message.name,
-      message: form.values.message,
+      ...data,
     });
   };
 
@@ -138,7 +144,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
         </footer>
       </header>
 
-      <Divider className="my-10" />
+      <Separator className="my-10" />
 
       <section className="my-10 flex flex-col gap-10">
         {formattedMessages.map((msg) => (
@@ -146,29 +152,23 @@ const SelectedInboxMessage = ({ message }: Props) => {
         ))}
       </section>
 
-      <form
-        className="sticky bottom-4 flex items-end gap-3 rounded-xl border-[1px] border-border bg-card p-2 shadow-lg"
-        onSubmit={submitHandler}
-      >
-        <Textarea
-          variant="filled"
-          placeholder="Send a reply..."
-          classNames={mantineInputClasses}
-          className="min-h-10 flex-1"
-          autosize
-          maxRows={6}
-          {...form.getInputProps("message")}
-        />
-        <button
-          className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-white hover:bg-primary hover:text-foreground"
-          type="submit"
-        >
-          <FontAwesomeIcon
-            icon={faPaperPlaneTop}
-            className="text-sm  shadow-sm"
+      <Separator className="mb-4" />
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(submitHandler)}>
+          <FormField
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <Textarea placeholder="Send a reply..." {...field} />
+              </FormItem>
+            )}
           />
-        </button>
-      </form>
+          <Button type="submit" className="mt-3">
+            Send message
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 };

@@ -30,6 +30,8 @@ export const contactRouter = createTRPCRouter({
   getByName: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
+      console.log("--->", input);
+
       return await prisma.contact.findFirst({
         where: {
           name: input,

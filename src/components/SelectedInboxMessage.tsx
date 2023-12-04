@@ -26,12 +26,21 @@ interface Props {
 }
 
 const SelectedInboxMessage = ({ message }: Props) => {
+  const apiContext = api.useUtils();
   const messageMutation = api.inbox.send.useMutation();
-  const addContact = api.contact.save.useMutation();
+  const addContact = api.contact.save.useMutation({
+    onSuccess: () => {
+      apiContext.contact.invalidate();
+      toast.success("Contact added!");
+    },
+  });
   const findPostQuery = api.inbox.findPostByTitle.useQuery(message?.subject, {
     enabled: !!message?.subject,
   });
-  const contactquery = api.contact.getByName.useQuery(message?.author);
+
+  console.log(message);
+
+  const contactquery = api.contact.getByName.useQuery(message?.dest);
   const approvedListQuery = api.story.getApprovedList.useQuery();
   const stories = api.story.addToApproved.useMutation({
     onSuccess: (data) => {
@@ -54,6 +63,8 @@ const SelectedInboxMessage = ({ message }: Props) => {
   }, [post?.id, approvedListQuery.data]);
 
   const isAContact = contactquery.data;
+
+  console.log(isAContact);
 
   const form = useForm({
     initialValues: {
@@ -110,7 +121,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
               </Button>
             ) : (
               <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
-                {message.author} is already a contact
+                {message.dest} is already a contact
               </div>
             )}
 
@@ -140,7 +151,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
       </section>
 
       <form
-        className="sticky bottom-4 flex items-end gap-3 rounded-xl border-[1px] border-border bg-muted p-2 shadow-lg"
+        className="sticky bottom-4 flex items-end gap-3 rounded-xl border-[1px] border-border bg-card p-2 shadow-lg"
         onSubmit={submitHandler}
       >
         <Textarea
@@ -153,12 +164,12 @@ const SelectedInboxMessage = ({ message }: Props) => {
           {...form.getInputProps("message")}
         />
         <button
-          className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-white"
+          className="flex h-[42px] w-[42px] items-center justify-center rounded-lg bg-white hover:bg-primary hover:text-foreground"
           type="submit"
         >
           <FontAwesomeIcon
             icon={faPaperPlaneTop}
-            className="text-sm text-rose-500 shadow-sm"
+            className="text-sm  shadow-sm"
           />
         </button>
       </form>
@@ -168,7 +179,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
 const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
-    <div className="rounded-2xl bg-card p-4">
+    <div className="rounded-2xl bg-card/50 p-4">
       <header className="mb-6 flex flex-col items-baseline justify-between xl:mb-2 xl:flex-row">
         <p className="mb-2  font-bold text-card-foreground">
           {message.isReply && (
@@ -176,11 +187,11 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
           )}
           {message.author}
         </p>
-        <p className="font-thin italic text-card-foreground">
+        <p className=" text-card-foreground/50">
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>
-      <p className="whitespace-pre-wrap break-all font-thin text-card-foreground">
+      <p className="whitespace-pre-wrap break-all text-muted-foreground">
         {message.body}
       </p>
     </div>

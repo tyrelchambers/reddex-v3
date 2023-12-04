@@ -38,8 +38,6 @@ const SelectedInboxMessage = ({ message }: Props) => {
     enabled: !!message?.subject,
   });
 
-  console.log(message);
-
   const contactquery = api.contact.getByName.useQuery(message?.dest);
   const approvedListQuery = api.story.getApprovedList.useQuery();
   const stories = api.story.addToApproved.useMutation({
@@ -63,8 +61,6 @@ const SelectedInboxMessage = ({ message }: Props) => {
   }, [post?.id, approvedListQuery.data]);
 
   const isAContact = contactquery.data;
-
-  console.log(isAContact);
 
   const form = useForm({
     initialValues: {

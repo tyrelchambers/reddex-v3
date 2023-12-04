@@ -64,8 +64,8 @@ const Contacts = () => {
           <EmptyState label="contacts" />
         )}
 
-        <Dialog open={opened}>
-          <DialogContent onClose={close}>
+        <Dialog open={opened} onOpenChange={close}>
+          <DialogContent>
             <DialogHeader>Add contact</DialogHeader>
             <form onSubmit={submitHandler} className="flex flex-col gap-4">
               <div className="flex flex-col">

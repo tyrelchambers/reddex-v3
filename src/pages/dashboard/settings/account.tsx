@@ -59,8 +59,6 @@ const Settings = () => {
 
       const customerEmail = currentUser?.email || form.values.email;
 
-      console.log(customerEmail);
-
       const customerId =
         currentUser?.customerId ||
         (await createCustomer.mutateAsync(customerEmail));

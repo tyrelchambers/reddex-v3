@@ -52,7 +52,6 @@ const QueueModal = ({ close }: Props) => {
     const contactedAuthors = contactedWritersQuery.data?.map(
       (item) => item.name
     );
-    console.log(user?.Profile);
 
     if (currentPostAuthor) {
       if (contactedAuthors && contactedAuthors.includes(currentPostAuthor)) {

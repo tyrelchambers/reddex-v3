@@ -25,8 +25,6 @@ const StoryListItem = ({ story, list }: Props) => {
   const user = api.user.me.useQuery();
   const readingTime = user.data?.Profile?.words_per_minute;
 
-  console.log(readingTime);
-
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background shadow-md">
       <header

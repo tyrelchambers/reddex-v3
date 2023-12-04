@@ -1,39 +1,32 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@mantine/core";
-import React, { FormEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import StatusBanner from "~/components/StatusBanner";
 import { Button } from "~/components/ui/button";
-import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineCheckBoxClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
+import { websiteSubmissionSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
-const formSchema = z.object({
-  name: z.string().optional(),
-  subtitle: z.string().optional(),
-  description: z.string().optional(),
-  submissionFormModules: z
-    .array(
-      z.object({
-        id: z.string().optional(),
-        name: z.string(),
-        enabled: z.boolean(),
-        required: z.boolean(),
-      })
-    )
-    .optional(),
-});
+const formSchema = websiteSubmissionSchema;
 
 const SubmissionForm = () => {
   const apiContext = api.useUtils();
@@ -135,13 +128,19 @@ const SubmissionForm = () => {
           )}
 
           <Form {...form}>
-            <form onSubmit={form.onSubmit(submitHandler)} className="form mt-4">
+            <form
+              onSubmit={form.handleSubmit(submitHandler)}
+              className="form mt-4"
+            >
               <FormField
                 name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Page title</FormLabel>
-                    <Input {...field} />
+                    <Input
+                      placeholder="Your submission form page title"
+                      {...field}
+                    />
                   </FormItem>
                 )}
               />
@@ -150,7 +149,7 @@ const SubmissionForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <Label>Page subtitle</Label>
-                    <Input {...field} />
+                    <Input placeholder="Subtitle" {...field} />
                   </FormItem>
                 )}
               />
@@ -173,7 +172,7 @@ const SubmissionForm = () => {
 
                 {websiteSettings.data?.submissionPage.submissionFormModules.map(
                   (mod, id) => (
-                    <FormItem
+                    <div
                       key={mod.id}
                       className="flex flex-col rounded-xl bg-card p-4"
                     >
@@ -182,30 +181,47 @@ const SubmissionForm = () => {
                       </p>
 
                       <div className="mt-2 flex gap-4">
-                        <Checkbox
-                          label="Enabled"
-                          description="Show this module on your submission page"
-                          classNames={mantineCheckBoxClasses}
-                          {...form.getInputProps(
-                            `submissionFormModules.${id}.enabled`,
-                            {
-                              type: "checkbox",
-                            }
+                        <FormField
+                          name={`submissionFormModules.${id}.enabled`}
+                          render={({ field }) => (
+                            <FormItem className="flex items-center gap-3">
+                              <FormControl>
+                                <Checkbox
+                                  checked={mod.enabled}
+                                  onChange={field.onChange}
+                                />
+                              </FormControl>
+                              <div className="flex flex-col">
+                                <FormLabel>Enabled</FormLabel>
+                                <FormDescription>
+                                  Show this module on your submission page
+                                </FormDescription>
+                              </div>
+                            </FormItem>
                           )}
                         />
-                        <Checkbox
-                          label="Required"
-                          description="Make this field required"
-                          classNames={mantineCheckBoxClasses}
-                          {...form.getInputProps(
-                            `submissionFormModules.${id}.required`,
-                            {
-                              type: "checkbox",
-                            }
+
+                        <FormField
+                          name={`submissionFormModules.${id}.required`}
+                          render={({ field }) => (
+                            <FormItem className="flex items-center gap-3">
+                              <FormControl>
+                                <Checkbox
+                                  checked={mod.enabled}
+                                  onChange={field.onChange}
+                                />
+                              </FormControl>
+                              <div className="flex flex-col">
+                                <FormLabel>Required</FormLabel>
+                                <FormDescription>
+                                  Make this field required
+                                </FormDescription>
+                              </div>
+                            </FormItem>
                           )}
                         />
                       </div>
-                    </FormItem>
+                    </div>
                   )
                 )}
               </section>

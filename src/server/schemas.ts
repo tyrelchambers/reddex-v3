@@ -83,17 +83,19 @@ export const websiteIntegrationsSchema = z.object({
 
 export const websiteSubmissionSchema = z.object({
   id: z.string().optional(),
-  name: z.string().nullable(),
-  subtitle: z.string().nullable(),
-  description: z.string().nullable(),
-  submissionFormModules: z.array(
-    z.object({
-      id: z.string().optional(),
-      name: z.string(),
-      enabled: z.boolean(),
-      required: z.boolean(),
-    })
-  ),
+  name: z.string().optional(),
+  subtitle: z.string().optional(),
+  description: z.string().optional(),
+  submissionFormModules: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string(),
+        enabled: z.boolean(),
+        required: z.boolean(),
+      })
+    )
+    .optional(),
 });
 
 export const removeImageSchema = z.object({

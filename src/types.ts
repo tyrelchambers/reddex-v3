@@ -94,18 +94,6 @@ export interface Tab {
   icon: IconProp;
 }
 
-export interface GeneralSettings {
-  subdomain: string | null | undefined;
-  name: string | null | undefined;
-  description: string | null | undefined;
-  twitter: string | null | undefined;
-  facebook: string | null | undefined;
-  instagram: string | null | undefined;
-  patreon: string | null | undefined;
-  podcast: string | null | undefined;
-  youtube: string | null | undefined;
-}
-
 export type SubmissionFormModuleWithoutId = Omit<
   SubmissionFormModule,
   "id" | "submissionPageId"

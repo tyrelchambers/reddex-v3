@@ -137,23 +137,25 @@ export const websiteRouter = createTRPCRouter({
           },
         });
 
-        for (
-          let index = 0;
-          index < input.submissionFormModules.length;
-          index++
-        ) {
-          const element = input.submissionFormModules[index];
+        if (input.submissionFormModules) {
+          for (
+            let index = 0;
+            index < input.submissionFormModules.length;
+            index++
+          ) {
+            const element = input.submissionFormModules[index];
 
-          if (element) {
-            await prisma.submissionFormModule.updateMany({
-              where: {
-                id: element.id,
-              },
-              data: {
-                enabled: element.enabled,
-                required: element.required,
-              },
-            });
+            if (element) {
+              await prisma.submissionFormModule.updateMany({
+                where: {
+                  id: element.id,
+                },
+                data: {
+                  enabled: element.enabled,
+                  required: element.required,
+                },
+              });
+            }
           }
         }
       } catch (error) {

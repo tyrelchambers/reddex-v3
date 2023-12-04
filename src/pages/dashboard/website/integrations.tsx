@@ -1,16 +1,20 @@
-import { useForm } from "@mantine/form";
-import React, { FormEvent, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "~/components/ui/button";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
+import { websiteIntegrationsSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
+const formSchema = websiteIntegrationsSchema;
 const Integrations = () => {
   const { data: user } = api.user.me.useQuery();
   const proPlan = hasProPlan(user?.subscription);
@@ -18,30 +22,25 @@ const Integrations = () => {
   const websiteSettings = api.website.settings.useQuery();
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       youtubeIntegrationId: "",
     },
   });
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.setValues({
+      form.reset({
         youtubeIntegrationId:
           websiteSettings.data?.youtubeIntegrationId || undefined,
       });
     }
   }, [websiteSettings.data]);
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = form.validate();
-
-    if (hasErrors) return;
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_INTERGRATIONS_SETTINGS);
 
-    saveIntegrations.mutate(form.values);
+    saveIntegrations.mutate(data);
   };
 
   return (
@@ -57,19 +56,26 @@ const Integrations = () => {
             Any integration field that lacks a value will not show up on your
             website.
           </p>
-          <form onSubmit={submitHandler} className="form mt-10">
-            <div className="flex flex-col">
-              <Label>Youtube</Label>
-              <Input
-                placeholder="Youtube channel ID"
-                {...form.getInputProps("youtubeIntegrationId")}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(submitHandler)}
+              className="form mt-10"
+            >
+              <FormField
+                name="youtube"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Youtube</FormLabel>
+                    <Input placeholder="Youtube channel ID" {...field} />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <Button type="submit" disabled={!proPlan}>
-              Save changes
-            </Button>
-          </form>
+              <Button type="submit" disabled={!proPlan}>
+                Save changes
+              </Button>
+            </form>
+          </Form>
         </BodyWithLoader>
       </main>
     </WrapperWithNav>

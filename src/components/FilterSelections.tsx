@@ -4,30 +4,39 @@ import { buildParams } from "~/utils";
 import { useRouter } from "next/router";
 import { FilterState } from "~/types";
 import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Switch } from "./ui/switch";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "./ui/form";
 
 interface FilterSelectionProps {
   filters: Partial<FilterState> | null;
 }
 
 const formSchema = z.object({
-  upvotes: z
-    .object({
-      qualifier: z.string().optional(),
-      value: z.union([z.string(), z.literal("")]).optional(),
-    })
-    .optional(),
-  readingTime: z
-    .object({
-      qualifier: z.string().optional(),
-      value: z.union([z.string(), z.literal("")]).optional(),
-    })
-    .optional(),
+  upvotes: z.object({
+    qualifier: z.string().optional(),
+    value: z.string().optional().nullable(),
+  }),
+  readingTime: z.object({
+    qualifier: z.string().optional(),
+    value: z.string().optional().nullable(),
+  }),
   keywords: z.string().optional(),
   seriesOnly: z.boolean().default(false),
   excludeSeries: z.boolean().default(false),
@@ -60,6 +69,7 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
 
   const qualifiers = ["Over", "Under", "Equals"];
 
+  // fix
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     updateFilterValueFromUrl(data);
   };
@@ -79,73 +89,92 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(submitHandler)}
       >
-        <FormField
-          name="upvotes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Upvotes</FormLabel>
-              <div className="mt-1 flex flex-col gap-2 md:flex-row">
-                <Select
-                  {...field}
-                  onValueChange={(v) => {
-                    form.setValue("upvotes.qualifier", v);
-                  }}
-                >
-                  <SelectContent>
-                    {qualifiers.map((q) => (
-                      <SelectItem key={q} value={q}>
-                        {q}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  className="flex-1"
-                  min={0}
-                  type="number"
-                  {...field}
-                  onChange={(v) => {
-                    form.setValue("upvotes.value", v.target.value);
-                  }}
-                />
-              </div>
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col">
+          <FormLabel>Upvotes</FormLabel>
+          <div className="flex items-end gap-3">
+            <FormField
+              name="upvotes.qualifier"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="mt-1 flex flex-col gap-2 md:flex-row">
+                    <Select
+                      {...field}
+                      onValueChange={(v) => {
+                        form.setValue("upvotes.qualifier", v);
+                      }}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue defaultValue="Over" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {qualifiers.map((q) => (
+                          <SelectItem key={q} value={q}>
+                            {q}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="upvotes.value"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <Input className="flex-1" min={0} type="number" {...field} />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
 
-        <FormField
-          name="readingTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Reading time in minutes</FormLabel>
-              <div className="mt-1 flex flex-col gap-2 md:flex-row">
-                <Select
-                  {...field}
-                  onValueChange={(v) =>
-                    form.setValue("readingTime.qualifier", v)
-                  }
-                >
-                  <SelectContent>
-                    {qualifiers.map((q) => (
-                      <SelectItem key={q} value={q}>
-                        {q}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  className="flex-1"
-                  min={0}
-                  type="number"
-                  {...field}
-                  onChange={(v) => {
-                    form.setValue("readingTime.value", v.target.value);
-                  }}
-                />
-              </div>
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col">
+          <FormLabel>Reading time in minutes</FormLabel>
+          <div className="flex items-end gap-3">
+            <FormField
+              name="readingTime.qualifier"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="mt-1 flex flex-col gap-2 md:flex-row">
+                    <Select {...field}>
+                      <FormControl>
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue defaultValue="Over" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {qualifiers.map((q) => (
+                          <SelectItem key={q} value={q}>
+                            {q}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="readingTime.value"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Input
+                      className="flex- w-full"
+                      min={0}
+                      type="number"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
 
         <FormField
           name="keywords"
@@ -165,10 +194,18 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
           name="seriesOnly"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Series only</FormLabel>
+            <FormItem className="flex items-center justify-between rounded-xl border border-border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Series only</FormLabel>
+                <FormDescription>
+                  Specify whether or not you want to see only series&apos;
+                </FormDescription>
+              </div>
               <FormControl>
-                <Switch checked={field.value} onChange={field.onChange} />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -177,10 +214,18 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
           name="excludeSeries"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Exclude series</FormLabel>
+            <FormItem className="flex items-center justify-between rounded-xl border border-border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Exclude series</FormLabel>
+                <FormDescription>
+                  Select to exclude series from the results
+                </FormDescription>
+              </div>
               <FormControl>
-                <Switch checked={field.value} onChange={field.onChange} />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
             </FormItem>
           )}

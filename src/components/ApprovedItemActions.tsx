@@ -1,21 +1,35 @@
-import { Modal, Select } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { RedditPost } from "@prisma/client";
 import React, { FormEvent } from "react";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
-import { mantineModalClasses, mantineSelectClasses } from "~/lib/styles";
 import EmptyState from "./EmptyState";
 import Link from "next/link";
 import { routes } from "~/routes";
 import { useSession } from "next-auth/react";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
+import { useForm } from "react-hook-form";
+import { tagOnPostSchema } from "~/server/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
+import { Form, FormField, FormItem, FormLabel } from "./ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface Props {
   postId: RedditPost["id"];
 }
+
+const formSchema = tagOnPostSchema.extend({
+  redditPostId: z.string().optional(),
+});
 
 const ApprovedItemActions = ({ postId }: Props) => {
   const { data } = useSession();
@@ -37,7 +51,8 @@ const ApprovedItemActions = ({ postId }: Props) => {
     })) || [];
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       tagId: "",
     },
   });
@@ -48,11 +63,9 @@ const ApprovedItemActions = ({ postId }: Props) => {
     },
   });
 
-  const addTagHandler = (e: FormEvent) => {
-    e.preventDefault();
-
+  const addTagHandler = (data: z.infer<typeof formSchema>) => {
     tagMutation.mutate({
-      tagId: form.values.tagId,
+      tagId: data.tagId,
       redditPostId: postId,
     });
   };
@@ -94,38 +107,58 @@ const ApprovedItemActions = ({ postId }: Props) => {
         <Button>View in Studio</Button>
       </Link>
 
-      <Modal
-        opened={opened}
-        onClose={close}
-        classNames={mantineModalClasses}
-        title="Add a tag to story"
-      >
-        <form onSubmit={addTagHandler} className="flex flex-col gap-4">
-          {formattedTags.length > 0 ? (
-            <Select
-              data={formattedTags}
-              label="Add a tag"
-              withinPortal
-              classNames={mantineSelectClasses}
-              {...form.getInputProps("tagId")}
-            />
-          ) : (
-            <EmptyState label="tags" />
-          )}
-          <Button
-            className="w-full"
-            type="submit"
-            disabled={!formattedTags.length}
-            onClick={() =>
-              trackUiEvent(MixpanelEvents.ADD_TAG_TO_STORY, {
-                userId: data?.user.id,
-              })
-            }
-          >
-            Add tag to story
-          </Button>
-        </form>
-      </Modal>
+      <Dialog open={opened}>
+        <DialogContent onClose={close}>
+          <DialogHeader>Add a tag to story</DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(addTagHandler)}
+              className="flex flex-col gap-4"
+            >
+              {formattedTags.length > 0 ? (
+                <FormField
+                  name="tagId"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Add a tag</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Tags" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {formattedTags.map((tag) => (
+                            <SelectItem key={tag.value} value={tag.value}>
+                              {tag.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              ) : (
+                <EmptyState label="tags" />
+              )}
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={!formattedTags.length}
+                onClick={() =>
+                  trackUiEvent(MixpanelEvents.ADD_TAG_TO_STORY, {
+                    userId: data?.user.id,
+                  })
+                }
+              >
+                Add tag to story
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

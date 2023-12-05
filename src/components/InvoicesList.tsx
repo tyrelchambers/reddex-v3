@@ -1,10 +1,10 @@
 import { faDownload } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, Table } from "@mantine/core";
+import { Table } from "@mantine/core";
 import React from "react";
 import Stripe from "stripe";
-import { mantineBadgeClasses } from "~/lib/styles";
 import { formatCurrency, formatStripeTime } from "~/utils";
+import { Badge } from "./ui/badge";
 
 interface Props {
   invoices: Stripe.Invoice[];
@@ -14,9 +14,7 @@ const InvoicesList = ({ invoices }: Props) => {
   const rows = invoices.map((invoice) => (
     <tr key={invoice.id} className="!border-border">
       <td className="!border-border !text-foreground">
-        <Badge color="gray" classNames={mantineBadgeClasses}>
-          {invoice.status}
-        </Badge>
+        <Badge variant="secondary">{invoice.status}</Badge>
       </td>
       <td className="!border-border !text-foreground">
         {formatStripeTime(invoice.created)}

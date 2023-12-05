@@ -22,7 +22,7 @@ const ApprovedItemActions = ({ postId }: Props) => {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const tagMutation = api.tag.add.useMutation({
     onSuccess: () => {
       apiContext.tag.all.invalidate();

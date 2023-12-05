@@ -7,7 +7,7 @@ import { api } from "~/utils/api";
 
 const Story = () => {
   const router = useRouter();
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const id = router.query.id as string;
 
   const submittedStory = api.story.storyById.useQuery(id, {

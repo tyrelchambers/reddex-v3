@@ -47,7 +47,7 @@ registerPlugin(
 );
 
 const General = () => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const { data: user } = api.user.me.useQuery();
   const proPlan = hasProPlan(user?.subscription);
 

@@ -32,7 +32,7 @@ import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 const formSchema = tagSaveSchema;
 
 const Tags = () => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const [opened, { open, close }] = useDisclosure(false);
   const approvedStories = api.story.getApprovedList.useQuery();
   const tagMutation = api.tag.save.useMutation({

@@ -1,6 +1,5 @@
 import { faExternalLink, faSpinner } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -13,8 +12,17 @@ import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";
 import NoSelectedPlan from "~/components/NoSelectedPlan";
 import { Button } from "~/components/ui/button";
-import { isNotEmpty, useForm } from "@mantine/form";
 import { captureException } from "@sentry/nextjs";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+
+const formSchema = z.object({
+  email: z.string().email(),
+});
 
 const Settings = () => {
   const { data: currentUser } = api.user.me.useQuery();
@@ -41,30 +49,29 @@ const Settings = () => {
     useDisclosure(false);
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       email: "",
-    },
-    validate: {
-      email: isNotEmpty(),
     },
   });
 
   const isLoading = subscriptionQuery.isLoading;
 
   const createSubscriptionHandler = async () => {
+    const formValues = form.getValues();
     try {
       setLoadingPaymentLink(true);
 
       if (!selectedPlan) throw new Error("Missing selected plan");
 
-      const customerEmail = currentUser?.email || form.values.email;
+      const customerEmail = currentUser?.email || formValues.email;
 
       const customerId =
         currentUser?.customerId ||
         (await createCustomer.mutateAsync(customerEmail));
 
       await updateUser.mutateAsync({
-        email: form.values.email,
+        email: formValues.email,
       });
 
       if (!customerId) {
@@ -139,46 +146,46 @@ const Settings = () => {
         </div> */}
       </section>
 
-      <Modal
-        opened={opened}
-        onClose={close}
-        title="Invoices"
-        size="xl"
-        classNames={mantineModalClasses}
-      >
-        <Link
-          href="https://dashboard.stripe.com/invoices"
-          className="text-sm text-accent underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View all invoices{" "}
-          <FontAwesomeIcon className="ml-2" icon={faExternalLink} />
-        </Link>
-        {invoices && <InvoicesList invoices={invoices.data} />}
-      </Modal>
+      <Dialog open={opened}>
+        <DialogContent onClose={close}>
+          <DialogHeader>Invoices</DialogHeader>
+          <Link
+            href="https://dashboard.stripe.com/invoices"
+            className="text-sm text-accent underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View all invoices{" "}
+            <FontAwesomeIcon className="ml-2" icon={faExternalLink} />
+          </Link>
+          {invoices && <InvoicesList invoices={invoices.data} />}
+        </DialogContent>
+      </Dialog>
 
-      <Modal
-        opened={planOpened}
-        onClose={closePlanModal}
-        title="Select plan"
-        classNames={mantineModalClasses}
-        size="xl"
-      >
-        <div className="mt-4">
+      <Dialog open={planOpened}>
+        <DialogContent onClose={closePlanModal}>
+          <DialogHeader>Select a plan</DialogHeader>
           {!currentUser?.email && (
             <>
               <p className="mb-4">
                 Please add an email to your account before we proceed.
               </p>
-              <TextInput
-                label="Email"
-                placeholder="Email"
-                required
-                type="email"
-                classNames={mantineInputClasses}
-                {...form.getInputProps("email")}
-              />
+              <Form {...form}>
+                <FormField
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <Input
+                        placeholder="Email"
+                        required
+                        type="email"
+                        {...field}
+                      />
+                    </FormItem>
+                  )}
+                />
+              </Form>
             </>
           )}
           <NoSelectedPlan
@@ -202,8 +209,8 @@ const Settings = () => {
               "Continue"
             )}
           </Button>
-        </div>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </WrapperWithNav>
   );
 };

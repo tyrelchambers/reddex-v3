@@ -1,20 +1,25 @@
-import { useForm } from "@mantine/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDisclosure } from "@mantine/hooks";
 import React, { FormEvent } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { contactSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
+const formSchema = contactSchema;
 const Contacts = () => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const [opened, { open, close }] = useDisclosure(false);
   const contactsQuery = api.contact.all.useQuery();
   const saveContact = api.contact.save.useMutation({
@@ -24,17 +29,16 @@ const Contacts = () => {
     },
   });
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       name: "",
       notes: "",
     },
   });
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_CONTACT_FORM);
-    saveContact.mutate(form.values);
+    saveContact.mutate(data);
   };
 
   return (
@@ -67,26 +71,39 @@ const Contacts = () => {
         <Dialog open={opened} onOpenChange={close}>
           <DialogContent>
             <DialogHeader>Add contact</DialogHeader>
-            <form onSubmit={submitHandler} className="flex flex-col gap-4">
-              <div className="flex flex-col">
-                <Label>Name</Label>
-                <Input
-                  placeholder="Add your contact's name"
-                  {...form.getInputProps("name")}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(submitHandler)}
+                className="flex flex-col gap-4"
+              >
+                <FormField
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <Input placeholder="Add your contact's name" {...field} />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div className="flex flex-col">
-                <Label>Notes</Label>
 
-                <Textarea
-                  placeholder="Add notes about this contact"
-                  {...form.getInputProps("notes")}
+                <FormField
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes</FormLabel>
+
+                      <Textarea
+                        placeholder="Add notes about this contact"
+                        {...field}
+                      />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <Button type="submit" className="mt-6 w-full">
-                Save
-              </Button>
-            </form>
+                <Button type="submit" className="mt-6 w-full">
+                  Save
+                </Button>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </section>

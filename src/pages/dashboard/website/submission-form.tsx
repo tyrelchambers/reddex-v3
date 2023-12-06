@@ -93,8 +93,6 @@ const SubmissionForm = () => {
         (module) => module.name.toLowerCase() === "email"
       );
 
-      console.log(modules);
-
       if (titleModule) {
         form.setValue("submissionFormModules.title", titleModule);
       }

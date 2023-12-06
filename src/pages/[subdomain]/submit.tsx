@@ -2,8 +2,6 @@ import { SubmissionFormModule, SubmissionPage, Website } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import React from "react";
 import { prisma } from "~/server/db";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -33,7 +31,6 @@ const Submit = ({ website }: Props) => {
     onSuccess: () => {
       toast.success("Your story has been submitted");
       form.reset();
-      editor?.commands.clearContent();
     },
   });
   const modules = website?.submissionPage.submissionFormModules || [];
@@ -84,16 +81,10 @@ const Submit = ({ website }: Props) => {
       story: "",
     },
   });
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: "",
-  });
 
   if (!website) return null;
 
   const submitHandler = (data: z.infer<typeof formSchema>) => {
-    if (!editor) return null;
-
     submitStory.mutate({
       ...data,
       siteId: website.id,

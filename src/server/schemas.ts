@@ -83,9 +83,9 @@ export const websiteIntegrationsSchema = z.object({
 
 export const websiteSubmissionSchema = z.object({
   id: z.string().optional(),
-  name: z.string().optional(),
-  subtitle: z.string().optional(),
-  description: z.string().optional(),
+  name: z.string().optional().nullable(),
+  subtitle: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
   submissionFormModules: z.object({
     title: z.object({
       enabled: z.boolean(),

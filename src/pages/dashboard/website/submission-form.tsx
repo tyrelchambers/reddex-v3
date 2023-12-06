@@ -38,7 +38,9 @@ const SubmissionForm = () => {
       toast.success("Submission form saved");
     },
   });
-  const websiteSettings = api.website.settings.useQuery();
+  const websiteSettings = api.website.settings.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
   const saveSubmissionFormVisibility =
     api.website.submissionFormVisibility.useMutation({
       onSuccess: async () => {
@@ -78,7 +80,7 @@ const SubmissionForm = () => {
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.reset();
+      form.reset(websiteSettings.data);
       const modules =
         websiteSettings.data.submissionPage?.submissionFormModules;
       const titleModule = modules.find(
@@ -90,6 +92,8 @@ const SubmissionForm = () => {
       const emailModule = modules.find(
         (module) => module.name.toLowerCase() === "email"
       );
+
+      console.log(modules);
 
       if (titleModule) {
         form.setValue("submissionFormModules.title", titleModule);

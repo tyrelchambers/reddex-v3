@@ -49,14 +49,14 @@ const Submitted = () => {
               >
                 <div className="flex items-center rounded-full text-sm text-card-foreground/70">
                   <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
-                  {story.author}
+                  {story.author || "Unknown"}
                 </div>
               </header>
               <Link
                 className=" block  p-3 font-bold text-foreground underline hover:text-rose-500"
                 href={`/story/${story.id}`}
               >
-                {story.title}
+                {story.title || "<This story has title>"}
               </Link>
 
               <div className="flex gap-3 p-2 px-4">

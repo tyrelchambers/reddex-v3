@@ -13,6 +13,7 @@ import { faAsterisk } from "@fortawesome/pro-solid-svg-icons";
 import { mantineInputClasses } from "~/lib/styles";
 import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
 import CustomTextEditor from "~/layouts/CustomSite/CustomTextEditor";
+import { toast } from "react-toastify";
 
 interface Props {
   website:
@@ -25,7 +26,13 @@ interface Props {
 }
 
 const Submit = ({ website }: Props) => {
-  const submitStory = api.website.submit.useMutation();
+  const submitStory = api.website.submit.useMutation({
+    onSuccess: () => {
+      toast.success("Your story has been submitted");
+      form.reset();
+      editor?.commands.clearContent();
+    },
+  });
   const modules = website?.submissionPage.submissionFormModules || [];
   const titleModule = modules.find(
     (module) => module.name.toLowerCase() === "title"

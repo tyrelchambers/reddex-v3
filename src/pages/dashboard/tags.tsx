@@ -1,14 +1,9 @@
 import { useDisclosure } from "@mantine/hooks";
-import React, { FormEvent } from "react";
+import React= from "react";
 import { api } from "~/utils/api";
 import TagListItem from "~/components/TagListItem";
 import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
-import {
-  mantineInputClasses,
-  mantineModalClasses,
-  mantineSelectClasses,
-} from "~/lib/styles";
 import { getStorySelectList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";

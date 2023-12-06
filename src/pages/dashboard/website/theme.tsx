@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColorPicker } from "@mantine/core";
-import React, { FormEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -15,7 +15,6 @@ import {
 } from "~/components/ui/select";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineSelectClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
 import { websiteThemeSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";

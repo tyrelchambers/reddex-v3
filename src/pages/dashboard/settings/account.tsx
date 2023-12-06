@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import Stripe from "stripe";
 import InvoicesList from "~/components/InvoicesList";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";

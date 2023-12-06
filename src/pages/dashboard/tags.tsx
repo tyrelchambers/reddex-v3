@@ -1,5 +1,5 @@
 import { useDisclosure } from "@mantine/hooks";
-import React= from "react";
+import React from "react";
 import { api } from "~/utils/api";
 import TagListItem from "~/components/TagListItem";
 import EmptyState from "~/components/EmptyState";

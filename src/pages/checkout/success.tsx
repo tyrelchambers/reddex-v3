@@ -4,10 +4,11 @@ import {
   faDownload,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, Divider } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { Badge } from "~/components/ui/badge";
+import { Separator } from "~/components/ui/separator";
 import { routes } from "~/routes";
 import { formatCurrency, formatStripeTime } from "~/utils";
 import { api } from "~/utils/api";
@@ -48,7 +49,7 @@ const Success = () => {
           body={<Badge color="green">{details.payment_status}</Badge>}
         />
 
-        <Divider />
+        <Separator />
 
         <Row title="Customer ID" body={details?.customer as string} />
         <Row title="Invoice #" body={details.invoice?.id} />

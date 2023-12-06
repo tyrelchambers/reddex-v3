@@ -1,50 +1,46 @@
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import React, { FormEvent, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "~/components/ui/button";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
+import { websiteIntegrationsSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
+const formSchema = websiteIntegrationsSchema;
 const Integrations = () => {
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
   const saveIntegrations = api.website.saveIntegrations.useMutation();
   const websiteSettings = api.website.settings.useQuery();
 
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       youtubeIntegrationId: "",
     },
   });
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.setValues({
+      form.reset({
         youtubeIntegrationId:
           websiteSettings.data?.youtubeIntegrationId || undefined,
       });
     }
   }, [websiteSettings.data]);
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = form.validate();
-
-    if (hasErrors) return;
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_INTERGRATIONS_SETTINGS);
 
-    saveIntegrations.mutate(form.values);
+    saveIntegrations.mutate(data);
   };
 
   return (
@@ -60,21 +56,26 @@ const Integrations = () => {
             Any integration field that lacks a value will not show up on your
             website.
           </p>
-          <form onSubmit={submitHandler} className="form mt-10">
-            <TextInput
-              variant="filled"
-              label="Youtube"
-              classNames={mantineInputClasses}
-              description="Show the last 5 videos on your website."
-              placeholder="Youtube channel ID"
-              icon={<FontAwesomeIcon icon={faYoutube} />}
-              {...form.getInputProps("youtubeIntegrationId")}
-            />
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(submitHandler)}
+              className="form mt-10"
+            >
+              <FormField
+                name="youtube"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Youtube</FormLabel>
+                    <Input placeholder="Youtube channel ID" {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <Button type="submit" disabled={!proPlan}>
-              Save changes
-            </Button>
-          </form>
+              <Button type="submit" disabled={!proPlan}>
+                Save changes
+              </Button>
+            </form>
+          </Form>
         </BodyWithLoader>
       </main>
     </WrapperWithNav>

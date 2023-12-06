@@ -1,14 +1,11 @@
-import { Badge } from "@mantine/core";
-import { mantineBadgeClasses } from "~/lib/styles";
 import Squiggly from "../../../public/images/undraw_fun-underline.svg";
 import Link from "next/link";
 import { routes } from "~/routes";
+import { Badge } from "~/components/ui/badge";
 
 const Hero = () => (
   <section className="hero mb-20 flex w-full  max-w-screen-lg flex-col items-center justify-center gap-10 px-2 md:mx-auto">
-    <Badge className="w-fit" classNames={mantineBadgeClasses} color="rose">
-      Thousands of stories read
-    </Badge>
+    <Badge className="w-fit">Thousands of stories read</Badge>
     <div className="relative">
       <h1 className="text-center font-semibold text-foreground lg:text-7xl">
         We help Narrators like you save time and effort

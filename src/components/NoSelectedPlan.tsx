@@ -1,7 +1,7 @@
 import { plans } from "~/constants";
 import PricingChip from "./PricingChip";
 import PricingFrequencySelect from "./PricingFrequencySelect";
-import { Divider } from "@mantine/core";
+import { Separator } from "./ui/separator";
 
 interface NoSelectedPlanProps {
   setSelectedPlanHandler: (id: string) => void;
@@ -24,7 +24,7 @@ const NoSelectedPlan = ({
       <p className="text-card-foreground/70">
         That&apos;s okay, just select one below and we will get started.
       </p>
-      <Divider className="my-8" />
+      <Separator className="my-8" />
 
       <div className="flex flex-col gap-6">
         <PricingFrequencySelect

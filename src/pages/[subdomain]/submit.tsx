@@ -1,19 +1,20 @@
-import { Divider, Text, TextInput, Title } from "@mantine/core";
 import { SubmissionFormModule, SubmissionPage, Website } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import React, { FormEvent } from "react";
+import React from "react";
 import { prisma } from "~/server/db";
-import { isNotEmpty, useForm } from "@mantine/form";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAsterisk } from "@fortawesome/pro-solid-svg-icons";
-import { mantineInputClasses } from "~/lib/styles";
 import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
-import CustomTextEditor from "~/layouts/CustomSite/CustomTextEditor";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { toast } from "react-toastify";
+import { Separator } from "~/components/ui/separator";
 
 interface Props {
   website:
@@ -30,7 +31,6 @@ const Submit = ({ website }: Props) => {
     onSuccess: () => {
       toast.success("Your story has been submitted");
       form.reset();
-      editor?.commands.clearContent();
     },
   });
   const modules = website?.submissionPage.submissionFormModules || [];
@@ -44,47 +44,49 @@ const Submit = ({ website }: Props) => {
     (module) => module.name.toLowerCase() === "email"
   );
 
+  const formSchema = z
+    .object({
+      title: z.string(),
+      author: z.string(),
+      email: z.string().email(),
+      story: z.string(),
+    })
+    .superRefine((data, ctx) => {
+      if (authorModule?.required && !data.author) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Author is required",
+        });
+      }
+      if (titleModule?.required && !data.title) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Title is required",
+        });
+      }
+      if (emailModule?.required && !data.email) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Email is required",
+        });
+      }
+    });
+
   const form = useForm({
-    initialValues: {
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       title: "",
       author: "",
       email: "",
+      story: "",
     },
-    validate: {
-      author: (value) => {
-        if (!authorModule?.enabled) return null;
-        if (authorModule.required && !isNotEmpty(value))
-          return "Author is required";
-      },
-      title: (value) => {
-        if (!titleModule?.enabled) return null;
-        if (titleModule.required && !isNotEmpty(value))
-          return "Title is required";
-      },
-      email: (value) => {
-        if (!emailModule?.enabled) return null;
-        if (emailModule.required && !isNotEmpty(value))
-          return "Email is required";
-      },
-    },
-  });
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: "",
   });
 
   if (!website) return null;
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = form.validate();
-
-    if (hasErrors || !website || !editor) return;
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     submitStory.mutate({
-      ...form.values,
-      story: editor.getText(),
+      ...data,
       siteId: website.id,
     });
   };
@@ -94,7 +96,9 @@ const Submit = ({ website }: Props) => {
       <CustomerSiteHeader website={website} />
       <main className="mx-auto mt-10 w-full max-w-screen-md p-4">
         <header className="flex flex-col gap-3 text-foreground">
-          <Title>{website?.submissionPage.name}</Title>
+          <h1 className="text-3xl font-semibold">
+            {website?.submissionPage.name}
+          </h1>
           <p className="whitespace-pre-wrap text-foreground">
             {website?.submissionPage.subtitle}
           </p>
@@ -103,59 +107,84 @@ const Submit = ({ website }: Props) => {
           </p>
         </header>
 
-        <Divider className="my-6 border-border" />
+        <Separator className="my-6 border-border" />
 
-        <form
-          className="flex flex-col gap-4 text-foreground"
-          onSubmit={submitHandler}
-        >
-          <Title order={2} size="h3">
-            What&apos;s your story?
-          </Title>
-          {titleModule?.enabled && (
-            <TextInput
-              label="Title"
-              variant="filled"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("title")}
-              required={titleModule.required}
-            />
-          )}
-
-          {authorModule?.enabled && (
-            <TextInput
-              variant="filled"
-              label="Author"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("author")}
-              required={authorModule.required}
-            />
-          )}
-
-          {emailModule?.enabled && (
-            <TextInput
-              label="Email"
-              variant="filled"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("email")}
-              required={emailModule.required}
-            />
-          )}
-
-          <div className="flex w-full flex-col">
-            <p className="text-sm">
-              Story{" "}
-              <FontAwesomeIcon
-                icon={faAsterisk}
-                className="mb-[5px] text-[7px] text-red-500"
+        <Form {...form}>
+          <form
+            className="flex flex-col gap-4 text-foreground"
+            onSubmit={form.handleSubmit(submitHandler)}
+          >
+            <h2 className="text-3xl font-semibold">What&apos;s your story?</h2>
+            {titleModule?.enabled && (
+              <FormField
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <Input
+                      placeholder="Story title"
+                      required={titleModule.required}
+                      {...field}
+                    />
+                  </FormItem>
+                )}
               />
-            </p>
-            <CustomTextEditor editor={editor} />
-          </div>
-          <Button type="submit" style={{ backgroundColor: website?.colour }}>
-            Submit story
-          </Button>
-        </form>
+            )}
+
+            {authorModule?.enabled && (
+              <FormField
+                name="author"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Author</FormLabel>
+                    <Input
+                      placeholder="Your name"
+                      required={authorModule.required}
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {emailModule?.enabled && (
+              <FormField
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <Input
+                      placeholder="Your email"
+                      {...field}
+                      required={emailModule.required}
+                    />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <FormField
+              name="story"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex w-full flex-col">
+                    <FormLabel>
+                      Story{" "}
+                      <FontAwesomeIcon
+                        icon={faAsterisk}
+                        className="mb-[5px] text-[7px] text-red-500"
+                      />
+                    </FormLabel>
+                    <Textarea placeholder="Write your story" {...field} />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <Button type="submit" style={{ backgroundColor: website?.colour }}>
+              Submit story
+            </Button>
+          </form>
+        </Form>
       </main>
     </section>
   );

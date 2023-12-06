@@ -1,20 +1,48 @@
 import { faTimes } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, NumberInput, TextInput, Textarea } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { RecentlySearched } from "@prisma/client";
-import React, { FormEvent, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { z } from "zod";
 import { Button } from "~/components/ui/button";
+import {
+  Form,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Separator } from "~/components/ui/separator";
+import { Textarea } from "~/components/ui/textarea";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses, mantineNumberClasses } from "~/lib/styles";
 import { settingsTabs } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
 import { api } from "~/utils/api";
 
+const profileFormSchema = z.object({
+  email: z.string().email(),
+  words_per_minute: z.number().min(10).max(200),
+});
+
+const messageFormSchema = z.object({
+  greeting: z.string(),
+  recurring: z.string(),
+});
+
 const Profile = () => {
-  const apiContext = api.useContext();
-  const saveProfile = api.user.saveProfile.useMutation();
-  const { user } = useUserStore();
+  const apiContext = api.useUtils();
+  const saveProfile = api.user.saveProfile.useMutation({
+    onSuccess: () => {
+      apiContext.user.invalidate();
+      toast.success("Profile saved");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+  const { data: user } = api.user.me.useQuery();
   const deleteSearched = api.user.removeSearch.useMutation({
     onSuccess: () => {
       apiContext.user.invalidate();
@@ -23,16 +51,15 @@ const Profile = () => {
   const currentUser = user;
 
   const profileForm = useForm({
-    initialValues: {
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
       words_per_minute: 200,
       email: "",
     },
-    validate: {
-      email: isNotEmpty("This field is required"),
-    },
   });
   const messagesForm = useForm({
-    initialValues: {
+    resolver: zodResolver(messageFormSchema),
+    defaultValues: {
       greeting: "",
       recurring: "",
     },
@@ -40,36 +67,24 @@ const Profile = () => {
 
   useEffect(() => {
     if (currentUser) {
-      profileForm.setValues({
+      profileForm.reset({
         email: currentUser.email || "",
         words_per_minute: currentUser.Profile?.words_per_minute || 150,
       });
 
-      messagesForm.setValues({
+      messagesForm.reset({
         greeting: currentUser.Profile?.greeting || "",
         recurring: currentUser.Profile?.recurring || "",
       });
     }
   }, [currentUser]);
 
-  const saveProfileHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = profileForm.validate();
-
-    if (hasErrors) return;
-
-    saveProfile.mutate(profileForm.values);
+  const saveProfileHandler = (data: z.infer<typeof profileFormSchema>) => {
+    saveProfile.mutate(data);
   };
 
-  const saveMessagesHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = messagesForm.validate();
-
-    if (hasErrors) return;
-
-    saveProfile.mutate(messagesForm.values);
+  const saveMessagesHandler = (data: z.infer<typeof messageFormSchema>) => {
+    saveProfile.mutate(data);
   };
 
   const deleteRecentlySearchedItem = (id: RecentlySearched["id"]) => {
@@ -80,28 +95,44 @@ const Profile = () => {
     <WrapperWithNav tabs={settingsTabs}>
       <div className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
         <h1 className="text-3xl text-foreground">Profile</h1>
-        <form className=" form" onSubmit={saveProfileHandler}>
-          <div className="flex flex-col gap-2">
-            <NumberInput
-              variant="filled"
-              classNames={mantineNumberClasses}
-              label="Words per minute"
-              description="This will help better calculate the time it takes to read a
-                story."
-              {...profileForm.getInputProps("words_per_minute")}
-            />
+        <Form {...profileForm}>
+          <form
+            className=" form"
+            onSubmit={profileForm.handleSubmit(saveProfileHandler)}
+          >
+            <div className="flex flex-col gap-4">
+              <FormField
+                name="words_per_minute"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Words per minute</FormLabel>
+                    <FormDescription>
+                      This will help better calculate the time it takes to read
+                      a story.
+                    </FormDescription>
+                    <Input type="number" {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <TextInput
-              variant="filled"
-              label="Email"
-              placeholder="Add your email"
-              classNames={mantineInputClasses}
-              {...profileForm.getInputProps("email")}
-            />
-          </div>
-          <Button type="submit">Save profile</Button>
-        </form>
-        <Divider className="border-border" />
+              <FormField
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Add your email</FormLabel>
+                    <Input
+                      type="email"
+                      placeholder="Add your email"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button type="submit">Save profile</Button>
+          </form>
+        </Form>
+        <Separator />
 
         <div className="flex flex-col">
           <h2 className="mb-4 text-xl text-foreground">Recent searches</h2>
@@ -131,31 +162,47 @@ const Profile = () => {
             </div>
           )}
         </div>
-        <Divider className="border-border" />
+        <Separator />
         <div className="flex flex-col gap-3">
           <h2 className="mb-4 text-xl text-foreground">Messages</h2>
 
-          <form action="" className="form" onSubmit={saveMessagesHandler}>
-            <Textarea
-              variant="filled"
-              label="Greeting"
-              description="This message is used when you haven't messaged an author before. Think of it as an initial greeting. Say hello, introduce yourself, go from there."
-              minRows={10}
-              classNames={mantineInputClasses}
-              {...messagesForm.getInputProps("greeting")}
-            />
-            <Textarea
-              variant="filled"
-              label="Recurring"
-              description="This is used when you've already messaged an author. It's useful so users don't feel like they're just getting copy and pasted messages."
-              minRows={10}
-              classNames={mantineInputClasses}
-              {...messagesForm.getInputProps("recurring")}
-            />
-            <Button className=" mt-3" type="submit">
-              Save messages
-            </Button>
-          </form>
+          <Form {...messagesForm}>
+            <form
+              action=""
+              className="form"
+              onSubmit={messagesForm.handleSubmit(saveMessagesHandler)}
+            >
+              <FormField
+                name="greeting"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Greeting message</FormLabel>
+                    <Textarea
+                      placeholder="This message is used when you haven't messaged an author before. Think of it as an initial greeting. Say hello, introduce yourself, go from there."
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="recurring"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Recurring message</FormLabel>
+
+                    <Textarea
+                      placeholder="This is used when you've already messaged an author. It's useful so users don't feel like they're just getting copy and pasted messages."
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+              <Button className=" mt-3" type="submit">
+                Save messages
+              </Button>
+            </form>
+          </Form>
         </div>
       </div>
     </WrapperWithNav>

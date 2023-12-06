@@ -10,7 +10,7 @@ interface Props {
 }
 
 const TagListItem = ({ tag }: Props) => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const deleteTag = api.tag.delete.useMutation({
     onSuccess: () => {
       apiContext.tag.all.invalidate();

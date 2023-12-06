@@ -20,7 +20,7 @@ const Login = ({ providers }: Props) => {
 
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
     await signIn(p.id, {
-      callbackUrl: routes.ONBOARDING,
+      callbackUrl: routes.ONBOARDING + `?redirectTo=${routes.SEARCH}`,
     });
   };
 

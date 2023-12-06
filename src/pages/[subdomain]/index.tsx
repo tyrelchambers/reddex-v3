@@ -1,4 +1,3 @@
-import { Image, Title } from "@mantine/core";
 import { SubmissionPage, Website } from "@prisma/client";
 import axios from "axios";
 import { GetServerSideProps, type NextPage } from "next";
@@ -7,6 +6,7 @@ import { prisma } from "~/server/db";
 import YouTube from "react-youtube";
 import { checkForProperSubscription } from "~/utils/index.server";
 import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
+import Image from "next/image";
 interface Props {
   website: (Website & { submissionPage: SubmissionPage }) | null;
   youtubeVideos: YoutubeVideo[];
@@ -46,11 +46,13 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
               "https://images.unsplash.com/photo-1506259091721-347e791bab0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGFic3RyYWN0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60"
             }
             alt=""
+            width={1500}
+            height={500}
           />
         </section>
         {website.description && (
           <div className="my-8 max-w-3xl text-foreground">
-            <Title size="h3">Welcome!</Title>
+            <h2 className="text-3xl font-semibold">Welcome!</h2>
             <p className="mt-2 whitespace-pre-wrap text-sm leading-loose text-foreground/70">
               {website.description}
             </p>
@@ -59,9 +61,7 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
 
         {youtubeVideos && (
           <section className="my-20">
-            <Title order={2} className="text-foreground">
-              Latest Youtube videos
-            </Title>
+            <h2 className="text-foreground">Latest Youtube videos</h2>
 
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {youtubeVideos.map((item) => (

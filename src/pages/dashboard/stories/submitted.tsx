@@ -1,46 +1,33 @@
-import { Badge, Table } from "@mantine/core";
-import { format } from "date-fns";
+import {
+  faCalendar,
+  faCircleUser,
+  faClock,
+} from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import React from "react";
+import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineBadgeClasses } from "~/lib/styles";
 import { storiesTabs } from "~/routes";
-import { MixpanelEvents } from "~/types";
+import { formatReadingTime } from "~/utils";
 import { api } from "~/utils/api";
-import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Submitted = () => {
+  const apiContext = api.useUtils();
+  const { data: user } = api.user.me.useQuery();
   const submittedStories = api.story.submittedList.useQuery();
-
+  const deleteSubmittedStory = api.story.deleteSubmittedStory.useMutation({
+    onSuccess: () => {
+      apiContext.story.submittedList.invalidate();
+    },
+  });
+  const profile = user?.Profile;
   const stories = submittedStories.data;
 
-  const rows = stories?.map((story) => (
-    <tr key={story.id} className=" !bg-card">
-      <td className="flex-1 font-light !text-foreground">{story.title}</td>
-      <td className=" font-light !text-foreground">{story.author}</td>
-      <td className=" font-light !text-foreground">{story.email}</td>
-
-      <td className=" font-light !text-foreground">
-        {format(new Date(story.date), "MMMM do, yyyy")}
-      </td>
-
-      <td className=" font-light !text-foreground">
-        {story.completed ? (
-          <Badge classNames={mantineBadgeClasses}>Read</Badge>
-        ) : null}
-      </td>
-
-      <td className="flex justify-end">
-        <Link
-          href={"/story/" + story.id}
-          className="rounded-full border-[1px] border-border px-5 py-1 text-muted-foreground  hover:bg-gray-200 hover:text-background"
-          onClick={() => trackUiEvent(MixpanelEvents.VIEW_SUBMITTED_STORY)}
-        >
-          View
-        </Link>
-      </td>
-    </tr>
-  ));
+  const deleteHandler = (id: string) => {
+    deleteSubmittedStory.mutate(id);
+  };
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
@@ -51,39 +38,50 @@ const Submitted = () => {
             These are your stories submitted via your website.
           </p>
         </header>
-        <div className="flex-1">
-          {stories && (
-            <Table
-              verticalSpacing="md"
-              highlightOnHover
-              striped
-              className="mt-4"
+        <div className="mt-10 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
+          {stories?.map((story) => (
+            <div
+              key={story.id}
+              className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background shadow-md"
             >
-              <thead>
-                <tr>
-                  <th className="!flex-1 !border-border !text-muted-foreground">
-                    Title
-                  </th>
-                  <th className="!border-border !text-muted-foreground">
-                    Author
-                  </th>
-                  <th className="!border-border !text-muted-foreground">
-                    Email
-                  </th>
+              <header
+                className={`flex flex-wrap items-center justify-between gap-3 bg-card p-3`}
+              >
+                <div className="flex items-center rounded-full text-sm text-card-foreground/70">
+                  <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
+                  {story.author || "Unknown"}
+                </div>
+              </header>
+              <Link
+                className=" block  p-3 font-bold text-foreground underline hover:text-rose-500"
+                href={`/story/${story.id}`}
+              >
+                {story.title || "<This story has title>"}
+              </Link>
 
-                  <th className="!border-border !text-muted-foreground">
-                    Date
-                  </th>
+              <div className="flex gap-3 p-2 px-4">
+                <div className="flex items-center gap-2 text-xs text-card-foreground/70">
+                  <FontAwesomeIcon icon={faCalendar} />
+                  <p>{formatDistanceToNowStrict(story.date)} ago</p>
+                </div>
 
-                  <th className="!border-border !text-muted-foreground">
-                    Read
-                  </th>
-                  <th className="!border-border !text-muted-foreground"></th>
-                </tr>
-              </thead>
-              <tbody>{rows}</tbody>
-            </Table>
-          )}
+                {profile?.words_per_minute && (
+                  <div className="flex items-center gap-2 text-xs text-card-foreground/70">
+                    <FontAwesomeIcon icon={faClock} />
+                    <p>
+                      {formatReadingTime(story.body, profile?.words_per_minute)}
+                      min
+                    </p>
+                  </div>
+                )}
+              </div>
+              <footer className="mt-auto flex flex-wrap items-center justify-end gap-4 border-t border-border p-3">
+                <Button type="button" onClick={() => deleteHandler(story.id)}>
+                  Delete
+                </Button>
+              </footer>
+            </div>
+          ))}
         </div>
       </section>
     </WrapperWithNav>

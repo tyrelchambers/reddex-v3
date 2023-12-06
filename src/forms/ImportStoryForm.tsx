@@ -1,16 +1,27 @@
-import { TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import axios from "axios";
-import React, { FormEvent } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "~/components/ui/button";
-import { mantineInputClasses } from "~/lib/styles";
+import {
+  Form,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
 
+const formSchema = z.object({
+  url: z.string().url(),
+});
+
 const ImportStoryForm = () => {
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const form = useForm({
-    initialValues: {
+    defaultValues: {
       url: "",
     },
   });
@@ -20,14 +31,8 @@ const ImportStoryForm = () => {
     },
   });
 
-  const submitHandler = async (e: FormEvent) => {
-    e.preventDefault();
-    const { hasErrors } = form.validate();
-
-    if (hasErrors) {
-      return;
-    }
-    const regex = form.values.url.match(/[\s\S]+\//gi);
+  const submitHandler = async (data: z.infer<typeof formSchema>) => {
+    const regex = form.getValues().url.match(/[\s\S]+\//gi);
 
     if (!regex) return;
 
@@ -50,20 +55,27 @@ const ImportStoryForm = () => {
   };
 
   return (
-    <form>
-      <TextInput
-        classNames={mantineInputClasses}
-        label="Story URL"
-        description="This imports a story without asking for permission. In case you are given permission outside Reddex, for example."
-        placeholder="https://www.reddit.com/r/"
-        name="storyUrl"
-        {...form.getInputProps("url")}
-      />
+    <Form {...form}>
+      <form className="mt-4" onSubmit={form.handleSubmit(submitHandler)}>
+        <FormField
+          name="url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Story URL</FormLabel>
+              <FormDescription>
+                This imports a story without asking for permission. In case you
+                are given permission outside Reddex, for example.
+              </FormDescription>
+              <Input placeholder="https://www.reddit.com/r/" {...field} />
+            </FormItem>
+          )}
+        />
 
-      <Button className="mt-4 w-full" onClick={submitHandler}>
-        Import
-      </Button>
-    </form>
+        <Button className="mt-4 w-full" type="submit">
+          Import
+        </Button>
+      </form>
+    </Form>
   );
 };
 

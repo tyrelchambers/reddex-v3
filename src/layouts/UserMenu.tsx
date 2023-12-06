@@ -28,11 +28,12 @@ const UserMenu = () => {
   return (
     <Menu
       shadow="md"
-      width={200}
+      width={300}
       classNames={{
         dropdown: "bg-background border-border",
         item: "hover:bg-card-foreground/10 text-foreground",
       }}
+      position="bottom-start"
     >
       <Menu.Target>
         <button
@@ -45,51 +46,34 @@ const UserMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>Reading list</Menu.Label>
         <Link href={routes.APPROVED}>
-          <Menu.Item>Approved</Menu.Item>
+          <Menu.Item>Approved stories</Menu.Item>
         </Link>
 
         <Link href={routes.COMPLETED}>
-          <Menu.Item>Completed</Menu.Item>
+          <Menu.Item>Completed stories</Menu.Item>
         </Link>
 
         <Link href={routes.SUBMITTED}>
-          <Menu.Item>Submitted</Menu.Item>
+          <Menu.Item>Submitted stories</Menu.Item>
         </Link>
-
-        <Menu.Divider className="border-border" />
-        <Menu.Label>Tags</Menu.Label>
 
         <Link href={routes.TAGS}>
           <Menu.Item>Tags</Menu.Item>
         </Link>
 
-        <Menu.Divider className="border-border" />
-
-        <Menu.Label>Contacts</Menu.Label>
-
         <Link href={routes.CONTACTS}>
           <Menu.Item>Contacts</Menu.Item>
         </Link>
 
-        <Menu.Divider className="border-border" />
-
-        <Menu.Label>Inbox</Menu.Label>
         <Link href={routes.INBOX}>
           <Menu.Item>Inbox</Menu.Item>
         </Link>
 
-        <Menu.Divider className="border-border" />
-
-        <Menu.Label>Website</Menu.Label>
         <Link href={routes.WEBSITE_GENERAL}>
           <Menu.Item>Website</Menu.Item>
         </Link>
 
-        <Menu.Divider className="border-border" />
-
-        <Menu.Label>Settings</Menu.Label>
         <Link href={routes.SETTINGS_PROFILE}>
           <Menu.Item>Profile</Menu.Item>
         </Link>

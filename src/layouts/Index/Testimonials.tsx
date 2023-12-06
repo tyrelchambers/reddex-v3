@@ -1,7 +1,9 @@
 import { useState } from "react";
 import ATRDLogo from "../../../public/images/ravendreams.jpeg";
 import to42 from "../../../public/images/to_42.jpg";
-import { Avatar } from "@mantine/core";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSmile } from "@fortawesome/pro-regular-svg-icons";
 
 const testimonials = [
   {
@@ -36,15 +38,17 @@ const Testimonials = () => {
                 <li key={idx}>
                   <figure>
                     <blockquote>
-                      <p className="text-xl font-semibold text-foreground/70 sm:text-2xl">
+                      <p className="text-xl font-semibold text-foreground sm:text-2xl">
                         “{item.quote}“
                       </p>
                     </blockquote>
-                    <div className="mt-6">
-                      <Avatar
-                        src={item?.avatar || undefined}
-                        className="mx-auto h-16 w-16 rounded-full"
-                      />
+                    <div className="mt-6 flex flex-col items-center">
+                      <Avatar>
+                        <AvatarImage src={item?.avatar || undefined} />
+                        <AvatarFallback>
+                          <FontAwesomeIcon icon={faSmile} />
+                        </AvatarFallback>
+                      </Avatar>
                       <div className="mt-3">
                         <span className="block font-semibold text-foreground">
                           {item.name}

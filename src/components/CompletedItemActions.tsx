@@ -12,7 +12,7 @@ interface Props {
 const CompletedItemActions = ({ postId }: Props) => {
   const { data } = useSession();
 
-  const apiContext = api.useContext();
+  const apiContext = api.useUtils();
   const deleteStory = api.story.deleteStory.useMutation({
     onSuccess: () => {
       apiContext.story.getCompletedList.invalidate();

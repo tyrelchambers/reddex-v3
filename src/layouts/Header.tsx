@@ -102,40 +102,32 @@ const Header = ({ openDrawer }: Props) => {
               className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
             />
           </button>
-          {session.status !== "loading" && (
-            <div className="flex">
-              {session.data?.user && <UserMenu />}
-              {session.status !== "authenticated" && (
-                <Link
-                  href={routes.LOGIN}
-                  onClick={() => {
-                    trackUiEvent(MixpanelEvents.GET_STARTED);
-                  }}
-                >
-                  <Button variant="default" size="sm">
-                    Get Started
-                  </Button>
-                </Link>
-              )}
-            </div>
-          )}
-
           {router.pathname === routes.SEARCH && !opened && (
             <Button
               type="button"
-              size="sm"
+              variant="secondary"
               onClick={() => {
                 trackUiEvent(MixpanelEvents.OPEN_SEARCH_DRAWER);
                 openDrawer?.();
               }}
             >
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="mr-2 text-xs text-accent-foreground"
-              />
-              <p className="text-sm text-accent-foreground">Search</p>
+              <FontAwesomeIcon icon={faSearch} className="mr-4" />
+              Search
             </Button>
           )}
+          <div className="flex">
+            {session.data?.user && <UserMenu />}
+            {session.status !== "authenticated" && (
+              <Link
+                href={routes.LOGIN}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.GET_STARTED);
+                }}
+              >
+                <Button type="button">Login</Button>
+              </Link>
+            )}
+          </div>
         </div>
       )}
 
@@ -168,7 +160,7 @@ const Header = ({ openDrawer }: Props) => {
             >
               <FontAwesomeIcon
                 icon={faSearch}
-                className="mr-2 text-xs text-accent-foreground"
+                className="mr-4 text-xs text-accent-foreground"
               />
               <p className="text-sm text-accent-foreground">Search</p>
             </Button>

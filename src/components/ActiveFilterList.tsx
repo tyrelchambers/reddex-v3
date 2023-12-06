@@ -1,11 +1,10 @@
 import { faTimes } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge } from "@mantine/core";
 import React from "react";
-import { mantineBadgeClasses } from "~/lib/styles";
 import { Button } from "./ui/button";
 import { activeFilters } from "~/utils";
 import { FilterState } from "~/types";
+import { Badge } from "./ui/badge";
 
 interface Props {
   filters: Partial<FilterState>;
@@ -26,7 +25,7 @@ const ActiveFilterList = ({ filters, removeFilter, reset }: Props) => {
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card p-1 text-card-foreground">
                 <FontAwesomeIcon icon={faTimes} />
               </span>
-              <Badge classNames={mantineBadgeClasses}>{filter.label}</Badge>
+              <Badge>{filter.label}</Badge>
             </li>
           ))}
         </ul>

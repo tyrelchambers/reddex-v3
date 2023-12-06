@@ -1,44 +1,46 @@
-import { Checkbox, TextInput, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import React, { FormEvent, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { z } from "zod";
 import StatusBanner from "~/components/StatusBanner";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineCheckBoxClasses, mantineInputClasses } from "~/lib/styles";
 import { websiteTabItems } from "~/routes";
-import { useUserStore } from "~/stores/useUserStore";
+import { websiteSubmissionSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
 import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
-interface Module {
-  id?: string;
-  name: string;
-  enabled: boolean;
-  required: boolean;
-}
-
-interface SubmissionFormProps {
-  name: string | null;
-  subtitle: string | null;
-  description: string | null;
-  submissionFormModules: Module[];
-}
+const formSchema = websiteSubmissionSchema;
 
 const SubmissionForm = () => {
-  const apiContext = api.useContext();
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const apiContext = api.useUtils();
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
 
   const submissionFormSave = api.website.saveSubmissionForm.useMutation({
     onSuccess: () => {
       toast.success("Submission form saved");
     },
   });
-  const websiteSettings = api.website.settings.useQuery();
+  const websiteSettings = api.website.settings.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
   const saveSubmissionFormVisibility =
     api.website.submissionFormVisibility.useMutation({
       onSuccess: async () => {
@@ -53,41 +55,61 @@ const SubmissionForm = () => {
       }
     );
 
-  const form = useForm<SubmissionFormProps>({
-    initialValues: {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       name: "",
       subtitle: "",
       description: "",
-      submissionFormModules: [],
+      submissionFormModules: {
+        title: {
+          enabled: false,
+          required: false,
+        },
+        author: {
+          enabled: false,
+          required: false,
+        },
+        email: {
+          enabled: false,
+          required: false,
+        },
+      },
     },
   });
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.setValues({
-        ...websiteSettings.data.submissionPage,
-        submissionFormModules:
-          websiteSettings.data.submissionPage.submissionFormModules,
-      });
+      form.reset(websiteSettings.data);
+      const modules =
+        websiteSettings.data.submissionPage?.submissionFormModules;
+      const titleModule = modules.find(
+        (module) => module.name.toLowerCase() === "title"
+      );
+      const authorModule = modules.find(
+        (module) => module.name.toLowerCase() === "author"
+      );
+      const emailModule = modules.find(
+        (module) => module.name.toLowerCase() === "email"
+      );
+
+      if (titleModule) {
+        form.setValue("submissionFormModules.title", titleModule);
+      }
+
+      if (authorModule) {
+        form.setValue("submissionFormModules.author", authorModule);
+      }
+
+      if (emailModule) {
+        form.setValue("submissionFormModules.email", emailModule);
+      }
     }
   }, [websiteSettings.data]);
 
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { hasErrors } = form.validate();
-
-    const { name, subtitle, description, submissionFormModules } = form.values;
-
-    if (hasErrors) return;
-
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_SUBMISSION_FORM);
-    submissionFormSave.mutate({
-      name,
-      subtitle,
-      description,
-      submissionFormModules,
-    });
+    submissionFormSave.mutate(data);
   };
 
   const visibilityHandler = () => {
@@ -139,74 +161,203 @@ const SubmissionForm = () => {
             />
           )}
 
-          <form onSubmit={submitHandler} className="form mt-4">
-            <TextInput
-              variant="filled"
-              label="Page title"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("name")}
-            />
-            <TextInput
-              variant="filled"
-              label="Page subtitle"
-              classNames={mantineInputClasses}
-              {...form.getInputProps("subtitle")}
-            />
-            <Textarea
-              variant="filled"
-              label="Description"
-              description="List any rules for submissions or any information you want people to know"
-              minRows={8}
-              classNames={mantineInputClasses}
-              {...form.getInputProps("description")}
-            />
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(submitHandler)}
+              className="form mt-4"
+            >
+              <FormField
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Page title</FormLabel>
+                    <Input
+                      placeholder="Your submission form page title"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="subtitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Page subtitle</Label>
+                    <Input placeholder="Subtitle" {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <section className="flex flex-col gap-4">
-              <p className="text-xl text-foreground">Customize modules</p>
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <Textarea
+                      placeholder="List any rules for submissions or any information you want people to know"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
 
-              {websiteSettings.data?.submissionPage.submissionFormModules.map(
-                (mod, id) => (
-                  <div
-                    key={mod.id}
-                    className="flex flex-col rounded-xl bg-card p-4"
-                  >
-                    <p className="label font-bold capitalize text-card-foreground">
-                      {mod.name}
-                    </p>
+              <section className="flex flex-col gap-4">
+                <p className="text-xl text-foreground">Customize modules</p>
 
-                    <div className="mt-2 flex gap-4">
-                      <Checkbox
-                        label="Enabled"
-                        description="Show this module on your submission page"
-                        classNames={mantineCheckBoxClasses}
-                        {...form.getInputProps(
-                          `submissionFormModules.${id}.enabled`,
-                          {
-                            type: "checkbox",
-                          }
-                        )}
-                      />
-                      <Checkbox
-                        label="Required"
-                        description="Make this field required"
-                        classNames={mantineCheckBoxClasses}
-                        {...form.getInputProps(
-                          `submissionFormModules.${id}.required`,
-                          {
-                            type: "checkbox",
-                          }
-                        )}
-                      />
-                    </div>
+                <div className="flex flex-col rounded-xl bg-card p-4">
+                  <p className="label font-bold capitalize text-card-foreground">
+                    Title
+                  </p>
+
+                  <div className="mt-2 flex gap-4">
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.title.enabled`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Enabled</FormLabel>
+                            <FormDescription>
+                              Show this module on your submission page
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.title.required`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Required</FormLabel>
+                            <FormDescription>
+                              Make this field required
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                )
-              )}
-            </section>
+                </div>
+                <div className="flex flex-col rounded-xl bg-card p-4">
+                  <p className="label font-bold capitalize text-card-foreground">
+                    Author
+                  </p>
 
-            <Button type="submit" disabled={!proPlan}>
-              Save changes
-            </Button>
-          </form>
+                  <div className="mt-2 flex gap-4">
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.author.enabled`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Enabled</FormLabel>
+                            <FormDescription>
+                              Show this module on your submission page
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.author.required`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Required</FormLabel>
+                            <FormDescription>
+                              Make this field required
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col rounded-xl bg-card p-4">
+                  <p className="label font-bold capitalize text-card-foreground">
+                    Email
+                  </p>
+
+                  <div className="mt-2 flex gap-4">
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.email.enabled`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Enabled</FormLabel>
+                            <FormDescription>
+                              Show this module on your submission page
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.email.required`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Required</FormLabel>
+                            <FormDescription>
+                              Make this field required
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <Button type="submit" disabled={!proPlan}>
+                Save changes
+              </Button>
+            </form>
+          </Form>
         </BodyWithLoader>
       </main>
     </WrapperWithNav>

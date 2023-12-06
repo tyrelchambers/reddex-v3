@@ -10,8 +10,6 @@ export const stripeRouter = createTRPCRouter({
   createCheckout: protectedProcedure
     .input(createCheckoutSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log(input);
-
       try {
         const link = await stripeClient.checkout.sessions.create({
           line_items: [

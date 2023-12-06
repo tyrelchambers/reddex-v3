@@ -8,11 +8,9 @@ import {
 import { faPodcast } from "@fortawesome/pro-light-svg-icons";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, Image, TextInput, Textarea } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
-import React, { FormEvent, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
-import { GeneralSettings, MixpanelEvents } from "~/types";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
@@ -26,11 +24,20 @@ import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { Button } from "~/components/ui/button";
-import { mantineInputClasses } from "~/lib/styles";
-import { useUserStore } from "~/stores/useUserStore";
 import { hasProPlan } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { toast } from "react-toastify";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import Image from "next/image";
+import { Separator } from "~/components/ui/separator";
+import { Badge } from "~/components/ui/badge";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { websiteGeneralSchema } from "~/server/schemas";
+import { z } from "zod";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -40,9 +47,9 @@ registerPlugin(
 );
 
 const General = () => {
-  const apiContext = api.useContext();
-  const userStore = useUserStore();
-  const proPlan = hasProPlan(userStore.user?.subscription);
+  const apiContext = api.useUtils();
+  const { data: user } = api.user.me.useQuery();
+  const proPlan = hasProPlan(user?.subscription);
 
   const websiteSave = api.website.saveGeneral.useMutation({
     onSuccess: () => {
@@ -66,8 +73,9 @@ const General = () => {
   const thumbnailRef = useRef<FilePond | null>(null);
   const bannerRef = useRef<FilePond | null>(null);
 
-  const form = useForm<GeneralSettings>({
-    initialValues: {
+  const form = useForm<z.infer<typeof websiteGeneralSchema>>({
+    resolver: zodResolver(websiteGeneralSchema),
+    defaultValues: {
       subdomain: "",
       name: "",
       description: "",
@@ -78,46 +86,38 @@ const General = () => {
       podcast: "",
       youtube: "",
     },
-
-    clearInputErrorOnChange: true,
-    validate: {
-      subdomain: isNotEmpty(),
-      name: isNotEmpty(),
-    },
   });
+  const formValues = form.getValues();
+
   const subdomainQuery = api.website.checkAvailableSubdomain.useQuery(
-    form.values.subdomain as string,
+    formValues.subdomain || "",
     {
-      enabled: !!form.values.subdomain,
+      enabled: !!formValues.subdomain,
     }
   );
 
   const DISABLE_SUBMIT_BUTTON =
-    !proPlan || !form.values.subdomain || !form.values.name;
+    !proPlan || !formValues.subdomain || !formValues.name;
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.setValues({ ...websiteSettings.data });
+      form.reset({ ...websiteSettings.data });
     }
   }, [websiteSettings.data]);
 
   const subdomainAvailable =
     !subdomainQuery.data &&
-    (!form.values.subdomain ||
-      form.values.subdomain !== websiteSettings.data?.subdomain) &&
-    form.values.subdomain !== "";
+    (!formValues.subdomain ||
+      formValues.subdomain !== websiteSettings.data?.subdomain) &&
+    formValues.subdomain !== "";
 
-  const submitHandler = async (e: FormEvent) => {
-    e.preventDefault();
+  const submitHandler = async (data: z.infer<typeof websiteGeneralSchema>) => {
     const thumbnail = thumbnailRef.current?.getFile();
     const banner = bannerRef.current?.getFile();
     const payload: {
       thumbnail?: string;
       banner?: string;
     } = {};
-    const { hasErrors } = form.validate();
-
-    if (hasErrors) return;
 
     if (thumbnail) {
       trackUiEvent(MixpanelEvents.PROCESS_THUMBNAIL);
@@ -136,10 +136,10 @@ const General = () => {
     }
 
     trackUiEvent(MixpanelEvents.SAVE_WEBSITE_SETTINGS, {
-      userId: userStore.user?.id,
+      userId: user?.id,
     });
     websiteSave.mutate({
-      ...form.values,
+      ...data,
       ...payload,
     });
   };
@@ -187,184 +187,256 @@ const General = () => {
               action={<Button onClick={hideWebsiteHandler}>Hide</Button>}
             />
           )}
-          <form className="form my-10" onSubmit={submitHandler}>
-            <div className="flex w-full flex-col">
-              <p className="label required text-foreground">Subdomain</p>
-              <div className="flex h-fit items-center rounded-lg bg-input p-1">
-                <span className="hidden px-3 text-gray-500 md:flex">
-                  http://reddex.app/
-                </span>
-
-                <TextInput
-                  variant="filled"
-                  placeholder="Your custom subdomain"
-                  classNames={{
-                    ...mantineInputClasses,
-                    input: `${mantineInputClasses.input || ""} !border-0`,
-                  }}
-                  {...form.getInputProps("subdomain")}
+          <Form {...form}>
+            <form
+              className="form my-10"
+              onSubmit={form.handleSubmit(submitHandler)}
+            >
+              <div className="flex w-full flex-col">
+                <FormField
+                  name="subdomain"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Subdomain</FormLabel>
+                      <Input placeholder="Your custom subdomain" {...field} />
+                    </FormItem>
+                  )}
                 />
+                <Link
+                  href={`https://reddex.app/${
+                    websiteSettings.data?.subdomain ??
+                    formValues.subdomain ??
+                    ""
+                  }`}
+                >
+                  <Badge className="mt-2 w-fit" variant="outline">
+                    https://reddex.app/{form.getValues().subdomain}
+                  </Badge>
+                </Link>
+                {formValues.subdomain && subdomainAvailable && (
+                  <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
+                    <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
+                    available
+                  </span>
+                )}
               </div>
-              {form.values.subdomain && subdomainAvailable && (
-                <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
-                  <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
-                  available
-                </span>
-              )}
-            </div>
 
-            <div className="flex">
-              <TextInput
-                variant="filled"
-                label="Site name"
-                classNames={mantineInputClasses}
-                placeholder="Name of your site"
-                required
-                {...form.getInputProps("name")}
-              />
-            </div>
-            <div className="flex h-fit">
-              <Textarea
-                variant="filled"
-                classNames={mantineInputClasses}
-                label="Site description"
-                description="Let people know who you are"
-                minRows={8}
-                {...form.getInputProps("description")}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <p className="label text-foreground">Thumbnail</p>
-              <p className="sublabel text-muted-foreground">
-                Optimal image size 200 x 200
-              </p>
-              {!websiteSettings.data?.thumbnail ? (
-                <FileUpload
-                  uploadRef={thumbnailRef}
-                  type="thumbnail"
-                  disabled={!proPlan}
-                />
-              ) : (
-                <div className="flex flex-col">
-                  <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
-                    <Image
-                      src={websiteSettings.data.thumbnail}
-                      alt=""
-                      w={200}
-                      h={200}
+              <FormField
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name of your site</FormLabel>
+                    <Input
+                      placeholder="Name of your site"
+                      required
+                      {...field}
                     />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Site description</FormLabel>
+                    <Textarea
+                      placeholder="Let people know who you are"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex flex-col">
+                <p className="label text-foreground">Thumbnail</p>
+                <p className="sublabel text-muted-foreground">
+                  Optimal image size 200 x 200
+                </p>
+                {!websiteSettings.data?.thumbnail ? (
+                  <FileUpload
+                    uploadRef={thumbnailRef}
+                    type="thumbnail"
+                    disabled={!proPlan}
+                  />
+                ) : (
+                  <div className="flex flex-col">
+                    <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
+                      <Image
+                        src={websiteSettings.data.thumbnail}
+                        alt=""
+                        width={200}
+                        height={200}
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      className=" mt-4"
+                      onClick={() =>
+                        websiteSettings.data?.thumbnail &&
+                        removeImage.mutate({
+                          type: "thumbnail",
+                          url: websiteSettings.data?.thumbnail,
+                        })
+                      }
+                    >
+                      Remove thumbnail
+                    </Button>
                   </div>
-                  <Button
-                    variant="secondary"
-                    className=" mt-4"
-                    onClick={() =>
-                      websiteSettings.data?.thumbnail &&
-                      removeImage.mutate({
-                        type: "thumbnail",
-                        url: websiteSettings.data?.thumbnail,
-                      })
-                    }
-                  >
-                    Remove thumbnail
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <p className="label text-foreground">Cover image</p>
-              <p className="sublabel text-muted-foreground">
-                Optimal image size 1500 x 500
-              </p>
-              {!websiteSettings.data?.banner ? (
-                <FileUpload
-                  uploadRef={bannerRef}
-                  type="banner"
-                  disabled={!proPlan}
-                />
-              ) : (
-                <div className="flex flex-col">
-                  <div className="overflow-hidden rounded-xl">
-                    <Image src={websiteSettings.data.banner} alt="" />
-                  </div>
-                  <Button
-                    variant="secondary"
-                    className=" mt-4"
-                    onClick={() =>
-                      websiteSettings.data?.banner &&
-                      removeImage.mutate({
-                        type: "banner",
-                        url: websiteSettings.data?.banner,
-                      })
-                    }
-                  >
-                    Remove banner
-                  </Button>
-                </div>
-              )}
-            </div>
-            <Divider className="my-4" />
-
-            <section className="flex flex-col">
-              <h2 className="text-xl text-foreground">Social media</h2>
-              <p className="font-thin text-muted-foreground">
-                The links below will appear as social icons on your site. These
-                are not required, and the icons will not appear on your site if
-                you leave them blank.
-              </p>
-
-              <div className="mt-6 flex flex-col gap-3">
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="@username"
-                  icon={<FontAwesomeIcon icon={faTwitter} />}
-                  {...form.getInputProps("twitter")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Facebook link"
-                  icon={<FontAwesomeIcon icon={faFacebook} />}
-                  {...form.getInputProps("facebook")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="@username"
-                  icon={<FontAwesomeIcon icon={faInstagram} />}
-                  {...form.getInputProps("instagram")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Patreon link"
-                  icon={<FontAwesomeIcon icon={faPatreon} />}
-                  {...form.getInputProps("patreon")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Youtube link"
-                  icon={<FontAwesomeIcon icon={faYoutube} />}
-                  {...form.getInputProps("youtube")}
-                />
-                <TextInput
-                  variant="filled"
-                  classNames={mantineInputClasses}
-                  placeholder="Podcast link"
-                  icon={<FontAwesomeIcon icon={faPodcast} />}
-                  {...form.getInputProps("podcast")}
-                />
+                )}
               </div>
-            </section>
-            <Divider className="my-4" />
 
-            <Button type="submit" disabled={DISABLE_SUBMIT_BUTTON}>
-              Save changes
-            </Button>
-          </form>
+              <div className="flex flex-col">
+                <p className="label text-foreground">Cover image</p>
+                <p className="sublabel text-muted-foreground">
+                  Optimal image size 1500 x 500
+                </p>
+                {!websiteSettings.data?.banner ? (
+                  <FileUpload
+                    uploadRef={bannerRef}
+                    type="banner"
+                    disabled={!proPlan}
+                  />
+                ) : (
+                  <div className="flex flex-col">
+                    <div className="overflow-hidden rounded-xl">
+                      <Image
+                        src={websiteSettings.data.banner}
+                        alt=""
+                        width={672}
+                        height={200}
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      className=" mt-4"
+                      onClick={() =>
+                        websiteSettings.data?.banner &&
+                        removeImage.mutate({
+                          type: "banner",
+                          url: websiteSettings.data?.banner,
+                        })
+                      }
+                    >
+                      Remove banner
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <Separator className="my-4" />
+
+              <section className="flex flex-col">
+                <h2 className="text-xl text-foreground">Social media</h2>
+                <p className="font-thin text-foreground/70">
+                  The links below will appear as social icons on your site.
+                  These are not required, and the icons will not appear on your
+                  site if you leave them blank.
+                </p>
+
+                <div className="mt-6 flex flex-col gap-3">
+                  <FormField
+                    name="twitter"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FontAwesomeIcon
+                            className="text-foreground/70"
+                            icon={faTwitter}
+                          />
+                          <Input placeholder="@username" {...field} />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="facebook"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FontAwesomeIcon
+                            className="text-foreground/70"
+                            icon={faFacebook}
+                          />
+
+                          <Input placeholder="Facebook link" {...field} />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="instagram"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FontAwesomeIcon
+                            className="text-foreground/70"
+                            icon={faInstagram}
+                          />
+
+                          <Input placeholder="@username" {...field} />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="patreon"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FontAwesomeIcon
+                            className="text-foreground/70"
+                            icon={faPatreon}
+                          />
+
+                          <Input placeholder="Patreon link" {...field} />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="youtube"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FontAwesomeIcon
+                            className="text-foreground/70"
+                            icon={faYoutube}
+                          />
+
+                          <Input placeholder="Youtube link" {...field} />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="podcast"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FontAwesomeIcon
+                            className="text-foreground/70"
+                            icon={faPodcast}
+                          />
+
+                          <Input placeholder="Podcast link" {...field} />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </section>
+              <Separator className="my-4" />
+
+              <Button type="submit" disabled={DISABLE_SUBMIT_BUTTON}>
+                Save changes
+              </Button>
+            </form>
+          </Form>
         </BodyWithLoader>
       </main>
     </WrapperWithNav>

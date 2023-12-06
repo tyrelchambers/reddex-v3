@@ -1,4 +1,4 @@
-import { RedditPost, User } from "@prisma/client";
+import { RedditPost } from "@prisma/client";
 import { format } from "date-fns";
 import { db } from "./dexie";
 import {
@@ -120,11 +120,7 @@ export const getStorySelectList = (stories: RedditPost[] | undefined) => {
       value: s.id,
     })) || [];
 
-  const storiesList = [
-    { label: "Select a story", value: "" },
-    ...formattedApprovedStories,
-  ];
-  return storiesList;
+  return formattedApprovedStories;
 };
 
 export const hasActiveSubscription = (
@@ -233,4 +229,10 @@ export const getValidSubdomain = (host?: string | null) => {
     }
   }
   return subdomain;
+};
+
+export const formatReadingTime = (string: string, time: number) => {
+  const words = string.split(" ");
+
+  return Math.ceil(words.length / time);
 };

@@ -1,6 +1,5 @@
 import { faArrowLeft } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TextInput } from "@mantine/core";
 import { useDebouncedState, useViewportSize } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -8,9 +7,9 @@ import InboxMessageList from "~/components/InboxMessageList";
 import SelectedInboxMessage from "~/components/SelectedInboxMessage";
 import Spinner from "~/components/Spinner";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { breakpoints } from "~/constants";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses } from "~/lib/styles";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
@@ -73,10 +72,9 @@ const Inbox = () => {
           )}
           <h1 className="text-2xl text-foreground">Inbox</h1>
           <div className="flex w-full max-w-lg gap-4">
-            <TextInput
+            <Input
               ref={searchRef}
               placeholder="Search for a message via author or subject"
-              classNames={mantineInputClasses}
               onChange={(e) => setSearch(e.target.value)}
             />
             <Button variant="secondary" onClick={resetSearch}>

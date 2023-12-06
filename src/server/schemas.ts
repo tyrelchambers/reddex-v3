@@ -86,16 +86,20 @@ export const websiteSubmissionSchema = z.object({
   name: z.string().optional(),
   subtitle: z.string().optional(),
   description: z.string().optional(),
-  submissionFormModules: z
-    .array(
-      z.object({
-        id: z.string().optional(),
-        name: z.string(),
-        enabled: z.boolean(),
-        required: z.boolean(),
-      })
-    )
-    .optional(),
+  submissionFormModules: z.object({
+    title: z.object({
+      enabled: z.boolean(),
+      required: z.boolean(),
+    }),
+    author: z.object({
+      enabled: z.boolean(),
+      required: z.boolean(),
+    }),
+    email: z.object({
+      enabled: z.boolean(),
+      required: z.boolean(),
+    }),
+  }),
 });
 
 export const removeImageSchema = z.object({

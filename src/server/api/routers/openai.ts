@@ -14,9 +14,21 @@ export const openAiRouter = createTRPCRouter({
         },
       });
 
-      if (!story) return;
+      if (!story?.content) return;
 
-      const prompt = `Generate a ${input.type} for this story: ${story.content}.`;
+      let prompt = `Generate a ${input.type} for this story: ${story.content}.`;
+
+      if (input.type === "tags") {
+        prompt += ` Provide a comma-separated list of tags.`;
+      }
+
+      if (input.type === "title") {
+        prompt = `Generate a title for this story, but keep it short and concise.`;
+      }
+
+      if (input.type === "description") {
+        prompt = `Generate a description for this story.`;
+      }
 
       const chatRes = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",

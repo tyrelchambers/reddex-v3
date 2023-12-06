@@ -58,9 +58,8 @@ const Theme = () => {
 
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_THEME_SETTINGS);
-    console.log(data);
 
-    // saveTheme.mutate(data);
+    saveTheme.mutate(data);
   };
 
   return (

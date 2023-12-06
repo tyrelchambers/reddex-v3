@@ -230,4 +230,14 @@ export const storyRouter = createTRPCRouter({
       },
     });
   }),
+  deleteSubmittedStory: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return prisma.submittedStory.deleteMany({
+        where: {
+          userId: ctx.session.user.id,
+          id: input,
+        },
+      });
+    }),
 });

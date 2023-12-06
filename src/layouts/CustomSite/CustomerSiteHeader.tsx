@@ -6,7 +6,6 @@ import {
   faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-light-svg-icons";
-import { Title } from "@mantine/core";
 import { SubmissionPage, Website } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,7 +54,7 @@ const CustomerSiteHeader = ({ website }: Props) => {
         style={{ backgroundColor: website.colour }}
       ></div>
       <header className="flex flex-col items-center  justify-between gap-2 bg-card p-4 sm:flex-row">
-        <Title size="h4" className="flex items-center text-foreground ">
+        <div className="flex items-center text-xl text-foreground">
           {website.thumbnail && (
             <Image
               src={website.thumbnail}
@@ -66,7 +65,7 @@ const CustomerSiteHeader = ({ website }: Props) => {
             />
           )}
           <Link href={`/${website.subdomain as string}`}>{website.name}</Link>
-        </Title>
+        </div>
         <SocialList socials={socials} />
         {!website.submissionPage.hidden && (
           <Link

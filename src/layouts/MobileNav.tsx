@@ -11,13 +11,13 @@ import {
   faUser,
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider } from "@mantine/core";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import { routes } from "~/routes";
 
 const commonRoutes = [
@@ -101,7 +101,7 @@ const MobileNav = ({ user }: Props) => {
           ))}
         </nav>
 
-        <Divider className="my-6 border-border" />
+        <Separator className="my-6 border-border" />
 
         {user ? (
           <nav className="flex flex-col gap-6">
@@ -115,7 +115,7 @@ const MobileNav = ({ user }: Props) => {
               </Link>
             ))}
 
-            <Divider className="my-2 border-border" />
+            <Separator className="my-2 border-border" />
 
             <Button variant="link" className="w-fit" onClick={logoutHandler}>
               <FontAwesomeIcon icon={faRightFromBracket} className="mr-4" />

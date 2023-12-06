@@ -15,10 +15,16 @@ import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useQueueStore } from "~/stores/queueStore";
 import { MixpanelEvents, PostFromReddit } from "~/types";
-import { Tooltip, clsx } from "@mantine/core";
 import { Button } from "./ui/button";
 import { calculateReadingTime } from "~/lib/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import clsx from "clsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface Props {
   post: PostFromReddit;
@@ -62,12 +68,19 @@ const SubredditSearchItem = ({
             {post.ups}
           </div>
           {hasBeenUsed && (
-            <Tooltip label="Already used">
-              <FontAwesomeIcon
-                icon={faCheck}
-                className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-200 p-2 text-xs text-green-800"
-              />
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    className="flex h-3 w-3 items-center gap-2 rounded-full bg-green-200 p-2 text-xs text-green-800"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  You&apos;ve already contacted the author about this story.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </div>
 

@@ -1,4 +1,3 @@
-import { Divider, Title } from "@mantine/core";
 import { SubmissionFormModule, SubmissionPage, Website } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import React from "react";
@@ -17,6 +16,7 @@ import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { toast } from "react-toastify";
+import { Separator } from "~/components/ui/separator";
 
 interface Props {
   website:
@@ -105,7 +105,9 @@ const Submit = ({ website }: Props) => {
       <CustomerSiteHeader website={website} />
       <main className="mx-auto mt-10 w-full max-w-screen-md p-4">
         <header className="flex flex-col gap-3 text-foreground">
-          <Title>{website?.submissionPage.name}</Title>
+          <h1 className="text-3xl font-semibold">
+            {website?.submissionPage.name}
+          </h1>
           <p className="whitespace-pre-wrap text-foreground">
             {website?.submissionPage.subtitle}
           </p>
@@ -114,16 +116,14 @@ const Submit = ({ website }: Props) => {
           </p>
         </header>
 
-        <Divider className="my-6 border-border" />
+        <Separator className="my-6 border-border" />
 
         <Form {...form}>
           <form
             className="flex flex-col gap-4 text-foreground"
             onSubmit={form.handleSubmit(submitHandler)}
           >
-            <Title order={2} size="h3">
-              What&apos;s your story?
-            </Title>
+            <h2 className="text-3xl font-semibold">What&apos;s your story?</h2>
             {titleModule?.enabled && (
               <FormField
                 name="title"

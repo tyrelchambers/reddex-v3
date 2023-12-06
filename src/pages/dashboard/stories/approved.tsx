@@ -1,6 +1,3 @@
-import { faSearch } from "@fortawesome/pro-light-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
@@ -11,7 +8,6 @@ import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import ImportStoryForm from "~/forms/ImportStoryForm";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { mantineInputClasses, mantineModalClasses } from "~/lib/styles";
 import { storiesTabs } from "~/routes";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";

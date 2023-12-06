@@ -1,4 +1,4 @@
-import { Loader, Pagination } from "@mantine/core";
+import { Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
@@ -23,6 +23,8 @@ import queryString from "query-string";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { Sheet, SheetContent, SheetHeader } from "~/components/ui/sheet";
 import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/pro-duotone-svg-icons";
 interface SearchHandlerProps {
   subreddit: string;
   category: string;
@@ -140,7 +142,7 @@ const Search = () => {
 
         {loading && (
           <div className="my-6 flex justify-center">
-            <Loader color="pink" />
+            <FontAwesomeIcon icon={faSpinner} spin className="text-primary" />
           </div>
         )}
 

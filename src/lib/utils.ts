@@ -26,17 +26,17 @@ export const FilterPosts = class FilterClass {
         this.filters.upvotes?.value &&
         this.filters.upvotes.qualifier === "Over"
       ) {
-        return this.post.ups >= this.filters.upvotes.value;
+        return this.post.ups >= Number(this.filters.upvotes.value);
       } else if (
         this.filters.upvotes?.value &&
         this.filters.upvotes.qualifier === "Under"
       ) {
-        return this.post.ups <= this.filters.upvotes.value;
+        return this.post.ups <= Number(this.filters.upvotes.value);
       } else if (
         this.filters.upvotes?.value &&
         this.filters.upvotes.qualifier === "Equals"
       ) {
-        return this.post.ups === this.filters.upvotes.value;
+        return this.post.ups === Number(this.filters.upvotes.value);
       }
     }
   }
@@ -67,17 +67,17 @@ export const FilterPosts = class FilterClass {
         this.filters.readingTime?.value &&
         this.filters.readingTime.qualifier === "Over"
       ) {
-        return calculatedTime >= this.filters.readingTime.value;
+        return calculatedTime >= Number(this.filters.readingTime.value);
       } else if (
         this.filters.readingTime?.value &&
         this.filters.readingTime.qualifier === "Under"
       ) {
-        return calculatedTime <= this.filters.readingTime.value;
+        return calculatedTime <= Number(this.filters.readingTime.value);
       } else if (
         this.filters.readingTime?.value &&
         this.filters.readingTime.qualifier === "Equals"
       ) {
-        return calculatedTime === this.filters.readingTime.value;
+        return calculatedTime === Number(this.filters.readingTime.value);
       }
     }
   }

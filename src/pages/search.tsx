@@ -107,8 +107,6 @@ const Search = () => {
       category: data.category,
     };
 
-    console.log(payload);
-
     trackUiEvent(MixpanelEvents.SUBREDDIT_SEARCH, {
       subreddit: data.subreddit,
     });

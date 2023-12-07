@@ -125,11 +125,11 @@ const SelectedInboxMessage = ({ message }: Props) => {
             <span className="text-muted-foreground">{message.dest}</span>
           </a>
 
-          <div className=" flex flex-col gap-2 lg:flex-row">
-            {!isAContact ? (
+          <div className=" flex flex-col items-center gap-2 lg:flex-row">
+            {isAContact ? (
               <button
                 type="button"
-                className="flex h-6 w-6 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
                 onClick={() => addToContacts(message.dest)}
               >
                 <FontAwesomeIcon icon={faUserPlus} />
@@ -138,7 +138,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-xs text-white">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-xs text-white">
                       <FontAwesomeIcon icon={faAddressBook} />
                     </span>
                   </TooltipTrigger>
@@ -154,7 +154,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
                 {!postIsInReadingList ? (
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-sm text-card-foreground"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
                     onClick={addStoryToReadingList}
                   >
                     <FontAwesomeIcon icon={faBookmark} />
@@ -163,7 +163,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm text-white">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-xs text-white">
                           <FontAwesomeIcon icon={faBook} />
                         </span>
                       </TooltipTrigger>

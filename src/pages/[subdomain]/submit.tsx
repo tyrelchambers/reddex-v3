@@ -10,7 +10,13 @@ import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { toast } from "react-toastify";
@@ -48,23 +54,23 @@ const Submit = ({ website }: Props) => {
     .object({
       title: z.string(),
       author: z.string(),
-      email: z.string().email(),
+      email: z.string(),
       story: z.string(),
     })
     .superRefine((data, ctx) => {
-      if (authorModule?.required && !data.author) {
+      if (authorModule?.enabled && authorModule?.required && !data.author) {
         ctx.addIssue({
           code: "custom",
           message: "Author is required",
         });
       }
-      if (titleModule?.required && !data.title) {
+      if (titleModule?.enabled && titleModule?.required && !data.title) {
         ctx.addIssue({
           code: "custom",
           message: "Title is required",
         });
       }
-      if (emailModule?.required && !data.email) {
+      if (emailModule?.enabled && emailModule?.required && !data.email) {
         ctx.addIssue({
           code: "custom",
           message: "Email is required",
@@ -120,12 +126,21 @@ const Submit = ({ website }: Props) => {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>
+                      Title{" "}
+                      {titleModule.required && (
+                        <FontAwesomeIcon
+                          icon={faAsterisk}
+                          className="mb-[5px] text-[7px] text-red-500"
+                        />
+                      )}
+                    </FormLabel>
                     <Input
                       placeholder="Story title"
                       required={titleModule.required}
                       {...field}
                     />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -136,12 +151,21 @@ const Submit = ({ website }: Props) => {
                 name="author"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Author</FormLabel>
+                    <FormLabel>
+                      Author{" "}
+                      {authorModule.required && (
+                        <FontAwesomeIcon
+                          icon={faAsterisk}
+                          className="mb-[5px] text-[7px] text-red-500"
+                        />
+                      )}
+                    </FormLabel>
                     <Input
                       placeholder="Your name"
                       required={authorModule.required}
                       {...field}
                     />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -152,12 +176,21 @@ const Submit = ({ website }: Props) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>
+                      Email{" "}
+                      {emailModule.required && (
+                        <FontAwesomeIcon
+                          icon={faAsterisk}
+                          className="mb-[5px] text-[7px] text-red-500"
+                        />
+                      )}
+                    </FormLabel>
                     <Input
                       placeholder="Your email"
                       {...field}
                       required={emailModule.required}
                     />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -176,6 +209,7 @@ const Submit = ({ website }: Props) => {
                       />
                     </FormLabel>
                     <Textarea placeholder="Write your story" {...field} />
+                    <FormMessage />
                   </div>
                 </FormItem>
               )}

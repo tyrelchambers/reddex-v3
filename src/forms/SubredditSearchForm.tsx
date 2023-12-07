@@ -4,7 +4,13 @@ import { RecentlySearched } from "@prisma/client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
-import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import {
+  Form,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import {
   Select,
@@ -55,7 +61,10 @@ const SubredditSearchForm = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Subreddit</FormLabel>
-                <Input placeholder="r/subreddit" {...field} />
+                <FormDescription>
+                  Input just the name of the subreddit. For example: nosleep.
+                </FormDescription>
+                <Input placeholder="eg: nosleep, animals, puppies" {...field} />
               </FormItem>
             )}
           />

@@ -101,11 +101,19 @@ const Search = () => {
   const searchHandler = (data: SearchHandlerProps) => {
     if (!data.subreddit) return;
 
+    const subreddit = data.subreddit.replace("r/", "").trim();
+    const payload = {
+      subreddit,
+      category: data.category,
+    };
+
+    console.log(payload);
+
     trackUiEvent(MixpanelEvents.SUBREDDIT_SEARCH, {
       subreddit: data.subreddit,
     });
 
-    subredditSearch.mutate(data);
+    subredditSearch.mutate(payload);
   };
 
   const removeFilter = (filter: { label: string; value: string }) => {

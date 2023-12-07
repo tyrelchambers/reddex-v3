@@ -33,7 +33,7 @@ const InboxMessageList = ({
         >
           <div
             className={`inbox-message-list-item rounded-2xl p-4 transition-all ${
-              m.id === selectedMessage ? "active" : "bg-card"
+              m.id === selectedMessage ? "active" : "border border-border"
             }`}
           >
             <p className="text-left font-semibold text-foreground">

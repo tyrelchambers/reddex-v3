@@ -1,5 +1,6 @@
 import {
-  faPaperPlaneTop,
+  faAddressBook,
+  faBook,
   faReply,
   faUserCircle,
 } from "@fortawesome/pro-solid-svg-icons";
@@ -23,6 +24,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormLabel } from "./ui/form";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { faBookmark, faUserPlus } from "@fortawesome/pro-regular-svg-icons";
 
 const formSchema = z.object({
   message: z.string(),
@@ -102,41 +110,68 @@ const SelectedInboxMessage = ({ message }: Props) => {
   };
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="flex-1 overflow-auto ">
       <header className="w-full">
-        <p className="text-2xl font-semibold text-foreground">
+        <p className="text-3xl font-semibold text-foreground">
           {message.subject}
         </p>
-        <footer className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:gap-10">
-          <p className="flex items-center gap-2 text-foreground/70">
+        <footer className="mt-6 flex w-fit flex-col  xl:flex-row xl:items-center">
+          <a
+            href={`https://reddit.com/u/${message.dest}`}
+            className="mr-3 flex items-center gap-2 rounded-full bg-card px-3 py-1 text-sm text-foreground"
+            target="_blank"
+          >
             <FontAwesomeIcon icon={faUserCircle} />
-            {message.dest}
-          </p>
+            <span className="text-muted-foreground">{message.dest}</span>
+          </a>
 
-          <div className=" flex flex-col gap-4 lg:flex-row">
+          <div className=" flex flex-col gap-2 lg:flex-row">
             {!isAContact ? (
-              <Button
-                variant="secondary"
+              <button
+                type="button"
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
                 onClick={() => addToContacts(message.dest)}
               >
-                Add to contacts
-              </Button>
+                <FontAwesomeIcon icon={faUserPlus} />
+              </button>
             ) : (
-              <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
-                {message.dest} is already a contact
-              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-xs text-white">
+                      <FontAwesomeIcon icon={faAddressBook} />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {message.dest} is already a contact
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
 
             {post && (
               <>
                 {!postIsInReadingList ? (
-                  <Button variant="secondary" onClick={addStoryToReadingList}>
-                    Add to reading list
-                  </Button>
+                  <button
+                    type="button"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-sm text-card-foreground"
+                    onClick={addStoryToReadingList}
+                  >
+                    <FontAwesomeIcon icon={faBookmark} />
+                  </button>
                 ) : (
-                  <div className="flex items-center justify-center rounded-lg border-[1px] border-border px-3 py-2 text-sm text-foreground/60">
-                    Story is in reading list
-                  </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm text-white">
+                          <FontAwesomeIcon icon={faBook} />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        This story is in your reading list
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
               </>
             )}
@@ -175,7 +210,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
 const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
-    <div className="rounded-2xl bg-card/50 p-4">
+    <div className="rounded-2xl bg-card p-4">
       <header className="mb-6 flex flex-col items-baseline justify-between xl:mb-2 xl:flex-row">
         <p className="mb-2  font-bold text-card-foreground">
           {message.isReply && (
@@ -187,7 +222,7 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>
-      <p className="whitespace-pre-wrap break-all text-muted-foreground">
+      <p className="hyphens-auto whitespace-pre-wrap text-muted-foreground">
         {message.body}
       </p>
     </div>

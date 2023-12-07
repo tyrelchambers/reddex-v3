@@ -101,7 +101,12 @@ const Search = () => {
   const searchHandler = (data: SearchHandlerProps) => {
     if (!data.subreddit) return;
 
-    const subreddit = data.subreddit.replace("r/", "").trim();
+    const subreddit = data.subreddit
+      .replace("r/", "")
+      .replaceAll(" ", "")
+      .trim()
+      .toLocaleLowerCase();
+
     const payload = {
       subreddit,
       category: data.category,

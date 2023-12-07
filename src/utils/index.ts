@@ -27,11 +27,11 @@ export const activeFilters = (filters: Partial<FilterState> | null) => {
 
   const active = [];
 
-  if (filters?.upvotes?.value && filters?.upvotes?.value > 0) {
+  if (filters?.upvotes?.value && filters?.upvotes?.value > "0") {
     active.push({ label: "upvotes", value: "upvotes" });
   }
 
-  if (filters?.readingTime?.value && filters?.readingTime?.value > 0) {
+  if (filters?.readingTime?.value && filters?.readingTime?.value > "0") {
     active.push({ label: "reading time", value: "readingTime" });
   }
 
@@ -154,7 +154,7 @@ export const buildParams = <T>(appliedFilters: T) => {
         typeof element === "object" &&
         "value" in element &&
         element.value !== undefined &&
-        element.value !== 0
+        element.value != 0
       ) {
         filters[key] = Object.values(element);
       } else if (element && typeof element !== "object") {
@@ -180,8 +180,8 @@ export const parseQuery = (query: ParsedQuery) => {
 
     if (value?.includes(",")) {
       parsed[key] = {
-        qualifier: value.split(",")[0] || null,
-        value: Number(value.split(",")[1]) || undefined,
+        qualifier: value.split(",")[0] || undefined,
+        value: value.split(",")[1] || undefined,
       };
     } else {
       if (value === "true") {

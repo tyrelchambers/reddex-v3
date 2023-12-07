@@ -26,6 +26,7 @@ import {
 
 interface FilterSelectionProps {
   filters: Partial<FilterState> | null;
+  closeModal: () => void;
 }
 
 const formSchema = z.object({
@@ -42,7 +43,7 @@ const formSchema = z.object({
   excludeSeries: z.boolean().default(false),
 });
 
-const FilterSelections = ({ filters }: FilterSelectionProps) => {
+const FilterSelections = ({ filters, closeModal }: FilterSelectionProps) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,15 +64,15 @@ const FilterSelections = ({ filters }: FilterSelectionProps) => {
 
   useEffect(() => {
     if (filters) {
-      form.reset();
+      form.reset(filters);
     }
   }, [filters]);
 
   const qualifiers = ["Over", "Under", "Equals"];
 
-  // fix
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     updateFilterValueFromUrl(data);
+    closeModal();
   };
   const updateFilterValueFromUrl = async (data: z.infer<typeof formSchema>) => {
     if (!data) return;

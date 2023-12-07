@@ -95,7 +95,9 @@ const Search = () => {
 
   useEffect(() => {
     const search = queryString.parse(window.location.search);
-    setAppliedFilters({ ...parseQuery(search) });
+    const parsedFilters = parseQuery(search);
+
+    setAppliedFilters({ ...parsedFilters });
   }, [router.query]);
 
   const searchHandler = (data: SearchHandlerProps) => {
@@ -214,7 +216,7 @@ const Search = () => {
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
-          <FilterSelections filters={appliedFilters} />
+          <FilterSelections filters={appliedFilters} closeModal={close} />
         </DialogContent>
       </Dialog>
 

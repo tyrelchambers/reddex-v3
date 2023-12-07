@@ -118,14 +118,14 @@ export type FilterQualifier = "Over" | "Under" | "Equals";
 
 export type Filter =
   | {
-      qualifier: string | FilterQualifier;
-      value: number;
+      qualifier: string | FilterQualifier | undefined;
+      value: string;
     }
   | {
-      qualifier?: string | FilterQualifier;
-      value: number;
+      qualifier?: string | FilterQualifier | undefined;
+      value: string;
     }
-  | { qualifier: string | FilterQualifier | null; value?: number };
+  | { qualifier: string | FilterQualifier | undefined; value?: string };
 
 export type FilterAction =
   | {

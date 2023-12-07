@@ -39,49 +39,56 @@ const Submitted = () => {
           </p>
         </header>
         <div className="mt-10 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
-          {stories?.map((story) => (
-            <div
-              key={story.id}
-              className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background shadow-md"
-            >
-              <header
-                className={`flex flex-wrap items-center justify-between gap-3 bg-card p-3`}
+          {stories
+            ?.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            )
+            .map((story) => (
+              <div
+                key={story.id}
+                className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background shadow-md"
               >
-                <div className="flex items-center rounded-full text-sm text-card-foreground/70">
-                  <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
-                  {story.author || "Unknown"}
-                </div>
-              </header>
-              <Link
-                className=" block  p-3 font-bold text-foreground underline hover:text-rose-500"
-                href={`/story/${story.id}`}
-              >
-                {story.title || "<This story has title>"}
-              </Link>
-
-              <div className="flex gap-3 p-2 px-4">
-                <div className="flex items-center gap-2 text-xs text-card-foreground/70">
-                  <FontAwesomeIcon icon={faCalendar} />
-                  <p>{formatDistanceToNowStrict(story.date)} ago</p>
-                </div>
-
-                {profile?.words_per_minute && (
-                  <div className="flex items-center gap-2 text-xs text-card-foreground/70">
-                    <FontAwesomeIcon icon={faClock} />
-                    <p>
-                      {formatReadingTime(story.body, profile?.words_per_minute)}
-                      min
-                    </p>
+                <header
+                  className={`flex flex-wrap items-center justify-between gap-3 bg-card p-3`}
+                >
+                  <div className="flex items-center rounded-full text-sm text-card-foreground/70">
+                    <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
+                    {story.author || "Unknown"}
                   </div>
-                )}
+                </header>
+                <Link
+                  className=" block  p-3 font-bold text-foreground underline hover:text-rose-500"
+                  href={`/story/${story.id}`}
+                >
+                  {story.title || "<This story has title>"}
+                </Link>
+
+                <div className="flex gap-3 p-2 px-4">
+                  <div className="flex items-center gap-2 text-xs text-card-foreground/70">
+                    <FontAwesomeIcon icon={faCalendar} />
+                    <p>{formatDistanceToNowStrict(story.date)} ago</p>
+                  </div>
+
+                  {profile?.words_per_minute && (
+                    <div className="flex items-center gap-2 text-xs text-card-foreground/70">
+                      <FontAwesomeIcon icon={faClock} />
+                      <p>
+                        {formatReadingTime(
+                          story.body,
+                          profile?.words_per_minute
+                        )}
+                        min
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <footer className="mt-auto flex flex-wrap items-center justify-end gap-4 border-t border-border p-3">
+                  <Button type="button" onClick={() => deleteHandler(story.id)}>
+                    Delete
+                  </Button>
+                </footer>
               </div>
-              <footer className="mt-auto flex flex-wrap items-center justify-end gap-4 border-t border-border p-3">
-                <Button type="button" onClick={() => deleteHandler(story.id)}>
-                  Delete
-                </Button>
-              </footer>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
     </WrapperWithNav>

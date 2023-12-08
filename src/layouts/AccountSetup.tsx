@@ -29,7 +29,7 @@ const AccountSetup = () => {
 
   const paymentLink = api.stripe.createCheckout.useMutation();
   const updateUser = api.user.saveProfile.useMutation({
-    onError(error, variables, context) {
+    onError() {
       toast.error("Something went wrong");
     },
     onSettled() {

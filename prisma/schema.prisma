@@ -39,7 +39,8 @@ model User {
   email            String?            @unique
   emailVerified    DateTime?
   image            String?
-  setToDelete      Boolean            @default(false)
+  deleteOnDate     DateTime?
+  lastLogin        DateTime?
   customerId       String?
   accounts         Account[]
   contact          Contact[]
@@ -87,7 +88,7 @@ model Profile {
 
 model RecentlySearched {
   id        String   @id @default(cuid())
-  text      String   @unique
+  text      String
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId String?
 }

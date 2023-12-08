@@ -104,14 +104,14 @@ export const authOptions: NextAuthOptions = {
         });
       }
 
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          lastLogin: new Date(Date.now()),
-        },
-      });
+      // await prisma.user.update({
+      //   where: {
+      //     id: user.id,
+      //   },
+      //   data: {
+      //     lastLogin: new Date(Date.now()),
+      //   },
+      // });
     },
   },
   providers: [

@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { Separator } from "~/components/ui/separator";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -134,15 +135,17 @@ const Settings = () => {
           )}
         </div>
 
-        {/* <Divider className="border-border" /> */}
-        {/* <div className="flex flex-col">
+        <Separator className="border-border" />
+        <div className="flex flex-col">
           <h2 className=" text-xl text-foreground">Delete account</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="mb-4 text-sm text-muted-foreground">
             To delete your account, manage your subscription and cancel your
             membership. Your account will be deleted once your membership is
             cancelled and the billing cycle ends.
           </p>
-        </div> */}
+
+          <Button variant="secondary">Delete account</Button>
+        </div>
       </section>
 
       <Dialog open={opened}>

@@ -35,6 +35,8 @@ const Search = () => {
   const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
     {}
   );
+
+  // pagination
   const [activePage, setPage] = useState(1);
   const session = useSession();
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
@@ -119,6 +121,7 @@ const Search = () => {
     });
 
     subredditSearch.mutate(payload);
+    setPage(1);
   };
 
   const removeFilter = (filter: { label: string; value: string }) => {

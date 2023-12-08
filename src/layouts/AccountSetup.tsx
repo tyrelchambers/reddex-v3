@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import NoSelectedPlan from "~/components/NoSelectedPlan";
 import { Button } from "~/components/ui/button";
@@ -27,7 +28,14 @@ const AccountSetup = () => {
   const [loading, setLoading] = useState(false);
 
   const paymentLink = api.stripe.createCheckout.useMutation();
-  const updateUser = api.user.saveProfile.useMutation();
+  const updateUser = api.user.saveProfile.useMutation({
+    onError(error, variables, context) {
+      toast.error("Something went wrong");
+    },
+    onSettled() {
+      setLoading(false);
+    },
+  });
   const createCustomer = api.billing.createCustomer.useMutation();
 
   const [selectedFrequency, setSelectedFrequency] = useState<

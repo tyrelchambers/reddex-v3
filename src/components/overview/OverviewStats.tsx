@@ -7,23 +7,21 @@ import {
   faInboxIn,
 } from "@fortawesome/pro-solid-svg-icons";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import Image from "next/image";
+import { api } from "~/utils/api";
+import StatShareDialog from "./StatShareDialog";
 
 interface Props {
   data: {
-    submittedStoriesCount: number | undefined;
-    approvedStoriesCount: number | undefined;
-    completedStoriesCount: number | undefined;
+    submittedStoriesCount: number;
+    approvedStoriesCount: number;
+    completedStoriesCount: number;
   };
 }
+
 const OverviewStats = ({ data }: Props) => {
+  const { data: user } = api.user.me.useQuery();
+  const username = user?.name;
+
   return (
     <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card className="overflow-hidden">
@@ -36,28 +34,12 @@ const OverviewStats = ({ data }: Props) => {
             />
           </p>
           <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row">
-            <p className="text-3xl font-bold">{data?.submittedStoriesCount}</p>
-            <Dialog>
-              <DialogTrigger>
-                <Button variant="secondary">Share</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Share your stats</DialogTitle>
-                </DialogHeader>
-
-                <div>
-                  <div className="relative">
-                    <Image
-                      src="/images/blob.jpg"
-                      width={800}
-                      height={418}
-                      alt=""
-                    />
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <p className="text-3xl font-bold">{data.submittedStoriesCount}</p>
+            <StatShareDialog
+              count={data.submittedStoriesCount}
+              description={`Thank you to all our amazing viewers for sending us ${data.submittedStoriesCount} stories on https://reddex.app! We appreciate your support and engagement. Keep them coming! 🙌📚`}
+              username={username}
+            />
           </div>
         </CardContent>
       </Card>
@@ -72,8 +54,7 @@ const OverviewStats = ({ data }: Props) => {
             />
           </p>
           <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row">
-            <p className="text-3xl font-bold">{data?.approvedStoriesCount}</p>
-            <Button variant="secondary">Share</Button>
+            <p className="text-3xl font-bold">{data.approvedStoriesCount}</p>
           </div>
         </CardContent>
       </Card>
@@ -85,8 +66,12 @@ const OverviewStats = ({ data }: Props) => {
             <FontAwesomeIcon icon={faBolt} className="text-muted-foreground" />
           </p>
           <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row">
-            <p className="text-3xl font-bold">{data?.completedStoriesCount}</p>
-            <Button variant="secondary">Share</Button>
+            <p className="text-3xl font-bold">{data.completedStoriesCount}</p>
+            <StatShareDialog
+              count={data.submittedStoriesCount}
+              description={`So far, I've read ⭐️${data.completedStoriesCount} stories⭐️ on https://reddex.app!`}
+              username={username}
+            />
           </div>
         </CardContent>
       </Card>

@@ -10,6 +10,7 @@ import { billingRouter } from "./routers/billing";
 import { stripeRouter } from "./routers/stripe";
 import { statsRouter } from "./routers/stats";
 import { openAiRouter } from "./routers/openai";
+import { overviewRouter } from "./routers/overview";
 /**
  * This is the primary router for your server.
  *
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   stripe: stripeRouter,
   stats: statsRouter,
   openAi: openAiRouter,
+  overview: overviewRouter,
 });
 
 // export type definition of API

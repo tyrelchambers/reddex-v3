@@ -6,7 +6,6 @@ import { api } from "~/utils/api";
 import OverviewStats from "~/components/overview/OverviewStats";
 import { Card, CardContent } from "~/components/ui/card";
 import Link from "next/link";
-import { format } from "date-fns";
 
 const Overview = () => {
   const { data: overviewData } = api.overview.overview.useQuery();
@@ -19,9 +18,9 @@ const Overview = () => {
 
       <OverviewStats
         data={{
-          approvedStoriesCount: overviewData?.approvedStoriesCount,
-          completedStoriesCount: overviewData?.completedStoriesCount,
-          submittedStoriesCount: overviewData?.submittedStoriesCount,
+          approvedStoriesCount: overviewData?.approvedStoriesCount || 0,
+          completedStoriesCount: overviewData?.completedStoriesCount || 0,
+          submittedStoriesCount: overviewData?.submittedStoriesCount || 0,
         }}
       />
 

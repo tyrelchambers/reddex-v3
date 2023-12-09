@@ -11,7 +11,7 @@ const Index = () => {
     if (status !== "loading" && status === "unauthenticated") {
       router.push(routes.HOME);
     } else if (status !== "loading" && status === "authenticated") {
-      router.push(routes.APPROVED);
+      router.push(routes.OVERVIEW);
     }
   }, [status, router.isReady]);
 

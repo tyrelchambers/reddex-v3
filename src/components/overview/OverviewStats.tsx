@@ -45,7 +45,7 @@ const OverviewStats = ({ data }: Props) => {
       </Card>
 
       <Card className="overflow-hidden">
-        <CardContent className=" bg-background p-6">
+        <CardContent className=" h-full bg-background  p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Approved stories{" "}
             <FontAwesomeIcon
@@ -53,7 +53,7 @@ const OverviewStats = ({ data }: Props) => {
               className="text-muted-foreground"
             />
           </p>
-          <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row">
+          <div className="mt-4 flex  flex-col justify-between gap-4 md:flex-row">
             <p className="text-3xl font-bold">{data.approvedStoriesCount}</p>
           </div>
         </CardContent>

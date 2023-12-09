@@ -28,7 +28,9 @@ const StatShareDialog = ({ username, description, count }: Props) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant="secondary">Share</Button>
+        <Button variant="secondary" className="w-full md:w-fit">
+          Share
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -41,14 +43,14 @@ const StatShareDialog = ({ username, description, count }: Props) => {
 
         <div className="my-6 flex gap-4 rounded-3xl border border-border p-4">
           <Avatar>
-            <AvatarFallback>SA</AvatarFallback>
+            <AvatarFallback className="text-foreground">SA</AvatarFallback>
           </Avatar>
 
           <div className="flex flex-1 flex-col">
-            <p>{username}</p>
+            <p className="text-foreground">{username}</p>
             <p className="mt-2 text-sm text-muted-foreground">{description}</p>
 
-            <footer className="mt-6 flex justify-between">
+            <footer className="mt-6 flex justify-between text-muted-foreground">
               <FontAwesomeIcon icon={faComment} />
               <FontAwesomeIcon icon={faRetweet} />
               <FontAwesomeIcon icon={faHeart} />

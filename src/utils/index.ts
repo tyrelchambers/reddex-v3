@@ -236,3 +236,10 @@ export const formatReadingTime = (string: string, time: number) => {
 
   return Math.ceil(words.length / time);
 };
+
+interface TweetLink {
+  text: string;
+}
+export const generateTweetLink = ({ text }: TweetLink) => {
+  return `https://twitter.com/intent/tweet?text=${encodeURI(text)}`;
+};

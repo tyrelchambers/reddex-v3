@@ -18,7 +18,7 @@ const Onboarding = () => {
   const user = userQuery.data;
 
   useEffect(() => {
-    const redirectTo = (router.query.redirectTo as string) || routes.APPROVED;
+    const redirectTo = (router.query.redirectTo as string) || routes.OVERVIEW;
     if (user) {
       if (
         user.email &&

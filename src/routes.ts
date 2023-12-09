@@ -11,6 +11,7 @@ import {
   faRectangleList,
   faTag,
   faUser,
+  faBolt,
 } from "@fortawesome/pro-light-svg-icons";
 
 import { Tab } from "./types";
@@ -36,9 +37,15 @@ export const routes = {
   SEARCH: "/search",
   STUDIO: "/dashboard/studio",
   ONBOARDING: "/onboarding",
+  OVERVIEW: "/dashboard/overview",
 };
 
 export const dashNavRoutes = [
+  {
+    label: "Overview",
+    slug: routes.OVERVIEW,
+    icon: faBolt,
+  },
   {
     label: "Stories",
     slug: routes.APPROVED,

@@ -1,4 +1,5 @@
 import {
+  faBolt,
   faBrowser,
   faCog,
   faHome,
@@ -18,7 +19,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { routes } from "~/routes";
+import { dashNavRoutes, routes } from "~/routes";
 
 const commonRoutes = [
   {
@@ -35,39 +36,6 @@ const commonRoutes = [
     label: "Pricing",
     slug: routes.PRICING,
     icon: faMoneyBill,
-  },
-];
-
-const authRoutes = [
-  {
-    label: "Approved stories",
-    slug: routes.APPROVED,
-    icon: faListCheck,
-  },
-  {
-    label: "Completed stories",
-    slug: routes.COMPLETED,
-    icon: faList,
-  },
-  {
-    label: "Inbox",
-    slug: routes.INBOX,
-    icon: faInbox,
-  },
-  {
-    label: "Website",
-    slug: routes.WEBSITE_GENERAL,
-    icon: faBrowser,
-  },
-  {
-    label: "Profile",
-    slug: routes.SETTINGS_PROFILE,
-    icon: faUser,
-  },
-  {
-    label: "Account",
-    slug: routes.SETTINGS_ACCOUNT,
-    icon: faCog,
   },
 ];
 
@@ -105,7 +73,7 @@ const MobileNav = ({ user }: Props) => {
 
         {user ? (
           <nav className="flex flex-col gap-6">
-            {authRoutes.map((r) => (
+            {dashNavRoutes.map((r) => (
               <Link
                 key={r.label}
                 className=" text-sm text-foreground hover:text-accent"

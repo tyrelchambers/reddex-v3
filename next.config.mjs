@@ -13,6 +13,9 @@ const config = {
       {
         hostname: "reddex.b-cdn.net",
       },
+      {
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 

@@ -1,12 +1,13 @@
 import { Menu } from "@mantine/core";
 import React from "react";
 import Link from "next/link";
-import { routes } from "~/routes";
+import { dashNavRoutes, routes } from "~/routes";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const UserMenu = () => {
   const session = useSession();
@@ -33,7 +34,7 @@ const UserMenu = () => {
         dropdown: "bg-background border-border",
         item: "hover:bg-card-foreground/10 text-foreground",
       }}
-      position="bottom-start"
+      position="bottom-end"
     >
       <Menu.Target>
         <button
@@ -46,41 +47,11 @@ const UserMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Link href={routes.APPROVED}>
-          <Menu.Item>Approved stories</Menu.Item>
-        </Link>
-
-        <Link href={routes.COMPLETED}>
-          <Menu.Item>Completed stories</Menu.Item>
-        </Link>
-
-        <Link href={routes.SUBMITTED}>
-          <Menu.Item>Submitted stories</Menu.Item>
-        </Link>
-
-        <Link href={routes.TAGS}>
-          <Menu.Item>Tags</Menu.Item>
-        </Link>
-
-        <Link href={routes.CONTACTS}>
-          <Menu.Item>Contacts</Menu.Item>
-        </Link>
-
-        <Link href={routes.INBOX}>
-          <Menu.Item>Inbox</Menu.Item>
-        </Link>
-
-        <Link href={routes.WEBSITE_GENERAL}>
-          <Menu.Item>Website</Menu.Item>
-        </Link>
-
-        <Link href={routes.SETTINGS_PROFILE}>
-          <Menu.Item>Profile</Menu.Item>
-        </Link>
-
-        <Link href={routes.SETTINGS_ACCOUNT}>
-          <Menu.Item>Account</Menu.Item>
-        </Link>
+        {dashNavRoutes.map((r) => (
+          <Menu.Item key={r.label} onClick={() => router.push(r.slug)}>
+            <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
+          </Menu.Item>
+        ))}
 
         <Menu.Divider className="border-border" />
 

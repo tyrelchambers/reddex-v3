@@ -59,7 +59,7 @@ const StatShareDialog = ({ username, description, count }: Props) => {
           </div>
         </div>
 
-        {count && description && (
+        {count !== undefined && description && (
           <a
             href={generateTweetLink({
               text: description,

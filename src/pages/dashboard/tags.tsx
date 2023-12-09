@@ -8,7 +8,12 @@ import { getStorySelectList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import {
@@ -80,7 +85,9 @@ const Tags = () => {
       </main>
       <Dialog open={opened}>
         <DialogContent onClose={close}>
-          <DialogHeader>Create a tag</DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Create a tag</DialogTitle>
+          </DialogHeader>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(submitHandler)}

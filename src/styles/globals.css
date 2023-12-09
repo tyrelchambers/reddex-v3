@@ -55,7 +55,7 @@
   }
 
   .form {
-    @apply flex flex-col gap-10;
+    @apply flex flex-col gap-3;
   }
 
   button[data-active="true"] {

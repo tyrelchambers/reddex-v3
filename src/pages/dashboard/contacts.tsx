@@ -1,15 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDisclosure } from "@mantine/hooks";
-import React, { FormEvent } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { contactSchema } from "~/server/schemas";
@@ -70,7 +74,9 @@ const Contacts = () => {
 
         <Dialog open={opened} onOpenChange={close}>
           <DialogContent>
-            <DialogHeader>Add contact</DialogHeader>
+            <DialogHeader>
+              <DialogTitle>Add contact</DialogTitle>
+            </DialogHeader>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(submitHandler)}

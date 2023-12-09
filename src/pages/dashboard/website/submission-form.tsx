@@ -80,30 +80,23 @@ const SubmissionForm = () => {
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.reset(websiteSettings.data);
       const modules =
         websiteSettings.data.submissionPage?.submissionFormModules;
-      const titleModule = modules.find(
-        (module) => module.name.toLowerCase() === "title"
-      );
-      const authorModule = modules.find(
-        (module) => module.name.toLowerCase() === "author"
-      );
-      const emailModule = modules.find(
-        (module) => module.name.toLowerCase() === "email"
-      );
 
-      if (titleModule) {
-        form.setValue("submissionFormModules.title", titleModule);
-      }
-
-      if (authorModule) {
-        form.setValue("submissionFormModules.author", authorModule);
-      }
-
-      if (emailModule) {
-        form.setValue("submissionFormModules.email", emailModule);
-      }
+      form.reset({
+        ...websiteSettings.data.submissionPage,
+        submissionFormModules: {
+          author: modules.find(
+            (module) => module.name.toLowerCase() === "author"
+          ),
+          email: modules.find(
+            (module) => module.name.toLowerCase() === "email"
+          ),
+          title: modules.find(
+            (module) => module.name.toLowerCase() === "title"
+          ),
+        },
+      });
     }
   }, [websiteSettings.data]);
 

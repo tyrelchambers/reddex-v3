@@ -163,7 +163,7 @@ const Profile = () => {
           )}
         </div>
         <Separator />
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col">
           <h2 className="mb-4 text-xl text-foreground">Messages</h2>
 
           <Form {...messagesForm}>

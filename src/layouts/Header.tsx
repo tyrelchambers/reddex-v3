@@ -9,7 +9,7 @@ import UserMenu from "./UserMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSearch, faSun } from "@fortawesome/pro-solid-svg-icons";
 import { useTheme } from "~/hooks/useTheme";
-import { Burger, clsx } from "@mantine/core";
+import { Burger } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";
@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { Button } from "~/components/ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
+import clsx from "clsx";
 
 const _routes = [
   {

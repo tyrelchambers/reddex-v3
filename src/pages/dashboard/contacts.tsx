@@ -28,7 +28,6 @@ const Contacts = () => {
   const contactsQuery = api.contact.all.useQuery();
   const saveContact = api.contact.save.useMutation({
     onSuccess: () => {
-      close();
       apiContext.contact.invalidate();
     },
   });
@@ -43,6 +42,7 @@ const Contacts = () => {
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_CONTACT_FORM);
     saveContact.mutate(data);
+    close();
   };
 
   return (

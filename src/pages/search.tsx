@@ -197,9 +197,10 @@ const Search = () => {
               ))) ||
             null}
         </div>
-        <div className="my-6 flex flex-col justify-between lg:flex-row">
+
+        <div className="mt-6 flex flex-col justify-between gap-4 lg:flex-row">
           {lastSearched && (
-            <p className="mb-4 text-sm text-foreground/70 lg:mb-0">
+            <p className="text-sm text-foreground/70 lg:mb-0">
               Last searched:{" "}
               {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
             </p>
@@ -211,6 +212,10 @@ const Search = () => {
             total={PAGINATION_TOTAL_PAGES}
           />
         </div>
+        <p className=" mt-4 text-sm text-foreground/60 lg:mt-0">
+          *For people who are not signed into their accounts, the reading time
+          is set at 150wpm.
+        </p>
       </div>
 
       <Dialog open={opened}>

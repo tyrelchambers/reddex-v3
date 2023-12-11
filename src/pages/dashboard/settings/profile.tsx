@@ -13,6 +13,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
@@ -23,7 +24,7 @@ import { api } from "~/utils/api";
 
 const profileFormSchema = z.object({
   email: z.string().email(),
-  words_per_minute: z.number().min(10).max(200),
+  words_per_minute: z.string(),
 });
 
 const messageFormSchema = z.object({
@@ -53,7 +54,7 @@ const Profile = () => {
   const profileForm = useForm({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      words_per_minute: 200,
+      words_per_minute: "200",
       email: "",
     },
   });
@@ -69,7 +70,8 @@ const Profile = () => {
     if (currentUser) {
       profileForm.reset({
         email: currentUser.email || "",
-        words_per_minute: currentUser.Profile?.words_per_minute || 150,
+        words_per_minute:
+          String(currentUser.Profile?.words_per_minute) || "150",
       });
 
       messagesForm.reset({
@@ -111,6 +113,7 @@ const Profile = () => {
                       a story.
                     </FormDescription>
                     <Input type="number" {...field} />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -168,7 +171,6 @@ const Profile = () => {
 
           <Form {...messagesForm}>
             <form
-              action=""
               className="form"
               onSubmit={messagesForm.handleSubmit(saveMessagesHandler)}
             >

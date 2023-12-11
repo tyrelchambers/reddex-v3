@@ -71,7 +71,7 @@ export const userRouter = createTRPCRouter({
 
             Profile: {
               update: {
-                words_per_minute: input.words_per_minute,
+                words_per_minute: Number(input.words_per_minute),
                 greeting: input.greeting,
                 recurring: input.recurring,
               },

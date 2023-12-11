@@ -4,7 +4,12 @@ import React, { useState } from "react";
 import EmptyState from "~/components/EmptyState";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import ImportStoryForm from "~/forms/ImportStoryForm";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
@@ -70,7 +75,9 @@ const Approved = () => {
 
       <Dialog open={opened}>
         <DialogContent onClose={close}>
-          <DialogHeader>Import a story</DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Import a story</DialogTitle>
+          </DialogHeader>
           <ImportStoryForm />
         </DialogContent>
       </Dialog>

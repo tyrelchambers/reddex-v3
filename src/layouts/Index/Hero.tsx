@@ -17,14 +17,14 @@ const Hero = () => (
     <p className=" relative z-10 mt-4 max-w-3xl text-center text-foreground/60 lg:text-2xl lg:leading-9">
       Reddex is a tool designed to help you find the next best Reddit story in
       no-time at all. Save hours searching for stories and requesting
-      permission. Reddex helps you do all that in a matter of minutes.
+      permission. Reddex helps you do all that in a matter of seconds.
     </p>
 
     <div className="cta-bg-parent relative h-fit w-full max-w-md">
       <div id="cta-bg"></div>
       <Link
         href={routes.SEARCH}
-        className="search-cta absolute z-10 flex w-full justify-center rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
+        className="absolute z-10 flex w-full justify-center rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
       >
         Start searching
       </Link>

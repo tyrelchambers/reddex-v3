@@ -108,7 +108,7 @@ export const removeImageSchema = z.object({
 });
 
 export const saveProfileSchema = z.object({
-  words_per_minute: z.number().optional(),
+  words_per_minute: z.string().optional(),
   email: z.string().optional(),
   greeting: z.string().optional(),
   recurring: z.string().optional(),

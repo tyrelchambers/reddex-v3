@@ -55,11 +55,10 @@ const AccountSetup = () => {
     try {
       setLoading(true);
 
-      const formValues = form.getValues();
-      const customerId = await createCustomer.mutateAsync(formValues.email);
+      const customerId = await createCustomer.mutateAsync(data.email);
 
       await updateUser.mutateAsync({
-        email: formValues.email,
+        email: data.email,
       });
 
       if (!customerId) throw new Error("Missing customer ID");
@@ -67,13 +66,13 @@ const AccountSetup = () => {
       const selectedPlan = new URLSearchParams(window.location.search).get(
         "plan"
       );
-      if (!formValues.email || !customerId)
+      if (!data.email || !customerId)
         throw new Error("Missing user email or customer id");
 
       if (!selectedPlan) throw new Error("Missing selected plan");
 
       const link = await paymentLink.mutateAsync({
-        customerEmail: formValues.email,
+        customerEmail: data.email,
         plan: selectedPlan,
         customerId,
       });

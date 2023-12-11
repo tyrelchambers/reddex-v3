@@ -23,19 +23,19 @@ const WrongPlanBanner = ({ title, text, actions, type }: Props) => {
   });
 
   return (
-    <div className="mx-auto my-10 mb-4 w-full max-w-screen-2xl rounded-2xl bg-warning p-4">
-      <p className="mb-2 text-warning-foreground">
+    <div className="mx-auto my-10 mb-4 w-full max-w-screen-2xl rounded-2xl bg-card p-4">
+      <p className="mb-2 text-card-foreground">
         <FontAwesomeIcon icon={faWarning} className="mr-3" />
         {title}
       </p>
-      <p className="text-sm font-thin text-warning-foreground">{text}</p>
+      <p className="text-sm font-thin text-card-foreground">{text}</p>
 
       {actions}
 
       {type === "upgrade_plan" && (
         <button
           onClick={() => updateLink.mutate()}
-          className="text-accent underline"
+          className="mt-4 text-accent underline"
           type="button"
         >
           Upgrade your plan{" "}

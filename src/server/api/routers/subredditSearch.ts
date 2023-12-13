@@ -59,7 +59,11 @@ export const subredditSearchRouter = createTRPCRouter({
         try {
           for (let i = 0; i < 10 && after !== null; i++) {
             await axios
-              .get(`${url}&after=${after}`)
+              .get(`${url}&after=${after}`, {
+                headers: {
+                  "User-Agent": "reddex.app/v3",
+                },
+              })
               .then((res: SubredditResponse) => {
                 after = res.data.data.after;
                 posts = posts.concat(res.data.data.children);

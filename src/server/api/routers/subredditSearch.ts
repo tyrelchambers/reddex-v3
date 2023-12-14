@@ -24,6 +24,12 @@ export const subredditSearchRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const url = `https://www.reddit.com/r/${input.subreddit.toLowerCase()}/${input.category.toLowerCase()}.json?limit=100`;
+        const buffer = Buffer.from(
+          `${process.env.REDDIT_CLIENT_ID as string}:${
+            process.env.REDDIT_CLIENT_SECRET as string
+          }`
+        ).toString("base64");
+
         let posts = [] as {
           kind: string;
           data: PostFromReddit;
@@ -61,7 +67,8 @@ export const subredditSearchRouter = createTRPCRouter({
             await axios
               .get(`${url}&after=${after}`, {
                 headers: {
-                  "User-Agent": "reddex.app/v3",
+                  "User-Agent": "reddex.app:v3 (by /u/storiesaftermidnight)",
+                  Authorization: `Basic ${buffer}`,
                 },
               })
               .then((res: SubredditResponse) => {

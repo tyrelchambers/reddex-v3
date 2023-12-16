@@ -39,8 +39,9 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
       <CustomerSiteHeader website={website} />
 
       <section className="mx-auto mt-10 w-full max-w-[1500px] p-4 lg:p-0">
-        <section className="mx-auto h-fit overflow-hidden rounded-xl lg:h-[500px]">
-          <Image
+        <section className="mx-auto flex h-fit items-center overflow-hidden rounded-xl lg:h-[500px]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={
               website.banner ??
               "https://images.unsplash.com/photo-1506259091721-347e791bab0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGFic3RyYWN0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60"

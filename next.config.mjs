@@ -16,6 +16,9 @@ const config = {
       {
         hostname: "images.unsplash.com",
       },
+      {
+        hostname: "reddex.s3.amazonaws.com",
+      },
     ],
   },
 

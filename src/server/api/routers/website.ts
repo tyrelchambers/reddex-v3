@@ -248,22 +248,12 @@ export const websiteRouter = createTRPCRouter({
             thumbnail: input.type === "thumbnail" ? null : undefined,
           },
         });
-        return await axios
-          .delete(url, {
-            headers: {
-              "content-type": "application/octet-stream",
-              AccessKey: env.BUNNY_PASSWORD,
-            },
-          })
-
-          .catch((err: AxiosError) => {
-            console.log(err);
-
-            if (err) {
-              throw new Error(err.message);
-            }
-          });
-        return;
+        return await axios.delete(url, {
+          headers: {
+            "content-type": "application/octet-stream",
+            AccessKey: env.BUNNY_PASSWORD,
+          },
+        });
       } catch (error) {
         captureException(error);
         throw error;

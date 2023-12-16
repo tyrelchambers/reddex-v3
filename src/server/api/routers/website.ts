@@ -239,6 +239,15 @@ export const websiteRouter = createTRPCRouter({
       );
 
       try {
+        await prisma.website.update({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          data: {
+            banner: input.type === "banner" ? null : undefined,
+            thumbnail: input.type === "thumbnail" ? null : undefined,
+          },
+        });
         return await axios
           .delete(url, {
             headers: {
@@ -246,17 +255,7 @@ export const websiteRouter = createTRPCRouter({
               AccessKey: env.BUNNY_PASSWORD,
             },
           })
-          .then(async () => {
-            await prisma.website.update({
-              where: {
-                userId: ctx.session.user.id,
-              },
-              data: {
-                banner: input.type === "banner" ? null : undefined,
-                thumbnail: input.type === "thumbnail" ? null : undefined,
-              },
-            });
-          })
+
           .catch((err: AxiosError) => {
             console.log(err);
 

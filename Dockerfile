@@ -43,7 +43,7 @@ RUN chmod 777 ./uploads
 
 USER nextjs
 
-COPY --from=builder /app ./
+COPY --chown=nextjs:nodejs --from=builder /app ./
 
 EXPOSE 3000
 

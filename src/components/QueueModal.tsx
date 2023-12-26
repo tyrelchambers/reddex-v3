@@ -113,12 +113,14 @@ const QueueModal = ({ close }: Props) => {
 
             <div className="flex gap-4">
               <Button
+                type="button"
                 variant="link"
                 onClick={() => fillWithMessage(user?.Profile?.greeting)}
               >
                 Initial
               </Button>
               <Button
+                type="button"
                 variant="link"
                 onClick={() => fillWithMessage(user?.Profile?.recurring)}
               >
@@ -138,6 +140,7 @@ const QueueModal = ({ close }: Props) => {
               Remove from queue
             </Button>
             <Button
+              type="button"
               variant="secondary"
               onClick={saveContactHandler}
               className="break-all"

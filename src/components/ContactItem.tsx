@@ -2,7 +2,7 @@ import { faUserCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDisclosure } from "@mantine/hooks";
 import { Contact } from "@prisma/client";
-import React, { FormEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
@@ -10,7 +10,6 @@ import { api } from "~/utils/api";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Label } from "./ui/label";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -54,7 +53,10 @@ const ContactItem = ({ contact }: Props) => {
 
   useEffect(() => {
     if (contactQuery.data) {
-      form.reset();
+      form.reset({
+        ...contactQuery.data,
+        notes: contactQuery.data.notes || "",
+      });
     }
   }, [contact]);
 

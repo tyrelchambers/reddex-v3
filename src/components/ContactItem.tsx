@@ -58,7 +58,7 @@ const ContactItem = ({ contact }: Props) => {
         notes: contactQuery.data.notes || "",
       });
     }
-  }, [contact]);
+  }, [contactQuery.data]);
 
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_EDIT_CONTACT_FORM);

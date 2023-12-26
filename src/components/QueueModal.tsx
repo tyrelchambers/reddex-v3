@@ -63,7 +63,7 @@ const QueueModal = ({ close }: Props) => {
         form.setValue("message", user?.Profile?.greeting || "");
       }
     }
-  }, [currentPost]);
+  }, [currentPost, contactedWritersQuery.data]);
 
   useEffect(() => {
     if (!currentPost) return close();

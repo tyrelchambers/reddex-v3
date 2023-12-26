@@ -131,6 +131,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
                 type="button"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
                 onClick={() => addToContacts(message.dest)}
+                title={`Add ${message.dest} to contacts`}
               >
                 <FontAwesomeIcon icon={faUserPlus} />
               </button>
@@ -156,6 +157,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
                     type="button"
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
                     onClick={addStoryToReadingList}
+                    title={`Add ${message.subject} to reading list`}
                   >
                     <FontAwesomeIcon icon={faBookmark} />
                   </button>

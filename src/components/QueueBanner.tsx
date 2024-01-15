@@ -25,6 +25,7 @@ const QueueBanner = ({ openQueue }: Props) => {
           className="!text-white"
           onClick={() => queueStore.clear()}
           size="xs"
+          type="button"
         >
           Clear queue
         </Button>

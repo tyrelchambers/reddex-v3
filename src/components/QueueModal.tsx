@@ -136,7 +136,7 @@ const QueueModal = ({ close }: Props) => {
 
         <footer className="mt-6 flex flex-col justify-between gap-3 lg:flex-row">
           <div className="flex flex-col gap-3 lg:flex-row">
-            <Button variant="secondary" onClick={removeFromQueue}>
+            <Button variant="secondary" type="button" onClick={removeFromQueue}>
               Remove from queue
             </Button>
             <Button

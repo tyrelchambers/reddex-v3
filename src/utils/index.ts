@@ -149,8 +149,6 @@ export const buildParams = <T>(appliedFilters: T) => {
     for (const key in appliedFilters) {
       const element = appliedFilters[key];
 
-      console.log(element);
-
       if (
         element &&
         typeof element === "object" &&

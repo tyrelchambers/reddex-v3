@@ -43,8 +43,6 @@ export const FilterPosts = class FilterClass {
 
   keywords() {
     if (this.filters.keywords) {
-      console.log(this.filters.keywords);
-
       const splitWords = this.filters.keywords.split(",");
 
       if (splitWords.length === 1)

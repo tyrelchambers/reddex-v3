@@ -149,6 +149,8 @@ export const buildParams = <T>(appliedFilters: T) => {
     for (const key in appliedFilters) {
       const element = appliedFilters[key];
 
+      console.log(element);
+
       if (
         element &&
         typeof element === "object" &&
@@ -178,7 +180,7 @@ export const parseQuery = (query: ParsedQuery) => {
   for (const key in query) {
     const value = query[key] as string;
 
-    if (value?.includes(",")) {
+    if (value?.includes(",") && key !== "keywords") {
       parsed[key] = {
         qualifier: value.split(",")[0] || undefined,
         value: value.split(",")[1] || undefined,

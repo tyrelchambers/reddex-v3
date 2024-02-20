@@ -182,6 +182,9 @@ const FilterSelections = ({ filters, closeModal }: FilterSelectionProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Keywords</FormLabel>
+              <FormDescription>
+                Comma separated list (eg: keyword1,keyword2)
+              </FormDescription>
               <Input
                 className="mt-1"
                 placeholder="Enter a comma separate list of keywords to search for"

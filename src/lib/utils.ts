@@ -43,17 +43,30 @@ export const FilterPosts = class FilterClass {
 
   keywords() {
     if (this.filters.keywords) {
-      return (
-        this.post.title
-          ?.toLowerCase()
-          ?.includes(this.filters.keywords.toLowerCase()) ||
-        this.post.selftext
-          ?.toLowerCase()
-          ?.includes(this.filters.keywords.toLowerCase()) ||
-        this.post.author
-          ?.toLowerCase()
-          ?.includes(this.filters.keywords.toLowerCase())
-      );
+      console.log(this.filters.keywords);
+
+      const splitWords = this.filters.keywords.split(",");
+
+      if (splitWords.length === 1)
+        return (
+          this.post.title
+            ?.toLowerCase()
+            ?.includes(this.filters.keywords.toLowerCase()) ||
+          this.post.selftext
+            ?.toLowerCase()
+            ?.includes(this.filters.keywords.toLowerCase()) ||
+          this.post.author
+            ?.toLowerCase()
+            ?.includes(this.filters.keywords.toLowerCase())
+        );
+
+      if (splitWords.length > 1)
+        return splitWords.every(
+          (word) =>
+            this.post.title?.toLowerCase()?.includes(word.toLowerCase()) ||
+            this.post.selftext?.toLowerCase()?.includes(word.toLowerCase()) ||
+            this.post.author?.toLowerCase()?.includes(word.toLowerCase())
+        );
     }
   }
 

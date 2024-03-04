@@ -75,7 +75,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
     return false;
   }, [post?.id, approvedListQuery.data]);
 
-  const isAContact = contactquery.data;
+  const isAContact = contactquery.data ?? false;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -91,10 +91,18 @@ const SelectedInboxMessage = ({ message }: Props) => {
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SEND_INBOX_MESSAGE);
 
-    messageMutation.mutate({
-      thing_id: message.name,
-      ...data,
-    });
+    messageMutation.mutate(
+      {
+        thing_id: message.name,
+        ...data,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Message sent!");
+          form.reset();
+        },
+      }
+    );
   };
 
   const addToContacts = (name: string) => {
@@ -106,6 +114,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
     if (post) {
       trackUiEvent(MixpanelEvents.ADD_STORY_TO_READING_LIST);
       stories.mutate(post.id);
+      toast.success("Added to reading list");
     }
   };
 
@@ -126,7 +135,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
           </a>
 
           <div className=" flex flex-col items-center gap-2 lg:flex-row">
-            {isAContact ? (
+            {!isAContact ? (
               <button
                 type="button"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"

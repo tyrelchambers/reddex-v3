@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import {
@@ -11,8 +12,9 @@ import {
   FormLabel,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { PostFromReddit } from "~/types";
+import { MixpanelEvents, PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const formSchema = z.object({
   url: z.string().url(),
@@ -43,15 +45,24 @@ const ImportStoryForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       .then((res) => res.data[0].data.children[0].data as PostFromReddit);
 
-    importStory.mutate({
-      ...storyFromUrl,
-      content: storyFromUrl.selftext,
-      story_length: storyFromUrl.selftext.length,
-      flair: storyFromUrl.link_flair_text,
-      post_id: storyFromUrl.id,
-      reading_time: Math.round(storyFromUrl.selftext.length / 200),
-      message: storyFromUrl.selftext,
-    });
+    importStory.mutate(
+      {
+        ...storyFromUrl,
+        content: storyFromUrl.selftext,
+        story_length: storyFromUrl.selftext.length,
+        flair: storyFromUrl.link_flair_text,
+        post_id: storyFromUrl.id,
+        reading_time: Math.round(storyFromUrl.selftext.length / 200),
+        message: storyFromUrl.selftext,
+      },
+      {
+        onSuccess: () => {
+          form.reset();
+          toast.success("Story imported successfully!");
+          trackUiEvent(MixpanelEvents.IMPORT_STORY);
+        },
+      }
+    );
   };
 
   return (

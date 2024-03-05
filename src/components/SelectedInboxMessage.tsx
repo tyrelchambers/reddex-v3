@@ -58,6 +58,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
   const stories = api.story.addToApproved.useMutation({
     onSuccess: (data) => {
       if ("success" in data && !data.success) {
+        apiContext.story.getApprovedList.invalidate();
         return toast(data.message, { type: "info" });
       }
     },

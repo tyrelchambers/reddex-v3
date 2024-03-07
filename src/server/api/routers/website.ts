@@ -143,8 +143,7 @@ export const websiteRouter = createTRPCRouter({
         if (input.submissionFormModules.author) {
           const data = await prisma.submissionFormModule.updateMany({
             where: {
-              name: "author",
-              submissionPageId: existingWebsite?.submissionPageId,
+              id: input.submissionFormModules.author.id,
             },
             data: {
               enabled: input.submissionFormModules.author.enabled,

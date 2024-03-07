@@ -144,6 +144,7 @@ export const websiteRouter = createTRPCRouter({
           await prisma.submissionFormModule.updateMany({
             where: {
               name: "author",
+              submissionPageId: existingWebsite?.submissionPageId,
             },
             data: {
               enabled: input.submissionFormModules.author.enabled,
@@ -156,6 +157,7 @@ export const websiteRouter = createTRPCRouter({
           await prisma.submissionFormModule.updateMany({
             where: {
               name: "title",
+              submissionPageId: existingWebsite?.submissionPageId,
             },
             data: {
               enabled: input.submissionFormModules.title.enabled,
@@ -168,6 +170,7 @@ export const websiteRouter = createTRPCRouter({
           await prisma.submissionFormModule.updateMany({
             where: {
               name: "email",
+              submissionPageId: existingWebsite?.submissionPageId,
             },
             data: {
               enabled: input.submissionFormModules.email.enabled,

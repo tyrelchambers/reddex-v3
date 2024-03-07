@@ -88,14 +88,17 @@ export const websiteSubmissionSchema = z.object({
   description: z.string().optional().nullable(),
   submissionFormModules: z.object({
     title: z.object({
+      id: z.string().optional(),
       enabled: z.boolean(),
       required: z.boolean(),
     }),
     author: z.object({
+      id: z.string().optional(),
       enabled: z.boolean(),
       required: z.boolean(),
     }),
     email: z.object({
+      id: z.string().optional(),
       enabled: z.boolean(),
       required: z.boolean(),
     }),

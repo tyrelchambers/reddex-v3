@@ -112,8 +112,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
 
-  console.log("website", website);
-
   const user = website?.user;
 
   if (!user) {

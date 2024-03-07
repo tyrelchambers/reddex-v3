@@ -137,11 +137,8 @@ export const websiteRouter = createTRPCRouter({
           },
         });
 
-        console.log(input.submissionFormModules);
-        console.log(input.submissionFormModules.author);
-
         if (input.submissionFormModules.author) {
-          const data = await prisma.submissionFormModule.updateMany({
+          await prisma.submissionFormModule.updateMany({
             where: {
               id: input.submissionFormModules.author.id,
             },
@@ -150,14 +147,12 @@ export const websiteRouter = createTRPCRouter({
               required: input.submissionFormModules.author.required,
             },
           });
-          console.log(data.count);
         }
 
         if (input.submissionFormModules.title) {
           await prisma.submissionFormModule.updateMany({
             where: {
-              name: "title",
-              submissionPageId: existingWebsite?.submissionPageId,
+              id: input.submissionFormModules.title.id,
             },
             data: {
               enabled: input.submissionFormModules.title.enabled,
@@ -169,8 +164,7 @@ export const websiteRouter = createTRPCRouter({
         if (input.submissionFormModules.email) {
           await prisma.submissionFormModule.updateMany({
             where: {
-              name: "email",
-              submissionPageId: existingWebsite?.submissionPageId,
+              id: input.submissionFormModules.email.id,
             },
             data: {
               enabled: input.submissionFormModules.email.enabled,

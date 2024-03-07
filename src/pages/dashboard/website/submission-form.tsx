@@ -102,7 +102,6 @@ const SubmissionForm = () => {
 
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_SUBMISSION_FORM);
-    console.log(data.submissionFormModules);
 
     submissionFormSave.mutate(data);
   };

@@ -50,8 +50,6 @@ const Submit = ({ website }: Props) => {
     (module) => module.name.toLowerCase() === "email"
   );
 
-  console.log(modules);
-
   const formSchema = z
     .object({
       title: z.string(),

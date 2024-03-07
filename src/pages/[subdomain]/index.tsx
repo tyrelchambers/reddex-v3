@@ -99,7 +99,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
 
     include: {
-      submissionPage: true,
+      submissionPage: {
+        include: {
+          submissionFormModules: true,
+        },
+      },
       user: {
         select: {
           customerId: true,
@@ -107,6 +111,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
+
+  console.log("website", website);
 
   const user = website?.user;
 

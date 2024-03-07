@@ -137,6 +137,9 @@ export const websiteRouter = createTRPCRouter({
           },
         });
 
+        console.log(input.submissionFormModules);
+        console.log(input.submissionFormModules.author);
+
         if (input.submissionFormModules.author) {
           await prisma.submissionFormModule.updateMany({
             where: {

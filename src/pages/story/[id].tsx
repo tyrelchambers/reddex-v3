@@ -35,10 +35,10 @@ const Story = () => {
         </p>
       </header>
 
-      <div
+      <article
         dangerouslySetInnerHTML={{ __html: story?.body || "" }}
         className="mt-10 w-full max-w-xl whitespace-pre-wrap leading-relaxed text-foreground/80"
-      ></div>
+      ></article>
     </WrapperWithNav>
   );
 };

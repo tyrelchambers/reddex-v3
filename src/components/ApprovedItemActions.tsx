@@ -140,7 +140,6 @@ const ApprovedItemActions = ({ postId }: Props) => {
         </DialogContent>
       </Dialog>
       <Button
-        variant="outline"
         onClick={() => {
           trackUiEvent(MixpanelEvents.MARK_AS_READ, {
             userId: data?.user.id,
@@ -151,16 +150,6 @@ const ApprovedItemActions = ({ postId }: Props) => {
       >
         Mark as read
       </Button>
-      <Link
-        href={routes.STUDIO + `/${postId}`}
-        onClick={() =>
-          trackUiEvent(MixpanelEvents.VIEW_IN_STUDIO, {
-            userId: data?.user.id,
-          })
-        }
-      >
-        <Button>View in Studio</Button>
-      </Link>
     </div>
   );
 };

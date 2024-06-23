@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDisclosure } from "@mantine/hooks";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
@@ -24,7 +24,6 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 const formSchema = contactSchema;
 const Contacts = () => {
   const apiContext = api.useUtils();
-  const [opened, { open, close }] = useDisclosure(false);
   const contactsQuery = api.contact.all.useQuery();
   const saveContact = api.contact.save.useMutation({
     onSuccess: () => {
@@ -51,15 +50,59 @@ const Contacts = () => {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl text-foreground">Contacts</h1>
 
-          <Button
-            variant="secondary"
-            onClick={() => {
-              trackUiEvent(MixpanelEvents.OPEN_ADD_CONTACT_MODAL);
-              open();
-            }}
-          >
-            Add contact
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.OPEN_ADD_CONTACT_MODAL);
+                }}
+              >
+                Add contact
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add contact</DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(submitHandler)}
+                  className="flex flex-col gap-4"
+                >
+                  <FormField
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <Input
+                          placeholder="Add your contact's name"
+                          {...field}
+                        />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="notes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Notes</FormLabel>
+
+                        <Textarea
+                          placeholder="Add notes about this contact"
+                          {...field}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="mt-6 w-full">
+                    Save
+                  </Button>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </header>
 
         {contactsQuery.data && contactsQuery.data.length > 0 ? (
@@ -71,47 +114,6 @@ const Contacts = () => {
         ) : (
           <EmptyState label="contacts" />
         )}
-
-        <Dialog open={opened} onOpenChange={close}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add contact</DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(submitHandler)}
-                className="flex flex-col gap-4"
-              >
-                <FormField
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <Input placeholder="Add your contact's name" {...field} />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Notes</FormLabel>
-
-                      <Textarea
-                        placeholder="Add notes about this contact"
-                        {...field}
-                      />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="mt-6 w-full">
-                  Save
-                </Button>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
       </section>
     </WrapperWithNav>
   );

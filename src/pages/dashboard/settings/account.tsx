@@ -1,10 +1,7 @@
-import { faExternalLink, faSpinner } from "@fortawesome/pro-solid-svg-icons";
+import { faSpinner } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDisclosure } from "@mantine/hooks";
-import Link from "next/link";
 import React, { useState } from "react";
 import Stripe from "stripe";
-import InvoicesList from "~/components/InvoicesList";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
@@ -15,7 +12,12 @@ import { captureException } from "@sentry/nextjs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
@@ -43,10 +45,6 @@ const Settings = () => {
   const updateUser = api.user.saveProfile.useMutation();
 
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
-
-  const [opened, { open, close }] = useDisclosure(false);
-  const [planOpened, { open: openPlanModal, close: closePlanModal }] =
-    useDisclosure(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -112,8 +110,8 @@ const Settings = () => {
         <h1 className="text-3xl text-foreground">Account</h1>
 
         <div className="flex flex-col">
-          <h2 className=" text-xl text-foreground">Billing</h2>
-          <p className=" text-sm text-muted-foreground">
+          <h2 className="text-xl text-foreground">Billing</h2>
+          <p className="text-sm text-muted-foreground">
             Your plan is managed with Stripe.
           </p>
 
@@ -123,21 +121,66 @@ const Settings = () => {
           </p>
 
           {subscription ? (
-            <SubscriptionCard
-              subscription={subscription}
-              open={open}
-              invoices={invoices}
-            />
+            <SubscriptionCard subscription={subscription} invoices={invoices} />
           ) : (
-            <Button className="mt-4" onClick={openPlanModal}>
-              Choose a plan
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="mt-4">Choose a plan</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>Select a plan</DialogHeader>
+                {!currentUser?.email && (
+                  <>
+                    <p className="mb-4">
+                      Please add an email to your account before we proceed.
+                    </p>
+                    <Form {...form}>
+                      <FormField
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <Input
+                              placeholder="Email"
+                              required
+                              type="email"
+                              {...field}
+                            />
+                          </FormItem>
+                        )}
+                      />
+                    </Form>
+                  </>
+                )}
+                <NoSelectedPlan
+                  setSelectedPlanHandler={setSelectedPlan}
+                  frequency={selectedFrequency}
+                  setFrequency={setSelectedFrequency}
+                  selectedPlan={selectedPlan}
+                />
+
+                <Button
+                  disabled={!selectedPlan || loadingPaymentLink}
+                  className="w-full"
+                  onClick={createSubscriptionHandler}
+                >
+                  {loadingPaymentLink ? (
+                    <>
+                      <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />{" "}
+                      Loading...
+                    </>
+                  ) : (
+                    "Continue"
+                  )}
+                </Button>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
 
         <Separator className="border-border" />
         <div className="flex flex-col">
-          <h2 className=" text-xl text-foreground">Delete account</h2>
+          <h2 className="text-xl text-foreground">Delete account</h2>
           <p className="mb-4 text-sm text-muted-foreground">
             To delete your account, manage your subscription and cancel your
             membership. Your account will be deleted once your membership is
@@ -147,72 +190,6 @@ const Settings = () => {
           <Button variant="secondary">Delete account</Button>
         </div>
       </section>
-
-      <Dialog open={opened}>
-        <DialogContent onClose={close}>
-          <DialogHeader>Invoices</DialogHeader>
-          <Link
-            href="https://dashboard.stripe.com/invoices"
-            className="text-sm text-accent underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View all invoices{" "}
-            <FontAwesomeIcon className="ml-2" icon={faExternalLink} />
-          </Link>
-          {invoices && <InvoicesList invoices={invoices.data} />}
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={planOpened}>
-        <DialogContent onClose={closePlanModal}>
-          <DialogHeader>Select a plan</DialogHeader>
-          {!currentUser?.email && (
-            <>
-              <p className="mb-4">
-                Please add an email to your account before we proceed.
-              </p>
-              <Form {...form}>
-                <FormField
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <Input
-                        placeholder="Email"
-                        required
-                        type="email"
-                        {...field}
-                      />
-                    </FormItem>
-                  )}
-                />
-              </Form>
-            </>
-          )}
-          <NoSelectedPlan
-            setSelectedPlanHandler={setSelectedPlan}
-            frequency={selectedFrequency}
-            setFrequency={setSelectedFrequency}
-            selectedPlan={selectedPlan}
-          />
-
-          <Button
-            disabled={!selectedPlan || loadingPaymentLink}
-            className="w-full"
-            onClick={createSubscriptionHandler}
-          >
-            {loadingPaymentLink ? (
-              <>
-                <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />{" "}
-                Loading...
-              </>
-            ) : (
-              "Continue"
-            )}
-          </Button>
-        </DialogContent>
-      </Dialog>
     </WrapperWithNav>
   );
 };

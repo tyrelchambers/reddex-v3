@@ -1,13 +1,17 @@
 import { faUserCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDisclosure } from "@mantine/hooks";
 import { Contact } from "@prisma/client";
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
-import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "react-toastify";
@@ -42,7 +46,6 @@ const ContactItem = ({ contact }: Props) => {
       toast.success("Contact updated!");
     },
   });
-  const [opened, { open, close }] = useDisclosure(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,54 +94,54 @@ const ContactItem = ({ contact }: Props) => {
       )}
 
       <footer className="flex justify-end p-2 px-4">
-        <Button
-          variant="secondary"
-          onClick={() => {
-            trackUiEvent(MixpanelEvents.OPEN_EDIT_CONTACT_MODAL);
-            open();
-          }}
-        >
-          Edit
-        </Button>
-      </footer>
-
-      <Dialog open={opened}>
-        <DialogContent onClose={close}>
-          <DialogHeader>Editing contact</DialogHeader>
-          <Form {...form}>
-            <form
-              className="flex flex-col gap-4"
-              onSubmit={form.handleSubmit(submitHandler)}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                trackUiEvent(MixpanelEvents.OPEN_EDIT_CONTACT_MODAL);
+              }}
             >
-              <FormField
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <Input placeholder="Contact name" {...field} />
-                  </FormItem>
-                )}
-              />
+              Edit
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>Editing contact</DialogHeader>
+            <Form {...form}>
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={form.handleSubmit(submitHandler)}
+              >
+                <FormField
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <Input placeholder="Contact name" {...field} />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes</FormLabel>
-                    <Textarea {...field} />
-                  </FormItem>
-                )}
-              />
-              <footer className="flex justify-between gap-3">
-                <Button variant="link" onClick={deleteHandler}>
-                  Delete contact
-                </Button>
-                <Button>Save</Button>
-              </footer>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+                <FormField
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes</FormLabel>
+                      <Textarea {...field} />
+                    </FormItem>
+                  )}
+                />
+                <footer className="flex justify-between gap-3">
+                  <Button variant="link" onClick={deleteHandler}>
+                    Delete contact
+                  </Button>
+                  <Button>Save</Button>
+                </footer>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      </footer>
     </div>
   );
 };

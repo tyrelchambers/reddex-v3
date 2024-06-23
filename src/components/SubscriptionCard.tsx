@@ -9,6 +9,16 @@ import { formatCurrency, formatStripeTime } from "~/utils";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import Link from "next/link";
+import InvoicesList from "./InvoicesList";
+import { faExternalLink } from "@fortawesome/pro-solid-svg-icons";
 
 interface Props {
   subscription: Stripe.Subscription & {
@@ -16,11 +26,10 @@ interface Props {
       product: Stripe.Product;
     };
   };
-  open: () => void;
   invoices: Stripe.ApiList<Stripe.Invoice> | undefined;
 }
 
-const SubscriptionCard = ({ subscription, open, invoices }: Props) => {
+const SubscriptionCard = ({ subscription, invoices }: Props) => {
   const updateLink = api.billing.updateLink.useMutation({
     onSuccess: (res) => {
       if (res) {
@@ -40,7 +49,7 @@ const SubscriptionCard = ({ subscription, open, invoices }: Props) => {
         <p className="text-sm font-semibold text-card-foreground">
           {formatCurrency(
             subscription?.plan.amount,
-            subscription?.plan.currency
+            subscription?.plan.currency,
           )}
           <span className="text-sm font-thin text-card-foreground/60">
             /{subscription?.plan.interval}
@@ -54,7 +63,7 @@ const SubscriptionCard = ({ subscription, open, invoices }: Props) => {
           </span>{" "}
           {formatCurrency(
             subscription?.plan.amount,
-            subscription?.plan.currency
+            subscription?.plan.currency,
           )}{" "}
           on {formatStripeTime(subscription.current_period_end)}
         </p>
@@ -74,12 +83,34 @@ const SubscriptionCard = ({ subscription, open, invoices }: Props) => {
 
       <footer className="mt-2 flex flex-col justify-end gap-4 border-t-[1px] border-t-border pt-3 md:flex-row">
         {invoices && (
-          <Button variant="ghost" onClick={open}>
-            View invoices <FontAwesomeIcon icon={faReceipt} className="ml-2" />
-          </Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button variant="ghost">
+                View invoices{" "}
+                <FontAwesomeIcon icon={faReceipt} className="ml-2" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent onClose={close}>
+              <DialogHeader className="flex">
+                <DialogTitle>Invoices</DialogTitle>
+                <Link
+                  href="https://dashboard.stripe.com/invoices"
+                  className="text-sm text-accent underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View all invoices{" "}
+                  <FontAwesomeIcon className="ml-2" icon={faExternalLink} />
+                </Link>
+              </DialogHeader>
+
+              {invoices && <InvoicesList invoices={invoices.data} />}
+            </DialogContent>
+          </Dialog>
         )}
+
         <button
-          className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm  text-accent-foreground hover:bg-accent/80"
+          className="flex-1 rounded-lg border-[1px] border-background bg-accent px-6 py-2 text-center text-sm text-accent-foreground hover:bg-accent/80"
           type="button"
           onClick={() => updateLink.mutate()}
         >

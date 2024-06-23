@@ -1,4 +1,3 @@
-import { useDisclosure } from "@mantine/hooks";
 import React from "react";
 import { api } from "~/utils/api";
 import TagListItem from "~/components/TagListItem";
@@ -13,6 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
@@ -33,7 +33,6 @@ const formSchema = tagSaveSchema;
 
 const Tags = () => {
   const apiContext = api.useUtils();
-  const [opened, { open, close }] = useDisclosure(false);
   const approvedStories = api.story.getApprovedList.useQuery();
   const tagMutation = api.tag.save.useMutation({
     onSuccess: () => {
@@ -62,15 +61,61 @@ const Tags = () => {
       <main className="mx-auto max-w-screen-2xl px-4 lg:px-0">
         <header className="flex justify-between">
           <h1 className="text-2xl text-foreground">Tags</h1>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL);
-              open();
-            }}
-          >
-            Create tag
-          </Button>
+
+          <Dialog>
+            <DialogTrigger>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL);
+                }}
+              >
+                Create tag
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create a tag</DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(submitHandler)}
+                  className="flex flex-col gap-4"
+                >
+                  <FormField
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <Input placeholder="A name for your tag" {...field} />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex flex-col">
+                    <Label>Story list</Label>
+                    {storiesList && (
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {storiesList.map((story) => (
+                            <SelectItem key={story.value} value={story.value}>
+                              {story.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </div>
+                  <Button className="mt-6 w-full" type="submit">
+                    Save tag
+                  </Button>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </header>
 
         {tagQuery.data && tagQuery.data.length > 0 ? (
@@ -83,50 +128,6 @@ const Tags = () => {
           <EmptyState label="tags" />
         )}
       </main>
-      <Dialog open={opened}>
-        <DialogContent onClose={close}>
-          <DialogHeader>
-            <DialogTitle>Create a tag</DialogTitle>
-          </DialogHeader>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(submitHandler)}
-              className="flex flex-col gap-4"
-            >
-              <FormField
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <Input placeholder="A name for your tag" {...field} />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex flex-col">
-                <Label>Story list</Label>
-                {storiesList && (
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {storiesList.map((story) => (
-                        <SelectItem key={story.value} value={story.value}>
-                          {story.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              </div>
-              <Button className="mt-6 w-full" type="submit">
-                Save tag
-              </Button>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
     </WrapperWithNav>
   );
 };

@@ -34,9 +34,9 @@ const InvoicesList = ({ invoices }: Props) => {
 
   return (
     <div className="mt-4">
-      <Table highlightOnHover>
-        <thead>
-          <tr>
+      <Table highlightOnHover className="w-full">
+        <thead className="w-full">
+          <tr className="w-full">
             <th className="!border-border !font-normal !text-foreground/60">
               Status
             </th>

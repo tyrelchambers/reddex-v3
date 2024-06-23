@@ -1,6 +1,5 @@
-import { useDisclosure } from "@mantine/hooks";
 import { RedditPost } from "@prisma/client";
-import React, { FormEvent } from "react";
+import React from "react";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import EmptyState from "./EmptyState";
@@ -13,7 +12,12 @@ import { useForm } from "react-hook-form";
 import { tagOnPostSchema } from "~/server/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "./ui/dialog";
 import { Form, FormField, FormItem, FormLabel } from "./ui/form";
 import {
   Select,
@@ -33,8 +37,6 @@ const formSchema = tagOnPostSchema.extend({
 
 const ApprovedItemActions = ({ postId }: Props) => {
   const { data } = useSession();
-
-  const [opened, { open, close }] = useDisclosure(false);
 
   const apiContext = api.useUtils();
   const tagMutation = api.tag.add.useMutation({
@@ -72,43 +74,21 @@ const ApprovedItemActions = ({ postId }: Props) => {
 
   return (
     <div className="flex flex-wrap gap-3">
-      <Button
-        variant="outline"
-        type="button"
-        onClick={() => {
-          trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL, {
-            userId: data?.user.id,
-          });
-          open();
-        }}
-      >
-        Add tags
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() => {
-          trackUiEvent(MixpanelEvents.MARK_AS_READ, {
-            userId: data?.user.id,
-          });
-          addToCompleted.mutate(postId);
-        }}
-        type="button"
-      >
-        Mark as read
-      </Button>
-      <Link
-        href={routes.STUDIO + `/${postId}`}
-        onClick={() =>
-          trackUiEvent(MixpanelEvents.VIEW_IN_STUDIO, {
-            userId: data?.user.id,
-          })
-        }
-      >
-        <Button>View in Studio</Button>
-      </Link>
-
-      <Dialog open={opened}>
-        <DialogContent onClose={close}>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL, {
+                userId: data?.user.id,
+              });
+            }}
+          >
+            Add tags
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
           <DialogHeader>Add a tag to story</DialogHeader>
           <Form {...form}>
             <form
@@ -159,6 +139,28 @@ const ApprovedItemActions = ({ postId }: Props) => {
           </Form>
         </DialogContent>
       </Dialog>
+      <Button
+        variant="outline"
+        onClick={() => {
+          trackUiEvent(MixpanelEvents.MARK_AS_READ, {
+            userId: data?.user.id,
+          });
+          addToCompleted.mutate(postId);
+        }}
+        type="button"
+      >
+        Mark as read
+      </Button>
+      <Link
+        href={routes.STUDIO + `/${postId}`}
+        onClick={() =>
+          trackUiEvent(MixpanelEvents.VIEW_IN_STUDIO, {
+            userId: data?.user.id,
+          })
+        }
+      >
+        <Button>View in Studio</Button>
+      </Link>
     </div>
   );
 };

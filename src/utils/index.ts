@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { db } from "./dexie";
 import {
   Filter,
+  FilterQualifier,
   FilterState,
   FormattedMessagesList,
   RedditInboxMessage,
@@ -52,7 +53,7 @@ export const activeFilters = (filters: Partial<FilterState> | null) => {
 
 export const formatCurrency = (
   amount?: number | null,
-  currency?: string | null
+  currency?: string | null,
 ) => {
   if (amount === null || amount === undefined || !currency) return null;
 
@@ -124,7 +125,7 @@ export const getStorySelectList = (stories: RedditPost[] | undefined) => {
 };
 
 export const hasActiveSubscription = (
-  subscription: Stripe.Subscription | null
+  subscription: Stripe.Subscription | null,
 ) => {
   if (!subscription) return false;
 
@@ -180,7 +181,7 @@ export const parseQuery = (query: ParsedQuery) => {
 
     if (value?.includes(",") && key !== "keywords") {
       parsed[key] = {
-        qualifier: value.split(",")[0] || undefined,
+        qualifier: (value.split(",")[0] as FilterQualifier) || undefined,
         value: value.split(",")[1] || undefined,
       };
     } else {
@@ -198,7 +199,7 @@ export const parseQuery = (query: ParsedQuery) => {
 };
 
 export const hasProPlan = (
-  subscription: StripeSubscription | undefined | null
+  subscription: StripeSubscription | undefined | null,
 ) => {
   if (!subscription?.plan) return false;
 
@@ -208,7 +209,7 @@ export const hasProPlan = (
 };
 
 export const getCustomerId = (
-  customer: string | Stripe.Customer | Stripe.DeletedCustomer
+  customer: string | Stripe.Customer | Stripe.DeletedCustomer,
 ) => {
   if (typeof customer === "string") return customer;
   if (isStripeCustomer(customer)) return customer.id;

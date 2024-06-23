@@ -9,7 +9,7 @@ import {
   websiteSubmissionSchema,
   websiteThemeSchema,
 } from "~/server/schemas";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { env } from "process";
 import { captureException } from "@sentry/nextjs";
 import { sendEmail } from "~/utils/sendMail";
@@ -55,7 +55,7 @@ export const websiteRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         hidden: z.boolean(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       return await prisma.submissionPage.update({
@@ -235,7 +235,7 @@ export const websiteRouter = createTRPCRouter({
       // this sucks and is dirty, but ok for now
       const url = input.url.replace(
         "reddex.b-cdn.net",
-        "storage.bunnycdn.com/reddex-images"
+        "storage.bunnycdn.com/reddex-images",
       );
 
       try {

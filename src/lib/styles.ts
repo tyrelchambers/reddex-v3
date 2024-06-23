@@ -1,5 +1,3 @@
-import { ClassNames, PaginationStylesNames } from "@mantine/core";
-
-export const mantinePaginationStyles: ClassNames<PaginationStylesNames> = {
+export const mantinePaginationStyles = {
   control: "text-foreground bg-card border-border",
 };

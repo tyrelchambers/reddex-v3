@@ -1,8 +1,7 @@
-import { ColorScheme } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 export const useTheme = () => {
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+  const [colorScheme, setColorScheme] = useLocalStorage<"light" | "dark">({
     key: "color-scheme",
     defaultValue: "light",
   });

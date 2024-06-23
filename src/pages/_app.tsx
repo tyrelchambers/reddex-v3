@@ -57,7 +57,7 @@ const MyApp: AppType<MyAppProps> = ({
             toastId: "no-subscription",
             position: "bottom-right",
             className: "!rounded-xl",
-          }
+          },
         );
       }
     }
@@ -74,12 +74,10 @@ const MyApp: AppType<MyAppProps> = ({
   return (
     <SessionProvider session={session}>
       <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
+        withGlobalClasses
         theme={{
           fontFamily: font.style.fontFamily,
         }}
-        withCSSVariables
       >
         <main className={font.className}>
           <Component {...pageProps} />

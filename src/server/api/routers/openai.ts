@@ -30,7 +30,7 @@ export const openAiRouter = createTRPCRouter({
         prompt = `Generate a description for this story.`;
       }
 
-      const chatRes = await openai.createChatCompletion({
+      const chatRes = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
           {
@@ -44,10 +44,9 @@ export const openAiRouter = createTRPCRouter({
           },
         ],
       });
-
-      const result = chatRes.data.choices[0]?.message?.content?.replace(
+      const result = chatRes.choices[0]?.message?.content?.replace(
         /^['"]|['"]$/g,
-        ""
+        "",
       );
 
       return {

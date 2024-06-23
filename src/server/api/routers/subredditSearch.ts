@@ -27,7 +27,7 @@ export const subredditSearchRouter = createTRPCRouter({
         const buffer = Buffer.from(
           `${process.env.REDDIT_CLIENT_ID as string}:${
             process.env.REDDIT_CLIENT_SECRET as string
-          }`
+          }`,
         ).toString("base64");
 
         let posts = [] as {
@@ -81,7 +81,9 @@ export const subredditSearchRouter = createTRPCRouter({
           throw new Error("Failed to fetch posts from Reddit");
         }
 
-        trackEvent(MixpanelEvents.SUBREDDIT_SEARCH);
+        trackEvent(MixpanelEvents.SUBREDDIT_SEARCH, {
+          query: input.subreddit,
+        });
 
         return posts.map((p) => p.data);
       } catch (error) {

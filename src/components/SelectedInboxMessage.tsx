@@ -21,7 +21,7 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormField, FormItem, FormLabel } from "./ui/form";
+import { Form, FormField, FormItem } from "./ui/form";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import {
@@ -102,7 +102,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
           toast.success("Message sent!");
           form.reset();
         },
-      }
+      },
     );
   };
 
@@ -120,12 +120,12 @@ const SelectedInboxMessage = ({ message }: Props) => {
   };
 
   return (
-    <div className="flex-1 overflow-auto ">
+    <div className="flex-1 overflow-auto">
       <header className="w-full">
         <p className="text-3xl font-semibold text-foreground">
           {message.subject}
         </p>
-        <footer className="mt-6 flex w-fit flex-col  xl:flex-row xl:items-center">
+        <footer className="mt-6 flex w-fit flex-row xl:items-center">
           <a
             href={`https://reddit.com/u/${message.dest}`}
             className="mr-3 flex items-center gap-2 rounded-full bg-card px-3 py-1 text-sm text-foreground"
@@ -135,7 +135,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
             <span className="text-muted-foreground">{message.dest}</span>
           </a>
 
-          <div className=" flex flex-col items-center gap-2 lg:flex-row">
+          <div className="flex flex-col items-center gap-2 lg:flex-row">
             {!isAContact ? (
               <button
                 type="button"
@@ -224,13 +224,13 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
     <div className="rounded-2xl bg-card p-4">
       <header className="mb-6 flex flex-col items-baseline justify-between xl:mb-2 xl:flex-row">
-        <p className="mb-2  font-bold text-card-foreground">
+        <p className="mb-2 font-bold text-card-foreground">
           {message.isReply && (
             <FontAwesomeIcon icon={faReply} className="mr-4 text-accent" />
           )}
           {message.author}
         </p>
-        <p className=" text-card-foreground/50">
+        <p className="text-card-foreground/50">
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>

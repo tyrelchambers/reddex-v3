@@ -1,6 +1,4 @@
-import { Menu } from "@mantine/core";
 import React from "react";
-import Link from "next/link";
 import { dashNavRoutes, routes } from "~/routes";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -8,6 +6,13 @@ import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
 const UserMenu = () => {
   const session = useSession();
@@ -27,16 +32,8 @@ const UserMenu = () => {
   };
 
   return (
-    <Menu
-      shadow="md"
-      width={300}
-      classNames={{
-        dropdown: "bg-background border-border",
-        item: "hover:bg-card-foreground/10 text-foreground",
-      }}
-      position="bottom-end"
-    >
-      <Menu.Target>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <button
           type="button"
           className="text-foreground underline hover:text-accent"
@@ -44,27 +41,27 @@ const UserMenu = () => {
         >
           {user?.name}
         </button>
-      </Menu.Target>
+      </DropdownMenuTrigger>
 
-      <Menu.Dropdown>
+      <DropdownMenuContent className="w-56">
         {dashNavRoutes.map((r) => (
-          <Menu.Item key={r.label} onClick={() => router.push(r.slug)}>
+          <DropdownMenuItem key={r.label} onClick={() => router.push(r.slug)}>
             <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
-          </Menu.Item>
+          </DropdownMenuItem>
         ))}
 
-        <Menu.Divider className="border-border" />
+        <DropdownMenuSeparator className="border-border" />
 
-        <Menu.Item
+        <DropdownMenuItem
           onClick={() => {
             trackUiEvent(MixpanelEvents.LOGOUT);
             logoutHandler();
           }}
         >
           Logout
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

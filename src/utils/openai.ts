@@ -1,7 +1,9 @@
-import { Configuration, OpenAIApi } from "openai";
+import { } from "openai";
 import { env } from "~/env.mjs";
-const configuration = new Configuration({
+import OpenAI from 'openai';
+
+const configuration = {
   apiKey: env.OPEN_AI_KEY,
   organization: env.OPEN_AI_ORG,
-});
-export const openai = new OpenAIApi(configuration);
+}
+export const openai = new OpenAI(configuration);

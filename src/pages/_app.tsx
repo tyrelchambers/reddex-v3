@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import mixpanel from "mixpanel-browser";
 import { env } from "~/env.mjs";
+import "@mantine/core/styles.css";
 
 const font = Poppins({
   weight: ["300", "500", "700"],
@@ -78,6 +79,8 @@ const MyApp: AppType<MyAppProps> = ({
         theme={{
           fontFamily: font.style.fontFamily,
         }}
+        withCssVariables
+        withStaticClasses
       >
         <main className={font.className}>
           <Component {...pageProps} />

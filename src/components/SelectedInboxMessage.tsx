@@ -100,6 +100,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
       {
         onSuccess: () => {
           toast.success("Message sent!");
+          apiContext.inbox.invalidate();
           form.reset();
         },
       },

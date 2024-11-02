@@ -19,7 +19,8 @@ RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_T
     --mount=type=secret,id=REDDIT_CLIENT_SECRET,env=REDDIT_CLIENT_SECRET,required=true \  
     --mount=type=secret,id=REDDIT_CLIENT_ID,env=REDDIT_CLIENT_ID,required=true \  
     --mount=type=secret,id=BUNNY_PASSWORD,env=BUNNY_PASSWORD,required=true \  
-    --mount=type=secret,id=STRIPE_TEST_KEY,env=STRIPE_TEST_KEY,required=true \       --mount=type=secret,id=STRIPE_LIVE_KEY,env=STRIPE_LIVE_KEY,required=true \   
+    --mount=type=secret,id=STRIPE_TEST_KEY,env=STRIPE_TEST_KEY,required=true \
+    --mount=type=secret,id=STRIPE_LIVE_KEY,env=STRIPE_LIVE_KEY,required=true \   
     --mount=type=secret,id=STRIPE_WEBHOOK_SECRET,env=STRIPE_WEBHOOK_SECRET,required=true \   
     --mount=type=secret,id=SENTRY_DSN,env=SENTRY_DSN,required=true \   
     --mount=type=secret,id=SENDGRID_API_KEY,env=SENDGRID_API_KEY,required=true \   

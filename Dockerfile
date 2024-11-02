@@ -6,10 +6,13 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+ARG FONTAWESOME_NPM_AUTH_TOKEN
+ENV FONTAWESOME_NPM_AUTH_TOKEN $FONTAWESOME_NPM_AUTH_TOKEN
+
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 COPY prisma ./
-RUN --mount=type=secret,id=npmrc,target=.npmrc --mount=type=secret,id=env,target=.env npm install
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -25,7 +28,7 @@ COPY . .
 # RUN yarn build
 
 # If using npm comment out above and use below instead
-RUN --mount=type=secret,id=env,target=/app/.env npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

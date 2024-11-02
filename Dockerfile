@@ -9,7 +9,7 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 COPY prisma ./
-RUN --mount=type=secret,id=npmrc,target=/root/.npmrc --mount=type=secret,id=env,target=/app/.env npm install
+RUN --mount=type=secret,id=npmrc,target=.npmrc --mount=type=secret,id=env,target=.env npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder

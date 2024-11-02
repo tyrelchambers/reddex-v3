@@ -21,15 +21,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Get env file from droplet
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           passphrase: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: |
-            scp root@${{ secrets.SSH_HOST }}:/root/apps/reddex/.env .env
+          source: "/root/apps/reddex/.env"
+          target: ".env"
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

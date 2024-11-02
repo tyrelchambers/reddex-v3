@@ -10,8 +10,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY prisma ./
 COPY .npmrc .npmrc
-RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN \ 
-    --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL \  
+RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN,required=true \ 
+    --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL,required=true \  
     npm install
 
 # Rebuild the source code only when needed
@@ -51,4 +51,3 @@ COPY --chown=nextjs:nodejs --from=builder /app ./
 EXPOSE 3000
 
 CMD ["npm", "run", "start"]
-

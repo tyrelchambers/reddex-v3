@@ -11,7 +11,7 @@ on:
     types: [closed]
 jobs:
   deploy:
-    if: ${{ github.event.pull_request.merged == true || inputs.deploy == true }}
+    needs: [build-web]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx

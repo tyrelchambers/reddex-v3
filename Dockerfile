@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:22-alpine AS base
 
 # Install dependencies only when needed
@@ -5,12 +6,13 @@ FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-ARG FONTAWESOME_NPM_AUTH_TOKEN
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 COPY prisma ./
 COPY .npmrc .npmrc
-RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=${FONTAWESOME_NPM_AUTH_TOKEN},required=true  npm install
+RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN,required=true \ 
+    --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL,required=true \  
+    npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder

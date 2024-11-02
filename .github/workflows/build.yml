@@ -49,6 +49,6 @@ jobs:
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/reddex
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          secrets: |
+          secret-envs: |
             FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}

@@ -81,6 +81,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd apps
-            docker compose pull ghcr.io/${{ github.repository_owner }}/reddex 
-            docker compose down reddex-client
-            docker compose up reddex-client -d
+            docker compose pull reddex-client
+            docker compose restart reddex-client

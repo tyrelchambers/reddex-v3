@@ -138,12 +138,3 @@ export const subscriptionSchema = z.object({
   subscriptionId: z.string().optional(),
   plan: z.string().optional(),
 });
-
-export const openAIGenerateSchema = z.object({
-  type: z.union([
-    z.literal("title"),
-    z.literal("description"),
-    z.literal("tags"),
-  ]),
-  postId: z.string(),
-});

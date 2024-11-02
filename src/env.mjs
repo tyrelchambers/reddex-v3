@@ -16,7 +16,7 @@ const server = z.object({
     // Since NextAuth.js automatically uses the VERCEL_URL if present.
     (str) => process.env.VERCEL_URL ?? str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string().min(1) : z.string().url()
+    process.env.VERCEL ? z.string().min(1) : z.string().url(),
   ),
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
 
@@ -27,17 +27,10 @@ const server = z.object({
   STRIPE_LIVE_KEY: z.string(),
   NEXT_URL: z.string().url(),
   STRIPE_WEBHOOK_SECRET: z.string(),
-  OPEN_AI_KEY: z.string(),
-  OPEN_AI_ORG: z.string(),
   SENDGRID_API_KEY: z.string(),
-  IBM_API_KEY: z.string(),
-  IBM_URL: z.string(),
   SENTRY_DSN: z.string(),
   NEXT_PUBLIC_SENTRY_DSN: z.string(),
   NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
-  TEST_DATABASE_URL: z.string().url(),
-  TEST_USERNAME: z.string(),
-  TEST_PASSWORD: z.string(),
   MIXPANEL_TOKEN: z.string(),
   YOUTUBE_API_KEY: z.string(),
 });
@@ -69,17 +62,10 @@ const processEnv = {
   STRIPE_LIVE_KEY: process.env.STRIPE_LIVE_KEY,
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   NEXT_URL: process.env.NEXT_URL,
-  OPEN_AI_KEY: process.env.OPEN_AI_KEY,
-  OPEN_AI_ORG: process.env.OPEN_AI_ORG,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-  IBM_API_KEY: process.env.IBM_API_KEY,
-  IBM_URL: process.env.IBM_URL,
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
   SENTRY_DSN: process.env.SENTRY_DSN,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  TEST_DATABASE_URL: process.env.TEST_DATABASE_URL,
-  TEST_USERNAME: process.env.TEST_USERNAME,
-  TEST_PASSWORD: process.env.TEST_PASSWORD,
   MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN,
   NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
   YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
@@ -108,7 +94,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   if (parsed.success === false) {
     console.error(
       "❌ Invalid environment variables:",
-      parsed.error.flatten().fieldErrors
+      parsed.error.flatten().fieldErrors,
     );
     throw new Error("Invalid environment variables");
   }
@@ -122,7 +108,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
         throw new Error(
           process.env.NODE_ENV === "production"
             ? "❌ Attempted to access a server-side environment variable on the client"
-            : `❌ Attempted to access server-side environment variable '${prop}' on the client`
+            : `❌ Attempted to access server-side environment variable '${prop}' on the client`,
         );
       return target[/** @type {keyof typeof target} */ (prop)];
     },

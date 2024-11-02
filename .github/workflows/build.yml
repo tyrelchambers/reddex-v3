@@ -54,3 +54,7 @@ jobs:
             "MIXPANEL_TOKEN=${{ secrets.MIXPANEL_TOKEN }}"
             "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}"
             "NEXT_PUBLIC_MIXPANEL_TOKEN=${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}"
+  deploy:
+    needs: [build-web]
+    uses: ./.github/workflows/deploy.yaml
+    name: Deploy

@@ -12,7 +12,7 @@ ENV FONTAWESOME_NPM_AUTH_TOKEN=$FONTAWESOME_NPM_AUTH_TOKEN
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 COPY prisma ./
-RUN FONTAWESOME_NPM_AUTH_TOKEN=$FONTAWESOME_NPM_AUTH_TOKEN npm install
+RUN --mount=type=secret,id=npmrc,target=.npmrc npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder

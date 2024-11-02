@@ -2,12 +2,12 @@
 name: Build and deploy
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      tag:
+        description: "Image tag based on GH event"
+        type: string
+        required: true
 
 jobs:
   build-web:

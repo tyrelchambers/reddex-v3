@@ -2,16 +2,13 @@
 name: "Deploy to prod"
 
 on:
-  workflow_dispatch:
-    inputs:
-      pr-number:
-        description: "Add PR number for tagging"
-        type: string
-        required: true
+  push:
+    branches:
+      - main
   pull_request:
-    branches: [master]
+    branches:
+      - main
     types: [closed]
-
 jobs:
   deploy:
     if: ${{ github.event.pull_request.merged == true || inputs.deploy == true }}
@@ -28,8 +25,8 @@ jobs:
       - name: Promote Reddex to latest
         run: |
           docker buildx imagetools create \
-            --tag ghcr.io/${{ github.repository_owner }}/reddex/app:latest \
-            ghcr.io/${{ github.repository_owner }}/reddex/app:pr-${{ github.event.pull_request.number }}
+            --tag ghcr.io/${{ github.repository_owner }}/reddex \
+            ghcr.io/${{ github.repository_owner }}/reddex
 
       - name: Deploy docker images to server
         uses: appleboy/ssh-action@v1.0.3
@@ -41,10 +38,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd apps
-            cd reddex
-            git checkout main
-            git pull
-            cd ../
-            docker compose pull ghcr.io/${{ github.repository_owner }}/reddex/app:latest 
+            docker compose pull ghcr.io/${{ github.repository_owner }}/reddex 
             docker compose down reddex-client
             docker compose up reddex-client -d

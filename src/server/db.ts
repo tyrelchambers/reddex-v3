@@ -13,7 +13,7 @@ export const prisma =
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
     datasources: {
       db: {
-        url: env.NODE_ENV === "test" ? env.TEST_DATABASE_URL : env.DATABASE_URL,
+        url: env.DATABASE_URL,
       },
     },
   });

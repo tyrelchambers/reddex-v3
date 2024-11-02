@@ -25,7 +25,9 @@ jobs:
         with:
           push: false
           cache-to: type=gha,mode=max
-
+          secrets: |
+            "FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}"
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
   build-web:
     needs: [prepare]
     name: app

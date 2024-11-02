@@ -79,7 +79,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
           script: |
             cd apps
             docker compose pull ghcr.io/${{ github.repository_owner }}/reddex 

@@ -37,5 +37,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           secrets: |
-            FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            "FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}""
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}""

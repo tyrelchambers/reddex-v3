@@ -9,7 +9,8 @@ ARG FONTAWESOME_NPM_AUTH_TOKEN
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 COPY prisma ./
-RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=${FONTAWESOME_NPM_AUTH_TOKEN},required=true  --mount=type=secret,id=npmrc,target=.npmrc  npm install
+COPY .npmrc .npmrc
+RUN  npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -31,7 +32,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 

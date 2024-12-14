@@ -1,82 +1,42 @@
-import { faSpinner } from "@fortawesome/pro-solid-svg-icons";
+import { faWarning } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import Stripe from "stripe";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { settingsTabs } from "~/routes";
+import { routes, settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";
-import NoSelectedPlan from "~/components/NoSelectedPlan";
 import { Button } from "~/components/ui/button";
 import { captureException } from "@sentry/nextjs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import AccountPlanSelectModal from "~/components/modals/AccountPlanSelectModal";
-
-const formSchema = z.object({
-  email: z.string().email(),
-});
+import { getPrices } from "~/constants";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 const Settings = () => {
   const { data: currentUser } = api.user.me.useQuery();
   const subscriptionQuery = api.billing.info.useQuery();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const subscription = subscriptionQuery.data?.customer.subscriptions
-    ?.data[0] as Stripe.Subscription & {
-    plan: Stripe.Plan & {
-      product: Stripe.Product;
-    };
-  };
   const invoices = subscriptionQuery.data?.invoices;
   const paymentLink = api.stripe.createCheckout.useMutation();
-  const createCustomer = api.billing.createCustomer.useMutation();
-  const updateUser = api.user.saveProfile.useMutation();
 
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
-
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-    },
-  });
 
   const isLoading = subscriptionQuery.isLoading;
 
   const createSubscriptionHandler = async () => {
-    const formValues = form.getValues();
     try {
       setLoadingPaymentLink(true);
 
-      if (!selectedPlan) throw new Error("Missing selected plan");
-
-      const customerEmail = currentUser?.email || formValues.email;
-
-      const customerId =
-        currentUser?.customerId ||
-        (await createCustomer.mutateAsync(customerEmail));
-
-      await updateUser.mutateAsync({
-        email: formValues.email,
-      });
-
-      if (!customerId) {
-        throw new Error("Missing customer ID");
-      }
+      if (!currentUser?.email) throw new Error("Missing email");
 
       const link = await paymentLink.mutateAsync({
-        price: selectedPlan,
+        price: getPrices().ultimate,
+        email: currentUser.email,
       });
 
       if (link) {
@@ -88,6 +48,8 @@ const Settings = () => {
 
       setLoadingPaymentLink(false);
     } catch (error) {
+      setLoadingPaymentLink(false);
+      toast.error("Something went wrong");
       captureException(error, {
         extra: {
           userId: currentUser?.id,
@@ -104,26 +66,44 @@ const Settings = () => {
       tabs={settingsTabs}
     >
       <section className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
-        <h1 className="text-3xl text-foreground">Account</h1>
+        <h1 className="text-3xl font-bold text-foreground">Account</h1>
 
         <div className="flex flex-col">
-          <h2 className="text-xl text-foreground">Billing</h2>
-          <p className="text-sm text-muted-foreground">
-            Your plan is managed with Stripe.
-          </p>
-
+          <h2 className="text-xl font-medium text-foreground">Billing</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             You can manage your subscription through Stripe. There you can
             update your billing information, cancel or update your plan.
           </p>
 
-          {subscription ? (
-            <SubscriptionCard subscription={subscription} invoices={invoices} />
+          {currentUser?.subscription ? (
+            <SubscriptionCard
+              subscription={currentUser.subscription}
+              invoices={invoices}
+            />
+          ) : !currentUser?.subscription && !currentUser?.email ? (
+            <div className="bg-warning/10 mt-6 flex items-center gap-4 rounded-md border border-yellow-500 p-4">
+              <FontAwesomeIcon icon={faWarning} className="text-yellow-500" />
+
+              <div className="flex flex-1 flex-col">
+                <p className="font-medium text-foreground">
+                  Your account is missing an email.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Before selecting a plan, please update your email.
+                </p>
+              </div>
+
+              <Link
+                href={routes.SETTINGS_PROFILE}
+                className="bg-warning text-warning-foreground rounded-md px-4 py-2 text-sm font-medium hover:bg-yellow-600"
+              >
+                Add email
+              </Link>
+            </div>
           ) : (
             <AccountPlanSelectModal
               currentPlan={selectedPlan}
-              form={form}
-              hasEmail={!!currentUser?.email}
+              disableSubmit={!currentUser?.email || loadingPaymentLink}
               loadingPaymentLink={loadingPaymentLink}
               setSelectedPlan={setSelectedPlan}
               createSubscriptionHandler={createSubscriptionHandler}

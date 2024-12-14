@@ -14,8 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/pro-duotone-svg-icons";
 
 interface Props {
-  form: any;
-  hasEmail: boolean;
+  disableSubmit: boolean;
   setSelectedPlan: (id: string) => void;
   currentPlan: string | null;
   loadingPaymentLink: boolean;
@@ -23,8 +22,7 @@ interface Props {
 }
 
 const AccountPlanSelectModal = ({
-  form,
-  hasEmail,
+  disableSubmit,
   setSelectedPlan,
   currentPlan,
   loadingPaymentLink,
@@ -39,36 +37,14 @@ const AccountPlanSelectModal = ({
         <DialogHeader>
           <DialogTitle>Select a plan</DialogTitle>
         </DialogHeader>
-        {!hasEmail && (
-          <>
-            <p className="mb-4">
-              Please add an email to your account before we proceed.
-            </p>
-            <Form {...form}>
-              <FormField
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                      placeholder="Email"
-                      required
-                      type="email"
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
-            </Form>
-          </>
-        )}
+
         <NoSelectedPlan
           setSelectedPlanHandler={setSelectedPlan}
           selectedPlan={currentPlan}
         />
 
         <Button
-          disabled={!currentPlan || loadingPaymentLink}
+          disabled={disableSubmit}
           className="w-full"
           onClick={createSubscriptionHandler}
         >

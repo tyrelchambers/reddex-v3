@@ -27,7 +27,7 @@ interface Props {
 const StatShareDialog = ({ username, description, count }: Props) => {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="secondary" className="w-full md:w-fit">
           Share
         </Button>

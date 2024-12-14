@@ -44,8 +44,7 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
   useEffect(() => {
     if (user) {
       setLoadDashboardOrBanner(
-        user.hasActiveSubscription ||
-          allowedRoutesWithoutPlan.includes(router.asPath)
+        !!user.subscription || allowedRoutesWithoutPlan.includes(router.asPath),
       );
     }
   }, [user, router.asPath]);

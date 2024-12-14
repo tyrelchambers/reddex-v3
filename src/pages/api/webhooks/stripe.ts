@@ -6,10 +6,11 @@ import { buffer } from "micro";
 import { prisma } from "~/server/db";
 import { StripeSubscription } from "~/types";
 import { getCustomerId } from "~/utils";
+import { isStripeCustomer } from "~/utils/typeguards";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   let data: Stripe.Event.Data;
   let eventType: string;
@@ -24,7 +25,7 @@ export default async function handler(
     event = stripeClient.webhooks.constructEvent(
       reqBuffer,
       signature,
-      env.STRIPE_WEBHOOK_SECRET
+      env.STRIPE_WEBHOOK_SECRET,
     );
 
     data = event.data;
@@ -83,7 +84,7 @@ export default async function handler(
     }
 
     if (eventType === "checkout.session.completed") {
-      const { id, metadata } = data.object as Stripe.Checkout.Session;
+      const { id, metadata, customer } = data.object as Stripe.Checkout.Session;
 
       const userId = metadata?.userId;
 
@@ -103,6 +104,15 @@ export default async function handler(
         console.log(`⚠️  User not found.`);
         return res.send(400);
       }
+
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          customerId: isStripeCustomer(customer) ? customer.id : null,
+        },
+      });
 
       console.log(`🔔  Payment received!`);
     }

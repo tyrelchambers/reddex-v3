@@ -5,17 +5,12 @@ import { createCheckoutSchema } from "~/server/schemas";
 import { z } from "zod";
 import Stripe from "stripe";
 import { captureException } from "@sentry/nextjs";
-import { getUserById } from "~/server/queries";
 
 export const stripeRouter = createTRPCRouter({
   createCheckout: protectedProcedure
     .input(createCheckoutSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const user = await getUserById(ctx.session.user.id);
-
-        if (!user?.customerId) throw Error("Missing user for checkout");
-
         const link = await stripeClient.checkout.sessions.create({
           line_items: [
             {
@@ -28,15 +23,16 @@ export const stripeRouter = createTRPCRouter({
           customer_email: input.email,
           allow_promotion_codes: true,
           expand: ["line_items"],
-          metadata: {
-            userId: ctx.session?.user.id,
-          },
+
           subscription_data: {
             trial_period_days: 14,
             trial_settings: {
               end_behavior: {
                 missing_payment_method: "cancel",
               },
+            },
+            metadata: {
+              userId: ctx.session?.user.id,
             },
           },
         });

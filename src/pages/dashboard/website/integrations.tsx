@@ -47,7 +47,7 @@ const Integrations = () => {
     <WrapperWithNav tabs={websiteTabItems}>
       <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading website integrations..."
           hasProPlan={proPlan}
         >

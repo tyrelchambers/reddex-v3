@@ -48,7 +48,7 @@ const Contacts = () => {
     <WrapperWithNav>
       <section className="mx-auto max-w-screen-2xl px-4 lg:px-0">
         <header className="flex items-center justify-between">
-          <h1 className="text-2xl text-foreground">Contacts</h1>
+          <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
 
           <Dialog>
             <DialogTrigger asChild>

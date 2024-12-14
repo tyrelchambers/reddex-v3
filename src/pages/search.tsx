@@ -21,8 +21,18 @@ import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { trackUiEvent } from "~/utils/mixpanelClient";
-import { Sheet, SheetContent, SheetHeader } from "~/components/ui/sheet";
-import { Dialog, DialogContent, DialogHeader } from "~/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "~/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/pro-duotone-svg-icons";
 interface SearchHandlerProps {
@@ -33,7 +43,7 @@ interface SearchHandlerProps {
 const Search = () => {
   const router = useRouter();
   const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
-    {}
+    {},
   );
 
   // pagination
@@ -63,7 +73,7 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState<PostFromReddit[]>([]);
   const [lastSearched, setLastSearched] = useState<{ time: Date } | undefined>(
-    undefined
+    undefined,
   );
   const [queueModalOpened, { open: openQueue, close: closeQueue }] =
     useDisclosure(false);
@@ -73,7 +83,7 @@ const Search = () => {
     filterPosts(
       appliedFilters,
       posts,
-      currentUser.data?.Profile?.words_per_minute
+      currentUser.data?.Profile?.words_per_minute,
     ).length / PAGINATION_LIMIT_PER_PAGE;
 
   useEffect(() => {
@@ -153,7 +163,7 @@ const Search = () => {
         </section>
       )}
 
-      <div className=" relative flex flex-col p-4">
+      <div className="relative flex flex-col p-4">
         <QueueBanner openQueue={openQueue} />
 
         {loading && (
@@ -174,10 +184,10 @@ const Search = () => {
               filterPosts(
                 appliedFilters,
                 posts,
-                currentUser.data?.Profile?.words_per_minute
+                currentUser.data?.Profile?.words_per_minute,
               ),
               PAGINATION_LIMIT_PER_PAGE,
-              activePage
+              activePage,
             )
               .sort((a, b) => b.created - a.created)
               .map((item) => (
@@ -186,7 +196,7 @@ const Search = () => {
                   post={item}
                   hasBeenUsed={
                     !!usedPostIdsQuery.data?.find(
-                      (id) => id.post_id === item.id
+                      (id) => id.post_id === item.id,
                     )
                   }
                   usersWordsPerMinute={
@@ -213,7 +223,7 @@ const Search = () => {
           />
         </div>
         {posts && (
-          <p className=" mt-4 text-sm text-foreground/60 lg:mt-0">
+          <p className="mt-4 text-sm text-foreground/60 lg:mt-0">
             *For people who are not signed into their accounts, the reading time
             is set at 150wpm.
           </p>
@@ -222,7 +232,9 @@ const Search = () => {
 
       <Dialog open={opened}>
         <DialogContent onClose={close}>
-          <DialogHeader className="text-foreground">Apply filters</DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Apply filters</DialogTitle>
+          </DialogHeader>
           <p className="mb-4 text-sm text-foreground/60">
             Any input that doesn&apos;t have a value, won&apos;t be applied.
           </p>
@@ -231,19 +243,23 @@ const Search = () => {
       </Dialog>
 
       <Dialog open={queueModalOpened}>
-        <DialogContent onClose={closeQueue}>
-          <DialogHeader className="text-foreground">Story queue</DialogHeader>
+        <DialogContent onClose={closeQueue} className="w-full max-w-screen-lg">
+          <DialogHeader>
+            <DialogTitle>Story queue</DialogTitle>
+          </DialogHeader>
           <QueueModal close={closeQueue} />
         </DialogContent>
       </Dialog>
 
       <Sheet open={drawerOpened}>
         <SheetContent side="right" onClose={closeDrawer}>
-          <SheetHeader className="text-foreground">Search Reddit</SheetHeader>
+          <SheetHeader>
+            <SheetTitle>Search Reddit</SheetTitle>
+          </SheetHeader>
           <SubredditSearchForm
             open={open}
             searchHandler={searchHandler}
-            disableSearch={subredditSearch.isLoading}
+            disableSearch={subredditSearch.isPending}
             searches={currentUser.data?.Profile?.searches}
           />
         </SheetContent>
@@ -255,7 +271,7 @@ const Search = () => {
 const paginatedSlice = (
   array: PostFromReddit[],
   page_size: number,
-  page_number: number
+  page_number: number,
 ) => {
   return array.slice((page_number - 1) * page_size, page_number * page_size);
 };
@@ -263,7 +279,7 @@ const paginatedSlice = (
 const filterPosts = (
   filters: Partial<FilterState> | null,
   posts: PostFromReddit[],
-  profileReadingTime: number | undefined | null
+  profileReadingTime: number | undefined | null,
 ) => {
   if (!filters) return posts;
 

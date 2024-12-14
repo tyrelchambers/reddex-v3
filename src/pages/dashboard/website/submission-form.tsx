@@ -52,7 +52,7 @@ const SubmissionForm = () => {
       websiteSettings.data?.submissionPage?.id,
       {
         enabled: !!websiteSettings.data?.submissionPage?.hidden,
-      }
+      },
     );
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,13 +87,13 @@ const SubmissionForm = () => {
         ...websiteSettings.data.submissionPage,
         submissionFormModules: {
           author: modules.find(
-            (module) => module.name.toLowerCase() === "author"
+            (module) => module.name.toLowerCase() === "author",
           ),
           email: modules.find(
-            (module) => module.name.toLowerCase() === "email"
+            (module) => module.name.toLowerCase() === "email",
           ),
           title: modules.find(
-            (module) => module.name.toLowerCase() === "title"
+            (module) => module.name.toLowerCase() === "title",
           ),
         },
       });
@@ -119,9 +119,9 @@ const SubmissionForm = () => {
 
   return (
     <WrapperWithNav tabs={websiteTabItems}>
-      <main className=" my-6 flex max-w-screen-2xl gap-10">
+      <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading submission form settings..."
           hasProPlan={proPlan}
         >

@@ -43,7 +43,7 @@ registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
   FilePondPluginFileValidateSize,
-  FilePondPluginImageResize
+  FilePondPluginImageResize,
 );
 
 const General = () => {
@@ -93,7 +93,7 @@ const General = () => {
     formValues.subdomain || "",
     {
       enabled: !!formValues.subdomain,
-    }
+    },
   );
 
   const DISABLE_SUBMIT_BUTTON =
@@ -159,7 +159,7 @@ const General = () => {
     <WrapperWithNav tabs={websiteTabItems}>
       <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading website settings..."
           hasProPlan={proPlan}
         >
@@ -271,7 +271,7 @@ const General = () => {
                     </div>
                     <Button
                       variant="secondary"
-                      className=" mt-4"
+                      className="mt-4"
                       onClick={() =>
                         websiteSettings.data?.thumbnail &&
                         removeImage.mutate({
@@ -309,7 +309,7 @@ const General = () => {
                     </div>
                     <Button
                       variant="secondary"
-                      className=" mt-4"
+                      className="mt-4"
                       onClick={() =>
                         websiteSettings.data?.banner &&
                         removeImage.mutate({

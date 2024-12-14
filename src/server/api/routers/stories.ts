@@ -87,44 +87,54 @@ export const storyRouter = createTRPCRouter({
           },
         });
         const redditAccount = user?.accounts.find(
-          (acc) => acc.provider === "reddit"
+          (acc) => acc.provider === "reddit",
         );
 
         if (!redditAccount) return;
 
         const accessToken = await refreshAccessToken(redditAccount);
 
-        if (env.NODE_ENV === "production" && accessToken) {
-          const body = new FormData();
-          body.set("to", input.author);
-          body.set("subject", formatSubject(input.title));
-          body.set("text", input.message);
-
-          await axios
-            .post(COMPOSE_MESSAGE_URL, body, {
-              headers: {
-                Authorization: `bearer ${accessToken}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            })
-            .then(async () => {
-              const { message, ...rest } = input;
-              await prisma.redditPost.create({
-                data: {
-                  ...rest,
-                  flair: input.flair ?? undefined,
-                  userId: ctx.session.user.id,
-                },
-              });
-
-              await prisma.contactedWriters.create({
-                data: {
-                  name: input.author,
-                  userId: ctx.session.user.id,
-                },
-              });
-            });
+        if (env.NODE_ENV !== "production" && !accessToken) {
+          throw new Error("Missing access token");
         }
+
+        const body = new FormData();
+
+        const author =
+          process.env.NODE_ENV === "production"
+            ? input.author
+            : "StoriesAfterMidnight";
+
+        body.set("to", author);
+        body.set("subject", formatSubject(input.title));
+        body.set("text", input.message);
+
+        await axios
+          .post(COMPOSE_MESSAGE_URL, body, {
+            headers: {
+              Authorization: `bearer ${accessToken}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          })
+          .then(async (res) => {
+            if (!res.data.success) throw new Error("Failed to send message");
+
+            const { message, ...rest } = input;
+            await prisma.redditPost.create({
+              data: {
+                ...rest,
+                flair: input.flair ?? undefined,
+                userId: ctx.session.user.id,
+              },
+            });
+
+            await prisma.contactedWriters.create({
+              data: {
+                name: input.author,
+                userId: ctx.session.user.id,
+              },
+            });
+          });
 
         return true;
       } catch (error) {
@@ -177,7 +187,7 @@ export const storyRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         completed: z.boolean(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       return await prisma.submittedStory.updateMany({

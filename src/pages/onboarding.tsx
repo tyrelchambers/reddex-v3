@@ -28,9 +28,9 @@ const Onboarding = () => {
         isActiveSubscription(user.subscription)
       ) {
         router.push(redirectTo);
-      } else if (!userQuery.isLoading && !userQuery.data) {
+      } else if (!userQuery.isPending && !userQuery.data) {
         router.push("/");
-      } else if (!userQuery.isLoading && userQuery.data) {
+      } else if (!userQuery.isPending && userQuery.data) {
         setLoading(false);
       }
     }

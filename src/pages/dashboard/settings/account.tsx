@@ -26,7 +26,7 @@ const Settings = () => {
 
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
 
-  const isLoading = subscriptionQuery.isLoading;
+  const isLoading = subscriptionQuery.isPending;
 
   const createSubscriptionHandler = async () => {
     try {

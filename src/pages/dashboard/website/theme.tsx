@@ -65,7 +65,7 @@ const Theme = () => {
     <WrapperWithNav tabs={websiteTabItems}>
       <main className="my-6 flex w-full max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading website theme settings..."
           hasProPlan={proPlan}
         >
@@ -73,7 +73,7 @@ const Theme = () => {
 
           <Form {...form}>
             <form
-              className="form mt-4 max-w-sm "
+              className="form mt-4 max-w-sm"
               onSubmit={form.handleSubmit(submitHandler)}
             >
               <FormField

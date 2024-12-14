@@ -36,9 +36,7 @@ const InboxMessageList = ({
               m.id === selectedMessage ? "active" : "border border-border"
             }`}
           >
-            <p className="text-left font-semibold text-foreground">
-              {m.subject}
-            </p>
+            <p className="text-left font-medium text-foreground">{m.subject}</p>
             <footer className="mt-4 flex justify-between">
               <p className="text-sm font-thin text-muted-foreground">
                 {m.dest}

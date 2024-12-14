@@ -34,35 +34,13 @@ const ImportStoryForm = () => {
   });
 
   const submitHandler = async (data: z.infer<typeof formSchema>) => {
-    const regex = form.getValues().url.match(/[\s\S]+\//gi);
-
-    if (!regex) return;
-
-    const _url = `${regex[0]}.json`;
-
-    const storyFromUrl = await axios
-      .get(_url)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      .then((res) => res.data[0].data.children[0].data as PostFromReddit);
-
-    importStory.mutate(
-      {
-        ...storyFromUrl,
-        content: storyFromUrl.selftext,
-        story_length: storyFromUrl.selftext.length,
-        flair: storyFromUrl.link_flair_text,
-        post_id: storyFromUrl.id,
-        reading_time: Math.round(storyFromUrl.selftext.length / 200),
-        message: storyFromUrl.selftext,
+    importStory.mutate(data.url, {
+      onSuccess: () => {
+        form.reset();
+        toast.success("Story imported successfully!");
+        trackUiEvent(MixpanelEvents.IMPORT_STORY);
       },
-      {
-        onSuccess: () => {
-          form.reset();
-          toast.success("Story imported successfully!");
-          trackUiEvent(MixpanelEvents.IMPORT_STORY);
-        },
-      }
-    );
+    });
   };
 
   return (

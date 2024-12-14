@@ -1,5 +1,5 @@
 import { Contact } from "@prisma/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
@@ -167,6 +167,8 @@ const QueueModal = ({ close }: Props) => {
 };
 
 const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
+  const [showNote, setShowNote] = useState(false);
+
   return (
     <header className="flex flex-col gap-3">
       <div className="flex flex-col rounded-xl bg-card p-2">
@@ -183,8 +185,19 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
           Author
         </p>
         <div className="mt-1 flex items-center gap-4 break-all font-bold text-card-foreground md:text-xl">
-          <p>{post.author}</p> {contact && <Badge>Is a contact</Badge>}
+          <p>{post.author}</p>{" "}
+          {contact && (
+            <button type="button" onClick={() => setShowNote((prev) => !prev)}>
+              <Badge>See contact note</Badge>
+            </button>
+          )}
         </div>
+
+        {showNote && (
+          <p className="mt-2 rounded-md border border-border bg-background p-2 text-sm text-card-foreground">
+            {contact?.notes}
+          </p>
+        )}
       </div>
     </header>
   );

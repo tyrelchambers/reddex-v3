@@ -1,3 +1,5 @@
+import { faUserCircle } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format, fromUnixTime } from "date-fns";
 import { NextRouter } from "next/router";
 import React from "react";
@@ -39,6 +41,7 @@ const InboxMessageList = ({
             <p className="text-left font-medium text-foreground">{m.subject}</p>
             <footer className="mt-4 flex justify-between">
               <p className="text-sm font-thin text-muted-foreground">
+                <FontAwesomeIcon icon={faUserCircle} className="mr-1" />{" "}
                 {m.dest}
               </p>
               <p className="text-sm font-thin text-muted-foreground">

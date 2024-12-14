@@ -8,6 +8,7 @@ import { formatSubject } from "~/utils";
 import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { env } from "~/env.mjs";
+import { PostFromReddit } from "~/types";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -211,19 +212,32 @@ export const storyRouter = createTRPCRouter({
       });
     }),
   importStory: protectedProcedure
-    .input(postSchema)
+    .input(z.string())
     .mutation(async ({ ctx, input }) => {
       try {
-        const { message, ...rest } = input;
+        const storyFromUrl = await axios
+          .get(`${input}.json`)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          .then((res) => res.data[0].data.children[0].data as PostFromReddit);
 
         return await prisma.redditPost.create({
           data: {
-            ...rest,
-            content: input.content,
-            flair: input.flair ?? undefined,
+            content: storyFromUrl.selftext,
+            flair: storyFromUrl.link_flair_text ?? undefined,
             userId: ctx.session.user.id,
             permission: true,
             read: false,
+            story_length: storyFromUrl.selftext.length,
+            post_id: storyFromUrl.id,
+            reading_time: Math.round(storyFromUrl.selftext.length / 200),
+            author: storyFromUrl.author,
+            title: storyFromUrl.title,
+            ups: storyFromUrl.ups,
+            subreddit: storyFromUrl.subreddit,
+            url: storyFromUrl.url,
+            upvote_ratio: storyFromUrl.upvote_ratio,
+            num_comments: storyFromUrl.num_comments,
+            created: storyFromUrl.created_utc,
           },
         });
       } catch (error) {

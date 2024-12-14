@@ -58,7 +58,7 @@ const Header = ({ openDrawer }: Props) => {
   return (
     <header
       className={clsx(
-        "sticky right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background px-4 py-4 lg:relative lg:justify-between",
+        "sticky right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
         opened && "h-screen !items-start overflow-hidden",
       )}
     >

@@ -5,6 +5,7 @@ export interface Plan {
   desc: string;
   price: string;
   features: string[];
+  featured?: boolean;
 }
 
 const testPrices = {
@@ -26,6 +27,7 @@ export const plans = [
     name: "Ultimate",
     desc: "You want organization with a custom website to receive submissions",
     price: "$8",
+    featured: true,
     features: [
       "Customize your reading list",
       "Unlimited reading history",

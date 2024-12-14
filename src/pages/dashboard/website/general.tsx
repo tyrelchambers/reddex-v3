@@ -200,7 +200,7 @@ const General = () => {
                   }`}
                 >
                   <Badge className="mt-2 w-fit" variant="outline">
-                    https://reddex.app/{form.getValues().subdomain}
+                    https://reddex.app/w/{subdomainFormWatch}
                   </Badge>
                 </Link>
                 {subdomainFormWatch && subdomainAvailable && (

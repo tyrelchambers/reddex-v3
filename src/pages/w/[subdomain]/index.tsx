@@ -6,7 +6,7 @@ import { prisma } from "~/server/db";
 import YouTube from "react-youtube";
 import { checkForProperSubscription } from "~/utils/index.server";
 import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
-import Image from "next/image";
+
 interface Props {
   website: (Website & { submissionPage: SubmissionPage }) | null;
   youtubeVideos: YoutubeVideo[];
@@ -32,8 +32,6 @@ interface YoutubeResponse {
 }
 
 const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
-  console.log("here");
-
   if (!website) return null;
 
   return (

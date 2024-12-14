@@ -18,7 +18,6 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { websiteThemeSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
-import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
@@ -28,8 +27,6 @@ const formSchema = websiteThemeSchema;
 
 const Theme = () => {
   const apiContext = api.useUtils();
-  const { data: user } = api.user.me.useQuery();
-  const proPlan = hasProPlan(user?.subscription);
   const saveTheme = api.website.saveTheme.useMutation({
     onSuccess: () => {
       apiContext.website.invalidate();
@@ -67,7 +64,6 @@ const Theme = () => {
         <BodyWithLoader
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading website theme settings..."
-          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Theme</h1>
 
@@ -123,9 +119,7 @@ const Theme = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={!proPlan}>
-                Save changes
-              </Button>
+              <Button type="submit">Save changes</Button>
             </form>
           </Form>
         </BodyWithLoader>

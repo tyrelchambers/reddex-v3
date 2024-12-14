@@ -30,8 +30,6 @@ const formSchema = websiteSubmissionSchema;
 
 const SubmissionForm = () => {
   const apiContext = api.useUtils();
-  const { data: user } = api.user.me.useQuery();
-  const proPlan = hasProPlan(user?.subscription);
 
   const submissionFormSave = api.website.saveSubmissionForm.useMutation({
     onSuccess: () => {
@@ -123,7 +121,6 @@ const SubmissionForm = () => {
         <BodyWithLoader
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading submission form settings..."
-          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Submission form</h1>
 
@@ -132,12 +129,7 @@ const SubmissionForm = () => {
               title="Enable Submission Page"
               subtitle="Enable this submission form to allow visitors to email you their own stories."
               action={
-                <Button
-                  variant="defaultInvert"
-                  onClick={visibilityHandler}
-                  disabled={!proPlan}
-                  title={!proPlan ? "Pro plan required" : undefined}
-                >
+                <Button variant="defaultInvert" onClick={visibilityHandler}>
                   Enable submission form
                 </Button>
               }
@@ -347,9 +339,7 @@ const SubmissionForm = () => {
                 </div>
               </section>
 
-              <Button type="submit" disabled={!proPlan}>
-                Save changes
-              </Button>
+              <Button type="submit">Save changes</Button>
             </form>
           </Form>
         </BodyWithLoader>

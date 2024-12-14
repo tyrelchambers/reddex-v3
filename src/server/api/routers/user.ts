@@ -26,9 +26,8 @@ export const userRouter = createTRPCRouter({
       let subscription = null;
 
       const subscriptionQuery = await stripeClient.subscriptions.search({
-        query: `metadata["userId"]: "${ctx.session.user.id}"`,
+        query: `status: 'active' AND metadata["userId"]: '${ctx.session.user.id}'`,
         expand: ["data.plan", "data.plan.product"],
-        limit: 1,
       });
 
       if (subscriptionQuery.data.length > 0) {
@@ -102,5 +101,56 @@ export const userRouter = createTRPCRouter({
         throw error;
       }
     }),
-  // deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {}),
+  deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+    const subscriptionQuery = await stripeClient.subscriptions.search({
+      query: `metadata["userId"]: "${ctx.session.user.id}"`,
+      limit: 1,
+    });
+
+    const sub = subscriptionQuery.data[0];
+
+    if (!sub) {
+      throw new Error("No subscription found");
+    }
+
+    const deletedSub = await stripeClient.subscriptions.update(sub.id, {
+      cancel_at_period_end: true,
+    });
+
+    return await prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        deleteOnDate: deletedSub.cancel_at
+          ? new Date(deletedSub.cancel_at * 1000)
+          : null,
+      },
+    });
+  }),
+  cancelDeletion: protectedProcedure.mutation(async ({ ctx }) => {
+    const subscriptionQuery = await stripeClient.subscriptions.search({
+      query: `metadata["userId"]: "${ctx.session.user.id}"`,
+      limit: 1,
+    });
+
+    const sub = subscriptionQuery.data[0];
+
+    if (!sub) {
+      throw new Error("No subscription found");
+    }
+
+    await stripeClient.subscriptions.update(sub.id, {
+      cancel_at_period_end: false,
+    });
+
+    return await prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        deleteOnDate: null,
+      },
+    });
+  }),
 });

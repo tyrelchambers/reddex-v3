@@ -1,28 +1,29 @@
 import { faWarning } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import Stripe from "stripe";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { routes, settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";
 import { Button } from "~/components/ui/button";
 import { captureException } from "@sentry/nextjs";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "~/components/ui/separator";
 import AccountPlanSelectModal from "~/components/modals/AccountPlanSelectModal";
 import { getPrices } from "~/constants";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import AccountDeletionBanner from "~/components/AccountDeletionBanner";
+import CancelAccountDeletionBanner from "~/components/CancelAccountDeletionBanner";
 
 const Settings = () => {
+  const apiCtx = api.useUtils();
   const { data: currentUser } = api.user.me.useQuery();
   const subscriptionQuery = api.billing.info.useQuery();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const invoices = subscriptionQuery.data?.invoices;
   const paymentLink = api.stripe.createCheckout.useMutation();
+  const deleteMutation = api.user.deleteAccount.useMutation();
+  const cancelDeletionMutation = api.user.cancelDeletion.useMutation();
 
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);
 
@@ -58,6 +59,20 @@ const Settings = () => {
       });
     }
   };
+
+  const deleteHandler = () =>
+    deleteMutation.mutate(undefined, {
+      onSuccess: async () => {
+        await apiCtx.user.me.invalidate();
+      },
+    });
+
+  const cancelHandler = () =>
+    cancelDeletionMutation.mutate(undefined, {
+      onSuccess: async () => {
+        await apiCtx.user.me.invalidate();
+      },
+    });
 
   return (
     <WrapperWithNav
@@ -112,16 +127,11 @@ const Settings = () => {
         </div>
 
         <Separator className="border-border" />
-        <div className="flex flex-col">
-          <h2 className="text-xl text-foreground">Delete account</h2>
-          <p className="mb-4 text-sm text-muted-foreground">
-            To delete your account, manage your subscription and cancel your
-            membership. Your account will be deleted once your membership is
-            cancelled and the billing cycle ends.
-          </p>
-
-          <Button variant="secondary">Delete account</Button>
-        </div>
+        {currentUser?.deleteOnDate ? (
+          <CancelAccountDeletionBanner cancelHandler={cancelHandler} />
+        ) : (
+          <AccountDeletionBanner deleteHandler={deleteHandler} />
+        )}
       </section>
     </WrapperWithNav>
   );

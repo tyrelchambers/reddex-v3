@@ -16,11 +16,13 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
+import AccountPlanSelectModal from "~/components/modals/AccountPlanSelectModal";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,9 +31,6 @@ const formSchema = z.object({
 const Settings = () => {
   const { data: currentUser } = api.user.me.useQuery();
   const subscriptionQuery = api.billing.info.useQuery();
-  const [selectedFrequency, setSelectedFrequency] = useState<
-    "yearly" | "monthly"
-  >("yearly");
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const subscription = subscriptionQuery.data?.customer.subscriptions
     ?.data[0] as Stripe.Subscription & {
@@ -123,58 +122,14 @@ const Settings = () => {
           {subscription ? (
             <SubscriptionCard subscription={subscription} invoices={invoices} />
           ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="mt-4">Choose a plan</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>Select a plan</DialogHeader>
-                {!currentUser?.email && (
-                  <>
-                    <p className="mb-4">
-                      Please add an email to your account before we proceed.
-                    </p>
-                    <Form {...form}>
-                      <FormField
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <Input
-                              placeholder="Email"
-                              required
-                              type="email"
-                              {...field}
-                            />
-                          </FormItem>
-                        )}
-                      />
-                    </Form>
-                  </>
-                )}
-                <NoSelectedPlan
-                  setSelectedPlanHandler={setSelectedPlan}
-                  frequency={selectedFrequency}
-                  setFrequency={setSelectedFrequency}
-                  selectedPlan={selectedPlan}
-                />
-
-                <Button
-                  disabled={!selectedPlan || loadingPaymentLink}
-                  className="w-full"
-                  onClick={createSubscriptionHandler}
-                >
-                  {loadingPaymentLink ? (
-                    <>
-                      <FontAwesomeIcon icon={faSpinner} className="mr-2" spin />{" "}
-                      Loading...
-                    </>
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
-              </DialogContent>
-            </Dialog>
+            <AccountPlanSelectModal
+              currentPlan={selectedPlan}
+              form={form}
+              hasEmail={!!currentUser?.email}
+              loadingPaymentLink={loadingPaymentLink}
+              setSelectedPlan={setSelectedPlan}
+              createSubscriptionHandler={createSubscriptionHandler}
+            />
           )}
         </div>
 

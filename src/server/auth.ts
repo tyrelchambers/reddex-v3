@@ -131,6 +131,8 @@ export const authOptions: NextAuthOptions = {
         email: string | null;
         snoovatar_img: string;
       }) {
+        console.log(profile);
+
         return {
           id: profile.id,
           name: profile.name,

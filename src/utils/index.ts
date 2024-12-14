@@ -244,3 +244,7 @@ interface TweetLink {
 export const generateTweetLink = ({ text }: TweetLink) => {
   return `https://twitter.com/intent/tweet?text=${encodeURI(text)}`;
 };
+
+export const isActiveSubscription = (subscription: Stripe.Subscription) => {
+  return subscription.status === "active" || subscription.status === "trialing";
+};

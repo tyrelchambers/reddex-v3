@@ -14,7 +14,7 @@ import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
-import { plans } from "~/constants";
+import { Plan, plans } from "~/constants";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
@@ -64,7 +64,7 @@ const AccountSetup = () => {
       if (!customerId) throw new Error("Missing customer ID");
 
       const selectedPlan = new URLSearchParams(window.location.search).get(
-        "plan"
+        "plan",
       );
       if (!data.email || !customerId)
         throw new Error("Missing user email or customer id");
@@ -89,6 +89,8 @@ const AccountSetup = () => {
         plan: selectedPlan,
         userId: session.data?.user.id,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -118,12 +120,13 @@ const AccountSetup = () => {
   return (
     <main className="mx-auto max-w-screen-md py-20">
       <>
-        <h1 className="text-foreground">
-          Let&apos;s finish setting up your account.
+        <h1 className="mb-6 text-3xl font-medium text-foreground">
+          Onboarding
         </h1>
+
         <p className="text-foreground/70">
-          We just need to add a thing or two to your accont, then you&apos;ll be
-          all set!
+          Let&apos;s finish setting up your account. We just need to add a thing
+          or two to your accont, then you&apos;ll be all set!
         </p>
         <Form {...form}>
           <form
@@ -145,7 +148,6 @@ const AccountSetup = () => {
               ) : (
                 <NoSelectedPlan
                   setSelectedPlanHandler={setSelectedPlanHandler}
-                  frequency={selectedFrequency}
                   setFrequency={setSelectedFrequency}
                 />
               )}
@@ -177,11 +179,7 @@ const AccountSetup = () => {
   );
 };
 
-const SelectedPlan = ({ plan }: { plan: string }) => {
-  const selectedPlan = plans.find(
-    (p) => p.monthly.productId === plan || p.yearly.productId === plan
-  );
-
+const SelectedPlan = ({ plan }: { plan: Plan }) => {
   return (
     <div className="flex flex-col rounded-2xl bg-card p-8">
       <p className="text-2xl text-card-foreground">
@@ -193,9 +191,9 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
       <Separator className="my-8 border-border" />
       <div>
         <h2 className="text-3xl font-medium text-card-foreground">
-          {selectedPlan?.name}
+          {plan?.name}
         </h2>
-        <p className="text-card-foreground/70">{selectedPlan?.desc}</p>
+        <p className="text-card-foreground/70">{plan?.desc}</p>
         <List
           spacing="xs"
           size="sm"
@@ -205,7 +203,7 @@ const SelectedPlan = ({ plan }: { plan: string }) => {
           }
           className="mt-6"
         >
-          {selectedPlan?.features.map((feature, idx) => (
+          {plan?.features.map((feature, idx) => (
             <List.Item key={idx} className="text-card-foreground/70">
               {feature}
             </List.Item>

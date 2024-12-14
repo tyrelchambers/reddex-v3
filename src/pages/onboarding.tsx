@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import LoadingScreen from "~/components/LoadingScreen";
 import AccountSetup from "~/layouts/AccountSetup";
 import { routes } from "~/routes";
+import { isActiveSubscription } from "~/utils";
 import { api } from "~/utils/api";
 
 const Onboarding = () => {
@@ -23,8 +24,8 @@ const Onboarding = () => {
       if (
         user.email &&
         user.customerId &&
-        (user.subscription?.status === "active" ||
-          user.subscription?.status === "trialing")
+        user.subscription &&
+        isActiveSubscription(user.subscription)
       ) {
         router.push(redirectTo);
       } else if (!userQuery.isLoading && !userQuery.data) {

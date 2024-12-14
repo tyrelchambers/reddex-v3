@@ -3,72 +3,23 @@ import { env } from "./env.mjs";
 export interface Plan {
   name: string;
   desc: string;
-  monthly: {
-    price: number;
-    productId: string;
-  };
-  yearly: {
-    price: number;
-    productId: string;
-  };
-  isMostPop: boolean;
+  price: string;
   features: string[];
 }
 
 const testPrices = {
-  pro: {
-    monthly: {
-      price: 20,
-      productId: "price_1NVdCwI8C7KcVoSyV9DX54pu",
-    },
-    yearly: {
-      price: 200,
-      productId: "price_1NVdCeI8C7KcVoSypm1bJDsd",
-    },
-  },
-  basic: {
-    monthly: {
-      price: 15,
-      productId: "price_1NVdDlI8C7KcVoSyl5pPerfx",
-    },
-    yearly: {
-      price: 150,
-      productId: "price_1NVdDeI8C7KcVoSy03ZN2GGT",
-    },
-  },
+  ultimate: "prod_ROkjElSkDC1ATs",
 };
 
 const livePrices = {
-  pro: {
-    monthly: {
-      price: 20,
-      productId: "price_1KHc14I8C7KcVoSyCHwBi3aX",
-    },
-    yearly: {
-      price: 200,
-      productId: "price_1NQejQI8C7KcVoSyAeORTi6T",
-    },
-  },
-  basic: {
-    monthly: {
-      price: 15,
-      productId: "price_1K64RzI8C7KcVoSyJ6MjuR8i",
-    },
-    yearly: {
-      price: 150,
-      productId: "price_1K64eWI8C7KcVoSyvxqt7X0y",
-    },
-  },
+  ultimate: "",
 };
 
 export const plans = [
   {
-    name: "Pro",
-    desc: "You want organization with a custom website and to receive submissions",
-    ...(env.NEXT_PUBLIC_NODE_ENV === "production"
-      ? livePrices.pro
-      : testPrices.pro),
-    isMostPop: true,
+    name: "Ultimate",
+    desc: "You want organization with a custom website to receive submissions",
+    price: "$8",
     features: [
       "Customize your reading list",
       "Unlimited reading history",
@@ -78,22 +29,6 @@ export const plans = [
       "Customizable personal website",
       "Custom website",
       "Contact list",
-    ],
-  },
-  {
-    name: "Basic",
-    desc: "You want organization from stories to contacts, but don't need a custom website",
-    ...(env.NEXT_PUBLIC_NODE_ENV === "production"
-      ? livePrices.basic
-      : testPrices.basic),
-    isMostPop: false,
-    features: [
-      "Customize your reading list",
-      "Unlimited reading history",
-      "Contact list",
-      "Save personalized messages",
-      "Searchable Reddit-connected inbox",
-      "Customizable personal website",
     ],
   },
 ];

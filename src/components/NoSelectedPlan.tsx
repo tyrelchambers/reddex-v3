@@ -5,15 +5,11 @@ import { Separator } from "./ui/separator";
 
 interface NoSelectedPlanProps {
   setSelectedPlanHandler: (id: string) => void;
-  frequency: "yearly" | "monthly";
-  setFrequency: React.Dispatch<React.SetStateAction<"yearly" | "monthly">>;
   selectedPlan?: string | null;
 }
 
 const NoSelectedPlan = ({
   setSelectedPlanHandler,
-  frequency,
-  setFrequency,
   selectedPlan,
 }: NoSelectedPlanProps) => {
   return (
@@ -27,21 +23,11 @@ const NoSelectedPlan = ({
       <Separator className="my-8" />
 
       <div className="flex flex-col gap-6">
-        <PricingFrequencySelect
-          frequency={frequency}
-          setFrequency={setFrequency}
-        />
         {plans.map((item) => (
           <PricingChip
             plan={item}
             setSelectedPlanHandler={setSelectedPlanHandler}
-            frequency={frequency}
             key={item.name}
-            isSelected={
-              frequency === "yearly"
-                ? item.yearly.productId === selectedPlan
-                : item.monthly.productId === selectedPlan
-            }
           />
         ))}
       </div>

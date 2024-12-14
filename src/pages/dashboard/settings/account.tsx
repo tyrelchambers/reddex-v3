@@ -76,9 +76,7 @@ const Settings = () => {
       }
 
       const link = await paymentLink.mutateAsync({
-        customerEmail,
-        plan: selectedPlan,
-        customerId,
+        price: selectedPlan,
       });
 
       if (link) {

@@ -1,6 +1,5 @@
 import { plans } from "~/constants";
 import PricingChip from "./PricingChip";
-import PricingFrequencySelect from "./PricingFrequencySelect";
 import { Separator } from "./ui/separator";
 
 interface NoSelectedPlanProps {
@@ -25,6 +24,7 @@ const NoSelectedPlan = ({
       <div className="flex flex-col gap-6">
         {plans.map((item) => (
           <PricingChip
+            isSelected={selectedPlan === item.name}
             plan={item}
             setSelectedPlanHandler={setSelectedPlanHandler}
             key={item.name}

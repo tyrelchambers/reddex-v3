@@ -20,7 +20,7 @@ import { env } from "~/env.mjs";
 import "@mantine/core/styles.css";
 
 const font = Poppins({
-  weight: ["300", "500", "700"],
+  weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
 });
 

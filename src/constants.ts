@@ -8,11 +8,17 @@ export interface Plan {
 }
 
 const testPrices = {
-  ultimate: "prod_ROkjElSkDC1ATs",
+  ultimate: "price_1QVxDyI8C7KcVoSyVgMmfQZB",
 };
 
 const livePrices = {
   ultimate: "",
+};
+
+export const getPrices = () => {
+  if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test")
+    return testPrices;
+  return livePrices;
 };
 
 export const plans = [

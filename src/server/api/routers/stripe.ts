@@ -5,22 +5,27 @@ import { createCheckoutSchema } from "~/server/schemas";
 import { z } from "zod";
 import Stripe from "stripe";
 import { captureException } from "@sentry/nextjs";
+import { getUserById } from "~/server/queries";
 
 export const stripeRouter = createTRPCRouter({
   createCheckout: protectedProcedure
     .input(createCheckoutSchema)
     .mutation(async ({ ctx, input }) => {
       try {
+        const user = await getUserById(ctx.session.user.id);
+
+        if (!user?.customerId) throw Error("Missing user for checkout");
+
         const link = await stripeClient.checkout.sessions.create({
           line_items: [
             {
-              price: input.plan,
+              price: input.price,
               quantity: 1,
             },
           ],
           mode: "subscription",
           success_url: CHECKOUT_SUCCESS_URL,
-          customer: input.customerId,
+          customer_email: input.email,
           allow_promotion_codes: true,
           expand: ["line_items"],
           metadata: {

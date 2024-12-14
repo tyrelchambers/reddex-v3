@@ -32,6 +32,8 @@ interface YoutubeResponse {
 }
 
 const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
+  console.log("here");
+
   if (!website) return null;
 
   return (
@@ -40,7 +42,6 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
 
       <section className="mx-auto mt-10 w-full max-w-[1500px] p-4 lg:p-0">
         <section className="mx-auto flex h-fit items-center overflow-hidden rounded-xl lg:h-[500px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={
               website.banner ??
@@ -106,7 +107,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
       user: {
         select: {
-          customerId: true,
+          id: true,
         },
       },
     },
@@ -120,9 +121,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const hasProSubscription = await checkForProperSubscription(user.customerId);
+  const hasSubscription = await checkForProperSubscription(user.id);
 
-  if (website?.hidden || !hasProSubscription || !website)
+  if (website?.hidden || !hasSubscription || !website)
     return {
       notFound: true,
     };

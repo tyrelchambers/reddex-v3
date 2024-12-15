@@ -1,4 +1,4 @@
-import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ import {
   FormLabel,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { MixpanelEvents, PostFromReddit } from "~/types";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
@@ -23,6 +23,7 @@ const formSchema = z.object({
 const ImportStoryForm = () => {
   const apiContext = api.useUtils();
   const form = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       url: "",
     },
@@ -33,7 +34,7 @@ const ImportStoryForm = () => {
     },
   });
 
-  const submitHandler = async (data: z.infer<typeof formSchema>) => {
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
     importStory.mutate(data.url, {
       onSuccess: () => {
         form.reset();

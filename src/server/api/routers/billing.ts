@@ -95,7 +95,7 @@ export const billingRouter = createTRPCRouter({
       captureException(error);
     }
   }),
-  updateLink: protectedProcedure.mutation(async ({ ctx }) => {
+  updateLink: protectedProcedure.mutation(() => {
     try {
       const url = "https://billing.stripe.com/p/login/test_fZe4iffki7hw9lm9AA";
       return url;

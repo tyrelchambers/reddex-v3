@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const knownWebsites = ["/astheravendreams", "/storiesaftermidnight"];
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   if (knownWebsites.includes(path)) {
     return NextResponse.redirect(new URL(`/w${path}`, request.url));

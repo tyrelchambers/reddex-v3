@@ -7,7 +7,7 @@ import { COMPOSE_MESSAGE_URL } from "~/url.constants";
 import { formatSubject } from "~/utils";
 import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { PostFromReddit } from "~/types";
 
 export const storyRouter = createTRPCRouter({
@@ -118,6 +118,7 @@ export const storyRouter = createTRPCRouter({
             },
           })
           .then(async (res) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (!res.data.success) throw new Error("Failed to send message");
 
             const { message, ...rest } = input;

@@ -15,6 +15,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
+    "@eslint/eslintrc": "^3.2.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.1",
     "@fortawesome/free-brands-svg-icons": "^6.7.1",
     "@fortawesome/pro-duotone-svg-icons": "^6.7.1",
@@ -64,6 +65,7 @@
     "filepond-plugin-image-preview": "^4.6.12",
     "filepond-plugin-image-resize": "^2.0.10",
     "formidable": "^3.5.2",
+    "globals": "^15.13.0",
     "lucide-react": "^0.468.0",
     "micro": "^10.0.1",
     "mime": "^4.0.4",
@@ -96,6 +98,7 @@
     "@playwright/test": "^1.49.1",
     "@svgr/webpack": "^8.1.0",
     "@types/eslint": "^9.6.1",
+    "@types/eslint__eslintrc": "^2.1.2",
     "@types/formidable": "^3.4.5",
     "@types/mixpanel-browser": "^2.50.2",
     "@types/multer": "^1.4.12",
@@ -118,6 +121,7 @@
     "prisma": "^6.0.1",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
     "vitest": "^2.1.8"
   },
   "ct3aMetadata": {

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { stripeClient } from "~/utils/stripe";
 import { buffer } from "micro";
 import { prisma } from "~/server/db";

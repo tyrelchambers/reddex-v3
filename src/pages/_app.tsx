@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import mixpanel from "mixpanel-browser";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import "@mantine/core/styles.css";
 import { isActiveSubscription } from "~/utils";
 

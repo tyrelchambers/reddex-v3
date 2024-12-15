@@ -1,4 +1,4 @@
-import { env } from "./env.mjs";
+import { env } from "./env";
 
 export interface Plan {
   name: string;
@@ -8,19 +8,19 @@ export interface Plan {
   featured?: boolean;
 }
 
-const testPrices = {
+interface Price {
+  [x: string]: string;
+}
+
+const testPrices: Price = {
   ultimate: "price_1QVxDyI8C7KcVoSyVgMmfQZB",
 };
 
-const livePrices = {
+const livePrices: Price = {
   ultimate: "",
 };
 
-export const getPrices: () => Record<
-  string,
-  | (typeof livePrices)[keyof typeof livePrices]
-  | (typeof testPrices)[keyof typeof testPrices]
-> = () => {
+export const getPrices: () => Price = () => {
   if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test")
     return testPrices;
   return livePrices;

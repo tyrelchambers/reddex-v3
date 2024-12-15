@@ -136,7 +136,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
     }
   };
 
-  const listName = (list: number) => {
+  const listName = (list: ListEnum) => {
     if (list === ListEnum.approvedList) {
       return "in approved list";
     } else if (list === ListEnum.completedList) {

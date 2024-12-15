@@ -6,7 +6,7 @@ import {
 } from "next-auth";
 import RedditProvider from "next-auth/providers/reddit";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { prisma } from "~/server/db";
 
 /**
@@ -54,35 +54,35 @@ export const authOptions: NextAuthOptions = {
         data: {
           userId: user.id,
         },
-      }),
-        await prisma.website.create({
-          data: {
-            user: {
-              connect: {
-                id: user.id,
-              },
+      });
+      await prisma.website.create({
+        data: {
+          user: {
+            connect: {
+              id: user.id,
             },
-            submissionPage: {
-              create: {
-                submissionFormModules: {
-                  createMany: {
-                    data: [
-                      {
-                        name: "email",
-                      },
-                      {
-                        name: "title",
-                      },
-                      {
-                        name: "author",
-                      },
-                    ],
-                  },
+          },
+          submissionPage: {
+            create: {
+              submissionFormModules: {
+                createMany: {
+                  data: [
+                    {
+                      name: "email",
+                    },
+                    {
+                      name: "title",
+                    },
+                    {
+                      name: "author",
+                    },
+                  ],
                 },
               },
             },
           },
-        });
+        },
+      });
     },
     async signIn(message) {
       const { user, account, isNewUser } = message;

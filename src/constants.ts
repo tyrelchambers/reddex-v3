@@ -17,7 +17,7 @@ const testPrices: Price = {
 };
 
 const livePrices: Price = {
-  ultimate: "",
+  ultimate: "price_1QWQ6KI8C7KcVoSyNJeqGf5g",
 };
 
 export const getPrices = (): Price => {

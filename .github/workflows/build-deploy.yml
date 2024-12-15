@@ -5,11 +5,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-    types:
-      - closed
 jobs:
   build-web:
     name: app
@@ -84,4 +79,5 @@ jobs:
           script: |
             cd apps
             docker compose pull reddex-client
-            docker compose restart reddex-client
+            docker compose down
+            docker compose up -d

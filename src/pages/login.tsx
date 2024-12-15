@@ -11,16 +11,22 @@ import { routes } from "~/routes";
 import Logo from "../../public/images/reddex-dark.svg";
 import LogoLight from "../../public/images/reddex-light.svg";
 import { useTheme } from "~/hooks/useTheme";
+import { useRouter } from "next/router";
+import { getPrices } from "~/constants";
+import { api } from "~/utils/api";
 interface Props {
   providers: ClientSafeProvider[];
 }
 
 const Login = ({ providers }: Props) => {
   const { isDark } = useTheme();
+  const router = useRouter();
 
   const signInHandler = async (p: Pick<ClientSafeProvider, "id" | "name">) => {
+    const plan = router.query.plan as string;
+
     await signIn(p.id, {
-      callbackUrl: routes.ONBOARDING + `?redirectTo=${routes.SEARCH}`,
+      callbackUrl: routes.ONBOARDING + `?plan=${plan}`,
     });
   };
 
@@ -34,7 +40,7 @@ const Login = ({ providers }: Props) => {
       <main>
         <Header />
 
-        <section className="mx-auto my-20 flex max-w-md flex-col-reverse gap-4 rounded-2xl border-[1px] border-border p-6 px-4  lg:flex-row">
+        <section className="mx-auto my-20 flex max-w-md flex-col-reverse gap-4 rounded-2xl border-[1px] border-border p-6 px-4 lg:flex-row">
           <div className="flex flex-col">
             {isDark ? (
               <LogoLight alt="" className="z-0 w-12" />

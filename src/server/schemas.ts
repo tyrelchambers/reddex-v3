@@ -129,7 +129,7 @@ export const createSubscriptionSchema = z.object({
 
 export const createCheckoutSchema = z.object({
   price: z.string(),
-  email: z.string(),
+  email: z.string().optional(),
 });
 
 export const subscriptionSchema = z.object({

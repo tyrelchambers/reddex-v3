@@ -16,7 +16,11 @@ const livePrices = {
   ultimate: "",
 };
 
-export const getPrices = () => {
+export const getPrices: () => Record<
+  string,
+  | (typeof livePrices)[keyof typeof livePrices]
+  | (typeof testPrices)[keyof typeof testPrices]
+> = () => {
   if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test")
     return testPrices;
   return livePrices;

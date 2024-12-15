@@ -109,7 +109,7 @@ const Pricing = () => {
                 ))}
               </ul>
               <Link
-                href={routes.LOGIN}
+                href={routes.LOGIN + "?plan=" + tier.name.toLowerCase()}
                 aria-describedby={tier.name}
                 className={classNames(
                   tier.featured

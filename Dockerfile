@@ -54,6 +54,8 @@ RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_T
 
 # Production image, copy all the files and run next
 FROM base AS runner
+RUN apk add --no-cache libc6-compat openssl
+
 WORKDIR /app
 
 ENV NODE_ENV=production

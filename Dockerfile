@@ -12,7 +12,7 @@ COPY prisma ./
 COPY .npmrc .npmrc
 RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN,required=true \ 
     --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL,required=true \    
-    npm install
+    npm install -f
 
 # Rebuild the source code only when needed
 FROM base AS builder

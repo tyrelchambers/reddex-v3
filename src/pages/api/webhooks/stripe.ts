@@ -1,15 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { stripeClient } from "~/utils/stripe";
 import { buffer } from "micro";
 import { prisma } from "~/server/db";
 import { StripeSubscription } from "~/types";
-import { getCustomerId } from "~/utils";
+import { isActiveSubscription } from "~/utils";
+import { isStripeCustomer } from "~/utils/typeguards";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   let data: Stripe.Event.Data;
   let eventType: string;
@@ -24,7 +25,7 @@ export default async function handler(
     event = stripeClient.webhooks.constructEvent(
       reqBuffer,
       signature,
-      env.STRIPE_WEBHOOK_SECRET
+      env.STRIPE_WEBHOOK_SECRET,
     );
 
     data = event.data;
@@ -41,30 +42,12 @@ export default async function handler(
 
       if (!subscription) throw new Error("No subscription provided in webhook");
 
-      const customerId = getCustomerId(subscription.customer);
+      const userId = subscription.metadata.userId;
 
-      const userFromCustomer = await prisma.user.findFirst({
-        where: {
-          customerId,
-        },
-      });
-
-      if (!userFromCustomer) throw new Error("No customer found from ID");
-
-      const priceId = subscription.plan?.id;
-
-      if (!priceId) throw new Error("No price ID found");
-
-      const price = (await stripeClient.prices.retrieve(priceId, {
-        expand: ["product"],
-      })) as Stripe.Price & { product: Stripe.Product };
-
-      const product = price.product.name;
-      // test this as it doesn't reach IF
-      if (product === "Pro") {
+      if (isActiveSubscription(subscription)) {
         await prisma.website.update({
           where: {
-            userId: userFromCustomer.id,
+            userId,
           },
           data: {
             canBeEnabled: true,
@@ -73,17 +56,38 @@ export default async function handler(
       } else {
         await prisma.website.update({
           where: {
-            userId: userFromCustomer.id,
+            userId,
           },
           data: {
             canBeEnabled: false,
+            hidden: true,
+          },
+        });
+      }
+
+      if (!subscription.cancel_at_period_end) {
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            deleteOnDate: null,
+          },
+        });
+      } else {
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            deleteOnDate: new Date(subscription.current_period_end * 1000),
           },
         });
       }
     }
 
     if (eventType === "checkout.session.completed") {
-      const { id, metadata } = data.object as Stripe.Checkout.Session;
+      const { id, metadata, customer } = data.object as Stripe.Checkout.Session;
 
       const userId = metadata?.userId;
 
@@ -103,6 +107,15 @@ export default async function handler(
         console.log(`⚠️  User not found.`);
         return res.send(400);
       }
+
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          customerId: isStripeCustomer(customer) ? customer.id : null,
+        },
+      });
 
       console.log(`🔔  Payment received!`);
     }

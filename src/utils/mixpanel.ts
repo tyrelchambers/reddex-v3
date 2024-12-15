@@ -1,5 +1,5 @@
 import Mixpanel, { PropertyDict } from "mixpanel";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 
 const memo: { mixpanel?: Mixpanel.Mixpanel } = {};
 const getMixpanel = () => {
@@ -13,7 +13,7 @@ const getMixpanel = () => {
 
   if (env.NODE_ENV === "development" || env.NODE_ENV === "test") {
     console.warn(
-      "Mixpanel is not being run in production. Not tracking metrics."
+      "Mixpanel is not being run in production. Not tracking metrics.",
     );
     return;
   }
@@ -31,7 +31,7 @@ const getMixpanel = () => {
  */
 export const trackEvent = <T extends PropertyDict>(
   name: string,
-  props?: Record<string, number | string> | T
+  props?: Record<string, number | string> | T,
 ) => {
   getMixpanel()?.track(name, { ...props });
 };

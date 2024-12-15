@@ -159,12 +159,6 @@ export type StripeSubscription = Stripe.Subscription & {
   };
 };
 
-export type FindUserResponse = Prisma.UserArgs["include"] extends {
-  accounts: true;
-}
-  ? { accounts: Account }
-  : object;
-
 export enum MixpanelEvents {
   "SUBREDDIT_SEARCH" = "SUBREDDIT_SEARCH",
   "ADD_TO_QUEUE" = "ADD_TO_QUEUE",

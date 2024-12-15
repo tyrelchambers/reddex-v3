@@ -4,7 +4,7 @@
 
 @layer components {
   .button {
-    @apply h-full rounded-md px-5 py-2 text-xs  font-bold text-white transition-all hover:shadow-lg;
+    @apply h-full rounded-md px-5 py-2 text-xs font-bold text-white transition-all hover:shadow-lg;
   }
 
   .button.main {
@@ -135,7 +135,7 @@
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
 
-    --warning: 55 97% 88%;
+    --warning: 55 97% 48%;
     --warning-foreground: 32 81% 29%;
 
     --ring: 215 20.2% 65.1%;

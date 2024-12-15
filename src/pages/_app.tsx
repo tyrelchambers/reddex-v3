@@ -7,7 +7,6 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
-import { Poppins } from "next/font/google";
 import { ToastContainer, toast } from "react-toastify";
 import { api } from "~/utils/api";
 
@@ -16,11 +15,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import mixpanel from "mixpanel-browser";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import "@mantine/core/styles.css";
+import { isActiveSubscription } from "~/utils";
+import { Poppins } from "next/font/google";
 
 const font = Poppins({
-  weight: ["300", "500", "700"],
+  weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
 });
 
@@ -45,7 +46,9 @@ const MyApp: AppType<MyAppProps> = ({
 
   useEffect(() => {
     if (userQuery.data) {
-      const activeSub = userQuery.data.hasActiveSubscription;
+      const activeSub = userQuery.data.subscription
+        ? isActiveSubscription(userQuery.data.subscription)
+        : false;
 
       if (!activeSub) {
         toast.warn(

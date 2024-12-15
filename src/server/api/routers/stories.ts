@@ -7,7 +7,8 @@ import { COMPOSE_MESSAGE_URL } from "~/url.constants";
 import { formatSubject } from "~/utils";
 import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
+import { PostFromReddit } from "~/types";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -87,44 +88,55 @@ export const storyRouter = createTRPCRouter({
           },
         });
         const redditAccount = user?.accounts.find(
-          (acc) => acc.provider === "reddit"
+          (acc) => acc.provider === "reddit",
         );
 
         if (!redditAccount) return;
 
         const accessToken = await refreshAccessToken(redditAccount);
 
-        if (env.NODE_ENV === "production" && accessToken) {
-          const body = new FormData();
-          body.set("to", input.author);
-          body.set("subject", formatSubject(input.title));
-          body.set("text", input.message);
-
-          await axios
-            .post(COMPOSE_MESSAGE_URL, body, {
-              headers: {
-                Authorization: `bearer ${accessToken}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            })
-            .then(async () => {
-              const { message, ...rest } = input;
-              await prisma.redditPost.create({
-                data: {
-                  ...rest,
-                  flair: input.flair ?? undefined,
-                  userId: ctx.session.user.id,
-                },
-              });
-
-              await prisma.contactedWriters.create({
-                data: {
-                  name: input.author,
-                  userId: ctx.session.user.id,
-                },
-              });
-            });
+        if (env.NODE_ENV !== "production" && !accessToken) {
+          throw new Error("Missing access token");
         }
+
+        const body = new FormData();
+
+        const author =
+          process.env.NODE_ENV === "production"
+            ? input.author
+            : "StoriesAfterMidnight";
+
+        body.set("to", author);
+        body.set("subject", formatSubject(input.title));
+        body.set("text", input.message);
+
+        await axios
+          .post(COMPOSE_MESSAGE_URL, body, {
+            headers: {
+              Authorization: `bearer ${accessToken}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          })
+          .then(async (res) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            if (!res.data.success) throw new Error("Failed to send message");
+
+            const { message, ...rest } = input;
+            await prisma.redditPost.create({
+              data: {
+                ...rest,
+                flair: input.flair ?? undefined,
+                userId: ctx.session.user.id,
+              },
+            });
+
+            await prisma.contactedWriters.create({
+              data: {
+                name: input.author,
+                userId: ctx.session.user.id,
+              },
+            });
+          });
 
         return true;
       } catch (error) {
@@ -177,7 +189,7 @@ export const storyRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         completed: z.boolean(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       return await prisma.submittedStory.updateMany({
@@ -201,19 +213,32 @@ export const storyRouter = createTRPCRouter({
       });
     }),
   importStory: protectedProcedure
-    .input(postSchema)
+    .input(z.string())
     .mutation(async ({ ctx, input }) => {
       try {
-        const { message, ...rest } = input;
+        const storyFromUrl = await axios
+          .get(`${input}.json`)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          .then((res) => res.data[0].data.children[0].data as PostFromReddit);
 
         return await prisma.redditPost.create({
           data: {
-            ...rest,
-            content: input.content,
-            flair: input.flair ?? undefined,
+            content: storyFromUrl.selftext,
+            flair: storyFromUrl.link_flair_text ?? undefined,
             userId: ctx.session.user.id,
             permission: true,
             read: false,
+            story_length: storyFromUrl.selftext.length,
+            post_id: storyFromUrl.id,
+            reading_time: Math.round(storyFromUrl.selftext.length / 200),
+            author: storyFromUrl.author,
+            title: storyFromUrl.title,
+            ups: storyFromUrl.ups,
+            subreddit: storyFromUrl.subreddit,
+            url: storyFromUrl.url,
+            upvote_ratio: storyFromUrl.upvote_ratio,
+            num_comments: storyFromUrl.num_comments,
+            created: storyFromUrl.created_utc,
           },
         });
       } catch (error) {

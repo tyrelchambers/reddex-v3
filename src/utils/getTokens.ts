@@ -1,14 +1,14 @@
 import { Account } from "@prisma/client";
 import axios from "axios";
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { prisma } from "~/server/db";
 import { ReturnAccessToken } from "~/types";
 
 export const getAccessToken = async (
-  refresh_token: string
+  refresh_token: string,
 ): Promise<ReturnAccessToken> => {
   const encode = Buffer.from(
-    `${env.REDDIT_CLIENT_ID}:${env.REDDIT_CLIENT_SECRET}`
+    `${env.REDDIT_CLIENT_ID}:${env.REDDIT_CLIENT_SECRET}`,
   ).toString("base64");
 
   const { data } = await axios.post<ReturnAccessToken>(
@@ -20,7 +20,7 @@ export const getAccessToken = async (
         Authorization: `Basic ${encode}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    }
+    },
   );
 
   return data;
@@ -33,7 +33,7 @@ export const refreshAccessToken = async (redditAccount: Account) => {
     redditAccount.expires_at < Date.now() / 1000
   ) {
     const { access_token, refresh_token, expires_at } = await getAccessToken(
-      redditAccount.refresh_token
+      redditAccount.refresh_token,
     );
 
     await prisma.account.update({

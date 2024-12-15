@@ -20,7 +20,7 @@ const UserMenu = () => {
     enabled: session.status === "authenticated",
   });
 
-  const user = userQuery?.data;
+  const user = userQuery.data;
   const router = useRouter();
   const logoutHandler = () => {
     try {

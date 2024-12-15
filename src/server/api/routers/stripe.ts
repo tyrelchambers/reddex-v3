@@ -14,24 +14,25 @@ export const stripeRouter = createTRPCRouter({
         const link = await stripeClient.checkout.sessions.create({
           line_items: [
             {
-              price: input.plan,
+              price: input.price,
               quantity: 1,
             },
           ],
           mode: "subscription",
           success_url: CHECKOUT_SUCCESS_URL,
-          customer: input.customerId,
+          customer_email: input.email,
           allow_promotion_codes: true,
           expand: ["line_items"],
-          metadata: {
-            userId: ctx.session?.user.id,
-          },
+
           subscription_data: {
             trial_period_days: 14,
             trial_settings: {
               end_behavior: {
                 missing_payment_method: "cancel",
               },
+            },
+            metadata: {
+              userId: ctx.session?.user.id,
             },
           },
         });

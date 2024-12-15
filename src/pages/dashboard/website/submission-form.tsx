@@ -22,7 +22,6 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { websiteSubmissionSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
-import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
@@ -30,8 +29,6 @@ const formSchema = websiteSubmissionSchema;
 
 const SubmissionForm = () => {
   const apiContext = api.useUtils();
-  const { data: user } = api.user.me.useQuery();
-  const proPlan = hasProPlan(user?.subscription);
 
   const submissionFormSave = api.website.saveSubmissionForm.useMutation({
     onSuccess: () => {
@@ -52,7 +49,7 @@ const SubmissionForm = () => {
       websiteSettings.data?.submissionPage?.id,
       {
         enabled: !!websiteSettings.data?.submissionPage?.hidden,
-      }
+      },
     );
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,13 +84,13 @@ const SubmissionForm = () => {
         ...websiteSettings.data.submissionPage,
         submissionFormModules: {
           author: modules.find(
-            (module) => module.name.toLowerCase() === "author"
+            (module) => module.name.toLowerCase() === "author",
           ),
           email: modules.find(
-            (module) => module.name.toLowerCase() === "email"
+            (module) => module.name.toLowerCase() === "email",
           ),
           title: modules.find(
-            (module) => module.name.toLowerCase() === "title"
+            (module) => module.name.toLowerCase() === "title",
           ),
         },
       });
@@ -119,11 +116,10 @@ const SubmissionForm = () => {
 
   return (
     <WrapperWithNav tabs={websiteTabItems}>
-      <main className=" my-6 flex max-w-screen-2xl gap-10">
+      <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading submission form settings..."
-          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Submission form</h1>
 
@@ -132,12 +128,7 @@ const SubmissionForm = () => {
               title="Enable Submission Page"
               subtitle="Enable this submission form to allow visitors to email you their own stories."
               action={
-                <Button
-                  variant="defaultInvert"
-                  onClick={visibilityHandler}
-                  disabled={!proPlan}
-                  title={!proPlan ? "Pro plan required" : undefined}
-                >
+                <Button variant="defaultInvert" onClick={visibilityHandler}>
                   Enable submission form
                 </Button>
               }
@@ -347,9 +338,7 @@ const SubmissionForm = () => {
                 </div>
               </section>
 
-              <Button type="submit" disabled={!proPlan}>
-                Save changes
-              </Button>
+              <Button type="submit">Save changes</Button>
             </form>
           </Form>
         </BodyWithLoader>

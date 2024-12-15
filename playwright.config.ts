@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-import { env as _env } from "~/env.mjs";
+import { env as _env } from "~/env";
 
 /**
  * See https://playwright.dev/docs/test-configuration.

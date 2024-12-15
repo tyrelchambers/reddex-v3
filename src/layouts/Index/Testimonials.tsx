@@ -57,7 +57,7 @@ const Testimonials = () => {
                     </div>
                   </figure>
                 </li>
-              ) : null
+              ) : null,
             )}
           </ul>
         </div>

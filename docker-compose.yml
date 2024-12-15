@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   web:
     container_name: web
@@ -9,17 +8,11 @@ services:
         - env
     expose:
       - "3000"
-    environment:
-      NODE_ENV: production
-      VIRTUAL_HOST: reddex.app,www.reddex.app
-      VIRTUAL_PORT: 3000
-      LETSENCRYPT_HOST: reddex.app,www.reddex.app
-      VIRTUAL_PATH: "/"
-
     command: npm run start
     depends_on:
       - db
     restart: unless-stopped
+
   db:
     container_name: reddex_db
     image: postgres
@@ -30,6 +23,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+
   db_test:
     container_name: reddex_db_test
     image: postgres

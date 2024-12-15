@@ -1,5 +1,5 @@
 import { Contact } from "@prisma/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
 import { api } from "~/utils/api";
@@ -53,7 +53,7 @@ const QueueModal = ({ close }: Props) => {
   useEffect(() => {
     const currentPostAuthor = currentPost?.author;
     const contactedAuthors = contactedWritersQuery.data?.map(
-      (item) => item.name
+      (item) => item.name,
     );
 
     if (currentPostAuthor) {
@@ -108,7 +108,7 @@ const QueueModal = ({ close }: Props) => {
         <ActiveQueueItem post={currentPost} contact={contactQuery.data} />
 
         <div className="mt-10 flex flex-col">
-          <div className="flex flex-col items-baseline gap-4 lg:flex-row">
+          <div className="flex flex-col items-baseline lg:flex-row lg:gap-4">
             <p className="font-bold text-foreground">Message</p>
 
             <div className="flex gap-4">
@@ -143,7 +143,7 @@ const QueueModal = ({ close }: Props) => {
               type="button"
               variant="secondary"
               onClick={saveContactHandler}
-              className="break-all"
+              className="whitespace-pre-wrap"
             >
               Add {currentPost?.author} to contacts
             </Button>
@@ -152,9 +152,9 @@ const QueueModal = ({ close }: Props) => {
           <Button
             type="button"
             onClick={sendHandler}
-            disabled={redditPost.isLoading}
+            disabled={redditPost.isPending}
           >
-            {redditPost.isLoading ? (
+            {redditPost.isPending ? (
               <FontAwesomeIcon icon={faLoader} spin />
             ) : (
               "Send message"
@@ -167,13 +167,15 @@ const QueueModal = ({ close }: Props) => {
 };
 
 const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
+  const [showNote, setShowNote] = useState(false);
+
   return (
     <header className="flex flex-col gap-3">
       <div className="flex flex-col rounded-xl bg-card p-2">
         <p className="text-xs font-normal uppercase text-card-foreground">
           Subject
         </p>
-        <p className="mt-1  text-xl font-bold text-card-foreground">
+        <p className="mt-1 font-bold text-card-foreground md:text-xl">
           {post.title}
         </p>
       </div>
@@ -182,9 +184,20 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
         <p className="text-xs font-normal uppercase text-card-foreground">
           Author
         </p>
-        <div className="mt-1 flex items-center  gap-4 break-all text-xl font-bold text-card-foreground">
-          <p>{post.author}</p> {contact && <Badge>Is a contact</Badge>}
+        <div className="mt-1 flex items-center gap-4 break-all font-bold text-card-foreground md:text-xl">
+          <p>{post.author}</p>{" "}
+          {contact && (
+            <button type="button" onClick={() => setShowNote((prev) => !prev)}>
+              <Badge>See contact note</Badge>
+            </button>
+          )}
         </div>
+
+        {showNote && (
+          <p className="mt-2 rounded-md border border-border bg-background p-2 text-sm text-card-foreground">
+            {contact?.notes}
+          </p>
+        )}
       </div>
     </header>
   );

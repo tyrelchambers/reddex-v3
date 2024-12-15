@@ -1,4 +1,4 @@
-import { env } from "./env.mjs";
+import { env } from "./env.js";
 
 export const apiBaseUrl = env.NEXT_URL;
 export const PULL_ZONE = `https://reddex.b-cdn.net`;

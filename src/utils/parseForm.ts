@@ -9,11 +9,11 @@ import {
   PULL_ZONE,
   THUMBNAIL_UPLOAD_URL,
 } from "~/url.constants";
-import { env } from "~/env.mjs";
-import queryString from "query-string";
+import { env } from "~/env";
+import queryString from "node:querystring";
 
 export const parseForm = async (
-  req: NextApiRequest
+  req: NextApiRequest,
 ): Promise<{ url: string }> => {
   return new Promise((resolve, reject) => {
     const uploadDir = path.resolve(
@@ -22,7 +22,7 @@ export const parseForm = async (
       "../",
       "../",
       "../",
-      "uploads"
+      "uploads",
     );
     const uploadType = req.headers["upload-type"];
 
@@ -49,9 +49,11 @@ export const parseForm = async (
 
     form.parse(req, async function (err, fields, files) {
       if (err) {
-        console.log(err);
-
-        reject(err);
+        if (err instanceof Error) {
+          reject(err);
+        } else {
+          reject(Error("Something went wrong"));
+        }
       }
 
       try {
@@ -90,7 +92,7 @@ export const parseForm = async (
                     "content-type": "application/octet-stream",
                     AccessKey: env.BUNNY_PASSWORD,
                   },
-                }
+                },
               )
               .then(() => {
                 rmSync(newFilename, { recursive: true });
@@ -105,9 +107,9 @@ export const parseForm = async (
           }
         }
       } catch (error) {
-        console.log(error);
-
-        reject(error);
+        if (error instanceof Error) {
+          reject(error);
+        }
       }
     });
   });

@@ -58,8 +58,8 @@ const Header = ({ openDrawer }: Props) => {
   return (
     <header
       className={clsx(
-        "sticky right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background px-4 py-4 lg:relative lg:justify-between",
-        opened && " h-screen !items-start overflow-hidden"
+        "sticky right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
+        opened && "h-screen !items-start overflow-hidden",
       )}
     >
       <div className="flex flex-1 items-center">
@@ -170,7 +170,7 @@ const Header = ({ openDrawer }: Props) => {
             opened={opened}
             onClick={toggle}
             aria-label={label}
-            className="relative z-20 "
+            className="relative z-20"
             color={isDark ? "white" : "black"}
           />
         </div>

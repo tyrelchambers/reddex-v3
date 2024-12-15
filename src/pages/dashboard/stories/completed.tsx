@@ -27,7 +27,9 @@ const Completed = () => {
       <section className="flex w-full flex-col">
         <header className="flex w-full flex-1 flex-col justify-between px-4 lg:flex-row lg:px-0">
           <div className="flex flex-col">
-            <h1 className="text-2xl text-foreground">Completed list</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              Completed list
+            </h1>
             <p className="font-light text-muted-foreground">
               Your list of stories for which you have read.
             </p>

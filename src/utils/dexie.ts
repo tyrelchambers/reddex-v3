@@ -4,7 +4,7 @@ import { PostFromReddit } from "~/types";
 export class DexieInstance extends Dexie {
   posts!: Table<PostFromReddit>;
   lastSearched!: Table<{ time: Date }>;
-  constructor(database?: string, options?: DexieOptions | undefined) {
+  constructor(database?: string, options?: DexieOptions) {
     super(database || "Reddex", options);
     this.version(1).stores({
       posts:

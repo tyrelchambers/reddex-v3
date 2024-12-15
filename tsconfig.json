@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "checkJs": true,
@@ -9,8 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -28,7 +28,9 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "tailwind.config.js"
+    "tailwind.config.js",
+    "eslint.config.mjs",
+    "src/env.js"
   ],
   "exclude": ["node_modules"]
 }

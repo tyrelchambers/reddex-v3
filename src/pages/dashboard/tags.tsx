@@ -60,7 +60,7 @@ const Tags = () => {
     <WrapperWithNav>
       <main className="mx-auto max-w-screen-2xl px-4 lg:px-0">
         <header className="flex justify-between">
-          <h1 className="text-2xl text-foreground">Tags</h1>
+          <h1 className="text-2xl font-bold text-foreground">Tags</h1>
 
           <Dialog>
             <DialogTrigger>

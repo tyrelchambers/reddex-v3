@@ -1,15 +1,8 @@
 import {
-  faBolt,
-  faBrowser,
-  faCog,
   faHome,
-  faInbox,
-  faList,
-  faListCheck,
   faMoneyBill,
   faRightFromBracket,
   faSearch,
-  faUser,
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { User } from "@prisma/client";
@@ -61,7 +54,7 @@ const MobileNav = ({ user }: Props) => {
           {commonRoutes.map((r) => (
             <Link
               key={r.label}
-              className=" text-sm text-foreground hover:text-accent"
+              className="text-sm text-foreground hover:text-accent"
               href={r.slug}
             >
               <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
@@ -76,7 +69,7 @@ const MobileNav = ({ user }: Props) => {
             {dashNavRoutes.map((r) => (
               <Link
                 key={r.label}
-                className=" text-sm text-foreground hover:text-accent"
+                className="text-sm text-foreground hover:text-accent"
                 href={r.slug}
               >
                 <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}

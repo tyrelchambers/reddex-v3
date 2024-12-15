@@ -128,9 +128,8 @@ export const createSubscriptionSchema = z.object({
 });
 
 export const createCheckoutSchema = z.object({
-  customerId: z.string(),
-  customerEmail: z.string(),
-  plan: z.string(),
+  price: z.string(),
+  email: z.string().optional(),
 });
 
 export const subscriptionSchema = z.object({

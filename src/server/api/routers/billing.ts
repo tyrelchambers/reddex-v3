@@ -95,23 +95,10 @@ export const billingRouter = createTRPCRouter({
       captureException(error);
     }
   }),
-  updateLink: protectedProcedure.mutation(async ({ ctx }) => {
+  updateLink: protectedProcedure.mutation(() => {
     try {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
-      });
-
-      if (!user?.customerId) {
-        return;
-      }
-
-      const session = await stripeClient.billingPortal.sessions.create({
-        customer: user.customerId,
-      });
-
-      return session.url;
+      const url = "https://billing.stripe.com/p/login/test_fZe4iffki7hw9lm9AA";
+      return url;
     } catch (error) {
       captureException(error);
     }

@@ -1,16 +1,17 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { proPlans } from "~/data/stripePlans";
 import { stripeClient } from "./stripe";
+import { isActiveSubscription } from ".";
 
-export const checkForProperSubscription = async (customerId: string | null) => {
-  if (!customerId) return false;
+export const checkForProperSubscription = async (userId: string | null) => {
+  if (!userId) return false;
 
-  const customer = await stripeClient.customers.retrieve(customerId, {
-    expand: ["subscriptions"],
+  const subscription = await stripeClient.subscriptions.search({
+    query: `metadata["userId"]: "${userId}"`,
+    expand: ["data.plan", "data.plan.product"],
+    limit: 1,
   });
 
-  // @ts-expect-error
-  return proPlans.includes(customer.subscriptions.data[0].plan.id);
+  if (!subscription.data[0]) return false;
+  return (
+    subscription.data.length > 0 && isActiveSubscription(subscription.data[0])
+  );
 };

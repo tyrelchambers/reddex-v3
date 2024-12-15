@@ -3,9 +3,8 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { stripeClient } from "~/utils/stripe";
 import { z } from "zod";
 import { saveProfileSchema } from "~/server/schemas";
-import Stripe from "stripe";
 import { captureException } from "@sentry/nextjs";
-import { hasActiveSubscription } from "~/utils";
+import Stripe from "stripe";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -23,35 +22,25 @@ export const userRouter = createTRPCRouter({
         },
       });
 
+      if (!user) return null;
       let subscription = null;
 
-      if (!user) return null;
+      const subscriptionQuery = await stripeClient.subscriptions.search({
+        query: `status: 'active' AND metadata["userId"]: '${ctx.session.user.id}'`,
+        expand: ["data.plan", "data.plan.product"],
+      });
 
-      if (user.customerId) {
-        const customer = (await stripeClient.customers.retrieve(
-          user.customerId,
-          {
-            expand: [
-              "subscriptions",
-              "subscriptions.data.plan",
-              "subscriptions.data.plan.product",
-            ],
-          }
-        )) as unknown as Stripe.Customer & {
-          subscriptions: Stripe.Subscription[] & {
-            plan: Stripe.Plan;
+      if (subscriptionQuery.data.length > 0) {
+        subscription = subscriptionQuery.data[0] as Stripe.Subscription & {
+          plan: Stripe.Plan & {
+            product: Stripe.Product;
           };
         };
-
-        subscription = customer?.subscriptions?.data[0] ?? null;
       }
-
-      const hasSubscription = hasActiveSubscription(subscription);
 
       return {
         ...user,
         subscription,
-        hasActiveSubscription: hasSubscription,
       };
     } catch (error) {
       captureException(error);
@@ -112,5 +101,56 @@ export const userRouter = createTRPCRouter({
         throw error;
       }
     }),
-  // deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {}),
+  deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+    const subscriptionQuery = await stripeClient.subscriptions.search({
+      query: `metadata["userId"]: "${ctx.session.user.id}"`,
+      limit: 1,
+    });
+
+    const sub = subscriptionQuery.data[0];
+
+    if (!sub) {
+      throw new Error("No subscription found");
+    }
+
+    const deletedSub = await stripeClient.subscriptions.update(sub.id, {
+      cancel_at_period_end: true,
+    });
+
+    return await prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        deleteOnDate: deletedSub.cancel_at
+          ? new Date(deletedSub.cancel_at * 1000)
+          : null,
+      },
+    });
+  }),
+  cancelDeletion: protectedProcedure.mutation(async ({ ctx }) => {
+    const subscriptionQuery = await stripeClient.subscriptions.search({
+      query: `metadata["userId"]: "${ctx.session.user.id}"`,
+      limit: 1,
+    });
+
+    const sub = subscriptionQuery.data[0];
+
+    if (!sub) {
+      throw new Error("No subscription found");
+    }
+
+    await stripeClient.subscriptions.update(sub.id, {
+      cancel_at_period_end: false,
+    });
+
+    return await prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        deleteOnDate: null,
+      },
+    });
+  }),
 });

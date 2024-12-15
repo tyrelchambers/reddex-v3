@@ -3,8 +3,6 @@ import React from "react";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import EmptyState from "./EmptyState";
-import Link from "next/link";
-import { routes } from "~/routes";
 import { useSession } from "next-auth/react";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";

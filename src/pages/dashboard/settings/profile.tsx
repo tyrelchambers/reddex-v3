@@ -96,10 +96,10 @@ const Profile = () => {
   return (
     <WrapperWithNav tabs={settingsTabs}>
       <div className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
-        <h1 className="text-3xl text-foreground">Profile</h1>
+        <h1 className="text-3xl font-bold text-foreground">Profile</h1>
         <Form {...profileForm}>
           <form
-            className=" form"
+            className="form"
             onSubmit={profileForm.handleSubmit(saveProfileHandler)}
           >
             <div className="flex flex-col gap-4">
@@ -200,7 +200,7 @@ const Profile = () => {
                   </FormItem>
                 )}
               />
-              <Button className=" mt-3" type="submit">
+              <Button className="mt-3" type="submit">
                 Save messages
               </Button>
             </form>

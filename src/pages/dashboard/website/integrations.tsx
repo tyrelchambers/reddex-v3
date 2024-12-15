@@ -10,14 +10,11 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { websiteIntegrationsSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
-import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const formSchema = websiteIntegrationsSchema;
 const Integrations = () => {
-  const { data: user } = api.user.me.useQuery();
-  const proPlan = hasProPlan(user?.subscription);
   const saveIntegrations = api.website.saveIntegrations.useMutation();
   const websiteSettings = api.website.settings.useQuery();
 
@@ -47,9 +44,8 @@ const Integrations = () => {
     <WrapperWithNav tabs={websiteTabItems}>
       <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading website integrations..."
-          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">Integrations</h1>
           <p className="text-sm text-muted-foreground">
@@ -71,9 +67,7 @@ const Integrations = () => {
                 )}
               />
 
-              <Button type="submit" disabled={!proPlan}>
-                Save changes
-              </Button>
+              <Button type="submit">Save changes</Button>
             </form>
           </Form>
         </BodyWithLoader>

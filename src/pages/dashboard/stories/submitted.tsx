@@ -33,7 +33,7 @@ const Submitted = () => {
     <WrapperWithNav tabs={storiesTabs}>
       <section className="flex flex-col">
         <header className="flex flex-col px-4 lg:px-0">
-          <h1 className="text-2xl text-foreground">Submitted</h1>
+          <h1 className="text-2xl font-bold text-foreground">Submitted</h1>
           <p className="font-light text-muted-foreground">
             These are your stories submitted via your website.
           </p>
@@ -41,7 +41,7 @@ const Submitted = () => {
         <div className="mt-10 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
           {stories
             ?.sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
             )
             .map((story) => (
               <div
@@ -57,7 +57,7 @@ const Submitted = () => {
                   </div>
                 </header>
                 <Link
-                  className=" block  p-3 font-bold text-foreground underline hover:text-rose-500"
+                  className="block p-3 font-bold text-foreground underline hover:text-rose-500"
                   href={`/story/${story.id}`}
                 >
                   {story.title || "<This story has title>"}
@@ -75,7 +75,7 @@ const Submitted = () => {
                       <p>
                         {formatReadingTime(
                           story.body,
-                          profile?.words_per_minute
+                          profile?.words_per_minute,
                         )}
                         min
                       </p>

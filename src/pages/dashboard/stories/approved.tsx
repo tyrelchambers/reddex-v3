@@ -29,7 +29,7 @@ const Approved = () => {
     <WrapperWithNav tabs={storiesTabs}>
       <header className="flex flex-1 flex-col justify-between px-4 lg:px-0 xl:flex-row">
         <div className="mb-6 flex flex-col lg:mb-0">
-          <h1 className="text-2xl text-foreground">Approved list</h1>
+          <h1 className="text-2xl font-bold text-foreground">Approved list</h1>
           <p className="font-light text-muted-foreground">
             Your list of stories for which you have permission to read.
           </p>

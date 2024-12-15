@@ -40,6 +40,11 @@ interface Props {
   message: RedditInboxMessage | undefined;
 }
 
+enum ListEnum {
+  approvedList,
+  completedList,
+}
+
 const SelectedInboxMessage = ({ message }: Props) => {
   const apiContext = api.useUtils();
   const messageMutation = api.inbox.send.useMutation();
@@ -55,6 +60,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
   const contactquery = api.contact.getByName.useQuery(message?.dest);
   const approvedListQuery = api.story.getApprovedList.useQuery();
+  const completedListQuery = api.story.getCompletedList.useQuery();
   const stories = api.story.addToApproved.useMutation({
     onSuccess: (data) => {
       if ("success" in data && !data.success) {
@@ -68,12 +74,22 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
   const postIsInReadingList = useMemo(() => {
     if (post?.id && approvedListQuery.data) {
-      return approvedListQuery.data.some((item) => {
+      const approvedList = approvedListQuery.data.some((item) => {
         return item.id === post.id;
       });
+
+      const completedList = completedListQuery.data?.some((item) => {
+        return item.id === post.id && item.read;
+      });
+
+      if (approvedList) {
+        return ListEnum.approvedList;
+      } else if (completedList) {
+        return ListEnum.completedList;
+      }
     }
 
-    return false;
+    return -1;
   }, [post?.id, approvedListQuery.data]);
 
   const isAContact = contactquery.data ?? false;
@@ -120,6 +136,14 @@ const SelectedInboxMessage = ({ message }: Props) => {
     }
   };
 
+  const listName = (list: ListEnum) => {
+    if (list === ListEnum.approvedList) {
+      return "in approved list";
+    } else if (list === ListEnum.completedList) {
+      return "this story has been read";
+    }
+  };
+
   return (
     <div className="flex-1 overflow-auto">
       <header className="w-full">
@@ -163,7 +187,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
 
             {post && (
               <>
-                {!postIsInReadingList ? (
+                {postIsInReadingList === -1 ? (
                   <button
                     type="button"
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
@@ -176,8 +200,10 @@ const SelectedInboxMessage = ({ message }: Props) => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-xs text-white">
-                          <FontAwesomeIcon icon={faBook} />
+                        <span className="flex h-8 items-center justify-center rounded-full bg-green-500 px-3 text-xs font-medium text-white">
+                          <FontAwesomeIcon icon={faBook} className="mr-2" />
+
+                          {listName(postIsInReadingList)}
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>

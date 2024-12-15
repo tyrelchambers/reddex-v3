@@ -29,7 +29,7 @@ RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_T
     --mount=type=secret,id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN,required=true \   
     --mount=type=secret,id=YOUTUBE_API_KEY,env=YOUTUBE_API_KEY,required=true \   
     --mount=type=secret,id=NEXT_PUBLIC_MIXPANEL_TOKEN,env=NEXT_PUBLIC_MIXPANEL_TOKEN,required=true \   
-    npm install
+    npm install -f
 
 # Rebuild the source code only when needed
 FROM base AS builder

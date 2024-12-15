@@ -44,8 +44,7 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
   useEffect(() => {
     if (user) {
       setLoadDashboardOrBanner(
-        user.hasActiveSubscription ||
-          allowedRoutesWithoutPlan.includes(router.asPath)
+        !!user.subscription || allowedRoutesWithoutPlan.includes(router.asPath),
       );
     }
   }, [user, router.asPath]);
@@ -71,7 +70,7 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
         </AuthenticationBoundary>
       ) : (
         <WrongPlanBanner
-          title="Please sign up with a plan"
+          title="Please sign up for a plan"
           text="In order to make the most of your account, please select a plan."
           type="upgrade_plan"
         />

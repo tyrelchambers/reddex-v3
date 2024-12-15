@@ -30,7 +30,6 @@ const server = z.object({
   SENDGRID_API_KEY: z.string(),
   SENTRY_DSN: z.string(),
   NEXT_PUBLIC_SENTRY_DSN: z.string(),
-  NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
   MIXPANEL_TOKEN: z.string(),
   YOUTUBE_API_KEY: z.string(),
 });
@@ -63,7 +62,6 @@ const processEnv = {
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   NEXT_URL: process.env.NEXT_URL,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-  NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
   SENTRY_DSN: process.env.SENTRY_DSN,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN,

@@ -38,7 +38,7 @@ const WrongPlanBanner = ({ title, text, actions, type }: Props) => {
           className="mt-4 text-accent underline"
           type="button"
         >
-          Upgrade your plan{" "}
+          Subscribe{" "}
           <FontAwesomeIcon
             icon={faSquareArrowUpRight}
             className="ml-2 text-accent"

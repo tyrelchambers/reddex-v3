@@ -24,7 +24,6 @@ import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { Button } from "~/components/ui/button";
-import { hasProPlan } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { toast } from "react-toastify";
 import { Input } from "~/components/ui/input";
@@ -43,13 +42,12 @@ registerPlugin(
   FilePondPluginImageExifOrientation,
   FilePondPluginImagePreview,
   FilePondPluginFileValidateSize,
-  FilePondPluginImageResize
+  FilePondPluginImageResize,
 );
 
 const General = () => {
   const apiContext = api.useUtils();
   const { data: user } = api.user.me.useQuery();
-  const proPlan = hasProPlan(user?.subscription);
 
   const websiteSave = api.website.saveGeneral.useMutation({
     onSuccess: () => {
@@ -88,16 +86,16 @@ const General = () => {
     },
   });
   const formValues = form.getValues();
+  const subdomainFormWatch = form.watch("subdomain");
 
   const subdomainQuery = api.website.checkAvailableSubdomain.useQuery(
     formValues.subdomain || "",
     {
       enabled: !!formValues.subdomain,
-    }
+    },
   );
 
-  const DISABLE_SUBMIT_BUTTON =
-    !proPlan || !formValues.subdomain || !formValues.name;
+  const DISABLE_SUBMIT_BUTTON = !formValues.subdomain || !formValues.name;
 
   useEffect(() => {
     if (websiteSettings.data) {
@@ -107,9 +105,9 @@ const General = () => {
 
   const subdomainAvailable =
     !subdomainQuery.data &&
-    (!formValues.subdomain ||
-      formValues.subdomain !== websiteSettings.data?.subdomain) &&
-    formValues.subdomain !== "";
+    (!subdomainFormWatch ||
+      subdomainFormWatch !== websiteSettings.data?.subdomain) &&
+    subdomainFormWatch !== "";
 
   const submitHandler = async (data: z.infer<typeof websiteGeneralSchema>) => {
     const thumbnail = thumbnailRef.current?.getFile();
@@ -159,9 +157,8 @@ const General = () => {
     <WrapperWithNav tabs={websiteTabItems}>
       <main className="my-6 flex max-w-screen-2xl gap-10">
         <BodyWithLoader
-          isLoading={websiteSettings.isLoading}
+          isLoading={websiteSettings.isPending}
           loadingMessage="Loading website settings..."
-          hasProPlan={proPlan}
         >
           <h1 className="text-2xl text-foreground">General</h1>
           {websiteVisibility.data?.hidden ? (
@@ -169,12 +166,7 @@ const General = () => {
               title="Enable Website"
               subtitle="Enable your website to be seen by the public."
               action={
-                <Button
-                  variant="defaultInvert"
-                  onClick={showWebsiteHandler}
-                  disabled={!proPlan}
-                  title={!proPlan ? "Pro plan required" : undefined}
-                >
+                <Button variant="defaultInvert" onClick={showWebsiteHandler}>
                   Make website public{" "}
                 </Button>
               }
@@ -204,16 +196,14 @@ const General = () => {
                 />
                 <Link
                   href={`https://reddex.app/${
-                    websiteSettings.data?.subdomain ??
-                    formValues.subdomain ??
-                    ""
+                    websiteSettings.data?.subdomain ?? subdomainFormWatch ?? ""
                   }`}
                 >
                   <Badge className="mt-2 w-fit" variant="outline">
-                    https://reddex.app/{form.getValues().subdomain}
+                    https://reddex.app/w/{subdomainFormWatch}
                   </Badge>
                 </Link>
-                {formValues.subdomain && subdomainAvailable && (
+                {subdomainFormWatch && subdomainAvailable && (
                   <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
                     <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
                     available
@@ -254,11 +244,7 @@ const General = () => {
                   Optimal image size 200 x 200
                 </p>
                 {!websiteSettings.data?.thumbnail ? (
-                  <FileUpload
-                    uploadRef={thumbnailRef}
-                    type="thumbnail"
-                    disabled={!proPlan}
-                  />
+                  <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
                 ) : (
                   <div className="flex flex-col">
                     <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
@@ -271,7 +257,7 @@ const General = () => {
                     </div>
                     <Button
                       variant="secondary"
-                      className=" mt-4"
+                      className="mt-4"
                       onClick={() =>
                         websiteSettings.data?.thumbnail &&
                         removeImage.mutate({
@@ -292,11 +278,7 @@ const General = () => {
                   Optimal image size 1500 x 500
                 </p>
                 {!websiteSettings.data?.banner ? (
-                  <FileUpload
-                    uploadRef={bannerRef}
-                    type="banner"
-                    disabled={!proPlan}
-                  />
+                  <FileUpload uploadRef={bannerRef} type="banner" />
                 ) : (
                   <div className="flex flex-col">
                     <div className="overflow-hidden rounded-xl">
@@ -309,7 +291,7 @@ const General = () => {
                     </div>
                     <Button
                       variant="secondary"
-                      className=" mt-4"
+                      className="mt-4"
                       onClick={() =>
                         websiteSettings.data?.banner &&
                         removeImage.mutate({

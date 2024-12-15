@@ -28,15 +28,15 @@ const Inbox = () => {
 
   const messages = useMemo(
     () => searchInboxQuery.data || inboxQuery.data || [],
-    [searchInboxQuery.data, inboxQuery.data]
+    [searchInboxQuery.data, inboxQuery.data],
   );
 
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
-    null
+    null,
   );
   const selectedMessage = useMemo(
     () => messages.find((m) => m.id === selectedMessageId),
-    [selectedMessageId, messages]
+    [selectedMessageId, messages],
   );
 
   useEffect(() => {
@@ -58,9 +58,9 @@ const Inbox = () => {
   };
 
   return (
-    <WrapperWithNav loading={inboxQuery.isLoading}>
+    <WrapperWithNav loading={inboxQuery.isPending}>
       <div className="flex flex-col px-4 xl:px-0">
-        <header className="mb-6 flex flex-col  justify-between gap-4 lg:flex-row lg:items-center">
+        <header className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
           {width < breakpoints.desktop && selectedMessage && (
             <button onClick={backButton}>
               <FontAwesomeIcon
@@ -70,7 +70,7 @@ const Inbox = () => {
               Back to Inbox
             </button>
           )}
-          <h1 className="text-2xl text-foreground">Inbox</h1>
+          <h1 className="text-2xl font-bold text-foreground">Inbox</h1>
           <div className="flex w-full max-w-lg gap-4">
             <Input
               ref={searchRef}
@@ -105,7 +105,7 @@ const Inbox = () => {
             )}
           </section>
         ) : (
-          <section className="my-2 flex h-[calc(100vh-250px)]  gap-4">
+          <section className="my-2 flex h-[calc(100vh-250px)] gap-4">
             {!searchInboxQuery.isFetching ? (
               <>
                 <InboxMessageList

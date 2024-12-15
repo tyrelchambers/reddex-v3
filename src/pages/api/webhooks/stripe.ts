@@ -5,7 +5,7 @@ import { stripeClient } from "~/utils/stripe";
 import { buffer } from "micro";
 import { prisma } from "~/server/db";
 import { StripeSubscription } from "~/types";
-import { getCustomerId, hasActiveSubscription } from "~/utils";
+import { isActiveSubscription } from "~/utils";
 import { isStripeCustomer } from "~/utils/typeguards";
 
 export default async function handler(
@@ -44,7 +44,7 @@ export default async function handler(
 
       const userId = subscription.metadata.userId;
 
-      if (hasActiveSubscription(subscription)) {
+      if (isActiveSubscription(subscription)) {
         await prisma.website.update({
           where: {
             userId,

@@ -124,17 +124,6 @@ export const getStorySelectList = (stories: RedditPost[] | undefined) => {
   return formattedApprovedStories;
 };
 
-export const hasActiveSubscription = (
-  subscription: Stripe.Subscription | null,
-) => {
-  if (!subscription) return false;
-
-  if (subscription?.status !== "active" && subscription?.status !== "trialing")
-    return false;
-
-  return true;
-};
-
 export const isFilterWithQualifier = (value: any): value is Filter => {
   if (typeof value !== "object") return false;
 

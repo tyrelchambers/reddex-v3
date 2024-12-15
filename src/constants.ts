@@ -39,7 +39,6 @@ export const plans = [
       "Save personalized messages",
       "Searchable Reddit-connected inbox",
       "Customizable personal website",
-      "Custom website",
       "Contact list",
     ],
   },

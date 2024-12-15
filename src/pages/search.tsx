@@ -224,8 +224,7 @@ const Search = () => {
         </div>
         {posts && (
           <p className="mt-4 text-sm text-foreground/60 lg:mt-0">
-            *For people who are not signed into their accounts, the reading time
-            is set at 150wpm.
+            *The default words per minute is set at 150wpm.
           </p>
         )}
       </div>

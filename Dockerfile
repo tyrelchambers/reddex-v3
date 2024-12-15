@@ -12,23 +12,6 @@ COPY prisma ./
 COPY .npmrc .npmrc
 RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN,required=true \ 
     --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL,required=true \ 
-    --mount=type=secret,id=NEXTAUTH_SECRET,env=NEXTAUTH_SECRET,required=true \  
-    --mount=type=secret,id=NEXTAUTH_URL_INTERNAL,env=NEXTAUTH_URL_INTERNAL,required=true \  
-    --mount=type=secret,id=NEXTAUTH_URL,env=NEXTAUTH_URL,required=true \  
-    --mount=type=secret,id=NEXT_URL,env=NEXT_URL,required=true \  
-    --mount=type=secret,id=REDDIT_CLIENT_SECRET,env=REDDIT_CLIENT_SECRET,required=true \  
-    --mount=type=secret,id=REDDIT_CLIENT_ID,env=REDDIT_CLIENT_ID,required=true \  
-    --mount=type=secret,id=BUNNY_PASSWORD,env=BUNNY_PASSWORD,required=true \  
-    --mount=type=secret,id=STRIPE_TEST_KEY,env=STRIPE_TEST_KEY,required=true \
-    --mount=type=secret,id=STRIPE_LIVE_KEY,env=STRIPE_LIVE_KEY,required=true \   
-    --mount=type=secret,id=STRIPE_WEBHOOK_SECRET,env=STRIPE_WEBHOOK_SECRET,required=true \   
-    --mount=type=secret,id=SENTRY_DSN,env=SENTRY_DSN,required=true \   
-    --mount=type=secret,id=SENDGRID_API_KEY,env=SENDGRID_API_KEY,required=true \   
-    --mount=type=secret,id=NEXT_PUBLIC_SENTRY_DSN,env=NEXT_PUBLIC_SENTRY_DSN,required=true \   
-    --mount=type=secret,id=MIXPANEL_TOKEN,env=MIXPANEL_TOKEN,required=true \   
-    --mount=type=secret,id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN,required=true \   
-    --mount=type=secret,id=YOUTUBE_API_KEY,env=YOUTUBE_API_KEY,required=true \   
-    --mount=type=secret,id=NEXT_PUBLIC_MIXPANEL_TOKEN,env=NEXT_PUBLIC_MIXPANEL_TOKEN,required=true \   
     npm install -f
 
 # Rebuild the source code only when needed
@@ -46,26 +29,7 @@ COPY . .
 RUN npx prisma generate
 
 # If using npm comment out above and use below instead
-RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN,required=true \ 
-    --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL,required=true \ 
-    --mount=type=secret,id=NEXTAUTH_SECRET,env=NEXTAUTH_SECRET,required=true \  
-    --mount=type=secret,id=NEXTAUTH_URL_INTERNAL,env=NEXTAUTH_URL_INTERNAL,required=true \  
-    --mount=type=secret,id=NEXTAUTH_URL,env=NEXTAUTH_URL,required=true \  
-    --mount=type=secret,id=NEXT_URL,env=NEXT_URL,required=true \  
-    --mount=type=secret,id=REDDIT_CLIENT_SECRET,env=REDDIT_CLIENT_SECRET,required=true \  
-    --mount=type=secret,id=REDDIT_CLIENT_ID,env=REDDIT_CLIENT_ID,required=true \  
-    --mount=type=secret,id=BUNNY_PASSWORD,env=BUNNY_PASSWORD,required=true \  
-    --mount=type=secret,id=STRIPE_TEST_KEY,env=STRIPE_TEST_KEY,required=true \
-    --mount=type=secret,id=STRIPE_LIVE_KEY,env=STRIPE_LIVE_KEY,required=true \   
-    --mount=type=secret,id=STRIPE_WEBHOOK_SECRET,env=STRIPE_WEBHOOK_SECRET,required=true \   
-    --mount=type=secret,id=SENTRY_DSN,env=SENTRY_DSN,required=true \   
-    --mount=type=secret,id=SENDGRID_API_KEY,env=SENDGRID_API_KEY,required=true \   
-    --mount=type=secret,id=NEXT_PUBLIC_SENTRY_DSN,env=NEXT_PUBLIC_SENTRY_DSN,required=true \   
-    --mount=type=secret,id=MIXPANEL_TOKEN,env=MIXPANEL_TOKEN,required=true \   
-    --mount=type=secret,id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN,required=true \   
-    --mount=type=secret,id=YOUTUBE_API_KEY,env=YOUTUBE_API_KEY,required=true \  
-    --mount=type=secret,id=NEXT_PUBLIC_MIXPANEL_TOKEN,env=NEXT_PUBLIC_MIXPANEL_TOKEN,required=true \    
-     npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -85,7 +49,7 @@ RUN chmod 777 ./uploads
 USER nextjs
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /usr/src/app/node_modules/.prisma/client  ./node_modules/.prisma/client 
+COPY --from=deps /app/node_modules/.prisma/client  ./node_modules/.prisma/client 
 
 EXPOSE 3000
 CMD ["node", "server.js"]

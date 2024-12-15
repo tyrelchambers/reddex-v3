@@ -81,9 +81,8 @@ RUN mkdir ./uploads
 RUN chmod 777 ./uploads
 
 USER nextjs
-
-COPY --chown=nextjs:nodejs --from=builder /app ./
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
-
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]

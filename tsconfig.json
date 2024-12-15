@@ -30,7 +30,10 @@
     "**/*.mjs",
     "tailwind.config.js",
     "eslint.config.mjs",
-    "src/env.js"
+    "src/env.js",
+    "sentry.server.config.js",
+    "sentry.edge.config.js",
+    "sentry.client.config.js"
   ],
   "exclude": ["node_modules"]
 }

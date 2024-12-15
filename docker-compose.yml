@@ -6,17 +6,13 @@ services:
       secrets:
         - npmrc
         - env
-        - FONTAWESOME_NPM_AUTH_TOKEN
-        - DATABASE_URL
     expose:
       - "3000"
     command: npm run start
     depends_on:
       - db
     restart: unless-stopped
-    environment:
-      - FONTAWESOME_NPM_AUTH_TOKEN=F1348F1C-996E-42A3-891E-33AB0188B6F0
-      - DATABASE_URL="postgres://reddexadmin:JUYVgv3vutcr4hjJd@db:5432/reddex"
+
   db:
     container_name: reddex_db
     image: postgres
@@ -51,7 +47,3 @@ secrets:
     file: $HOME/.npmrc
   env:
     file: .env
-  FONTAWESOME_NPM_AUTH_TOKEN:
-    environment: FONTAWESOME_NPM_AUTH_TOKEN
-  DATABASE_URL:
-    environment: DATABASE_URL

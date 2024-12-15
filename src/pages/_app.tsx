@@ -7,7 +7,6 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
-import { Poppins } from "next/font/google";
 import { ToastContainer, toast } from "react-toastify";
 import { api } from "~/utils/api";
 
@@ -19,6 +18,7 @@ import mixpanel from "mixpanel-browser";
 import { env } from "~/env";
 import "@mantine/core/styles.css";
 import { isActiveSubscription } from "~/utils";
+import { Poppins } from "next/font/google";
 
 const font = Poppins({
   weight: ["300", "400", "500", "700"],

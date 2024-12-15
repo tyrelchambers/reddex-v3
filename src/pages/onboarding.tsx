@@ -35,7 +35,7 @@ const Onboarding = () => {
         }
         if (plan && !user.subscription) {
           const link = await checkoutMutation.mutateAsync({
-            price: getPrices()[plan] ?? "",
+            price: getPrices().ultimate,
             email: user.email ?? undefined,
           });
 

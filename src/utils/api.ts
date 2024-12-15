@@ -20,6 +20,7 @@ const getBaseUrl = () => {
 /** A set of type-safe react-query hooks for your tRPC API. */
 export const api = createTRPCNext<AppRouter>({
   transformer: superjson,
+  // @ts-expect-error server and client don't share types
   config() {
     return {
       /**

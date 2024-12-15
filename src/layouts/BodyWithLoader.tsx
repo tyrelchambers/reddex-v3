@@ -1,6 +1,5 @@
 import React from "react";
 import Spinner from "~/components/Spinner";
-import WrongPlanBanner from "~/components/WrongPlanBanner";
 
 interface Props {
   isLoading: boolean;

@@ -22,7 +22,6 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { websiteSubmissionSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
-import { hasProPlan } from "~/utils";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 

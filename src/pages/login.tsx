@@ -12,8 +12,6 @@ import Logo from "../../public/images/reddex-dark.svg";
 import LogoLight from "../../public/images/reddex-light.svg";
 import { useTheme } from "~/hooks/useTheme";
 import { useRouter } from "next/router";
-import { getPrices } from "~/constants";
-import { api } from "~/utils/api";
 interface Props {
   providers: ClientSafeProvider[];
 }

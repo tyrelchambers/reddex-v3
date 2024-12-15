@@ -9,7 +9,7 @@ export interface Plan {
 }
 
 interface Price {
-  [x: string]: string;
+  ultimate: string;
 }
 
 const testPrices: Price = {
@@ -20,7 +20,7 @@ const livePrices: Price = {
   ultimate: "",
 };
 
-export const getPrices: () => Price = () => {
+export const getPrices = (): Price => {
   if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test")
     return testPrices;
   return livePrices;

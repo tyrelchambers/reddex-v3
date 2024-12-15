@@ -5,7 +5,6 @@ import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { routes, settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";
-import { Button } from "~/components/ui/button";
 import { captureException } from "@sentry/nextjs";
 import { Separator } from "~/components/ui/separator";
 import AccountPlanSelectModal from "~/components/modals/AccountPlanSelectModal";
@@ -96,7 +95,7 @@ const Settings = () => {
               invoices={invoices}
             />
           ) : !currentUser?.subscription && !currentUser?.email ? (
-            <div className="bg-warning/10 mt-6 flex items-center gap-4 rounded-md border border-yellow-500 p-4">
+            <div className="mt-6 flex items-center gap-4 rounded-md border border-yellow-500 bg-warning/10 p-4">
               <FontAwesomeIcon icon={faWarning} className="text-yellow-500" />
 
               <div className="flex flex-1 flex-col">
@@ -110,7 +109,7 @@ const Settings = () => {
 
               <Link
                 href={routes.SETTINGS_PROFILE}
-                className="bg-warning text-warning-foreground rounded-md px-4 py-2 text-sm font-medium hover:bg-yellow-600"
+                className="rounded-md bg-warning px-4 py-2 text-sm font-medium text-warning-foreground hover:bg-yellow-600"
               >
                 Add email
               </Link>

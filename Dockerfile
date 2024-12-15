@@ -43,6 +43,7 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 # RUN yarn build
+RUN npx prisma generate
 
 # If using npm comment out above and use below instead
 RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_TOKEN,required=true \ 
@@ -74,7 +75,6 @@ ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN npx prisma generate
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -85,6 +85,7 @@ RUN chmod 777 ./uploads
 USER nextjs
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=build /usr/src/app/node_modules/.prisma/client  ./node_modules/.prisma/client 
 
 EXPOSE 3000
 CMD ["node", "server.js"]

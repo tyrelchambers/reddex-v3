@@ -8,28 +8,14 @@ import {
 } from "~/types";
 import { sendMessageSchema } from "~/server/schemas";
 import { z } from "zod";
-import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { trackEvent } from "~/utils/mixpanel";
+import { getAccessTokenFromServer } from "~/server/queries";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const userAccount = await prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
-        include: {
-          accounts: true,
-        },
-      });
-      const redditAccount = userAccount?.accounts.find(
-        (acc) => acc.provider === "reddit"
-      );
-
-      if (!redditAccount?.access_token) return;
-
-      const accessToken = await refreshAccessToken(redditAccount);
+      const accessToken = await getAccessTokenFromServer(ctx.session.user.id);
 
       if (!accessToken) return;
 
@@ -51,21 +37,7 @@ export const inboxRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const url = `https://oauth.reddit.com/api/comment`;
-        const userAccount = await prisma.user.findUnique({
-          where: {
-            id: ctx.session.user.id,
-          },
-          include: {
-            accounts: true,
-          },
-        });
-        const redditAccount = userAccount?.accounts.find(
-          (acc) => acc.provider === "reddit"
-        );
-
-        if (!redditAccount?.access_token) return;
-
-        const accessToken = await refreshAccessToken(redditAccount);
+        const accessToken = await getAccessTokenFromServer(ctx.session.user.id);
 
         if (!accessToken) return;
 
@@ -90,21 +62,7 @@ export const inboxRouter = createTRPCRouter({
   search: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     try {
       const query = input.toLowerCase();
-      const userAccount = await prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
-        include: {
-          accounts: true,
-        },
-      });
-      const redditAccount = userAccount?.accounts.find(
-        (acc) => acc.provider === "reddit"
-      );
-
-      if (!redditAccount?.access_token) return;
-
-      const accessToken = await refreshAccessToken(redditAccount);
+      const accessToken = await getAccessTokenFromServer(ctx.session.user.id);
 
       if (!accessToken) return;
 
@@ -119,14 +77,14 @@ export const inboxRouter = createTRPCRouter({
               headers: {
                 Authorization: `bearer ${accessToken}`,
               },
-            }
+            },
           )
           // eslint-disable-next-line no-loop-func
           .then((res) => {
             posts.push(
               res.data.data.children.map(
-                (post) => post.data
-              ) as unknown as RedditInboxMessage
+                (post) => post.data,
+              ) as unknown as RedditInboxMessage,
             );
             after = res.data.data.after;
           });
@@ -137,7 +95,7 @@ export const inboxRouter = createTRPCRouter({
         .filter(
           (post) =>
             post.subject.toLowerCase().includes(query) ||
-            post.dest.toLowerCase().includes(query)
+            post.dest.toLowerCase().includes(query),
         );
 
       trackEvent(MixpanelEvents.SEARCH_INBOX);

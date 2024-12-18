@@ -9,6 +9,7 @@ import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
+import { getAccessTokenFromServer } from "~/server/queries";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -216,8 +217,15 @@ export const storyRouter = createTRPCRouter({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       try {
+        const url = new URL(input);
+        const newUrl = `https://reddit.com${url.pathname}`;
+
         const storyFromUrl = await axios
-          .get(`${input}.json`)
+          .get(`${newUrl}.json`, {
+            headers: {
+              "User-Agent": "Reddex/1.0",
+            },
+          })
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           .then((res) => res.data[0].data.children[0].data as PostFromReddit);
 

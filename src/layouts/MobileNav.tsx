@@ -5,7 +5,6 @@ import {
   faSearch,
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Burger } from "@mantine/core";
 import { User } from "@prisma/client";
 import { Menu } from "lucide-react";
 import { signOut } from "next-auth/react";

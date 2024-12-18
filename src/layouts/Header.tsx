@@ -9,7 +9,6 @@ import UserMenu from "./UserMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSearch, faSun } from "@fortawesome/pro-solid-svg-icons";
 import { useTheme } from "~/hooks/useTheme";
-import { Burger } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";

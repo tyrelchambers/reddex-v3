@@ -1,3 +1,3 @@
 export const mantinePaginationStyles = {
-  control: "text-foreground bg-card border-border",
+  control: "!text-card-foreground !bg-card !border-border",
 };

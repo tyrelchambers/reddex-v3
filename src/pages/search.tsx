@@ -1,32 +1,22 @@
 import { Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import SubredditSearchForm from "~/forms/SubredditSearchForm";
 import Header from "~/layouts/Header";
 import { useDisclosure } from "@mantine/hooks";
 import { api } from "~/utils/api";
 import SubredditSearchItem from "~/components/SubredditSearchItem";
 import QueueBanner from "~/components/QueueBanner";
-import FilterSelections from "~/components/FilterSelections";
 import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
-import { FilterState, MixpanelEvents, PostFromReddit } from "~/types";
+import { FilterState, PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
 import { mantinePaginationStyles } from "~/lib/styles";
-import { FilterPosts } from "~/lib/utils";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
-import { addLastSearchedOrUpdate, buildParams, parseQuery } from "~/utils";
+import { buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
 import queryString from "query-string";
-import { trackUiEvent } from "~/utils/mixpanelClient";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "~/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
@@ -35,42 +25,30 @@ import {
 } from "~/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/pro-duotone-svg-icons";
-interface SearchHandlerProps {
-  subreddit: string;
-  category: string;
-}
+import { filterPosts, paginatedSlice } from "~/utils/searchHelpers";
+import { useSearchStore } from "~/stores/searchStore";
 
 const Search = () => {
+  const {
+    isSearching,
+    loadingPosts,
+    setLoadingPosts,
+    page,
+    setPage,
+    filters,
+    setFilters,
+  } = useSearchStore();
   const router = useRouter();
-  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
-    {},
-  );
 
-  // pagination
-  const [activePage, setPage] = useState(1);
   const session = useSession();
-  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
-    useDisclosure(false);
-  const [opened, { open, close }] = useDisclosure(false);
-  const statsUpdate = api.stats.set.useMutation();
   const currentUser = api.user.me.useQuery(undefined, {
     enabled: session.status === "authenticated",
   });
 
-  const subredditSearch = api.subredditSearch.search.useMutation({
-    async onSuccess(data) {
-      await db.posts.clear();
-      await db.posts.bulkAdd(data);
-      await addLastSearchedOrUpdate();
-      statsUpdate.mutate(data.length);
-      closeDrawer();
-    },
-  });
   const usedPostIdsQuery = api.story.getUsedPostIds.useQuery(undefined, {
     enabled: session.status === "authenticated",
   });
 
-  const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState<PostFromReddit[]>([]);
   const [lastSearched, setLastSearched] = useState<{ time: Date } | undefined>(
     undefined,
@@ -80,62 +58,37 @@ const Search = () => {
 
   const PAGINATION_LIMIT_PER_PAGE = 15;
   const PAGINATION_TOTAL_PAGES =
-    filterPosts(
-      appliedFilters,
-      posts,
-      currentUser.data?.Profile?.words_per_minute,
-    ).length / PAGINATION_LIMIT_PER_PAGE;
+    filterPosts(filters, posts, currentUser.data?.Profile?.words_per_minute)
+      .length / PAGINATION_LIMIT_PER_PAGE;
 
   useEffect(() => {
     const fn = async () => {
-      setLoading(true);
+      setLoadingPosts(true);
 
       const posts = await db.posts.toArray();
       const lastSearchedTime = await db.lastSearched.toArray();
 
       setLastSearched(lastSearchedTime[0]);
       setPosts(posts);
-      setLoading(false);
+      setLoadingPosts(false);
     };
 
     fn();
 
     return () => {
-      setLoading(false);
+      setLoadingPosts(false);
     };
-  }, [subredditSearch.isSuccess]);
+  }, [isSearching]);
 
   useEffect(() => {
     const search = queryString.parse(window.location.search);
     const parsedFilters = parseQuery(search);
 
-    setAppliedFilters({ ...parsedFilters });
+    setFilters({ ...parsedFilters });
   }, [router.query]);
 
-  const searchHandler = (data: SearchHandlerProps) => {
-    if (!data.subreddit) return;
-
-    const subreddit = data.subreddit
-      .replace("r/", "")
-      .replaceAll(" ", "")
-      .trim()
-      .toLocaleLowerCase();
-
-    const payload = {
-      subreddit,
-      category: data.category,
-    };
-
-    trackUiEvent(MixpanelEvents.SUBREDDIT_SEARCH, {
-      subreddit: data.subreddit,
-    });
-
-    subredditSearch.mutate(payload);
-    setPage(1);
-  };
-
   const removeFilter = (filter: { label: string; value: string }) => {
-    const filterClone = appliedFilters;
+    const filterClone = filters;
     if (!filterClone) return;
 
     delete filterClone[filter.value as keyof FilterState];
@@ -145,7 +98,7 @@ const Search = () => {
   };
 
   const resetFilters = () => {
-    setAppliedFilters({});
+    setFilters({});
     router.replace(router.asPath, { query: {} });
   };
 
@@ -155,9 +108,9 @@ const Search = () => {
         <title>Reddex | Search</title>
       </Head>
 
-      <Header openDrawer={openDrawer} />
+      <Header />
 
-      {!loading && !posts.length && (
+      {!isSearching && !loadingPosts && !posts.length && (
         <section className="mx-auto max-w-screen-2xl">
           <EmptyState label="subreddit posts" />
         </section>
@@ -166,28 +119,29 @@ const Search = () => {
       <div className="relative flex flex-col p-4">
         <QueueBanner openQueue={openQueue} />
 
-        {loading && (
+        {(isSearching || loadingPosts) && (
           <div className="my-6 flex justify-center">
             <FontAwesomeIcon icon={faSpinner} spin className="text-primary" />
           </div>
         )}
 
         <ActiveFilterList
-          filters={appliedFilters}
+          filters={filters}
           removeFilter={removeFilter}
           reset={resetFilters}
         />
 
         <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {(!loading &&
+          {(!isSearching &&
+            !loadingPosts &&
             paginatedSlice(
               filterPosts(
-                appliedFilters,
+                filters,
                 posts,
                 currentUser.data?.Profile?.words_per_minute,
               ),
               PAGINATION_LIMIT_PER_PAGE,
-              activePage,
+              page,
             )
               .sort((a, b) => b.created - a.created)
               .map((item) => (
@@ -217,7 +171,7 @@ const Search = () => {
           )}
           <Pagination
             classNames={mantinePaginationStyles}
-            value={activePage}
+            value={page}
             onChange={setPage}
             total={PAGINATION_TOTAL_PAGES}
           />
@@ -229,95 +183,16 @@ const Search = () => {
         )}
       </div>
 
-      <Dialog open={opened}>
-        <DialogContent onClose={close}>
-          <DialogHeader>
-            <DialogTitle>Apply filters</DialogTitle>
-          </DialogHeader>
-          <p className="mb-4 text-sm text-foreground/60">
-            Any input that doesn&apos;t have a value, won&apos;t be applied.
-          </p>
-          <FilterSelections filters={appliedFilters} closeModal={close} />
-        </DialogContent>
-      </Dialog>
-
       <Dialog open={queueModalOpened}>
-        <DialogContent onClose={closeQueue} className="w-full max-w-screen-lg">
+        <DialogContent className="w-full max-w-screen-lg">
           <DialogHeader>
             <DialogTitle>Story queue</DialogTitle>
           </DialogHeader>
           <QueueModal close={closeQueue} />
         </DialogContent>
       </Dialog>
-
-      <Sheet open={drawerOpened}>
-        <SheetContent side="right" onClose={closeDrawer}>
-          <SheetHeader>
-            <SheetTitle>Search Reddit</SheetTitle>
-          </SheetHeader>
-          <SubredditSearchForm
-            open={open}
-            searchHandler={searchHandler}
-            disableSearch={subredditSearch.isPending}
-            searches={currentUser.data?.Profile?.searches}
-          />
-        </SheetContent>
-      </Sheet>
     </>
   );
-};
-
-const paginatedSlice = (
-  array: PostFromReddit[],
-  page_size: number,
-  page_number: number,
-) => {
-  return array.slice((page_number - 1) * page_size, page_number * page_size);
-};
-
-const filterPosts = (
-  filters: Partial<FilterState> | null,
-  posts: PostFromReddit[],
-  profileReadingTime: number | undefined | null,
-) => {
-  if (!filters) return posts;
-
-  const newArray: PostFromReddit[] = [];
-
-  for (let index = 0; index < posts.length; index++) {
-    const element = posts[index];
-
-    if (!element) continue;
-
-    const post = new FilterPosts(element, filters);
-    const acceptance: boolean[] = [];
-
-    if (element?.author.includes("[deleted]")) continue;
-
-    const obj: {
-      [k in keyof FilterState as string]: () => boolean | undefined | null;
-    } = {
-      keywords: () => post.keywords(),
-      upvotes: () => post.upvotes(),
-      readingTime: () => post.readingTime(profileReadingTime ?? 200),
-      seriesOnly: () => post.seriesOnly(),
-      excludeSeries: () => post.excludeSeries(),
-    };
-
-    Object.keys(filters).forEach((key) => {
-      const result = obj[key]?.();
-
-      if (result !== undefined && result !== null) {
-        acceptance.push(result);
-      }
-    });
-
-    if (element && acceptance.every((item) => item)) {
-      newArray.push(element);
-    }
-  }
-
-  return newArray;
 };
 
 export default Search;

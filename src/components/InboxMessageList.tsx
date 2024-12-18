@@ -1,56 +1,79 @@
 import { faUserCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format, fromUnixTime } from "date-fns";
-import { NextRouter } from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import { routes } from "~/routes";
 import { MixpanelEvents, RedditInboxMessage } from "~/types";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import InboxHeader from "./dashboard/inbox/InboxHeader";
+import Spinner from "./Spinner";
 
 interface Props {
   messages: RedditInboxMessage[];
   selectedMessage: RedditInboxMessage["id"] | undefined;
   setSelectedMessageId: (id: string) => void;
-  router: NextRouter;
+  search: string;
+  setSearch: (search: string) => void;
+  searching: boolean;
 }
 
 const InboxMessageList = ({
   messages,
   setSelectedMessageId,
   selectedMessage,
-  router,
+  search,
+  setSearch,
+  searching,
 }: Props) => {
+  const router = useRouter();
+  const resetSearch = () => {
+    trackUiEvent(MixpanelEvents.RESET_SEARCH_INPUT);
+    setSearch("");
+  };
+
   return (
-    <div className="flex w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-border pr-6">
-      {messages.map((m) => (
-        <button
-          key={m.id}
-          onClick={() => {
-            trackUiEvent(MixpanelEvents.SELECT_INBOX_MESSAGE);
-            setSelectedMessageId(m.id);
-            router.push(routes.INBOX, {
-              search: `message=${m.id}`,
-            });
-          }}
-        >
-          <div
-            className={`inbox-message-list-item rounded-2xl p-4 transition-all ${
-              m.id === selectedMessage ? "active" : "border border-border"
-            }`}
+    <div className="flex w-full flex-col overflow-auto border-r border-card p-4 xl:max-w-sm">
+      <InboxHeader
+        search={search}
+        setSearch={setSearch}
+        resetSearch={resetSearch}
+      />
+      {!searching ? (
+        messages.map((m) => (
+          <button
+            key={m.id}
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.SELECT_INBOX_MESSAGE);
+              setSelectedMessageId(m.id);
+              router.push(routes.INBOX, {
+                search: `message=${m.id}`,
+              });
+            }}
           >
-            <p className="text-left font-medium text-foreground">{m.subject}</p>
-            <footer className="mt-4 flex justify-between">
-              <p className="text-sm font-thin text-muted-foreground">
-                <FontAwesomeIcon icon={faUserCircle} className="mr-1" />{" "}
-                {m.dest}
+            <div
+              className={`inbox-message-list-item p-4 transition-all ${
+                m.id === selectedMessage ? "active" : ""
+              }`}
+            >
+              <p className="text-left font-medium text-foreground">
+                {m.subject}
               </p>
-              <p className="text-sm font-thin text-muted-foreground">
-                {format(fromUnixTime(m.created), "MMM do, yyyy")}
-              </p>
-            </footer>
-          </div>
-        </button>
-      ))}
+              <footer className="mt-4 flex justify-between">
+                <p className="text-sm font-thin text-muted-foreground">
+                  <FontAwesomeIcon icon={faUserCircle} className="mr-1" />{" "}
+                  {m.dest}
+                </p>
+                <p className="text-sm font-thin text-muted-foreground">
+                  {format(fromUnixTime(m.created), "MMM do, yyyy")}
+                </p>
+              </footer>
+            </div>
+          </button>
+        ))
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 };

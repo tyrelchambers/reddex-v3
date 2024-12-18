@@ -46,14 +46,15 @@ const Contacts = () => {
 
   return (
     <WrapperWithNav>
-      <section className="mx-auto max-w-screen-2xl px-4 lg:px-0">
-        <header className="flex items-center justify-between">
+      <section className="px-4">
+        <header className="flex items-center justify-between gap-8">
           <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
 
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 variant="secondary"
+                className="w-fit flex-grow-0"
                 onClick={() => {
                   trackUiEvent(MixpanelEvents.OPEN_ADD_CONTACT_MODAL);
                 }}
@@ -106,7 +107,7 @@ const Contacts = () => {
         </header>
 
         {contactsQuery.data && contactsQuery.data.length > 0 ? (
-          <section className="my-10 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+          <section className="my-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {contactsQuery.data?.map((ct) => (
               <ContactItem key={ct.id} contact={ct} />
             ))}

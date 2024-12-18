@@ -33,6 +33,7 @@ const Onboarding = () => {
         ) {
           router.push(redirectTo);
         }
+
         if (plan && !user.subscription) {
           const link = await checkoutMutation.mutateAsync({
             price: getPrices().ultimate,

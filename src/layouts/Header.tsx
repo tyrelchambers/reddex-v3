@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Logo from "../../public/images/reddex-dark.svg";
 import LogoLight from "../../public/images/reddex-light.svg";
 
@@ -7,10 +7,9 @@ import { routes } from "~/routes";
 import { useSession } from "next-auth/react";
 import UserMenu from "./UserMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSearch, faSun } from "@fortawesome/pro-solid-svg-icons";
+import { faMoon, faSun } from "@fortawesome/pro-solid-svg-icons";
 import { useTheme } from "~/hooks/useTheme";
-import { Burger } from "@mantine/core";
-import { useDisclosure, useViewportSize } from "@mantine/hooks";
+import { useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";
 import { breakpoints } from "~/constants";
 import { User } from "@prisma/client";
@@ -19,6 +18,7 @@ import { Button } from "~/components/ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
 import clsx from "clsx";
+import SearchModal from "~/components/modals/SearchModal";
 
 const _routes = [
   {
@@ -33,33 +33,20 @@ const _routes = [
 ];
 
 interface Props {
-  openDrawer?: () => void;
+  sticky?: boolean;
 }
 
-const Header = ({ openDrawer }: Props) => {
+const Header = ({ sticky = false }: Props) => {
   const session = useSession();
   const { isDark, toggleTheme } = useTheme();
-  const [opened, { toggle }] = useDisclosure(false);
   const { width } = useViewportSize();
   const router = useRouter();
-  const label = opened ? "Close navigation" : "Open navigation";
-
-  useEffect(() => {
-    const body = document.body;
-    if (opened) {
-      body.style.height = "0px";
-      body.style.overflow = "hidden";
-    } else {
-      body.style.height = "auto";
-      body.style.overflow = "auto";
-    }
-  }, [opened]);
 
   return (
     <header
       className={clsx(
-        "sticky right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
-        opened && "h-screen !items-start overflow-hidden",
+        "right-0 top-0 z-30 mx-auto flex h-[80px] max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
+        sticky && "sticky",
       )}
     >
       <div className="flex flex-1 items-center">
@@ -103,19 +90,7 @@ const Header = ({ openDrawer }: Props) => {
               className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
             />
           </button>
-          {router.pathname === routes.SEARCH && !opened && (
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                trackUiEvent(MixpanelEvents.OPEN_SEARCH_DRAWER);
-                openDrawer?.();
-              }}
-            >
-              <FontAwesomeIcon icon={faSearch} className="mr-4" />
-              Search
-            </Button>
-          )}
+          {router.pathname === routes.SEARCH && <SearchModal />}
           <div className="flex">
             {session.data?.user && <UserMenu />}
             {session.status !== "authenticated" && (
@@ -149,33 +124,10 @@ const Header = ({ openDrawer }: Props) => {
               className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
             />
           </button>
-          {!opened && router.pathname === routes.SEARCH && (
-            <Button
-              type="button"
-              size="sm"
-              className="mx-3"
-              onClick={() => {
-                trackUiEvent(MixpanelEvents.OPEN_SEARCH_DRAWER);
-                openDrawer?.();
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="mr-4 text-xs text-accent-foreground"
-              />
-              <p className="text-sm text-accent-foreground">Search</p>
-            </Button>
-          )}
-          <Burger
-            opened={opened}
-            onClick={toggle}
-            aria-label={label}
-            className="relative z-20"
-            color={isDark ? "white" : "black"}
-          />
+          {router.pathname === routes.SEARCH && <SearchModal />}
+          <MobileNav user={session.data?.user as User} />
         </div>
       )}
-      {opened && <MobileNav user={session.data?.user as User} />}
     </header>
   );
 };

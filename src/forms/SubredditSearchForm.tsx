@@ -1,9 +1,19 @@
 import { faSpinnerThird } from "@fortawesome/pro-duotone-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { RecentlySearched } from "@prisma/client";
-import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useSession } from "next-auth/react";
+import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import FilterSelections from "~/components/FilterSelections";
 import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import {
   Form,
   FormDescription,
@@ -19,42 +29,97 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { useSearchStore } from "~/stores/searchStore";
+import { MixpanelEvents } from "~/types";
+import { addLastSearchedOrUpdate } from "~/utils";
+import { api } from "~/utils/api";
+import { db } from "~/utils/dexie";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const categories = ["Hot", "New", "Rising", "Controversial", "Top"];
 
-interface Props {
-  open: () => void;
-  searchHandler: (state: { subreddit: string; category: string }) => void;
-  disableSearch: boolean;
-  searches: RecentlySearched[] | undefined;
-}
+const formSchema = z.object({
+  subreddit: z.string(),
+  category: z.string(),
+});
 
-const SubredditSearchForm = ({
-  open,
-  searchHandler,
-  disableSearch,
-  searches,
-}: Props) => {
+const SubredditSearchForm = () => {
+  const [filterModalOpen, setFilterModalOpen] = React.useState(false);
+
+  const { filters: appliedFilters, setIsSearching, setPage } = useSearchStore();
+  const statsUpdate = api.stats.set.useMutation();
+
+  const subredditSearch = api.subredditSearch.search.useMutation({
+    async onSuccess(data) {
+      await db.posts.clear();
+      await db.posts.bulkAdd(data);
+      await addLastSearchedOrUpdate();
+      // TODO; move to server
+      statsUpdate.mutate(data.length);
+      setIsSearching(false);
+    },
+  });
+  const session = useSession();
+
+  const currentUser = api.user.me.useQuery(undefined, {
+    enabled: session.status === "authenticated",
+  });
+  const searches = currentUser.data?.Profile?.searches;
+
   const form = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       subreddit: "",
       category: "Hot",
     },
   });
-  const [state, setState] = useState<{
+
+  const submitHandler = (data: z.infer<typeof formSchema>) => {
+    searchHandler(data);
+  };
+
+  const recentSearchHandler = (subreddit: string) => {
+    searchHandler({
+      subreddit,
+      category: "Hot",
+    });
+  };
+
+  const searchHandler = ({
+    subreddit,
+    category,
+  }: {
     subreddit: string;
     category: string;
-  }>({
-    subreddit: "",
-    category: "Hot",
-  });
+  }) => {
+    if (!subreddit) return;
+
+    const s = subreddit
+      .replace("r/", "")
+      .replaceAll(" ", "")
+      .trim()
+      .toLocaleLowerCase();
+
+    const payload = {
+      subreddit,
+      category,
+    };
+
+    trackUiEvent(MixpanelEvents.SUBREDDIT_SEARCH, {
+      subreddit: s,
+    });
+
+    subredditSearch.mutate(payload);
+    setIsSearching(true);
+    setPage(1);
+  };
 
   return (
     <div className="mt-8 flex flex-col">
       <Form {...form}>
         <form
           className="flex flex-col gap-4"
-          onSubmit={form.handleSubmit(searchHandler)}
+          onSubmit={form.handleSubmit(submitHandler)}
         >
           <FormField
             name="subreddit"
@@ -64,7 +129,15 @@ const SubredditSearchForm = ({
                 <FormDescription>
                   Input just the name of the subreddit. For example: nosleep.
                 </FormDescription>
-                <Input placeholder="eg: nosleep, animals, puppies" {...field} />
+                <div className="flex">
+                  <p className="mr-2 flex aspect-square h-10 w-10 items-center justify-center rounded-lg bg-card font-bold uppercase text-card-foreground">
+                    r <span className="text-sm">/</span>
+                  </p>
+                  <Input
+                    placeholder="eg: nosleep, animals, puppies"
+                    {...field}
+                  />
+                </div>
               </FormItem>
             )}
           />
@@ -90,21 +163,29 @@ const SubredditSearchForm = ({
             )}
           />
 
-          <Button
-            type="button"
-            variant="secondary"
-            className="w-full "
-            onClick={open}
-          >
-            Add filters
-          </Button>
+          <Dialog open={filterModalOpen} onOpenChange={setFilterModalOpen}>
+            <DialogTrigger asChild>
+              <Button type="button" variant="secondary" className="w-full">
+                Add filters
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Apply filters</DialogTitle>
+              </DialogHeader>
+              <p className="mb-4 text-sm text-foreground/60">
+                Any input that doesn&apos;t have a value, won&apos;t be applied.
+              </p>
+              <FilterSelections closeModal={() => setFilterModalOpen(false)} />
+            </DialogContent>
+          </Dialog>
           <Button
             type="submit"
             variant="default"
-            className="w-full "
-            disabled={disableSearch}
+            className="w-full"
+            disabled={subredditSearch.isPending}
           >
-            {disableSearch ? (
+            {subredditSearch.isPending ? (
               <FontAwesomeIcon
                 icon={faSpinnerThird}
                 spin
@@ -126,7 +207,7 @@ const SubredditSearchForm = ({
               <Button
                 variant="link"
                 size="sm"
-                onClick={() => searchHandler({ ...state, subreddit: s.text })}
+                onClick={() => recentSearchHandler(s.text)}
               >
                 {s.text}
               </Button>

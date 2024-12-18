@@ -148,7 +148,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       website,
-      youtubeVideos: videos,
+      youtubeVideos: videos ?? null,
     },
   };
 };

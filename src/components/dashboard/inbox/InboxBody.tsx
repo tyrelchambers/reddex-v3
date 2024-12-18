@@ -43,9 +43,9 @@ const InboxBody = ({
   const { width } = useViewportSize();
   const isDesktop = width > breakpoints.laptop;
 
-  const handleBack = () => {
-    const params = new URLSearchParams(window.location.search);
-    params.delete("message");
+  const handleBack = async () => {
+    // need to await this or else the above useEffect will trigger and grab the query before it's removed
+    await router.replace(router.asPath, { query: {} });
     setSelectedMessageId("");
   };
 

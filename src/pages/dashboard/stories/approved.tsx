@@ -27,10 +27,10 @@ const Approved = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col px-4">
         {" "}
-        <header className="flex flex-1 flex-col justify-between px-4 lg:px-0 xl:flex-row">
-          <div className="mb-6 flex flex-col lg:mb-0">
+        <header className="flex flex-1 flex-col justify-between lg:px-0 xl:flex-row">
+          <div className="mb-6 flex flex-col xl:mb-0">
             <h1 className="text-2xl font-bold text-foreground">
               Approved list
             </h1>
@@ -39,14 +39,13 @@ const Approved = () => {
             </p>
           </div>
 
-          <div className="flex w-full max-w-md flex-col gap-3 lg:flex-row">
-            <div className="flex flex-1 flex-col">
-              <Input
-                placeholder="Search by keywords"
-                value={query}
-                onChange={(e) => setQuery(e.currentTarget.value)}
-              />
-            </div>
+          <div className="flex w-full flex-col gap-3 sm:flex-row md:max-w-md">
+            <Input
+              placeholder="Search by keywords"
+              value={query}
+              className="w-full"
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
 
             <Dialog>
               <DialogTrigger asChild>

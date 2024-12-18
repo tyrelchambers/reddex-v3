@@ -31,8 +31,8 @@ const Submitted = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <section className="flex w-full flex-col">
-        <header className="flex flex-col px-4 lg:px-0">
+      <section className="flex w-full flex-col px-4">
+        <header className="flex flex-col lg:px-0">
           <h1 className="text-2xl font-bold text-foreground">Submitted</h1>
           <p className="font-light text-muted-foreground">
             These are your stories submitted via your website.

@@ -24,8 +24,8 @@ const Completed = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <section className="flex w-full flex-col">
-        <header className="flex w-full flex-1 flex-col justify-between px-4 lg:flex-row lg:px-0">
+      <section className="flex w-full flex-col px-4">
+        <header className="flex w-full flex-1 flex-col justify-between gap-2 lg:flex-row lg:px-0">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold text-foreground">
               Completed list
@@ -35,17 +35,15 @@ const Completed = () => {
             </p>
           </div>
 
-          <div className="flex w-full max-w-md flex-col gap-3 lg:flex-row">
-            <div className="flex flex-1 flex-col">
-              <Input
-                placeholder="Search by keywords"
-                value={query}
-                onChange={(e) => setQuery(e.currentTarget.value)}
-              />
-            </div>
+          <div className="flex w-full flex-col gap-3 sm:flex-row md:max-w-md">
+            <Input
+              placeholder="Search by keywords"
+              value={query}
+              className="w-full"
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
             <Button
               variant="secondary"
-              className="mt-4 lg:mt-0"
               onClick={() => {
                 trackUiEvent(MixpanelEvents.REMOVE_ALL_COMPLETED_STORIES, {
                   userId: data?.user?.id,
@@ -59,7 +57,7 @@ const Completed = () => {
         </header>
 
         {completedListQuery.data && completedListQuery.data.length > 0 ? (
-          <div className="mt-6 grid grid-cols-2 gap-3">
+          <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
             {completedListQuery.data
               ?.filter(
                 (item) => item.title.match(regex) || item.author.match(regex),

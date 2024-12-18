@@ -84,13 +84,13 @@ const SubscriptionCard = ({ subscription, invoices }: Props) => {
       <footer className="mt-2 flex flex-col justify-end gap-4 border-t-[1px] border-t-border pt-3 md:flex-row">
         {invoices && (
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button variant="ghost">
                 View invoices{" "}
                 <FontAwesomeIcon icon={faReceipt} className="ml-2" />
               </Button>
             </DialogTrigger>
-            <DialogContent onClose={close}>
+            <DialogContent>
               <DialogHeader className="flex">
                 <DialogTitle>Invoices</DialogTitle>
                 <Link

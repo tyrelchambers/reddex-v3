@@ -94,26 +94,6 @@ const Settings = () => {
               subscription={currentUser.subscription}
               invoices={invoices}
             />
-          ) : !currentUser?.subscription && !currentUser?.email ? (
-            <div className="mt-6 flex items-center gap-4 rounded-md border border-yellow-500 bg-warning/10 p-4">
-              <FontAwesomeIcon icon={faWarning} className="text-yellow-500" />
-
-              <div className="flex flex-1 flex-col">
-                <p className="font-medium text-foreground">
-                  Your account is missing an email.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Before selecting a plan, please update your email.
-                </p>
-              </div>
-
-              <Link
-                href={routes.SETTINGS_PROFILE}
-                className="rounded-md bg-warning px-4 py-2 text-sm font-medium text-warning-foreground hover:bg-yellow-600"
-              >
-                Add email
-              </Link>
-            </div>
           ) : (
             <AccountPlanSelectModal
               currentPlan={selectedPlan}

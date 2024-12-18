@@ -6,9 +6,6 @@ import Stripe from "stripe";
 import { captureException } from "@sentry/nextjs";
 
 interface BillingInfo {
-  customer: Stripe.Customer & {
-    subscriptions: Stripe.Subscription[] & { plan: Stripe.Plan };
-  };
   invoices: Stripe.ApiList<Stripe.Invoice>;
 }
 
@@ -61,34 +58,15 @@ export const billingRouter = createTRPCRouter({
 
   info: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: ctx.session.user.id,
-        },
+      const subscriptionQuery = await stripeClient.subscriptions.search({
+        query: `status: 'active' AND metadata["userId"]: "${ctx.session.user.id}"`,
       });
 
-      if (!user?.customerId) {
-        return null;
-      }
-
-      const customer = (await stripeClient.customers.retrieve(user.customerId, {
-        expand: [
-          "subscriptions",
-          "subscriptions.data.plan",
-          "subscriptions.data.plan.product",
-        ],
-      })) as unknown as Stripe.Customer & {
-        subscriptions: Stripe.Subscription[] & {
-          plan: Stripe.Plan;
-        };
-      };
-
       const invoices = await stripeClient.invoices.list({
-        customer: customer.id,
+        subscription: subscriptionQuery.data[0]?.id,
       });
 
       return {
-        customer,
         invoices,
       } as BillingInfo;
     } catch (error) {

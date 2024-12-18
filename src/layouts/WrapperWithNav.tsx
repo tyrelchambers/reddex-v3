@@ -71,7 +71,7 @@ const WrapperWithNav = ({
         <AuthenticationBoundary>
           <section className={classes}>
             {tabs && (
-              <header className="w-full px-4 lg:w-48">
+              <header className="w-full px-4 lg:w-60">
                 <TabsList tabs={tabs} />
               </header>
             )}

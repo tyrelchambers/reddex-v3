@@ -95,7 +95,7 @@ const Profile = () => {
 
   return (
     <WrapperWithNav tabs={settingsTabs}>
-      <div className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
+      <div className="flex w-full max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
         <h1 className="text-3xl font-bold text-foreground">Profile</h1>
         <Form {...profileForm}>
           <form

@@ -7,7 +7,7 @@ import { routes } from "~/routes";
 import { useSession } from "next-auth/react";
 import UserMenu from "./UserMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSearch, faSun } from "@fortawesome/pro-solid-svg-icons";
+import { faMoon, faSun } from "@fortawesome/pro-solid-svg-icons";
 import { useTheme } from "~/hooks/useTheme";
 import { useViewportSize } from "@mantine/hooks";
 import MobileNav from "./MobileNav";

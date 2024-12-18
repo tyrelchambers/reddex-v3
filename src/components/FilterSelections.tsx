@@ -23,9 +23,9 @@ import {
   FormItem,
   FormLabel,
 } from "./ui/form";
+import { useSearchStore } from "~/stores/searchStore";
 
 interface FilterSelectionProps {
-  filters: Partial<FilterState> | null;
   closeModal: () => void;
 }
 
@@ -43,7 +43,8 @@ const formSchema = z.object({
   excludeSeries: z.boolean().default(false),
 });
 
-const FilterSelections = ({ filters, closeModal }: FilterSelectionProps) => {
+const FilterSelections = ({ closeModal }: FilterSelectionProps) => {
+  const { filters } = useSearchStore();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

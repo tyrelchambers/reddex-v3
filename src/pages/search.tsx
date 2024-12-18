@@ -29,12 +29,16 @@ import { filterPosts, paginatedSlice } from "~/utils/searchHelpers";
 import { useSearchStore } from "~/stores/searchStore";
 
 const Search = () => {
-  const { isSearching, loadingPosts, setLoadingPosts, page, setPage } =
-    useSearchStore();
+  const {
+    isSearching,
+    loadingPosts,
+    setLoadingPosts,
+    page,
+    setPage,
+    filters,
+    setFilters,
+  } = useSearchStore();
   const router = useRouter();
-  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
-    {},
-  );
 
   const session = useSession();
   const currentUser = api.user.me.useQuery(undefined, {
@@ -54,11 +58,8 @@ const Search = () => {
 
   const PAGINATION_LIMIT_PER_PAGE = 15;
   const PAGINATION_TOTAL_PAGES =
-    filterPosts(
-      appliedFilters,
-      posts,
-      currentUser.data?.Profile?.words_per_minute,
-    ).length / PAGINATION_LIMIT_PER_PAGE;
+    filterPosts(filters, posts, currentUser.data?.Profile?.words_per_minute)
+      .length / PAGINATION_LIMIT_PER_PAGE;
 
   useEffect(() => {
     const fn = async () => {
@@ -83,11 +84,11 @@ const Search = () => {
     const search = queryString.parse(window.location.search);
     const parsedFilters = parseQuery(search);
 
-    setAppliedFilters({ ...parsedFilters });
+    setFilters({ ...parsedFilters });
   }, [router.query]);
 
   const removeFilter = (filter: { label: string; value: string }) => {
-    const filterClone = appliedFilters;
+    const filterClone = filters;
     if (!filterClone) return;
 
     delete filterClone[filter.value as keyof FilterState];
@@ -97,7 +98,7 @@ const Search = () => {
   };
 
   const resetFilters = () => {
-    setAppliedFilters({});
+    setFilters({});
     router.replace(router.asPath, { query: {} });
   };
 
@@ -125,7 +126,7 @@ const Search = () => {
         )}
 
         <ActiveFilterList
-          filters={appliedFilters}
+          filters={filters}
           removeFilter={removeFilter}
           reset={resetFilters}
         />
@@ -135,7 +136,7 @@ const Search = () => {
             !loadingPosts &&
             paginatedSlice(
               filterPosts(
-                appliedFilters,
+                filters,
                 posts,
                 currentUser.data?.Profile?.words_per_minute,
               ),

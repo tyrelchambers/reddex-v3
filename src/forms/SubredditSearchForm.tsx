@@ -44,6 +44,8 @@ const formSchema = z.object({
 });
 
 const SubredditSearchForm = () => {
+  const [filterModalOpen, setFilterModalOpen] = React.useState(false);
+
   const { filters: appliedFilters, setIsSearching, setPage } = useSearchStore();
   const statsUpdate = api.stats.set.useMutation();
 
@@ -161,7 +163,7 @@ const SubredditSearchForm = () => {
             )}
           />
 
-          <Dialog>
+          <Dialog open={filterModalOpen} onOpenChange={setFilterModalOpen}>
             <DialogTrigger asChild>
               <Button type="button" variant="secondary" className="w-full">
                 Add filters
@@ -174,7 +176,7 @@ const SubredditSearchForm = () => {
               <p className="mb-4 text-sm text-foreground/60">
                 Any input that doesn&apos;t have a value, won&apos;t be applied.
               </p>
-              <FilterSelections filters={appliedFilters} closeModal={close} />
+              <FilterSelections closeModal={() => setFilterModalOpen(false)} />
             </DialogContent>
           </Dialog>
           <Button

@@ -12,7 +12,7 @@ const QueueBanner = ({ openQueue }: Props) => {
   if (queueStore.queue.length === 0) return null;
 
   return (
-    <div className="sticky top-20 my-6 flex flex-col items-center justify-between overflow-hidden rounded-xl bg-accent text-white shadow-xl md:flex-row lg:top-2">
+    <div className="sticky top-20 my-6 flex flex-col items-center justify-between overflow-hidden rounded-xl bg-primary text-white shadow-xl md:flex-row lg:top-2">
       <div className="flex-1 py-3 md:px-3">
         <p className="text-sm">
           <span className="font-bold">{queueStore.queue.length}</span> items in

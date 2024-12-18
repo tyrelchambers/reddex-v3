@@ -1,27 +1,41 @@
 import { faUserCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { format, fromUnixTime } from "date-fns";
-import { NextRouter } from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import { routes } from "~/routes";
 import { MixpanelEvents, RedditInboxMessage } from "~/types";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import InboxHeader from "./dashboard/inbox/InboxHeader";
 
 interface Props {
   messages: RedditInboxMessage[];
   selectedMessage: RedditInboxMessage["id"] | undefined;
   setSelectedMessageId: (id: string) => void;
-  router: NextRouter;
+  search: string;
+  setSearch: (search: string) => void;
 }
 
 const InboxMessageList = ({
   messages,
   setSelectedMessageId,
   selectedMessage,
-  router,
+  search,
+  setSearch,
 }: Props) => {
+  const router = useRouter();
+  const resetSearch = () => {
+    trackUiEvent(MixpanelEvents.RESET_SEARCH_INPUT);
+    setSearch("");
+  };
+
   return (
-    <div className="flex w-full max-w-sm flex-col gap-4 overflow-auto border-r-[1px] border-border pr-6">
+    <div className="flex w-full flex-col overflow-auto p-4 xl:max-w-sm">
+      <InboxHeader
+        search={search}
+        setSearch={setSearch}
+        resetSearch={resetSearch}
+      />
       {messages.map((m) => (
         <button
           key={m.id}
@@ -34,8 +48,8 @@ const InboxMessageList = ({
           }}
         >
           <div
-            className={`inbox-message-list-item rounded-2xl p-4 transition-all ${
-              m.id === selectedMessage ? "active" : "border border-border"
+            className={`inbox-message-list-item p-4 transition-all ${
+              m.id === selectedMessage ? "active" : ""
             }`}
           >
             <p className="text-left font-medium text-foreground">{m.subject}</p>

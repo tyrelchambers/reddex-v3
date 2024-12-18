@@ -31,7 +31,7 @@ const Submitted = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <section className="flex flex-col">
+      <section className="flex w-full flex-col">
         <header className="flex flex-col px-4 lg:px-0">
           <h1 className="text-2xl font-bold text-foreground">Submitted</h1>
           <p className="font-light text-muted-foreground">

@@ -41,7 +41,7 @@
     @apply text-white;
   }
   .inbox-message-list-item.active {
-    @apply bg-rose-500 shadow-md;
+    @apply bg-rose-500 shadow-xl;
   }
   .inbox-message-list-item.active * {
     @apply text-white;

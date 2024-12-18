@@ -18,9 +18,16 @@ interface Props {
   tabs?: Tab[];
   loading?: boolean;
   loadingMessage?: string;
+  className?: string;
 }
 
-const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
+const WrapperWithNav = ({
+  children,
+  tabs,
+  loading,
+  loadingMessage,
+  className,
+}: Props) => {
   const [loadDashboardOrBanner, setLoadDashboardOrBanner] = useState<
     boolean | undefined
   >(undefined);
@@ -51,22 +58,27 @@ const WrapperWithNav = ({ children, tabs, loading, loadingMessage }: Props) => {
 
   if (status === "unauthenticated") return null;
 
+  const classes = className
+    ? className
+    : "mx-auto my-6 flex w-full max-w-screen-2xl flex-col gap-8 lg:flex-row lg:gap-14";
+  const bodyClasses = "flex w-full";
+
   return (
     <>
       <Header />
       {width >= breakpoints.tablet && <DashNav />}
       {loadDashboardOrBanner === undefined ? null : loadDashboardOrBanner ? (
         <AuthenticationBoundary>
-          <main className="mx-auto my-6 flex w-full max-w-screen-2xl flex-col gap-8 lg:flex-row lg:gap-14">
+          <section className={classes}>
             {tabs && (
-              <header className="w-full lg:w-48">
+              <header className="w-full px-4 lg:w-48">
                 <TabsList tabs={tabs} />
               </header>
             )}
-            <section className="w-full max-w-screen-2xl px-4 xl:px-4">
+            <section className={bodyClasses}>
               {loading ? <Spinner message={loadingMessage} /> : children}
             </section>
-          </main>
+          </section>
         </AuthenticationBoundary>
       ) : (
         <WrongPlanBanner

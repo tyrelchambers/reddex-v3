@@ -1,6 +1,5 @@
 import {
-  faAddressBook,
-  faBook,
+  faArrowLeft,
   faReply,
   faUserCircle,
 } from "@fortawesome/pro-solid-svg-icons";
@@ -24,13 +23,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem } from "./ui/form";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-import { faBookmark, faUserPlus } from "@fortawesome/pro-regular-svg-icons";
+import MessageContact from "./dashboard/message/MessageContact";
+import MessageReadingList from "./dashboard/message/MessageReadingList";
+import { breakpoints } from "~/constants";
+import { useViewportSize } from "@mantine/hooks";
 
 const formSchema = z.object({
   message: z.string(),
@@ -38,14 +34,16 @@ const formSchema = z.object({
 
 interface Props {
   message: RedditInboxMessage | undefined;
+  handleBack?: () => void;
 }
 
-enum ListEnum {
+export enum ListEnum {
   approvedList,
   completedList,
 }
 
-const SelectedInboxMessage = ({ message }: Props) => {
+const SelectedInboxMessage = ({ message, handleBack }: Props) => {
+  const { width } = useViewportSize();
   const apiContext = api.useUtils();
   const messageMutation = api.inbox.send.useMutation();
   const addContact = api.contact.save.useMutation({
@@ -92,7 +90,7 @@ const SelectedInboxMessage = ({ message }: Props) => {
     return -1;
   }, [post?.id, approvedListQuery.data]);
 
-  const isAContact = contactquery.data ?? false;
+  const isAContact = !!contactquery.data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -136,83 +134,45 @@ const SelectedInboxMessage = ({ message }: Props) => {
     }
   };
 
-  const listName = (list: ListEnum) => {
-    if (list === ListEnum.approvedList) {
-      return "in approved list";
-    } else if (list === ListEnum.completedList) {
-      return "this story has been read";
-    }
-  };
-
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="my-6 w-full max-w-screen-xl flex-1 overflow-auto p-4 xl:m-5 xl:my-0 xl:p-5">
+      {width < breakpoints.desktop && message && (
+        <button onClick={handleBack} className="mb-8">
+          <FontAwesomeIcon
+            icon={faArrowLeft}
+            className="mr-4 text-foreground"
+          />
+          Back to Inbox
+        </button>
+      )}
+
       <header className="w-full">
-        <p className="text-3xl font-semibold text-foreground">
+        <p className="text-xl font-semibold text-foreground lg:text-3xl">
           {message.subject}
         </p>
-        <footer className="mt-6 flex w-fit flex-row xl:items-center">
+        <footer className="mt-6 flex w-full flex-col gap-2 lg:w-fit lg:flex-row xl:items-center">
           <a
             href={`https://reddit.com/u/${message.dest}`}
-            className="mr-3 flex items-center gap-2 rounded-full bg-card px-3 py-1 text-sm text-foreground"
+            className="mr-3 flex w-full items-center gap-2 rounded-full bg-card px-3 py-1 text-sm text-foreground"
             target="_blank"
           >
             <FontAwesomeIcon icon={faUserCircle} />
             <span className="text-muted-foreground">{message.dest}</span>
           </a>
 
-          <div className="flex flex-col items-center gap-2 lg:flex-row">
-            {!isAContact ? (
-              <button
-                type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
-                onClick={() => addToContacts(message.dest)}
-                title={`Add ${message.dest} to contacts`}
-              >
-                <FontAwesomeIcon icon={faUserPlus} />
-              </button>
-            ) : (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-xs text-white">
-                      <FontAwesomeIcon icon={faAddressBook} />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {message.dest} is already a contact
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+          <div className="flex items-center gap-2 lg:flex-row">
+            <MessageContact
+              addContactHandler={addToContacts}
+              isContact={isAContact}
+              message={message}
+            />
 
             {post && (
-              <>
-                {postIsInReadingList === -1 ? (
-                  <button
-                    type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
-                    onClick={addStoryToReadingList}
-                    title={`Add ${message.subject} to reading list`}
-                  >
-                    <FontAwesomeIcon icon={faBookmark} />
-                  </button>
-                ) : (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <span className="flex h-8 items-center justify-center rounded-full bg-green-500 px-3 text-xs font-medium text-white">
-                          <FontAwesomeIcon icon={faBook} className="mr-2" />
-
-                          {listName(postIsInReadingList)}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        This story is in your reading list
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </>
+              <MessageReadingList
+                addStoryToReadingList={addStoryToReadingList}
+                postIsInReadingList={postIsInReadingList}
+                message={message}
+              />
             )}
           </div>
         </footer>
@@ -261,7 +221,7 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
           {format(fromUnixTime(message.created), "MMM do, yyyy")}
         </p>
       </header>
-      <p className="hyphens-auto whitespace-pre-wrap text-muted-foreground">
+      <p className="w-full hyphens-auto whitespace-pre-wrap break-all text-muted-foreground lg:break-normal">
         {message.body}
       </p>
     </div>

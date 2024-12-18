@@ -34,9 +34,10 @@ const _routes = [
 
 interface Props {
   openDrawer?: () => void;
+  sticky?: boolean;
 }
 
-const Header = ({ openDrawer }: Props) => {
+const Header = ({ openDrawer, sticky = false }: Props) => {
   const session = useSession();
   const { isDark, toggleTheme } = useTheme();
   const [opened, { toggle }] = useDisclosure(false);
@@ -58,8 +59,9 @@ const Header = ({ openDrawer }: Props) => {
   return (
     <header
       className={clsx(
-        "sticky right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
+        "right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
         opened && "h-screen !items-start overflow-hidden",
+        sticky && "sticky",
       )}
     >
       <div className="flex flex-1 items-center">

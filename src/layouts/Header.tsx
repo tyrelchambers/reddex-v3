@@ -59,7 +59,7 @@ const Header = ({ openDrawer, sticky = false }: Props) => {
   return (
     <header
       className={clsx(
-        "right-0 top-0 z-30 mx-auto flex max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
+        "right-0 top-0 z-30 mx-auto flex h-[80px] max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
         opened && "h-screen !items-start overflow-hidden",
         sticky && "sticky",
       )}
@@ -168,16 +168,9 @@ const Header = ({ openDrawer, sticky = false }: Props) => {
               <p className="text-sm text-accent-foreground">Search</p>
             </Button>
           )}
-          <Burger
-            opened={opened}
-            onClick={toggle}
-            aria-label={label}
-            className="relative z-20"
-            color={isDark ? "white" : "black"}
-          />
+          <MobileNav user={session.data?.user as User} />
         </div>
       )}
-      {opened && <MobileNav user={session.data?.user as User} />}
     </header>
   );
 };

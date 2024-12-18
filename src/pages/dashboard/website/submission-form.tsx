@@ -121,7 +121,9 @@ const SubmissionForm = () => {
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading submission form settings..."
         >
-          <h1 className="text-2xl text-foreground">Submission form</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Submission form
+          </h1>
 
           {submissionFormVisibility.data?.hidden ? (
             <StatusBanner

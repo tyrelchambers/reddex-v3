@@ -5,13 +5,22 @@ import {
   faSearch,
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Burger } from "@mantine/core";
 import { User } from "@prisma/client";
+import { Menu } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import { dashNavRoutes, routes } from "~/routes";
 
 const commonRoutes = [
@@ -48,13 +57,19 @@ const MobileNav = ({ user }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 z-10 flex h-full w-full flex-col overflow-y-auto bg-background">
-      <section className="mt-20 px-4 pb-6">
-        <nav className="flex flex-col gap-6">
+    <Sheet>
+      <SheetTrigger>
+        <Menu className="text-foreground" />
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader className="mb-4">
+          <SheetTitle>Navigation</SheetTitle>
+        </SheetHeader>
+        <nav className="flex flex-col gap-2">
           {commonRoutes.map((r) => (
             <Link
               key={r.label}
-              className="text-sm text-foreground hover:text-accent"
+              className="rounded-sm bg-card/50 p-2 text-sm text-foreground hover:text-accent"
               href={r.slug}
             >
               <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
@@ -65,11 +80,11 @@ const MobileNav = ({ user }: Props) => {
         <Separator className="my-6 border-border" />
 
         {user ? (
-          <nav className="flex flex-col gap-6">
+          <nav className="flex flex-col gap-2">
             {dashNavRoutes.map((r) => (
               <Link
                 key={r.label}
-                className="text-sm text-foreground hover:text-accent"
+                className="rounded-sm bg-card/50 p-2 text-sm text-foreground hover:text-accent"
                 href={r.slug}
               >
                 <FontAwesomeIcon icon={r.icon} className="mr-2" /> {r.label}
@@ -86,8 +101,8 @@ const MobileNav = ({ user }: Props) => {
         ) : (
           <Link href={routes.LOGIN}>Login</Link>
         )}
-      </section>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

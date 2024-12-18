@@ -17,9 +17,13 @@ const InboxHeaderTablet = ({ search, setSearch, resetSearch }: Props) => {
           placeholder="Search for a message via author or subject"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
-          className="w-full flex-1"
+          className="flex w-full flex-1"
         />
-        <Button variant="secondary" onClick={resetSearch}>
+        <Button
+          variant="secondary"
+          className="flex-grow-0"
+          onClick={resetSearch}
+        >
           Reset
         </Button>
       </div>

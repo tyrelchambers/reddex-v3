@@ -135,7 +135,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
   };
 
   return (
-    <div className="my-6 w-full max-w-screen-xl flex-1 overflow-auto p-4 xl:m-5 xl:my-0 xl:p-5">
+    <div className="w-full max-w-screen-xl flex-1 overflow-auto p-4 xl:m-5 xl:my-6 xl:p-5">
       {width < breakpoints.desktop && message && (
         <button onClick={handleBack} className="mb-8">
           <FontAwesomeIcon
@@ -150,7 +150,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
         <p className="text-xl font-semibold text-foreground lg:text-3xl">
           {message.subject}
         </p>
-        <footer className="mt-6 flex w-full flex-col gap-2 lg:w-fit lg:flex-row xl:items-center">
+        <footer className="mt-6 flex w-full flex-col gap-2 sm:w-fit sm:flex-row xl:items-center">
           <a
             href={`https://reddit.com/u/${message.dest}`}
             className="mr-3 flex w-full items-center gap-2 rounded-full bg-card px-3 py-1 text-sm text-foreground"
@@ -210,7 +210,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
 const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
     <div className="rounded-2xl bg-card p-4">
-      <header className="mb-6 flex flex-col items-baseline justify-between xl:mb-2 xl:flex-row">
+      <header className="mb-6 flex flex-col items-baseline justify-between sm:flex-row xl:mb-2">
         <p className="mb-2 font-bold text-card-foreground">
           {message.isReply && (
             <FontAwesomeIcon icon={faReply} className="mr-4 text-accent" />

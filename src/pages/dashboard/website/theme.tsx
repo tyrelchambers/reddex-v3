@@ -65,7 +65,7 @@ const Theme = () => {
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading website theme settings..."
         >
-          <h1 className="text-2xl text-foreground">Theme</h1>
+          <h1 className="text-2xl font-bold text-foreground">Theme</h1>
 
           <Form {...form}>
             <form

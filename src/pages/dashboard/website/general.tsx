@@ -160,7 +160,7 @@ const General = () => {
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading website settings..."
         >
-          <h1 className="text-2xl text-foreground">General</h1>
+          <h1 className="text-2xl font-bold text-foreground">General</h1>
           {websiteVisibility.data?.hidden ? (
             <StatusBanner
               title="Enable Website"

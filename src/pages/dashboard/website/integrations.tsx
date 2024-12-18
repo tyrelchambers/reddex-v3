@@ -47,7 +47,7 @@ const Integrations = () => {
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading website integrations..."
         >
-          <h1 className="text-2xl text-foreground">Integrations</h1>
+          <h1 className="text-2xl font-bold text-foreground">Integrations</h1>
           <p className="text-sm text-muted-foreground">
             Any integration field that lacks a value will not show up on your
             website.

@@ -61,6 +61,7 @@ const InboxBody = ({
                 setSelectedMessageId={setSelectedMessageId}
                 search={search}
                 setSearch={setSearch}
+                searching={searchInboxQuery.isFetching}
               />
               <SelectedInboxMessage message={selectedMessage} />
             </>
@@ -73,6 +74,7 @@ const InboxBody = ({
                   setSelectedMessageId={setSelectedMessageId}
                   search={search}
                   setSearch={setSearch}
+                  searching={searchInboxQuery.isFetching}
                 />
               )}
               {selectedMessage?.id && (

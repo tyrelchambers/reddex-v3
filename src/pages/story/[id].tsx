@@ -20,25 +20,30 @@ const Story = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <h1 className="text-3xl font-bold text-foreground">{title}</h1>
-      <header className="mt-3 flex flex-col items-center gap-6 rounded-md bg-card p-4 md:flex-row">
-        <p className="flex items-center gap-2 text-card-foreground">
-          <FontAwesomeIcon icon={faUser} className="text-muted-foreground/60" />
-          {story?.author}
-        </p>
-        <p className="flex items-center gap-2 text-card-foreground">
-          <FontAwesomeIcon
-            icon={faEnvelope}
-            className="text-muted-foreground/60"
-          />{" "}
-          {story?.email}
-        </p>
-      </header>
-
-      <article
-        dangerouslySetInnerHTML={{ __html: story?.body || "" }}
-        className="mt-10 w-full max-w-xl whitespace-pre-wrap leading-relaxed text-foreground/80"
-      ></article>
+      <section className="flex flex-col">
+        {" "}
+        <h1 className="text-3xl font-bold text-foreground">{title}</h1>
+        <header className="mt-3 flex flex-col items-center gap-6 rounded-md bg-card p-4 md:flex-row">
+          <p className="flex items-center gap-2 text-card-foreground">
+            <FontAwesomeIcon
+              icon={faUser}
+              className="text-muted-foreground/60"
+            />
+            {story?.author}
+          </p>
+          <p className="flex items-center gap-2 text-card-foreground">
+            <FontAwesomeIcon
+              icon={faEnvelope}
+              className="text-muted-foreground/60"
+            />{" "}
+            {story?.email}
+          </p>
+        </header>
+        <article
+          dangerouslySetInnerHTML={{ __html: story?.body || "" }}
+          className="mt-10 w-full max-w-xl whitespace-pre-wrap leading-relaxed text-foreground/80"
+        ></article>
+      </section>
     </WrapperWithNav>
   );
 };

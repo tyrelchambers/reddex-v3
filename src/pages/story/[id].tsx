@@ -20,7 +20,7 @@ const Story = () => {
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <section className="flex flex-col">
+      <section className="flex flex-col px-4">
         {" "}
         <h1 className="text-3xl font-bold text-foreground">{title}</h1>
         <header className="mt-3 flex flex-col items-center gap-6 rounded-md bg-card p-4 md:flex-row">

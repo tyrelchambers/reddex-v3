@@ -33,7 +33,7 @@ const Login = ({ providers }: Props) => {
   return (
     <>
       <Head>
-        <title>Reddex | Login</title>
+        <title>Login | Reddex</title>
       </Head>
       <main>
         <Header />

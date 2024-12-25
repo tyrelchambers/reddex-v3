@@ -1,11 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ColorPicker } from "@mantine/core";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { z } from "zod";
 import { Button } from "~/components/ui/button";
-import { Form, FormField, FormItem } from "~/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -16,14 +11,12 @@ import {
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
-import { websiteThemeSchema } from "~/server/schemas";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
+import { Input } from "~/components/ui/input";
 
 const themes = ["light", "dark"];
-
-const formSchema = websiteThemeSchema;
 
 const Theme = () => {
   const apiContext = api.useUtils();
@@ -35,27 +28,24 @@ const Theme = () => {
   });
   const websiteSettings = api.website.settings.useQuery();
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      theme: "light",
-      colour: "rgba(0,0,0,0)",
-    },
+  const [colours, setColours] = useState({
+    theme: "light",
+    colour: "#ffffff",
   });
 
   useEffect(() => {
     if (websiteSettings.data) {
-      form.reset({
+      setColours({
         theme: websiteSettings.data.theme,
         colour: websiteSettings.data.colour,
       });
     }
   }, [websiteSettings.data]);
 
-  const submitHandler = (data: z.infer<typeof formSchema>) => {
+  const submitHandler = () => {
     trackUiEvent(MixpanelEvents.SAVE_THEME_SETTINGS);
 
-    saveTheme.mutate(data);
+    saveTheme.mutate(colours);
   };
 
   return (
@@ -66,62 +56,34 @@ const Theme = () => {
           loadingMessage="Loading website theme settings..."
         >
           <h1 className="text-2xl font-bold text-foreground">Theme</h1>
-
-          <Form {...form}>
-            <form
-              className="form mt-4 max-w-sm"
-              onSubmit={form.handleSubmit(submitHandler)}
+          <div className="my-6 flex gap-4">
+            <Select
+              value={colours.theme}
+              onValueChange={(v) => setColours({ ...colours, theme: v })}
             >
-              <FormField
-                name="mode"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select {...field}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Theme" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {themes.map((theme) => (
-                          <SelectItem key={theme} value={theme}>
-                            {theme}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="colour"
-                render={({ field }) => (
-                  <FormItem>
-                    <ColorPicker
-                      format="rgba"
-                      swatches={[
-                        "#25262b",
-                        "#868e96",
-                        "#fa5252",
-                        "#e64980",
-                        "#be4bdb",
-                        "#7950f2",
-                        "#4c6ef5",
-                        "#228be6",
-                        "#15aabf",
-                        "#12b886",
-                        "#40c057",
-                        "#82c91e",
-                        "#fab005",
-                        "#fd7e14",
-                      ]}
-                      className="w-full"
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Save changes</Button>
-            </form>
-          </Form>
+              <SelectTrigger>
+                <SelectValue placeholder="Theme" />
+              </SelectTrigger>
+              <SelectContent>
+                {themes.map((theme) => (
+                  <SelectItem key={theme} value={theme}>
+                    {theme}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input
+              type="color"
+              value={colours.colour}
+              onChange={(v) =>
+                setColours({ ...colours, colour: v.target.value })
+              }
+              className="aspect-square w-12 p-0"
+            />
+          </div>
+          <Button type="button" onClick={submitHandler}>
+            Save changes
+          </Button>
         </BodyWithLoader>
       </main>
     </WrapperWithNav>

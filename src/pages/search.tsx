@@ -2,7 +2,6 @@ import { Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import Header from "~/layouts/Header";
-import { useDisclosure } from "@mantine/hooks";
 import { api } from "~/utils/api";
 import SubredditSearchItem from "~/components/SubredditSearchItem";
 import QueueBanner from "~/components/QueueBanner";
@@ -53,8 +52,7 @@ const Search = () => {
   const [lastSearched, setLastSearched] = useState<{ time: Date } | undefined>(
     undefined,
   );
-  const [queueModalOpened, { open: openQueue, close: closeQueue }] =
-    useDisclosure(false);
+  const [openQueue, setOpenQueue] = useState(false);
 
   const PAGINATION_LIMIT_PER_PAGE = 15;
   const PAGINATION_TOTAL_PAGES =
@@ -105,7 +103,7 @@ const Search = () => {
   return (
     <>
       <Head>
-        <title>Reddex | Search</title>
+        <title>Search | Reddex</title>
       </Head>
 
       <Header />
@@ -117,7 +115,7 @@ const Search = () => {
       )}
 
       <div className="relative flex flex-col p-4">
-        <QueueBanner openQueue={openQueue} />
+        <QueueBanner openQueue={() => setOpenQueue(true)} />
 
         {(isSearching || loadingPosts) && (
           <div className="my-6 flex justify-center">
@@ -183,12 +181,12 @@ const Search = () => {
         )}
       </div>
 
-      <Dialog open={queueModalOpened}>
+      <Dialog open={openQueue} onOpenChange={setOpenQueue}>
         <DialogContent className="w-full max-w-screen-lg">
           <DialogHeader>
             <DialogTitle>Story queue</DialogTitle>
           </DialogHeader>
-          <QueueModal close={closeQueue} />
+          <QueueModal close={() => setOpenQueue(false)} />
         </DialogContent>
       </Dialog>
     </>

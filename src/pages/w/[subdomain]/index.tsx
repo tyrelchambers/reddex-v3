@@ -6,6 +6,7 @@ import { prisma } from "~/server/db";
 import YouTube from "react-youtube";
 import { checkForProperSubscription } from "~/utils/index.server";
 import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
+import { useEffect } from "react";
 
 interface Props {
   website: (Website & { submissionPage: SubmissionPage }) | null;
@@ -32,6 +33,13 @@ interface YoutubeResponse {
 }
 
 const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
+  useEffect(() => {
+    const html = document.querySelector("html");
+    if (html) {
+      html.setAttribute("data-mantine-color-scheme", website?.theme ?? "light");
+    }
+  }, [website]);
+
   if (!website) return null;
 
   return (

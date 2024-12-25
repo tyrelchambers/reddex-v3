@@ -25,8 +25,7 @@ import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import MessageContact from "./dashboard/message/MessageContact";
 import MessageReadingList from "./dashboard/message/MessageReadingList";
-import { breakpoints } from "~/constants";
-import { useViewportSize } from "@mantine/hooks";
+import clsx from "clsx";
 
 const formSchema = z.object({
   message: z.string(),
@@ -43,7 +42,6 @@ export enum ListEnum {
 }
 
 const SelectedInboxMessage = ({ message, handleBack }: Props) => {
-  const { width } = useViewportSize();
   const apiContext = api.useUtils();
   const messageMutation = api.inbox.send.useMutation();
   const addContact = api.contact.save.useMutation({
@@ -135,16 +133,18 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
   };
 
   return (
-    <div className="w-full max-w-screen-xl flex-1 overflow-auto p-4 xl:m-5 xl:my-6 xl:p-5">
-      {width < breakpoints.desktop && message && (
-        <button onClick={handleBack} className="mb-8">
-          <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="mr-4 text-foreground"
-          />
-          Back to Inbox
-        </button>
+    <div
+      className={clsx(
+        "w-full max-w-screen-xl flex-1 overflow-auto p-4 xl:m-5 xl:my-6 xl:p-5",
       )}
+    >
+      <button
+        onClick={handleBack}
+        className={clsx("mb-8 xl:hidden", message && "flex items-center")}
+      >
+        <FontAwesomeIcon icon={faArrowLeft} className="mr-4 text-foreground" />
+        Back to Inbox
+      </button>
 
       <header className="w-full">
         <p className="text-xl font-semibold text-foreground lg:text-3xl">

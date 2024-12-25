@@ -80,7 +80,7 @@ const MyApp: AppType<MyAppProps> = ({
           <Component {...pageProps} />
         </main>
       </MantineProvider>
-      <Toaster />
+      <Toaster richColors />
     </SessionProvider>
   );
 };

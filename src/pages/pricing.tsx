@@ -1,4 +1,5 @@
-import { CheckIcon } from "lucide-react";
+import { faCheck } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
@@ -101,7 +102,8 @@ const Pricing = () => {
               >
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex gap-x-3">
-                    <CheckIcon
+                    <FontAwesomeIcon
+                      icon={faCheck}
                       aria-hidden="true"
                       className={classNames(
                         tier.featured ? "text-indigo-400" : "text-indigo-600",

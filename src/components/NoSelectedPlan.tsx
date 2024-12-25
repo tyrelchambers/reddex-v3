@@ -1,6 +1,5 @@
 import { plans } from "~/constants";
 import PricingChip from "./PricingChip";
-import { Separator } from "./ui/separator";
 
 interface NoSelectedPlanProps {
   setSelectedPlanHandler: (id: string) => void;

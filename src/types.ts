@@ -1,10 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import {
-  Account,
-  Prisma,
-  RedditPost,
-  SubmissionFormModule,
-} from "@prisma/client";
+import { RedditPost, SubmissionFormModule } from "@prisma/client";
 import Stripe from "stripe";
 export interface RedditPostWithText extends RedditPost {
   selftext: string;

@@ -9,7 +9,6 @@ import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
-import { getAccessTokenFromServer } from "~/server/queries";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {

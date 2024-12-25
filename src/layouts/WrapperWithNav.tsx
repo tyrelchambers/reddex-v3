@@ -5,7 +5,6 @@ import DashNav from "./DashNav";
 import { Tab } from "~/types";
 import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
-import { breakpoints } from "~/constants";
 import WrongPlanBanner from "~/components/WrongPlanBanner";
 import { routes } from "~/routes";
 import { useRouter } from "next/router";

@@ -46,7 +46,7 @@ const formSchema = z.object({
 const SubredditSearchForm = () => {
   const [filterModalOpen, setFilterModalOpen] = React.useState(false);
 
-  const { filters: appliedFilters, setIsSearching, setPage } = useSearchStore();
+  const { setIsSearching, setPage } = useSearchStore();
   const statsUpdate = api.stats.set.useMutation();
 
   const subredditSearch = api.subredditSearch.search.useMutation({

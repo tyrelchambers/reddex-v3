@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { buildParams } from "~/utils";
 import { useRouter } from "next/router";
-import { FilterState } from "~/types";
 import { Input } from "./ui/input";
 import {
   Select,

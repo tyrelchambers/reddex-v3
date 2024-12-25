@@ -1,18 +1,15 @@
-import { faWarning } from "@fortawesome/pro-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { routes, settingsTabs } from "~/routes";
+import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";
 import { captureException } from "@sentry/nextjs";
 import { Separator } from "~/components/ui/separator";
 import AccountPlanSelectModal from "~/components/modals/AccountPlanSelectModal";
 import { getPrices } from "~/constants";
-import Link from "next/link";
-import { toast } from "react-toastify";
 import AccountDeletionBanner from "~/components/AccountDeletionBanner";
 import CancelAccountDeletionBanner from "~/components/CancelAccountDeletionBanner";
+import { toast } from "sonner";
 
 const Settings = () => {
   const apiCtx = api.useUtils();

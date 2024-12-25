@@ -5,8 +5,6 @@ import DashNav from "./DashNav";
 import { Tab } from "~/types";
 import Spinner from "~/components/Spinner";
 import AuthenticationBoundary from "./AuthenticationBoundary";
-import { useViewportSize } from "@mantine/hooks";
-import { breakpoints } from "~/constants";
 import WrongPlanBanner from "~/components/WrongPlanBanner";
 import { routes } from "~/routes";
 import { useRouter } from "next/router";
@@ -32,7 +30,6 @@ const WrapperWithNav = ({
     boolean | undefined
   >(undefined);
 
-  const { width } = useViewportSize();
   const { data: user } = api.user.me.useQuery();
   const router = useRouter();
   const { status } = useSession();
@@ -66,7 +63,7 @@ const WrapperWithNav = ({
   return (
     <>
       <Header />
-      {width >= breakpoints.tablet && <DashNav />}
+      <DashNav />
       {loadDashboardOrBanner === undefined ? null : loadDashboardOrBanner ? (
         <AuthenticationBoundary>
           <section className={classes}>

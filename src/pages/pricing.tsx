@@ -1,4 +1,5 @@
 import { CheckIcon } from "lucide-react";
+import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 import { plans } from "~/constants";
@@ -13,6 +14,9 @@ function classNames(...classes: string[]) {
 const Pricing = () => {
   return (
     <>
+      <Head>
+        <title>Pricing | Reddex</title>
+      </Head>
       <Header />
       <div className="relative isolate bg-background px-6 py-24 sm:py-32 lg:px-8">
         <div

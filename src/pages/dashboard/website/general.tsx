@@ -25,7 +25,6 @@ import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { Button } from "~/components/ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
-import { toast } from "react-toastify";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
@@ -37,6 +36,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { websiteGeneralSchema } from "~/server/schemas";
 import { z } from "zod";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import { toast } from "sonner";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,

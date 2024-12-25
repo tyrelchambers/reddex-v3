@@ -7,7 +7,6 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import SubredditSearchForm from "~/forms/SubredditSearchForm";
-import { useSearchStore } from "~/stores/searchStore";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { MixpanelEvents } from "~/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

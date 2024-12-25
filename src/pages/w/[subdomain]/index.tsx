@@ -6,6 +6,8 @@ import { prisma } from "~/server/db";
 import YouTube from "react-youtube";
 import { checkForProperSubscription } from "~/utils/index.server";
 import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
+import { useEffect } from "react";
+import Image from "next/image";
 
 interface Props {
   website: (Website & { submissionPage: SubmissionPage }) | null;
@@ -32,6 +34,13 @@ interface YoutubeResponse {
 }
 
 const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
+  useEffect(() => {
+    const html = document.querySelector("html");
+    if (html) {
+      html.setAttribute("data-mantine-color-scheme", website?.theme ?? "light");
+    }
+  }, [website]);
+
   if (!website) return null;
 
   return (
@@ -40,7 +49,7 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
 
       <section className="mx-auto mt-10 w-full max-w-[1500px] p-4 lg:p-0">
         <section className="mx-auto flex h-fit items-center overflow-hidden rounded-xl lg:h-[500px]">
-          <img
+          <Image
             src={
               website.banner ??
               "https://images.unsplash.com/photo-1506259091721-347e791bab0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGFic3RyYWN0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60"

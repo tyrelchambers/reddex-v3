@@ -8,6 +8,7 @@ import { MixpanelEvents, RedditInboxMessage } from "~/types";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import InboxHeader from "./dashboard/inbox/InboxHeader";
 import Spinner from "./Spinner";
+import clsx from "clsx";
 
 interface Props {
   messages: RedditInboxMessage[];
@@ -33,7 +34,12 @@ const InboxMessageList = ({
   };
 
   return (
-    <div className="flex w-full flex-col overflow-auto border-r border-card p-4 xl:max-w-sm">
+    <div
+      className={clsx(
+        "flex w-full flex-col overflow-auto border-r border-card p-4 xl:max-w-sm",
+        selectedMessage && "hidden xl:flex",
+      )}
+    >
       <InboxHeader
         search={search}
         setSearch={setSearch}

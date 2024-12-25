@@ -6,7 +6,6 @@ import {
   faCheckToSlot,
   faInboxIn,
 } from "@fortawesome/pro-solid-svg-icons";
-import { Button } from "../ui/button";
 import { api } from "~/utils/api";
 import StatShareDialog from "./StatShareDialog";
 
@@ -25,7 +24,7 @@ const OverviewStats = ({ data }: Props) => {
   return (
     <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card className="overflow-hidden">
-        <CardContent className=" bg-background  p-6">
+        <CardContent className="bg-background p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Submitted stories{" "}
             <FontAwesomeIcon
@@ -45,7 +44,7 @@ const OverviewStats = ({ data }: Props) => {
       </Card>
 
       <Card className="overflow-hidden">
-        <CardContent className=" h-full bg-background  p-6">
+        <CardContent className="h-full bg-background p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Approved stories{" "}
             <FontAwesomeIcon
@@ -53,14 +52,14 @@ const OverviewStats = ({ data }: Props) => {
               className="text-muted-foreground"
             />
           </p>
-          <div className="mt-4 flex  flex-col justify-between gap-4 md:flex-row">
+          <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row">
             <p className="text-3xl font-bold">{data.approvedStoriesCount}</p>
           </div>
         </CardContent>
       </Card>
 
       <Card className="overflow-hidden">
-        <CardContent className=" bg-background p-6">
+        <CardContent className="bg-background p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Completed stories{" "}
             <FontAwesomeIcon icon={faBolt} className="text-muted-foreground" />

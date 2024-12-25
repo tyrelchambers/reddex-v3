@@ -19,8 +19,8 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { toast } from "react-toastify";
 import { Separator } from "~/components/ui/separator";
+import { toast } from "sonner";
 
 interface Props {
   website:
@@ -41,13 +41,13 @@ const Submit = ({ website }: Props) => {
   });
   const modules = website?.submissionPage.submissionFormModules || [];
   const titleModule = modules.find(
-    (module) => module.name.toLowerCase() === "title"
+    (module) => module.name.toLowerCase() === "title",
   );
   const authorModule = modules.find(
-    (module) => module.name.toLowerCase() === "author"
+    (module) => module.name.toLowerCase() === "author",
   );
   const emailModule = modules.find(
-    (module) => module.name.toLowerCase() === "email"
+    (module) => module.name.toLowerCase() === "email",
   );
 
   const formSchema = z

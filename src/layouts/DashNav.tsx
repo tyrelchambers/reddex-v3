@@ -10,7 +10,7 @@ const DashNav = () => {
   const pathRoot = pathname.split("/")[2];
 
   return (
-    <nav className=" w-full overflow-x-auto bg-foreground/5 p-3">
+    <nav className="hidden w-full overflow-x-auto bg-foreground/5 p-3 xl:flex">
       <ul className="mx-auto flex max-w-screen-2xl gap-8 text-sm text-gray-500">
         {dashNavRoutes.map((r) => (
           <li key={r.label}>
@@ -19,7 +19,7 @@ const DashNav = () => {
               className={`flex items-center gap-2 hover:text-accent ${
                 pathRoot === r.label.toLowerCase()
                   ? "text-foreground"
-                  : " text-foreground/50"
+                  : "text-foreground/50"
               }`}
             >
               <FontAwesomeIcon icon={r.icon} />

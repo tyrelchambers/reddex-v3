@@ -10,8 +10,8 @@ import {
   StripeSubscription,
 } from "~/types";
 import Stripe from "stripe";
-import queryString, { ParsedQuery } from "query-string";
 import { isDeletedCustomer, isStripeCustomer } from "./typeguards";
+import queryString, { ParsedQuery } from "query-string";
 
 export const addLastSearchedOrUpdate = async () => {
   const exists = await db.lastSearched.get(1);
@@ -134,7 +134,7 @@ export const isFilterWithQualifier = (value: any): value is Filter => {
 
 export const buildParams = <T>(appliedFilters: T) => {
   const flattenedFilters = () => {
-    const filters: Partial<Record<keyof T, unknown>> = {};
+    const filters: Partial<Record<keyof T, any>> = {};
 
     for (const key in appliedFilters) {
       const element = appliedFilters[key];

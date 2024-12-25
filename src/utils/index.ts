@@ -10,7 +10,7 @@ import {
   StripeSubscription,
 } from "~/types";
 import Stripe from "stripe";
-import queryString, { ParsedQuery } from "query-string";
+import queryString from "node:querystring";
 import { isDeletedCustomer, isStripeCustomer } from "./typeguards";
 
 export const addLastSearchedOrUpdate = async () => {
@@ -134,7 +134,7 @@ export const isFilterWithQualifier = (value: any): value is Filter => {
 
 export const buildParams = <T>(appliedFilters: T) => {
   const flattenedFilters = () => {
-    const filters: Partial<Record<keyof T, unknown>> = {};
+    const filters: Partial<Record<keyof T, any>> = {};
 
     for (const key in appliedFilters) {
       const element = appliedFilters[key];
@@ -155,12 +155,10 @@ export const buildParams = <T>(appliedFilters: T) => {
     return filters;
   };
 
-  return queryString.stringify(flattenedFilters(), {
-    arrayFormat: "comma",
-  });
+  return queryString.stringify(flattenedFilters(), ",");
 };
 
-export const parseQuery = (query: ParsedQuery) => {
+export const parseQuery = (query: queryString.ParsedUrlQuery) => {
   const parsed: Partial<FilterState> & {
     [key: string]: FilterState[keyof FilterState];
   } = {};

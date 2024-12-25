@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { Button } from "~/components/ui/button";
 import {
   Select,
@@ -15,6 +14,7 @@ import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { Input } from "~/components/ui/input";
+import { toast } from "sonner";
 
 const themes = ["light", "dark"];
 

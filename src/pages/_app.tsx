@@ -7,11 +7,9 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
-import { ToastContainer, toast } from "react-toastify";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
-import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import mixpanel from "mixpanel-browser";
@@ -19,6 +17,8 @@ import { env } from "~/env";
 import "@mantine/core/styles.css";
 import { isActiveSubscription } from "~/utils";
 import { Poppins } from "next/font/google";
+import { Toaster } from "~/components/ui/sonner";
+import { toast } from "sonner";
 
 const font = Poppins({
   weight: ["300", "400", "500", "700"],
@@ -51,17 +51,8 @@ const MyApp: AppType<MyAppProps> = ({
         : false;
 
       if (!activeSub) {
-        toast.warn(
-          <p>
-            Your subscription is inactive. Please go to your account and update
-            your details.
-          </p>,
-          {
-            autoClose: false,
-            toastId: "no-subscription",
-            position: "bottom-right",
-            className: "!rounded-xl",
-          },
+        toast.warning(
+          "Your subscription is inactive. Please go to your account and update your details.",
         );
       }
     }
@@ -89,23 +80,7 @@ const MyApp: AppType<MyAppProps> = ({
           <Component {...pageProps} />
         </main>
       </MantineProvider>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        toastStyle={{
-          width: "400px",
-          right: "100px",
-        }}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        limit={3}
-        theme={colorScheme}
-      />
+      <Toaster />
     </SessionProvider>
   );
 };

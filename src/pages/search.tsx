@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
 import { buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
-import queryString from "query-string";
+import queryString from "node:querystring";
 import {
   Dialog,
   DialogContent,

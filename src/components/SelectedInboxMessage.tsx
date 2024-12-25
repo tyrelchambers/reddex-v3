@@ -13,7 +13,6 @@ import {
   RedditInboxMessage,
 } from "~/types";
 import { api } from "~/utils/api";
-import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { formatInboxMessagesToList } from "~/utils";
 import { trackUiEvent } from "~/utils/mixpanelClient";
@@ -26,6 +25,7 @@ import { Textarea } from "./ui/textarea";
 import MessageContact from "./dashboard/message/MessageContact";
 import MessageReadingList from "./dashboard/message/MessageReadingList";
 import clsx from "clsx";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   message: z.string(),
@@ -61,7 +61,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
     onSuccess: (data) => {
       if ("success" in data && !data.success) {
         apiContext.story.getApprovedList.invalidate();
-        return toast(data.message, { type: "info" });
+        return toast(data.message);
       }
     },
   });

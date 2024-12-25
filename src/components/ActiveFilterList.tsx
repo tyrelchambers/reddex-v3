@@ -1,4 +1,4 @@
-import { faTimes } from "@fortawesome/pro-light-svg-icons";
+import { faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button } from "./ui/button";

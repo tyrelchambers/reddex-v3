@@ -1,7 +1,7 @@
 import {
   faSquareArrowUpRight,
   faWarning,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { api } from "~/utils/api";

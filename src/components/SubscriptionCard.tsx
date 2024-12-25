@@ -1,7 +1,7 @@
 import {
   faReceipt,
   faSquareArrowUpRight,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Stripe from "stripe";

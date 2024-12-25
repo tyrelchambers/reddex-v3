@@ -5,7 +5,7 @@ import {
   faTwitter,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { faPodcast } from "@fortawesome/pro-light-svg-icons";
+import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";

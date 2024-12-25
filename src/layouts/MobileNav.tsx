@@ -1,10 +1,10 @@
 import {
-  faBurger,
+  faBars,
   faHome,
   faMoneyBill,
   faRightFromBracket,
   faSearch,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
@@ -58,7 +58,7 @@ const MobileNav = ({ user }: Props) => {
   return (
     <Sheet>
       <SheetTrigger>
-        <FontAwesomeIcon icon={faBurger} className="text-foreground" />
+        <FontAwesomeIcon icon={faBars} className="text-foreground" />
       </SheetTrigger>
       <SheetContent>
         <SheetHeader className="mb-4">

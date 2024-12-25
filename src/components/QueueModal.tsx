@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormField } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLoader } from "@fortawesome/pro-light-svg-icons";
+import { faLoader } from "@fortawesome/pro-regular-svg-icons";
 import { Badge } from "./ui/badge";
 
 interface ActiveQueueItemProps {

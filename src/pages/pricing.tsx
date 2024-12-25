@@ -1,4 +1,4 @@
-import { faCheck } from "@fortawesome/pro-light-svg-icons";
+import { faCheck } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Head from "next/head";
 import Link from "next/link";

@@ -4,7 +4,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { cn } from "~/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/pro-solid-svg-icons";
-import { faCheck, faCircle } from "@fortawesome/pro-light-svg-icons";
+import { faCheck, faCircle } from "@fortawesome/pro-regular-svg-icons";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 

@@ -5,7 +5,7 @@ import {
   faPatreon,
   faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
-import { faPodcast } from "@fortawesome/pro-light-svg-icons";
+import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
 import { SubmissionPage, Website } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,7 +53,7 @@ const CustomerSiteHeader = ({ website }: Props) => {
         className="h-[5px] w-full"
         style={{ backgroundColor: website.colour }}
       ></div>
-      <header className="flex flex-col items-center  justify-between gap-2 bg-card p-4 sm:flex-row">
+      <header className="flex flex-col items-center justify-between gap-2 bg-card p-4 sm:flex-row">
         <div className="flex items-center text-xl text-foreground">
           {website.thumbnail && (
             <Image

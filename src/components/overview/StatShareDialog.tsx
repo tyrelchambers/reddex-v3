@@ -15,7 +15,7 @@ import {
   faComment,
   faHeart,
   faRetweet,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/pro-regular-svg-icons";
 import { generateTweetLink } from "~/utils";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 

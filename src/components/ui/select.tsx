@@ -6,7 +6,7 @@ import {
   faCheck,
   faChevronDown,
   faChevronUp,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/pro-regular-svg-icons";
 
 const Select = SelectPrimitive.Root;
 

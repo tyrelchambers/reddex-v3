@@ -1,4 +1,5 @@
 import {
+  faBurger,
   faHome,
   faMoneyBill,
   faRightFromBracket,
@@ -6,7 +7,6 @@ import {
 } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { User } from "@prisma/client";
-import { Menu } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -58,7 +58,7 @@ const MobileNav = ({ user }: Props) => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Menu className="text-foreground" />
+        <FontAwesomeIcon icon={faBurger} className="text-foreground" />
       </SheetTrigger>
       <SheetContent>
         <SheetHeader className="mb-4">

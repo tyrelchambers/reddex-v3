@@ -15,7 +15,6 @@ import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";
 import { buildParams, parseQuery } from "~/utils";
 import { useRouter } from "next/router";
-import queryString from "node:querystring";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/pro-duotone-svg-icons";
 import { filterPosts, paginatedSlice } from "~/utils/searchHelpers";
 import { useSearchStore } from "~/stores/searchStore";
+import queryString from "query-string";
 
 const Search = () => {
   const {

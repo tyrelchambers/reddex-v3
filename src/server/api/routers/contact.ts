@@ -42,6 +42,9 @@ export const contactRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
+      orderBy: {
+        name: "asc",
+      },
     });
   }),
   updateContact: protectedProcedure

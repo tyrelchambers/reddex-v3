@@ -1,6 +1,7 @@
 import { faAddressBook, faUserPlus } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import AddContactModal from "~/components/modals/AddContactModal";
 import {
   Tooltip,
   TooltipContent,
@@ -12,19 +13,19 @@ import { RedditInboxMessage } from "~/types";
 interface Props {
   isContact: boolean;
   message: RedditInboxMessage;
-  addContactHandler: (params: RedditInboxMessage["dest"]) => void;
 }
 
-const MessageContact = ({ isContact, message, addContactHandler }: Props) => {
+const MessageContact = ({ isContact, message }: Props) => {
   return !isContact ? (
-    <button
-      type="button"
-      className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
-      onClick={() => addContactHandler(message.dest)}
-      title={`Add ${message.dest} to contacts`}
-    >
-      <FontAwesomeIcon icon={faUserPlus} />
-    </button>
+    <AddContactModal name={message.dest}>
+      <button
+        type="button"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs text-card-foreground"
+        title={`Add ${message.dest} to contacts`}
+      >
+        <FontAwesomeIcon icon={faUserPlus} />
+      </button>
+    </AddContactModal>
   ) : (
     <TooltipProvider>
       <Tooltip>

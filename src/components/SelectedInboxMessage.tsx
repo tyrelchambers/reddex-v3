@@ -44,12 +44,7 @@ export enum ListEnum {
 const SelectedInboxMessage = ({ message, handleBack }: Props) => {
   const apiContext = api.useUtils();
   const messageMutation = api.inbox.send.useMutation();
-  const addContact = api.contact.save.useMutation({
-    onSuccess: () => {
-      apiContext.contact.invalidate();
-      toast.success("Contact added!");
-    },
-  });
+
   const findPostQuery = api.inbox.findPostByTitle.useQuery(message?.subject, {
     enabled: !!message?.subject,
   });
@@ -119,11 +114,6 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
     );
   };
 
-  const addToContacts = (name: string) => {
-    trackUiEvent(MixpanelEvents.ADD_INBOX_CONTACT_TO_CONTACTS);
-    addContact.mutate({ name });
-  };
-
   const addStoryToReadingList = () => {
     if (post) {
       trackUiEvent(MixpanelEvents.ADD_STORY_TO_READING_LIST);
@@ -161,11 +151,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
           </a>
 
           <div className="flex items-center gap-2 lg:flex-row">
-            <MessageContact
-              addContactHandler={addToContacts}
-              isContact={isAContact}
-              message={message}
-            />
+            <MessageContact isContact={isAContact} message={message} />
 
             {post && (
               <MessageReadingList

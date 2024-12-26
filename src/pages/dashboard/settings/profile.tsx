@@ -138,7 +138,9 @@ const Profile = () => {
         <Separator />
 
         <div className="flex flex-col">
-          <h2 className="mb-4 text-xl text-foreground">Recent searches</h2>
+          <h2 className="mb-4 text-xl font-medium text-foreground">
+            Recent searches
+          </h2>
           {currentUser?.Profile?.searches &&
           currentUser?.Profile?.searches.length > 0 ? (
             <div className="flex gap-4">
@@ -167,7 +169,7 @@ const Profile = () => {
         </div>
         <Separator />
         <div className="flex flex-col">
-          <h2 className="mb-4 text-xl text-foreground">Messages</h2>
+          <h2 className="mb-4 text-xl font-medium text-foreground">Messages</h2>
 
           <Form {...messagesForm}>
             <form

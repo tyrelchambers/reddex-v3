@@ -23,19 +23,6 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
-
-  db_test:
-    container_name: reddex_db_test
-    image: postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: prisma
-      POSTGRES_PASSWORD: prisma
-      POSTGRES_DB: tests
-    volumes:
-      - test_postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "6432:5432"
 networks:
   default:
     name: reddex_v3

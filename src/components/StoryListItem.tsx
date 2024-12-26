@@ -30,7 +30,7 @@ const StoryListItem = ({ story, list }: Props) => {
       <header
         className={`flex flex-wrap items-center justify-between gap-3 bg-card p-3`}
       >
-        <div className="flex items-center rounded-full  font-black text-card-foreground/70">
+        <div className="flex items-center rounded-full font-black text-card-foreground/70">
           <FontAwesomeIcon icon={faUp} className="mr-2" />
           {story.ups}
         </div>
@@ -48,7 +48,7 @@ const StoryListItem = ({ story, list }: Props) => {
         </div>
       </header>
       <Link
-        className=" block min-h-[100px] p-3 font-bold text-foreground underline hover:text-rose-500"
+        className="block min-h-[100px] p-3 font-bold text-foreground underline hover:text-rose-500"
         href={story.url}
         target="_blank"
       >
@@ -74,7 +74,9 @@ const StoryListItem = ({ story, list }: Props) => {
         )}
       </div>
       <footer className="mt-auto flex flex-wrap items-center justify-end gap-4 border-t border-border p-3">
-        {list === "approved" && <ApprovedItemActions postId={story.id} />}
+        {list === "approved" && (
+          <ApprovedItemActions postId={story.id} post={story} />
+        )}
         {list === "completed" && <CompletedItemActions postId={story.id} />}
       </footer>
     </div>

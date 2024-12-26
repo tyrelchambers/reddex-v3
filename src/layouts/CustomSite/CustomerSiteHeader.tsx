@@ -64,12 +64,12 @@ const CustomerSiteHeader = ({ website }: Props) => {
               className="mr-2 rounded-md"
             />
           )}
-          <Link href={`/${website.subdomain as string}`}>{website.name}</Link>
+          <Link href={`/w/${website.subdomain as string}`}>{website.name}</Link>
         </div>
         <SocialList socials={socials} />
         {!website.submissionPage.hidden && (
           <Link
-            href={`/${website.subdomain as string}/submit`}
+            href={`/w/${website.subdomain as string}/submit`}
             className={buttonVariants({
               variant: "default",
               size: "sm",

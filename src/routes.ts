@@ -12,7 +12,7 @@ import {
   faTag,
   faUser,
   faBolt,
-} from "@fortawesome/pro-regular-svg-icons";
+} from "@fortawesome/pro-solid-svg-icons";
 
 import { Tab } from "./types";
 

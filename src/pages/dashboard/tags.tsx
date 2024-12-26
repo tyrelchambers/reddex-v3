@@ -101,7 +101,11 @@ const Tags = () => {
                         </SelectTrigger>
                         <SelectContent>
                           {storiesList.map((story) => (
-                            <SelectItem key={story.value} value={story.value}>
+                            <SelectItem
+                              key={story.value}
+                              value={story.value}
+                              className="break-all"
+                            >
                               {story.label}
                             </SelectItem>
                           ))}

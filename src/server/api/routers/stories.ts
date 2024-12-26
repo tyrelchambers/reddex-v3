@@ -10,6 +10,22 @@ import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
 
+const fetchAiResponse = async (structure: Record<string, any>) => {
+  const response = await axios.post(
+    `${process.env.AI_URL}/api/chat/completions`,
+    structure,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.AI_API_KEY}`,
+      },
+    },
+  );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const result = response.data?.choices?.[0].message.content as string;
+  return result;
+};
+
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.redditPost.findMany({
@@ -271,5 +287,28 @@ export const storyRouter = createTRPCRouter({
           id: input,
         },
       });
+    }),
+  summarize: protectedProcedure
+    .input(
+      z.object({
+        body: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const prompt = `
+        Summarize this text: ${input.body}. Return only your summarization and no other preamble.
+      `;
+      const structure = {
+        model: process.env.AI_MODEL,
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      };
+
+      const resp = await fetchAiResponse(structure);
+      return resp;
     }),
 });

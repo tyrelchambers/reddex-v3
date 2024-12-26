@@ -24,16 +24,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import SummarizeStory from "./SummarizeStory";
 
 interface Props {
   postId: RedditPost["id"];
+  post: RedditPost;
 }
 
 const formSchema = tagOnPostSchema.extend({
   redditPostId: z.string().optional(),
 });
 
-const ApprovedItemActions = ({ postId }: Props) => {
+const ApprovedItemActions = ({ postId, post }: Props) => {
   const { data } = useSession();
 
   const apiContext = api.useUtils();
@@ -72,6 +74,7 @@ const ApprovedItemActions = ({ postId }: Props) => {
 
   return (
     <div className="flex flex-wrap gap-3">
+      <SummarizeStory text={post.content} />
       <Dialog>
         <DialogTrigger asChild>
           <Button

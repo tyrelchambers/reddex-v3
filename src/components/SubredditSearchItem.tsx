@@ -8,6 +8,7 @@ import {
   faHashtag,
   faClock,
   faCheck,
+  faSquareBinary,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -25,6 +26,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { api } from "~/utils/api";
+import { faSpinner } from "@fortawesome/pro-regular-svg-icons";
+import SummarizeStory from "./SummarizeStory";
 
 interface Props {
   post: PostFromReddit;
@@ -47,22 +58,22 @@ const SubredditSearchItem = ({
     header: clsx(
       "bg-foreground/5",
       isInQueue && "!bg-accent",
-      hasBeenUsed && "bg-success"
+      hasBeenUsed && "bg-success",
     ),
     headerText: clsx(
       isInQueue && "!text-accent-foreground",
-      hasBeenUsed && "text-success-foreground"
+      hasBeenUsed && "text-success-foreground",
     ),
   };
 
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background">
       <header
-        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header} p-3 `}
+        className={`mb-2 flex items-center justify-between gap-3 ${activeClasses.header} p-3`}
       >
         <div className="flex items-center gap-2">
           <div
-            className={`flex items-center rounded-full  font-black text-orange-500 ${activeClasses.headerText}`}
+            className={`flex items-center rounded-full font-black text-orange-500 ${activeClasses.headerText}`}
           >
             <FontAwesomeIcon icon={faUp} className="mr-2" />
             {post.ups}
@@ -93,7 +104,7 @@ const SubredditSearchItem = ({
           </div>
 
           <div
-            className={`flex items-center rounded-full text-sm text-card-foreground  ${activeClasses.headerText}`}
+            className={`flex items-center rounded-full text-sm text-card-foreground ${activeClasses.headerText}`}
           >
             <FontAwesomeIcon icon={faThumbsUp} className="mr-2" />
             {(post.upvote_ratio * 100).toFixed(0)}%
@@ -140,10 +151,10 @@ const SubredditSearchItem = ({
 
         {canAddToQueue && (
           <div className="mt-4 flex items-end gap-2 lg:mt-0">
+            <SummarizeStory text={post.selftext} />
             {isInQueue ? (
               <Button
                 variant="default"
-                size="xs"
                 onClick={() => {
                   trackUiEvent(MixpanelEvents.REMOVE_FROM_QUEUE);
                   queueStore.remove(post);
@@ -154,7 +165,6 @@ const SubredditSearchItem = ({
             ) : (
               <Button
                 variant="outline"
-                size="xs"
                 onClick={() => {
                   trackUiEvent(MixpanelEvents.ADD_TO_QUEUE);
                   queueStore.add(post);

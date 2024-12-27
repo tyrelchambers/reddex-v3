@@ -114,6 +114,7 @@ model RedditPost {
   userId        String
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   TagsOnStories TagsOnStories[]
+  deleted_at    DateTime?
 }
 
 model TagsOnStories {

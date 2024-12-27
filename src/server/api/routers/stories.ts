@@ -10,7 +10,6 @@ import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { redisClient } from "~/lib/redis";
 import { checkCache, fetchAiResponse, setCache } from "~/utils/openai-helpers";
 
 export const storyRouter = createTRPCRouter({
@@ -208,10 +207,13 @@ export const storyRouter = createTRPCRouter({
   deleteStory: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      return await prisma.redditPost.deleteMany({
+      return await prisma.redditPost.updateMany({
         where: {
           id: input,
           userId: ctx.session.user.id,
+        },
+        data: {
+          deleted_at: new Date(),
         },
       });
     }),
@@ -257,11 +259,14 @@ export const storyRouter = createTRPCRouter({
       }
     }),
   removeAllFromCompletedList: protectedProcedure.mutation(async ({ ctx }) => {
-    return prisma.redditPost.deleteMany({
+    return prisma.redditPost.updateMany({
       where: {
         read: true,
         permission: true,
         userId: ctx.session.user.id,
+      },
+      data: {
+        deleted_at: new Date(),
       },
     });
   }),

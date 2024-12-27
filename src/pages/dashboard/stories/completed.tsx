@@ -13,7 +13,11 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 const Completed = () => {
   const { data } = useSession();
   const apiContext = api.useUtils();
-  const completedListQuery = api.story.getCompletedList.useQuery();
+  const completedListQuery = api.story.getCompletedList.useQuery(undefined, {
+    select(data) {
+      return data.filter((item) => !item.deleted_at);
+    },
+  });
   const removeAll = api.story.removeAllFromCompletedList.useMutation({
     onSuccess: () => {
       apiContext.story.getCompletedList.invalidate();

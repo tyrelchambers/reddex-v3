@@ -9,21 +9,21 @@ import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
+import { openai } from "~/lib/openai";
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
-const fetchAiResponse = async (structure: Record<string, any>) => {
-  const response = await axios.post(
-    `${process.env.AI_URL}/api/chat/completions`,
-    structure,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.AI_API_KEY}`,
+const fetchAiResponse = async (structure: ChatCompletionMessageParam[]) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini-2024-07-18",
+    messages: [
+      {
+        role: "developer",
+        content: "You are a helpful assistant.",
       },
-    },
-  );
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const result = response.data?.choices?.[0].message.content as string;
-  return result;
+      ...structure,
+    ],
+  });
+  return response?.choices?.[0]?.message.content ?? null;
 };
 
 export const storyRouter = createTRPCRouter({
@@ -298,15 +298,12 @@ export const storyRouter = createTRPCRouter({
       const prompt = `
         Summarize this text: ${input.body}. Return only your summarization and no other preamble.
       `;
-      const structure = {
-        model: process.env.AI_MODEL,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      };
+      const structure: ChatCompletionMessageParam[] = [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ];
 
       const resp = await fetchAiResponse(structure);
       return resp;

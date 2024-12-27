@@ -65,7 +65,7 @@ model VerificationToken {
 model Contact {
   id     String  @id @default(cuid())
   name   String
-  notes  String? @db.Text
+  notes  String?
   userId String
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -79,19 +79,19 @@ model ContactedWriters {
 
 model Profile {
   id               String             @id @default(cuid())
-  greeting         String?            @db.Text
-  recurring        String?            @db.Text
+  greeting         String?
+  recurring        String?
   words_per_minute Int?
-  searches         RecentlySearched[]
   userId           String             @unique
   user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  searches         RecentlySearched[]
 }
 
 model RecentlySearched {
   id        String   @id @default(cuid())
   text      String
-  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId String?
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model RedditPost {
@@ -110,11 +110,11 @@ model RedditPost {
   reading_time  Int
   upvote_ratio  Float
   created       Int
-  content       String          @db.Text
+  content       String
   userId        String
+  deleted_at    DateTime?
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   TagsOnStories TagsOnStories[]
-  deleted_at    DateTime?
 }
 
 model TagsOnStories {
@@ -128,7 +128,7 @@ model TagsOnStories {
 
 model Tag {
   id            String          @id @default(cuid())
-  tag           String          @db.Text
+  tag           String
   userId        String
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   TagsOnStories TagsOnStories[]
@@ -139,12 +139,12 @@ model SubmittedStory {
   email          String?
   author         String?
   sent_to_others Boolean?
-  body           String   @db.Text
+  body           String
   userId         String
   title          String?
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   date           DateTime @default(now())
   completed      Boolean  @default(false)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Website {
@@ -152,7 +152,7 @@ model Website {
   hidden               Boolean        @default(true)
   subdomain            String?        @unique
   name                 String?
-  description          String?        @db.Text
+  description          String?
   twitter              String?
   facebook             String?
   instagram            String?
@@ -174,8 +174,8 @@ model Website {
 model SubmissionPage {
   id                    String                 @id @default(cuid())
   name                  String?
-  subtitle              String?                @db.Text
-  description           String?                @db.Text
+  subtitle              String?
+  description           String?
   hidden                Boolean                @default(true)
   submissionFormModules SubmissionFormModule[]
   website               Website?

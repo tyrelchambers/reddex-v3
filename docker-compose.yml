@@ -1,18 +1,4 @@
 services:
-  web:
-    container_name: web
-    build:
-      context: .
-      secrets:
-        - npmrc
-        - env
-    expose:
-      - "3000"
-    command: npm run start
-    depends_on:
-      - db
-    restart: unless-stopped
-
   db:
     container_name: reddex_db
     image: postgres
@@ -23,6 +9,11 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
 networks:
   default:
     name: reddex_v3

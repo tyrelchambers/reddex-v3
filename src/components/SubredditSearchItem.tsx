@@ -151,7 +151,7 @@ const SubredditSearchItem = ({
 
         {canAddToQueue && (
           <div className="mt-4 flex items-end gap-2 lg:mt-0">
-            <SummarizeStory text={post.selftext} />
+            <SummarizeStory postId={post.id} text={post.selftext} />
             {isInQueue ? (
               <Button
                 variant="default"

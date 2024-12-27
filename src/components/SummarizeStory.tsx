@@ -12,7 +12,7 @@ import {
 } from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
 
-const SummarizeStory = ({ text }: { text: string }) => {
+const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
   const [summaryOpen, setSummaryOpen] = React.useState(false);
 
   const summarize = api.story.summarize.useMutation({
@@ -22,7 +22,7 @@ const SummarizeStory = ({ text }: { text: string }) => {
   });
 
   const handleSummarize = () => {
-    summarize.mutate({ body: text });
+    summarize.mutate({ body: text, postId });
   };
 
   return (

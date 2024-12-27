@@ -2,8 +2,6 @@ import {
   faCalendar,
   faCircleUser,
   faClock,
-  faSpinner,
-  faSquareBinary,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Profile, SubmittedStory } from "@prisma/client";
@@ -13,13 +11,6 @@ import React from "react";
 import { formatReadingTime } from "~/utils";
 import { Button } from "./ui/button";
 import { api } from "~/utils/api";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
 import SummarizeStory from "./SummarizeStory";
 
 interface Props {
@@ -77,7 +68,7 @@ const StoryCard = ({ story, profile }: Props) => {
         )}
       </div>
       <footer className="mt-auto flex flex-wrap items-center justify-end gap-4 border-t border-border p-3">
-        <SummarizeStory text={story.body} />
+        <SummarizeStory postId={story.id} text={story.body} />
         <Button type="button" onClick={() => deleteHandler(story.id)}>
           Delete
         </Button>

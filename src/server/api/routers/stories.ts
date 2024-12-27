@@ -9,22 +9,9 @@ import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
-import { openai } from "~/lib/openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-
-const fetchAiResponse = async (structure: ChatCompletionMessageParam[]) => {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini-2024-07-18",
-    messages: [
-      {
-        role: "developer",
-        content: "You are a helpful assistant.",
-      },
-      ...structure,
-    ],
-  });
-  return response?.choices?.[0]?.message.content ?? null;
-};
+import { redisClient } from "~/lib/redis";
+import { checkCache, fetchAiResponse, setCache } from "~/utils/openai-helpers";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -291,6 +278,7 @@ export const storyRouter = createTRPCRouter({
   summarize: protectedProcedure
     .input(
       z.object({
+        postId: z.string(),
         body: z.string(),
       }),
     )
@@ -305,7 +293,21 @@ export const storyRouter = createTRPCRouter({
         },
       ];
 
+      console.log("Checking cache for", input.postId);
+      const cacheHit = await checkCache(input.postId);
+
+      if (cacheHit) {
+        console.log("Cache hit");
+        return cacheHit;
+      }
+
       const resp = await fetchAiResponse(structure);
+
+      if (!resp) {
+        return;
+      }
+
+      await setCache(input.postId, resp);
       return resp;
     }),
 });

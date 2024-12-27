@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
 
 const SummarizeStory = ({ text }: { text: string }) => {
   const [summaryOpen, setSummaryOpen] = React.useState(false);
@@ -47,8 +48,9 @@ const SummarizeStory = ({ text }: { text: string }) => {
             <DialogTitle>Summary</DialogTitle>
           </DialogHeader>
 
-          <p className="text-muted-foreground">{summarize.data}</p>
-
+          <ScrollArea className="h-[400px]">
+            <p className="text-muted-foreground">{summarize.data}</p>
+          </ScrollArea>
           <DialogFooter>
             <Button onClick={() => setSummaryOpen(false)}>Close</Button>
           </DialogFooter>

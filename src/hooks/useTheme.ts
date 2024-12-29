@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const useTheme = () => {
-  const [colorScheme, setColorScheme] = useState<"dark" | "light">(() => {
-    if (typeof window !== "undefined") {
-      const color = window.localStorage.getItem("color-schema");
-
-      if (color) {
-        return color === "dark" ? "dark" : "light";
-      }
-    }
-    return "light";
-  });
+  const [colorScheme, setColorScheme] = useState<"dark" | "light">("light");
 
   useEffect(() => {
     const html = document.querySelector("html");
@@ -19,9 +10,18 @@ export const useTheme = () => {
       html.className = colorScheme;
     }
   }, [colorScheme]);
+  useEffect(() => {
+    const color = window.localStorage.getItem("color-scheme");
+
+    if (color) {
+      setColorScheme(color as "dark" | "light");
+    }
+  }, []);
 
   const toggleTheme = () => {
-    setColorScheme(colorScheme === "light" ? "dark" : "light");
+    const s = colorScheme === "light" ? "dark" : "light";
+    window.localStorage.setItem("color-scheme", s);
+    setColorScheme(s);
   };
 
   return { colorScheme, isDark: colorScheme === "dark", toggleTheme };

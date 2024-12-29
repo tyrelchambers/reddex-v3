@@ -53,11 +53,9 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
   const approvedListQuery = api.story.getApprovedList.useQuery();
   const completedListQuery = api.story.getCompletedList.useQuery();
   const stories = api.story.addToApproved.useMutation({
-    onSuccess: (data) => {
-      if ("success" in data && !data.success) {
-        apiContext.story.getApprovedList.invalidate();
-        return toast(data.message);
-      }
+    onSuccess: () => {
+      apiContext.story.getApprovedList.invalidate();
+      return toast("Added to reading list");
     },
   });
 

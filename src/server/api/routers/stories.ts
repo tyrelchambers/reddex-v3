@@ -35,34 +35,16 @@ export const storyRouter = createTRPCRouter({
   addToApproved: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const foundPost = await prisma.redditPost.findFirst({
+      return await prisma.redditPost.updateMany({
         where: {
           id: input,
+          userId: ctx.session.user.id,
+        },
+        data: {
+          permission: true,
+          read: false,
         },
       });
-
-      if (foundPost == null) {
-        return {
-          success: false,
-          message: "Post not found. Unable to add to approved list.",
-        };
-      } else {
-        try {
-          return await prisma.redditPost.updateMany({
-            where: {
-              id: input,
-              userId: ctx.session.user.id,
-            },
-            data: {
-              permission: true,
-              read: false,
-            },
-          });
-        } catch (error) {
-          captureException(error);
-          throw error;
-        }
-      }
     }),
   addToCompleted: protectedProcedure
     .input(z.string())

@@ -10,7 +10,7 @@ const Contacts = () => {
 
   return (
     <WrapperWithNav>
-      <section className="px-4">
+      <section className="w-full px-4">
         <header className="flex items-center justify-between gap-8">
           <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
 

@@ -12,7 +12,7 @@ const Overview = () => {
 
   return (
     <WrapperWithNav>
-      <section className="flex flex-col">
+      <section className="flex w-full flex-col">
         <header>
           <h1 className="text-2xl font-bold text-foreground">Overview</h1>
         </header>

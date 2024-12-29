@@ -2,8 +2,11 @@ import React from "react";
 import ContactItem from "~/components/ContactItem";
 import EmptyState from "~/components/EmptyState";
 import AddContactModal from "~/components/modals/AddContactModal";
+import { Button } from "~/components/ui/button";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
+import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Contacts = () => {
   const contactsQuery = api.contact.all.useQuery();
@@ -14,7 +17,16 @@ const Contacts = () => {
         <header className="flex items-center justify-between gap-8">
           <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
 
-          <AddContactModal />
+          <AddContactModal>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                trackUiEvent(MixpanelEvents.OPEN_ADD_CONTACT_MODAL);
+              }}
+            >
+              Add contact
+            </Button>
+          </AddContactModal>
         </header>
 
         {contactsQuery.data && contactsQuery.data.length > 0 ? (

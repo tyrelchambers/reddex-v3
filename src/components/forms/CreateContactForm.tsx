@@ -65,7 +65,7 @@ const CreateContactForm = ({ name }: { name?: string }) => {
               <FormLabel>Notes</FormLabel>
 
               <Textarea
-                autoFocus
+                autoFocus={!!name}
                 placeholder="Add notes about this contact"
                 {...field}
               />

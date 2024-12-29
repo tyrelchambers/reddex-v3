@@ -8,7 +8,6 @@ import {
   faHashtag,
   faClock,
   faCheck,
-  faSquareBinary,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -26,15 +25,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
-import { api } from "~/utils/api";
-import { faSpinner } from "@fortawesome/pro-regular-svg-icons";
 import SummarizeStory from "./SummarizeStory";
 
 interface Props {
@@ -53,6 +43,7 @@ const SubredditSearchItem = ({
   const queueStore = useQueueStore();
 
   const isInQueue = queueStore.exists(post);
+  console.log(isInQueue);
 
   const activeClasses = {
     header: clsx(

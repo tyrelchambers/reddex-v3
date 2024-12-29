@@ -139,14 +139,16 @@ const QueueModal = ({ close }: Props) => {
             <Button variant="secondary" type="button" onClick={removeFromQueue}>
               Remove from queue
             </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={saveContactHandler}
-              className="whitespace-pre-wrap"
-            >
-              Add {currentPost?.author} to contacts
-            </Button>
+            {!contactQuery.data && (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={saveContactHandler}
+                className="whitespace-pre-wrap"
+              >
+                Add {currentPost?.author} to contacts
+              </Button>
+            )}
           </div>
 
           <Button

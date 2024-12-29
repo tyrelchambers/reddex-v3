@@ -20,12 +20,12 @@ export const useQueueStore = create<QueueState>((set, get) => ({
   exists: (item) => {
     const queue = get().queue;
 
-    return queue.includes(item);
+    return queue.some((itemInQueue) => itemInQueue.id === item.id);
   },
   remove: (item) =>
     set((state) => {
       const queueWithoutItem = state.queue.filter(
-        (stateItem) => stateItem !== item
+        (stateItem) => stateItem !== item,
       );
 
       return {

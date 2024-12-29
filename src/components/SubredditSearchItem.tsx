@@ -43,7 +43,6 @@ const SubredditSearchItem = ({
   const queueStore = useQueueStore();
 
   const isInQueue = queueStore.exists(post);
-  console.log(isInQueue);
 
   const activeClasses = {
     header: clsx(

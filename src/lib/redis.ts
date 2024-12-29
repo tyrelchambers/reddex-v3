@@ -2,9 +2,7 @@ import { createClient } from "redis";
 
 export const redisClient = async () => {
   const c = await createClient({
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-    username: process.env.REDIS_USERNAME,
-    password: process.env.REDIS_PASSWORD,
+    url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   }).connect();
 
   return c;
@@ -19,5 +17,5 @@ export const checkCache = async (key: string) => {
 
 export const setCache = async (key: string, value: string) => {
   const redis = await redisClient();
-  await redis.set(key, value);
+  await redis.set(key, value, { EX: 2628000 });
 };

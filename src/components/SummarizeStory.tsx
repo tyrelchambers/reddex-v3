@@ -83,7 +83,7 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
                         Characters
                       </h3>
                     </header>
-                    <div className="flex gap-1">
+                    <div className="flex flex-wrap gap-1">
                       {parsedSummary.characters.map((c, idx) => (
                         <Badge key={c + idx}>{c}</Badge>
                       ))}

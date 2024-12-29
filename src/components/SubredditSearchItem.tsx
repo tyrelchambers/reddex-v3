@@ -164,14 +164,13 @@ const SubredditSearchItem = ({
               </Button>
             ) : (
               <Button
-                variant="outline"
+                title={`Add ${post.title} to queue`}
                 onClick={() => {
                   trackUiEvent(MixpanelEvents.ADD_TO_QUEUE);
                   queueStore.add(post);
                 }}
               >
-                <FontAwesomeIcon icon={faAdd} className="mr-2" />
-                Add to Queue
+                <FontAwesomeIcon icon={faAdd} />
               </Button>
             )}
           </div>

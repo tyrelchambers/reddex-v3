@@ -74,7 +74,7 @@ const ApprovedItemActions = ({ postId, post }: Props) => {
 
   return (
     <div className="flex flex-wrap gap-3">
-      <SummarizeStory text={post.content} postId={post.id} />
+      <SummarizeStory text={post.content} postId={post.post_id} />
       <Dialog>
         <DialogTrigger asChild>
           <Button

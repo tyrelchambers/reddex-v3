@@ -10,7 +10,8 @@ import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
 import { PostFromReddit } from "~/types";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { checkCache, fetchAiResponse, setCache } from "~/utils/openai-helpers";
+import { checkCache, setCache } from "~/lib/redis";
+import { fetchAiResponse } from "~/utils/openai-helpers";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -302,8 +303,13 @@ export const storyRouter = createTRPCRouter({
       const cacheHit = await checkCache(input.postId);
 
       if (cacheHit) {
-        console.log("Cache hit");
-        return cacheHit;
+        try {
+          console.log("Cache hit");
+          await JSON.parse(cacheHit);
+          return cacheHit;
+        } catch (error) {
+          console.log("Cache error");
+        }
       }
 
       const resp = await fetchAiResponse(structure);

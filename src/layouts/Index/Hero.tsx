@@ -7,10 +7,10 @@ const Hero = () => (
   <section className="hero mb-20 flex w-full max-w-screen-lg flex-col items-center justify-center gap-10 px-2 md:mx-auto">
     <Badge className="w-fit">Thousands of stories read</Badge>
     <div className="relative">
-      <h1 className="text-center text-4xl font-semibold text-foreground md:text-6xl lg:text-7xl">
+      <h1 className="text-center text-4xl font-semibold text-foreground dark:drop-shadow-[0_15px_35px_rgba(255,255,255,0.35)] md:text-6xl lg:text-7xl">
         We help Narrators like you save time and effort
       </h1>
-      <span className="absolute hidden h-[600px] w-[500px] lg:right-[-140px] lg:block">
+      <span className="absolute hidden h-[600px] w-[500px] dark:drop-shadow-[0_15px_35px_rgba(255,0,0,1)] lg:right-[-140px] lg:block">
         <Squiggly id="svg-squig" />
       </span>
     </div>

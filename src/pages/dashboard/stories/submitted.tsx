@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import StoryCard from "~/components/StoryCard";
+import DeletedStories from "~/components/dashboard/submittedStories/DeletedStories";
+import UnreadStories from "~/components/dashboard/submittedStories/UnreadStories";
 import { Input } from "~/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { storiesTabs } from "~/routes";
 import { api } from "~/utils/api";
@@ -8,16 +10,14 @@ import { api } from "~/utils/api";
 const Submitted = () => {
   const [query, setQuery] = useState("");
   const regex = new RegExp(query, "gi");
-  const { data: user } = api.user.me.useQuery();
   const submittedStories = api.story.submittedList.useQuery();
 
-  const profile = user?.Profile;
   const stories = submittedStories.data;
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
-      <section className="flex w-full flex-col px-4">
-        <header className="flex w-full flex-1 flex-col justify-between gap-2 lg:flex-row lg:px-0">
+      <Tabs defaultValue="unread" className="w-full px-4">
+        <header className="mb-4 flex w-full flex-1 flex-col justify-between gap-2 lg:flex-row lg:px-0">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold text-foreground">Submitted</h1>
             <p className="font-light text-muted-foreground">
@@ -34,19 +34,17 @@ const Submitted = () => {
             />
           </div>
         </header>
-        <div className="mt-10 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
-          {stories
-            ?.filter(
-              (item) => item.title?.match(regex) || item.author?.match(regex),
-            )
-            ?.sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-            )
-            .map((story) => (
-              <StoryCard key={story.id} profile={profile} story={story} />
-            ))}
-        </div>
-      </section>
+        <TabsList>
+          <TabsTrigger value="unread">Unread</TabsTrigger>
+          <TabsTrigger value="deleted">Deleted</TabsTrigger>
+        </TabsList>
+        <TabsContent value="unread">
+          <UnreadStories regex={regex} stories={stories ?? []} />
+        </TabsContent>
+        <TabsContent value="deleted">
+          <DeletedStories regex={regex} stories={stories ?? []} />
+        </TabsContent>
+      </Tabs>
     </WrapperWithNav>
   );
 };

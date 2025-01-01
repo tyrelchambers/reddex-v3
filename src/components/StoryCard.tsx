@@ -4,7 +4,7 @@ import {
   faClock,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Profile, SubmittedStory } from "@prisma/client";
+import { SubmittedStory } from "@prisma/client";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import React from "react";
@@ -15,11 +15,12 @@ import SummarizeStory from "./SummarizeStory";
 
 interface Props {
   story: SubmittedStory;
-  profile: Profile | undefined | null;
 }
 
-const StoryCard = ({ story, profile }: Props) => {
+const StoryCard = ({ story }: Props) => {
   const apiContext = api.useUtils();
+  const { data: user } = api.user.me.useQuery();
+  const profile = user?.Profile;
 
   const deleteSubmittedStory = api.story.deleteSubmittedStory.useMutation({
     onSuccess: () => {
@@ -65,7 +66,7 @@ const StoryCard = ({ story, profile }: Props) => {
         className="block p-3 font-bold text-foreground underline hover:text-rose-500"
         href={`/story/${story.id}`}
       >
-        {story.title || "<This story has title>"}
+        {story.title || "<This story is missing a title>"}
       </Link>
 
       <div className="flex gap-3 p-2 px-4">

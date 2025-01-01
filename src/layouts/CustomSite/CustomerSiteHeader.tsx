@@ -54,7 +54,7 @@ const CustomerSiteHeader = ({ website }: Props) => {
         style={{ backgroundColor: website.colour }}
       ></div>
       <header className="flex flex-col items-center justify-between gap-2 bg-card p-4 sm:flex-row">
-        <div className="flex items-center text-xl text-foreground">
+        <div className="flex flex-1 items-center text-xl text-foreground">
           {website.thumbnail && (
             <Image
               src={website.thumbnail}
@@ -67,21 +67,23 @@ const CustomerSiteHeader = ({ website }: Props) => {
           <Link href={`/w/${website.subdomain as string}`}>{website.name}</Link>
         </div>
         <SocialList socials={socials} />
-        {!website.submissionPage.hidden && (
-          <Link
-            href={`/w/${website.subdomain as string}/submit`}
-            className={buttonVariants({
-              variant: "default",
-              size: "sm",
-              class: "max-w-sm px-4 py-2",
-            })}
-            style={{
-              backgroundColor: website.colour,
-            }}
-          >
-            Submit a story
-          </Link>
-        )}
+        <div className="flex flex-1 justify-end">
+          {!website.submissionPage.hidden && (
+            <Link
+              href={`/w/${website.subdomain as string}/submit`}
+              className={buttonVariants({
+                variant: "default",
+                size: "sm",
+                class: "max-w-sm px-4 py-2",
+              })}
+              style={{
+                backgroundColor: website.colour,
+              }}
+            >
+              Submit a story
+            </Link>
+          )}
+        </div>
       </header>
     </>
   );

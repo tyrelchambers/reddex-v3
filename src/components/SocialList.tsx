@@ -10,7 +10,7 @@ interface Props {
 
 const SocialList = ({ socials }: Props) => {
   return (
-    <ul className="flex items-center gap-4">
+    <ul className="flex flex-1 items-center justify-center gap-4">
       {socials.map((soc, id) => {
         if (soc.icon && soc.url) {
           return (

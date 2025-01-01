@@ -256,10 +256,26 @@ export const storyRouter = createTRPCRouter({
   deleteSubmittedStory: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      return prisma.submittedStory.deleteMany({
+      return prisma.submittedStory.update({
         where: {
           userId: ctx.session.user.id,
           id: input,
+        },
+        data: {
+          deleted_at: new Date(),
+        },
+      });
+    }),
+  restoreSubmittedStory: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return prisma.submittedStory.update({
+        where: {
+          userId: ctx.session.user.id,
+          id: input,
+        },
+        data: {
+          deleted_at: null,
         },
       });
     }),

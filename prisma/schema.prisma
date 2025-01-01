@@ -135,16 +135,17 @@ model Tag {
 }
 
 model SubmittedStory {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   email          String?
   author         String?
   sent_to_others Boolean?
   body           String
   userId         String
   title          String?
-  date           DateTime @default(now())
-  completed      Boolean  @default(false)
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date           DateTime  @default(now())
+  completed      Boolean   @default(false)
+  deleted_at     DateTime?
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Website {

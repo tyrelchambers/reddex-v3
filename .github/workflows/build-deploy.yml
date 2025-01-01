@@ -77,7 +77,4 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd apps
-            docker compose pull reddex-client
-            docker compose down
-            docker compose up -d
+            kubectl rollout restart deployment reddex-deploy

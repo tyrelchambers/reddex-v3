@@ -45,6 +45,11 @@ registerPlugin(
   FilePondPluginImageResize,
 );
 
+const URL =
+  process.env.NEXT_PUBLIC_NODE_ENV === "production"
+    ? `https://reddex.app/`
+    : `http://localhost:3001/`;
+
 const General = () => {
   const apiContext = api.useUtils();
   const { data: user } = api.user.me.useQuery();
@@ -195,12 +200,13 @@ const General = () => {
                   )}
                 />
                 <Link
-                  href={`https://reddex.app/${
+                  href={`${URL}w/${
                     websiteSettings.data?.subdomain ?? subdomainFormWatch ?? ""
                   }`}
+                  target="_blank"
                 >
                   <Badge className="mt-2 w-fit" variant="outline">
-                    https://reddex.app/w/{subdomainFormWatch}
+                    {URL}w/{subdomainFormWatch}
                   </Badge>
                 </Link>
                 {subdomainFormWatch && subdomainAvailable && (

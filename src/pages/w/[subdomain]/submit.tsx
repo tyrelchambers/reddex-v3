@@ -208,7 +208,11 @@ const Submit = ({ website }: Props) => {
                         className="mb-[5px] text-[7px] text-red-500"
                       />
                     </FormLabel>
-                    <Textarea placeholder="Write your story" {...field} />
+                    <Textarea
+                      placeholder="Write your story"
+                      className="min-h-80"
+                      {...field}
+                    />
                     <FormMessage />
                   </div>
                 </FormItem>

@@ -50,42 +50,38 @@ const Theme = () => {
 
   return (
     <WrapperWithNav tabs={websiteTabItems}>
-      <main className="my-6 flex w-full max-w-screen-2xl gap-10">
-        <BodyWithLoader
-          isLoading={websiteSettings.isPending}
-          loadingMessage="Loading website theme settings..."
-        >
-          <h1 className="text-2xl font-bold text-foreground">Theme</h1>
-          <div className="my-6 flex gap-4">
-            <Select
-              value={colours.theme}
-              onValueChange={(v) => setColours({ ...colours, theme: v })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Theme" />
-              </SelectTrigger>
-              <SelectContent>
-                {themes.map((theme) => (
-                  <SelectItem key={theme} value={theme}>
-                    {theme}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              type="color"
-              value={colours.colour}
-              onChange={(v) =>
-                setColours({ ...colours, colour: v.target.value })
-              }
-              className="aspect-square w-12 p-0"
-            />
-          </div>
-          <Button type="button" className="w-fit" onClick={submitHandler}>
-            Save changes
-          </Button>
-        </BodyWithLoader>
-      </main>
+      <BodyWithLoader
+        isLoading={websiteSettings.isPending}
+        loadingMessage="Loading website theme settings..."
+      >
+        <h1 className="text-2xl font-bold text-foreground">Theme</h1>
+        <div className="my-6 flex gap-4">
+          <Select
+            value={colours.theme}
+            onValueChange={(v) => setColours({ ...colours, theme: v })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Theme" />
+            </SelectTrigger>
+            <SelectContent>
+              {themes.map((theme) => (
+                <SelectItem key={theme} value={theme}>
+                  {theme}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            type="color"
+            value={colours.colour}
+            onChange={(v) => setColours({ ...colours, colour: v.target.value })}
+            className="aspect-square w-12 p-0"
+          />
+        </div>
+        <Button type="button" className="w-fit" onClick={submitHandler}>
+          Save changes
+        </Button>
+      </BodyWithLoader>
     </WrapperWithNav>
   );
 };

@@ -14,21 +14,21 @@ const TabsList = ({ tabs }: Props) => {
   return (
     <ul
       role="tablist"
-      className="sticky top-36 flex w-full flex-row overflow-x-auto text-sm lg:flex-col"
+      className="sticky flex w-full flex-row gap-2 overflow-x-auto rounded-lg bg-card p-1 text-sm lg:flex-col xl:top-36"
     >
       {tabs.map((item, idx) => (
         <li
           key={idx}
-          className={`rounded-lg ${
+          className={`rounded-md ${
             router.pathname.includes(item.slug)
-              ? "bg-card text-foreground"
+              ? "bg-background text-foreground"
               : "text-gray-500"
           }`}
         >
           <Link
             aria-selected={router.pathname.includes(item.slug)}
             aria-controls={`tabpanel-${idx + 1}`}
-            className="flex items-center gap-x-2 whitespace-nowrap rounded-lg px-2 py-2 font-medium duration-150 hover:bg-card hover:text-foreground"
+            className="flex items-center gap-x-2 whitespace-nowrap rounded-md px-2 py-2 font-medium duration-150 hover:bg-background hover:text-foreground"
             href={item.slug}
           >
             <FontAwesomeIcon icon={item.icon} />

@@ -11,7 +11,7 @@ const StatusBanner = ({ type = "primary", title, subtitle, action }: Props) => {
   if (type === "primary") {
     return (
       <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-accent p-4 shadow-lg">
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col">
           <p className="text-accent-foreground">{title}</p>
           <p className="text-sm font-thin text-accent-foreground">{subtitle}</p>
         </div>
@@ -23,7 +23,7 @@ const StatusBanner = ({ type = "primary", title, subtitle, action }: Props) => {
 
   return (
     <div className="mt-6 flex w-full items-center justify-between gap-4 rounded-xl bg-card p-4">
-      <div className="flex flex-col">
+      <div className="flex w-full flex-col">
         <p className="text-card-foreground">{title}</p>
         <p className="text-sm font-thin text-muted-foreground">{subtitle}</p>
       </div>

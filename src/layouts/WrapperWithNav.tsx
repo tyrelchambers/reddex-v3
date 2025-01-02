@@ -57,8 +57,8 @@ const WrapperWithNav = ({
 
   const classes = className
     ? className
-    : "mx-auto my-6 flex w-full max-w-screen-2xl flex-col gap-8 lg:flex-row lg:gap-14";
-  const bodyClasses = "flex w-full";
+    : "mx-auto xl:my-6 flex lg:grid lg:grid-cols-[250px_1fr] w-full max-w-screen-2xl flex-col lg:flex-row gap-6";
+  const bodyClasses = "flex w-full px-4";
 
   return (
     <>
@@ -68,7 +68,7 @@ const WrapperWithNav = ({
         <AuthenticationBoundary>
           <section className={classes}>
             {tabs && (
-              <header className="w-full px-4 lg:w-60">
+              <header className="w-full px-4">
                 <TabsList tabs={tabs} />
               </header>
             )}

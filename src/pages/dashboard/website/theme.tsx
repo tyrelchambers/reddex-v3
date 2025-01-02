@@ -81,7 +81,7 @@ const Theme = () => {
               className="aspect-square w-12 p-0"
             />
           </div>
-          <Button type="button" onClick={submitHandler}>
+          <Button type="button" className="w-fit" onClick={submitHandler}>
             Save changes
           </Button>
         </BodyWithLoader>

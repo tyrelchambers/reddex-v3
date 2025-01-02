@@ -42,7 +42,7 @@ const Integrations = () => {
 
   return (
     <WrapperWithNav tabs={websiteTabItems}>
-      <main className="my-6 flex max-w-screen-2xl gap-10">
+      <main className="my-6 flex w-full max-w-screen-2xl gap-10">
         <BodyWithLoader
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading website integrations..."
@@ -67,7 +67,9 @@ const Integrations = () => {
                 )}
               />
 
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" className="w-fit">
+                Save changes
+              </Button>
             </form>
           </Form>
         </BodyWithLoader>

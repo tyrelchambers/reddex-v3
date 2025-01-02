@@ -160,7 +160,7 @@ const General = () => {
 
   return (
     <WrapperWithNav tabs={websiteTabItems}>
-      <main className="my-6 flex max-w-screen-2xl gap-10">
+      <main className="flex max-w-screen-2xl gap-10">
         <BodyWithLoader
           isLoading={websiteSettings.isPending}
           loadingMessage="Loading website settings..."
@@ -171,7 +171,11 @@ const General = () => {
               title="Enable Website"
               subtitle="Enable your website to be seen by the public."
               action={
-                <Button variant="defaultInvert" onClick={showWebsiteHandler}>
+                <Button
+                  variant="defaultInvert"
+                  className="w-fit"
+                  onClick={showWebsiteHandler}
+                >
                   Make website public{" "}
                 </Button>
               }
@@ -181,7 +185,11 @@ const General = () => {
               type="secondary"
               title="Hide Website"
               subtitle="Hide your website so others can't see it."
-              action={<Button onClick={hideWebsiteHandler}>Hide</Button>}
+              action={
+                <Button onClick={hideWebsiteHandler} className="w-fit">
+                  Hide
+                </Button>
+              }
             />
           )}
           <Form {...form}>
@@ -420,7 +428,11 @@ const General = () => {
               </section>
               <Separator className="my-4" />
 
-              <Button type="submit" disabled={DISABLE_SUBMIT_BUTTON}>
+              <Button
+                type="submit"
+                className="w-fit"
+                disabled={DISABLE_SUBMIT_BUTTON}
+              >
                 Save changes
               </Button>
             </form>

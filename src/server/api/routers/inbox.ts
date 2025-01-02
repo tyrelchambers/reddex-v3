@@ -140,4 +140,33 @@ export const inboxRouter = createTRPCRouter({
 
       return post;
     }),
+  lastTimeContactMessaged: protectedProcedure.query(async ({ ctx }) => {
+    const accessToken = await getAccessTokenFromServer(ctx.session.user.id);
+
+    if (!accessToken) return;
+
+    const posts: RedditInboxMessage[] = [];
+    let after = ``;
+
+    for (let i = 0; i < 10 && after !== null; i++) {
+      await axios
+        .get<RedditInboxResponse>(
+          `https://oauth.reddit.com/message/messages?after=${after}`,
+          {
+            headers: {
+              Authorization: `bearer ${accessToken}`,
+            },
+          },
+        )
+        // eslint-disable-next-line no-loop-func
+        .then((res) => {
+          posts.push(
+            res.data.data.children.map(
+              (post) => post.data,
+            ) as unknown as RedditInboxMessage,
+          );
+          after = res.data.data.after;
+        });
+    }
+  }),
 });

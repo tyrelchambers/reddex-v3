@@ -42,82 +42,84 @@ const Header = ({ sticky = false }: Props) => {
   return (
     <header
       className={clsx(
-        "right-0 top-0 z-30 mx-auto flex h-[80px] max-w-screen-2xl items-center bg-background/10 px-4 py-4 backdrop-blur-md lg:justify-between",
+        "sticky right-0 top-0 z-30 mx-auto flex h-[80px] items-center bg-background px-4 py-4 lg:justify-between",
         sticky && "sticky",
       )}
     >
-      <div className="flex flex-1 items-center">
-        {isDark ? (
-          <LogoLight alt="" className="z-0 w-12" />
-        ) : (
-          <Logo alt="" className="z-0 w-12" />
-        )}
-        <nav className="ml-4 hidden items-center xl:flex">
-          <ul className="flex gap-4">
-            {_routes.map((r) => (
-              <li key={r.label} className="text-sm">
-                <Link
-                  href={r.slug}
-                  className="text-gray-500 dark:text-gray-200"
-                >
-                  {r.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-
-      <div className="hidden items-center gap-6 xl:flex">
-        <button
-          type="button"
-          onClick={() => {
-            trackUiEvent(MixpanelEvents.TOGGLE_THEME, {
-              theme: isDark ? "dark" : "light",
-            });
-            toggleTheme();
-          }}
-          className="z-20 mr-4 lg:mr-0"
-        >
-          <FontAwesomeIcon
-            icon={isDark ? faSun : faMoon}
-            className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
-          />
-        </button>
-        {router.pathname === routes.SEARCH && <SearchModal />}
-        <div className="flex">
-          {session.data?.user && <UserMenu />}
-          {session.status !== "authenticated" && (
-            <Link
-              href={routes.LOGIN}
-              onClick={() => {
-                trackUiEvent(MixpanelEvents.GET_STARTED);
-              }}
-            >
-              <Button type="button">Login</Button>
-            </Link>
+      <div className="mx-auto flex w-full max-w-screen-2xl items-center">
+        <div className="flex flex-1 items-center">
+          {isDark ? (
+            <LogoLight alt="" className="z-0 w-12" />
+          ) : (
+            <Logo alt="" className="z-0 w-12" />
           )}
+          <nav className="ml-4 hidden items-center xl:flex">
+            <ul className="flex gap-4">
+              {_routes.map((r) => (
+                <li key={r.label} className="text-sm">
+                  <Link
+                    href={r.slug}
+                    className="text-gray-500 dark:text-gray-200"
+                  >
+                    {r.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-      </div>
 
-      <div className="flex items-center gap-3 xl:hidden">
-        <button
-          type="button"
-          onClick={() => {
-            trackUiEvent(MixpanelEvents.TOGGLE_THEME, {
-              theme: isDark ? "dark" : "light",
-            });
-            toggleTheme();
-          }}
-          className="z-20"
-        >
-          <FontAwesomeIcon
-            icon={isDark ? faSun : faMoon}
-            className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
-          />
-        </button>
-        {router.pathname === routes.SEARCH && <SearchModal />}
-        <MobileNav user={session.data?.user as User} />
+        <div className="hidden items-center gap-6 xl:flex">
+          <button
+            type="button"
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.TOGGLE_THEME, {
+                theme: isDark ? "dark" : "light",
+              });
+              toggleTheme();
+            }}
+            className="z-20 mr-4 lg:mr-0"
+          >
+            <FontAwesomeIcon
+              icon={isDark ? faSun : faMoon}
+              className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
+            />
+          </button>
+          {router.pathname === routes.SEARCH && <SearchModal />}
+          <div className="flex">
+            {session.data?.user && <UserMenu />}
+            {session.status !== "authenticated" && (
+              <Link
+                href={routes.LOGIN}
+                onClick={() => {
+                  trackUiEvent(MixpanelEvents.GET_STARTED);
+                }}
+              >
+                <Button type="button">Login</Button>
+              </Link>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 xl:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              trackUiEvent(MixpanelEvents.TOGGLE_THEME, {
+                theme: isDark ? "dark" : "light",
+              });
+              toggleTheme();
+            }}
+            className="z-20"
+          >
+            <FontAwesomeIcon
+              icon={isDark ? faSun : faMoon}
+              className={clsx(isDark ? "text-gray-100" : "text-gray-700")}
+            />
+          </button>
+          {router.pathname === routes.SEARCH && <SearchModal />}
+          <MobileNav user={session.data?.user as User} />
+        </div>
       </div>
     </header>
   );

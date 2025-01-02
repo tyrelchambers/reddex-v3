@@ -10,7 +10,7 @@ const DashNav = () => {
   const pathRoot = pathname.split("/")[2];
 
   return (
-    <nav className="hidden w-full justify-start overflow-x-auto bg-foreground/5 p-3 xl:flex">
+    <nav className="z-20 hidden w-full justify-start overflow-x-auto bg-card p-3 xl:sticky xl:top-20 xl:flex">
       <ul className="mx-auto flex w-full max-w-screen-2xl gap-8 px-4 text-sm text-gray-500">
         {dashNavRoutes.map((r) => (
           <li key={r.label}>

@@ -26,6 +26,8 @@ import MessageContact from "./dashboard/message/MessageContact";
 import MessageReadingList from "./dashboard/message/MessageReadingList";
 import clsx from "clsx";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
+import { SelectValue } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   message: z.string(),
@@ -64,6 +66,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
       return toast("Added to reading list");
     },
   });
+  const allStories = api.story.all.useQuery();
 
   const post = findPostQuery.data;
 
@@ -159,12 +162,31 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
           <div className="flex w-full items-center gap-4">
             <MessageContact isContact={isAContact} message={message} />
 
-            {post && (
+            {post ? (
               <MessageReadingList
                 addStoryToReadingList={addStoryToReadingList}
                 postIsInReadingList={postIsInReadingList}
                 message={message}
               />
+            ) : (
+              <Select>
+                <SelectTrigger className="w-full max-w-md">
+                  <SelectValue placeholder="Manually link a story" />
+                </SelectTrigger>
+                <SelectContent className="w-full max-w-md">
+                  {allStories.data?.map((story) => (
+                    <SelectItem
+                      key={story.id}
+                      value={story.id}
+                      onClick={() => {
+                        stories.mutate(story.id);
+                      }}
+                    >
+                      {story.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
           </div>
         </div>

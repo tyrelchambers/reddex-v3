@@ -11,6 +11,7 @@ import { z } from "zod";
 import { captureException } from "@sentry/nextjs";
 import { trackEvent } from "~/utils/mixpanel";
 import { getAccessTokenFromServer } from "~/server/queries";
+import { InboxMessage } from "@prisma/client";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
@@ -107,15 +108,25 @@ export const inboxRouter = createTRPCRouter({
     }
   }),
   findPostByTitle: protectedProcedure
-    .input(z.string().optional())
+    .input(
+      z.object({
+        subject: z.string().optional(),
+        to: z.string().optional(),
+      }),
+    )
     .query(async ({ input }) => {
-      const subject = input?.endsWith("...") ? input.slice(0, -3) : input;
+      const inboxMessage = await prisma.inboxMessage.findFirst({
+        where: {
+          subject: input.subject,
+          to: input.to,
+        },
+      });
+
+      if (!inboxMessage) return;
 
       const post = await prisma.redditPost.findFirst({
         where: {
-          title: {
-            contains: subject,
-          },
+          post_id: inboxMessage?.redditPostId,
         },
       });
 

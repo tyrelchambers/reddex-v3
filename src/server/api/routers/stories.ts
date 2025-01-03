@@ -12,6 +12,7 @@ import { PostFromReddit } from "~/types";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { checkCache, setCache } from "~/lib/redis";
 import { fetchAiResponse } from "~/utils/openai-helpers";
+import { saveInboxMessage } from "~/utils/index.server";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -122,6 +123,12 @@ export const storyRouter = createTRPCRouter({
               },
             });
           });
+
+        await saveInboxMessage({
+          redditPostId: input.post_id,
+          subject: formatSubject(input.title),
+          to: author,
+        });
 
         return true;
       } catch (error) {
@@ -319,4 +326,11 @@ export const storyRouter = createTRPCRouter({
       await setCache(input.postId, resp);
       return resp;
     }),
+  all: protectedProcedure.query(async ({ ctx }) => {
+    return await prisma.redditPost.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
 });

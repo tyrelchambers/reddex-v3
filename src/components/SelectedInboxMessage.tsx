@@ -26,6 +26,8 @@ import MessageContact from "./dashboard/message/MessageContact";
 import MessageReadingList from "./dashboard/message/MessageReadingList";
 import clsx from "clsx";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
+import { SelectValue } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   message: z.string(),
@@ -45,9 +47,15 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
   const apiContext = api.useUtils();
   const messageMutation = api.inbox.send.useMutation();
 
-  const findPostQuery = api.inbox.findPostByTitle.useQuery(message?.subject, {
-    enabled: !!message?.subject,
-  });
+  const findPostQuery = api.inbox.findPostByTitle.useQuery(
+    {
+      subject: message?.subject,
+      to: message?.dest,
+    },
+    {
+      enabled: !!message,
+    },
+  );
 
   const contactquery = api.contact.getByName.useQuery(message?.dest);
   const approvedListQuery = api.story.getApprovedList.useQuery();
@@ -58,6 +66,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
       return toast("Added to reading list");
     },
   });
+  const allStories = api.story.all.useQuery();
 
   const post = findPostQuery.data;
 
@@ -116,14 +125,13 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
     if (post) {
       trackUiEvent(MixpanelEvents.ADD_STORY_TO_READING_LIST);
       stories.mutate(post.id);
-      toast.success("Added to reading list");
     }
   };
 
   return (
     <div
       className={clsx(
-        "w-full max-w-screen-xl flex-1 overflow-auto p-4 xl:m-5 xl:my-6 xl:p-5",
+        "overflow-autoxl:m-5 w-full max-w-screen-xl flex-1 xl:my-6 xl:p-5",
       )}
     >
       <button
@@ -138,28 +146,50 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
         <p className="text-xl font-semibold text-foreground lg:text-3xl">
           {message.subject}
         </p>
-        <footer className="mt-6 flex w-full flex-col gap-2 sm:w-fit sm:flex-row xl:items-center">
+
+        <div className="mt-4 flex flex-col items-center gap-2 md:flex-row">
           <a
             href={`https://reddit.com/u/${message.dest}`}
-            className="mr-3 flex w-full items-center gap-2 rounded-full bg-card px-3 py-1 text-sm text-foreground"
+            className="mr-3 flex w-full items-center gap-2 rounded-full bg-card px-3 py-1 text-foreground md:w-fit"
             target="_blank"
           >
             <FontAwesomeIcon icon={faUserCircle} />
-            <span className="text-muted-foreground">{message.dest}</span>
+            <span className="text-sm text-muted-foreground">
+              {message.dest}
+            </span>
           </a>
 
-          <div className="flex items-center gap-2 lg:flex-row">
+          <div className="flex w-full gap-4">
             <MessageContact isContact={isAContact} message={message} />
 
-            {post && (
+            {post ? (
               <MessageReadingList
                 addStoryToReadingList={addStoryToReadingList}
                 postIsInReadingList={postIsInReadingList}
                 message={message}
               />
+            ) : (
+              <Select>
+                <SelectTrigger className="w-full max-w-md">
+                  <SelectValue placeholder="Manually link a story" />
+                </SelectTrigger>
+                <SelectContent className="w-full max-w-md">
+                  {allStories.data?.map((story) => (
+                    <SelectItem
+                      key={story.id}
+                      value={story.id}
+                      onClick={() => {
+                        stories.mutate(story.id);
+                      }}
+                    >
+                      {story.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
           </div>
-        </footer>
+        </div>
       </header>
 
       <Separator className="my-10" />
@@ -195,7 +225,7 @@ const InboxMessageReply = ({ message }: { message: FormattedMessagesList }) => {
   return (
     <div className="rounded-2xl bg-card p-4">
       <header className="mb-6 flex flex-col items-baseline justify-between sm:flex-row xl:mb-2">
-        <p className="mb-2 font-bold text-card-foreground">
+        <p className="font-bold text-card-foreground">
           {message.isReply && (
             <FontAwesomeIcon icon={faReply} className="mr-4 text-accent" />
           )}

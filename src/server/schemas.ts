@@ -1,3 +1,4 @@
+import { InboxMessage } from "@prisma/client";
 import { z } from "zod";
 
 export const searchSchema = z.object({
@@ -137,3 +138,5 @@ export const subscriptionSchema = z.object({
   subscriptionId: z.string().optional(),
   plan: z.string().optional(),
 });
+
+export const sendInboxMessage = z.ZodType<InboxMessage>;

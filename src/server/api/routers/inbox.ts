@@ -122,11 +122,20 @@ export const inboxRouter = createTRPCRouter({
         },
       });
 
-      if (!inboxMessage) return;
-
       const post = await prisma.redditPost.findFirst({
         where: {
-          post_id: inboxMessage?.redditPostId,
+          OR: [
+            {
+              post_id: inboxMessage?.redditPostId,
+            },
+            {
+              title: {
+                contains: input.subject?.endsWith("...")
+                  ? input.subject.slice(0, -3)
+                  : input.subject,
+              },
+            },
+          ],
         },
       });
 

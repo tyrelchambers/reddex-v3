@@ -107,66 +107,33 @@ export const inboxRouter = createTRPCRouter({
     }
   }),
   findPostByTitle: protectedProcedure
-    .input(
-      z.object({
-        subject: z.string().optional(),
-        to: z.string().optional(),
-      }),
-    )
+    .input(z.string().optional())
     .query(async ({ input }) => {
-      const inboxMessage = await prisma.inboxMessage.findFirst({
-        where: {
-          subject: input.subject,
-          to: input.to,
-        },
-      });
+      const subject = input?.endsWith("...") ? input.slice(0, -3) : input;
 
       const post = await prisma.redditPost.findFirst({
         where: {
-          OR: [
-            {
-              post_id: inboxMessage?.redditPostId,
-            },
-            {
-              title: {
-                contains: input.subject?.endsWith("...")
-                  ? input.subject.slice(0, -3)
-                  : input.subject,
-              },
-            },
-          ],
+          title: {
+            contains: subject,
+          },
         },
       });
 
       return post;
     }),
-  lastTimeContactMessaged: protectedProcedure.query(async ({ ctx }) => {
-    const accessToken = await getAccessTokenFromServer(ctx.session.user.id);
+  lastTimeContactMessaged: protectedProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      const lastMessage = await prisma.inboxMessage.findMany({
+        where: {
+          from: ctx.session.user.id,
+          to: input,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
 
-    if (!accessToken) return;
-
-    const posts: RedditInboxMessage[] = [];
-    let after = ``;
-
-    for (let i = 0; i < 10 && after !== null; i++) {
-      await axios
-        .get<RedditInboxResponse>(
-          `https://oauth.reddit.com/message/messages?after=${after}`,
-          {
-            headers: {
-              Authorization: `bearer ${accessToken}`,
-            },
-          },
-        )
-        // eslint-disable-next-line no-loop-func
-        .then((res) => {
-          posts.push(
-            res.data.data.children.map(
-              (post) => post.data,
-            ) as unknown as RedditInboxMessage,
-          );
-          after = res.data.data.after;
-        });
-    }
-  }),
+      return lastMessage?.[0];
+    }),
 });

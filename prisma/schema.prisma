@@ -202,4 +202,5 @@ model InboxMessage {
   to           String
   subject      String
   createdAt    DateTime @default(now())
+  from         String   @default("")
 }

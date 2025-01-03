@@ -1,4 +1,4 @@
-import { Contact } from "@prisma/client";
+import { Contact, InboxMessage } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useQueueStore } from "~/stores/queueStore";
 import { PostFromReddit } from "~/types";
@@ -10,10 +10,13 @@ import { Textarea } from "./ui/textarea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLoader } from "@fortawesome/pro-regular-svg-icons";
 import { Badge } from "./ui/badge";
+import { faTimer } from "@fortawesome/pro-solid-svg-icons";
+import { format } from "date-fns";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
   contact: Contact | null | undefined;
+  lastMessage: InboxMessage | undefined;
 }
 
 interface Props {
@@ -43,6 +46,9 @@ const QueueModal = ({ close }: Props) => {
   const contactQuery = api.contact.getByName.useQuery(currentPost?.author, {
     enabled: !!currentPost,
   });
+  const lastMessage = api.inbox.lastTimeContactMessaged.useQuery(
+    currentPost?.author ?? "",
+  );
 
   const form = useForm({
     defaultValues: {
@@ -105,9 +111,13 @@ const QueueModal = ({ close }: Props) => {
   return (
     <Form {...form}>
       <form>
-        <ActiveQueueItem post={currentPost} contact={contactQuery.data} />
+        <ActiveQueueItem
+          post={currentPost}
+          contact={contactQuery.data}
+          lastMessage={lastMessage.data}
+        />
 
-        <div className="mt-10 flex flex-col">
+        <div className="mt-4 flex flex-col">
           <div className="flex flex-col items-baseline lg:flex-row lg:gap-4">
             <p className="font-bold text-foreground">Message</p>
 
@@ -168,7 +178,11 @@ const QueueModal = ({ close }: Props) => {
   );
 };
 
-const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
+const ActiveQueueItem = ({
+  post,
+  contact,
+  lastMessage,
+}: ActiveQueueItemProps) => {
   const [showNote, setShowNote] = useState(false);
 
   return (
@@ -177,16 +191,14 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
         <p className="text-xs font-normal uppercase text-card-foreground">
           Subject
         </p>
-        <p className="mt-1 font-bold text-card-foreground md:text-xl">
-          {post.title}
-        </p>
+        <p className="mt-1 font-bold text-card-foreground">{post.title}</p>
       </div>
 
       <div className="flex flex-col rounded-xl bg-card p-2">
         <p className="text-xs font-normal uppercase text-card-foreground">
           Author
         </p>
-        <div className="mt-1 flex items-center gap-4 break-all font-bold text-card-foreground md:text-xl">
+        <div className="mt-1 flex items-center gap-4 break-all font-bold text-card-foreground">
           <p>{post.author}</p>{" "}
           {contact && (
             <button type="button" onClick={() => setShowNote((prev) => !prev)}>
@@ -201,6 +213,15 @@ const ActiveQueueItem = ({ post, contact }: ActiveQueueItemProps) => {
           </p>
         )}
       </div>
+
+      {lastMessage && (
+        <div className="rounded-lg border border-border p-4">
+          <p className="text-xs font-medium uppercase">
+            <FontAwesomeIcon icon={faTimer} className="mr-2" />
+            Last messaged on {format(lastMessage.createdAt, "MMM do, yyyy")}
+          </p>
+        </div>
+      )}
     </header>
   );
 };

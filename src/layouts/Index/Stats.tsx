@@ -34,13 +34,18 @@ const Stats = () => {
           </p>
         </div>
         <div className="mt-12">
-          <ul className="flex-wrap items-start gap-x-12 gap-y-10 space-y-8 sm:flex sm:space-y-0 lg:justify-center">
+          <ul className="flex flex-col flex-wrap items-center justify-center gap-x-12 gap-y-10 space-y-8 sm:flex-row sm:space-y-0 lg:justify-center">
             {_stats.map((item, idx) => (
-              <li key={idx} className="sm:max-w-[15rem]">
+              <li
+                key={idx}
+                className="flex flex-col items-center sm:max-w-[15rem]"
+              >
                 <h4 className="text-4xl font-semibold text-white">
                   {item.data}
                 </h4>
-                <p className="mt-3 font-medium text-gray-400">{item.desc}</p>
+                <p className="mt-3 text-center font-medium text-gray-400">
+                  {item.desc}
+                </p>
               </li>
             ))}
           </ul>

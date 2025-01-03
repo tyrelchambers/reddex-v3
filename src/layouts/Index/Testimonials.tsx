@@ -4,6 +4,7 @@ import to42 from "../../../public/images/to_42.jpg";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/pro-regular-svg-icons";
+import Marquee from "~/components/ui/marquee";
 
 const testimonials = [
   {
@@ -23,58 +24,37 @@ const testimonials = [
   },
 ];
 const Testimonials = () => {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
   return (
     <section className="py-4 xl:py-14">
-      <div className="mx-auto max-w-screen-xl px-4 md:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <h3 className="pb-6 font-semibold text-accent">
-            What people are saying
-          </h3>
-          <ul>
-            {testimonials.map((item, idx) =>
-              currentTestimonial == idx ? (
-                <li key={idx}>
-                  <figure>
-                    <blockquote>
-                      <p className="text-xl font-semibold text-foreground sm:text-2xl">
-                        “{item.quote}“
-                      </p>
-                    </blockquote>
-                    <div className="mt-6 flex flex-col items-center">
-                      <Avatar>
-                        <AvatarImage src={item?.avatar || undefined} />
-                        <AvatarFallback>
-                          <FontAwesomeIcon icon={faSmile} />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="mt-3">
-                        <span className="block font-semibold text-foreground">
-                          {item.name}
-                        </span>
-                      </div>
-                    </div>
-                  </figure>
-                </li>
-              ) : null,
-            )}
-          </ul>
-        </div>
-        <div className="mt-6">
-          <ul className="flex justify-center gap-x-3">
-            {testimonials.map((item, idx) => (
-              <li key={idx}>
-                <button
-                  className={`h-2.5 w-2.5 rounded-full ring-indigo-600 ring-offset-2 duration-150 focus:ring ${
-                    currentTestimonial == idx ? "bg-indigo-600" : "bg-gray-300"
-                  }`}
-                  onClick={() => setCurrentTestimonial(idx)}
-                ></button>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="mx-auto px-4 md:px-8">
+        <h3 className="pb-6 text-center font-semibold text-accent">
+          What people are saying
+        </h3>
+        <Marquee pauseOnHover className="[--duration:60s] [--gap:5rem]">
+          {testimonials.map((item, idx) => (
+            <div
+              className="flex max-w-screen-lg flex-col items-center"
+              key={idx}
+            >
+              <p className="text-center text-xl font-semibold text-foreground sm:text-2xl">
+                “{item.quote}“
+              </p>
+              <div className="mt-6 flex flex-col items-center">
+                <Avatar>
+                  <AvatarImage src={item?.avatar || undefined} />
+                  <AvatarFallback>
+                    <FontAwesomeIcon icon={faSmile} />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="mt-3">
+                  <span className="block font-semibold text-foreground">
+                    {item.name}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Marquee>
       </div>
     </section>
   );

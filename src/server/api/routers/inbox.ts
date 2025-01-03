@@ -11,7 +11,6 @@ import { z } from "zod";
 import { captureException } from "@sentry/nextjs";
 import { trackEvent } from "~/utils/mixpanel";
 import { getAccessTokenFromServer } from "~/server/queries";
-import { InboxMessage } from "@prisma/client";
 
 export const inboxRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {

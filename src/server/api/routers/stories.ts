@@ -293,7 +293,7 @@ export const storyRouter = createTRPCRouter({
         body: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const prompt = `
         Summarize this text: ${input.body}. Return only your summarization and no other preamble.
       `;

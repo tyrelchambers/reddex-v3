@@ -57,8 +57,8 @@ const MobileNav = ({ user }: Props) => {
 
   return (
     <Sheet>
-      <SheetTrigger>
-        <FontAwesomeIcon icon={faBars} className="text-foreground" />
+      <SheetTrigger className="flex items-center">
+        <FontAwesomeIcon icon={faBars} className="text-xl text-foreground" />
       </SheetTrigger>
       <SheetContent>
         <SheetHeader className="mb-4">

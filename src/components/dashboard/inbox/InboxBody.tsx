@@ -48,7 +48,6 @@ const InboxBody = ({
     <section className="flex w-full gap-4">
       {!loading ? (
         <>
-          {" "}
           <InboxMessageList
             messages={messages}
             selectedMessage={selectedMessage?.id}

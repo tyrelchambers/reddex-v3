@@ -48,6 +48,7 @@ const config = [
           argsIgnorePattern: "^_",
         },
       ],
+      "react-hooks/exhaustive-deps": "off",
     },
   },
   ...compat

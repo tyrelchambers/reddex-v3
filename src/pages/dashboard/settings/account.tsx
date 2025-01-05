@@ -94,7 +94,7 @@ const Settings = () => {
           ) : (
             <AccountPlanSelectModal
               currentPlan={selectedPlan}
-              disableSubmit={!currentUser?.email || loadingPaymentLink}
+              disableSubmit={!selectedPlan}
               loadingPaymentLink={loadingPaymentLink}
               setSelectedPlan={setSelectedPlan}
               createSubscriptionHandler={createSubscriptionHandler}

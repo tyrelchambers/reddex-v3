@@ -235,5 +235,9 @@ export const generateTweetLink = ({ text }: TweetLink) => {
 };
 
 export const isActiveSubscription = (subscription: Stripe.Subscription) => {
-  return subscription.status === "active" || subscription.status === "trialing";
+  return (
+    subscription.status === "active" ||
+    subscription.status === "trialing" ||
+    subscription.status === "past_due"
+  );
 };

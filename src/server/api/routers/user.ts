@@ -5,6 +5,7 @@ import { z } from "zod";
 import { saveProfileSchema } from "~/server/schemas";
 import { captureException } from "@sentry/nextjs";
 import Stripe from "stripe";
+import { isActiveSubscription } from "~/utils";
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -31,8 +32,8 @@ export const userRouter = createTRPCRouter({
       });
 
       if (subscriptionQuery.data.length > 0) {
-        subscription = subscriptionQuery.data.filter(
-          (sub) => sub.status === "active" || sub.status === "trialing",
+        subscription = subscriptionQuery.data.filter((sub) =>
+          isActiveSubscription(sub),
         )[0] as Stripe.Subscription & {
           plan: Stripe.Plan & {
             product: Stripe.Product;

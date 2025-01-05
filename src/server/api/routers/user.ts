@@ -26,12 +26,14 @@ export const userRouter = createTRPCRouter({
       let subscription = null;
 
       const subscriptionQuery = await stripeClient.subscriptions.search({
-        query: `status: 'active' AND metadata["userId"]: '${ctx.session.user.id}'`,
+        query: `metadata["userId"]: '${ctx.session.user.id}'`,
         expand: ["data.plan", "data.plan.product"],
       });
 
       if (subscriptionQuery.data.length > 0) {
-        subscription = subscriptionQuery.data[0] as Stripe.Subscription & {
+        subscription = subscriptionQuery.data.filter(
+          (sub) => sub.status === "active" || sub.status === "trialing",
+        )[0] as Stripe.Subscription & {
           plan: Stripe.Plan & {
             product: Stripe.Product;
           };

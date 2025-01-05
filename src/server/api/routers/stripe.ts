@@ -20,7 +20,7 @@ export const stripeRouter = createTRPCRouter({
           ],
           mode: "subscription",
           success_url: CHECKOUT_SUCCESS_URL,
-          customer_email: input.email,
+          customer_email: input.email ?? undefined,
           allow_promotion_codes: true,
           expand: ["line_items"],
 

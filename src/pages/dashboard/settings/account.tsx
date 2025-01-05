@@ -29,11 +29,9 @@ const Settings = () => {
     try {
       setLoadingPaymentLink(true);
 
-      if (!currentUser?.email) throw new Error("Missing email");
-
       const link = await paymentLink.mutateAsync({
         price: getPrices().ultimate,
-        email: currentUser.email,
+        email: currentUser?.email,
       });
 
       if (link) {

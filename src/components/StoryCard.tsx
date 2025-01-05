@@ -58,7 +58,7 @@ const StoryCard = ({ story }: Props) => {
         {story.deleted_at && (
           <p className="flex items-center gap-2 text-xs text-card-foreground/60">
             <FontAwesomeIcon icon={faCalendar} /> Deleted on{" "}
-            {format(story.deleted_at as Date, "MMM do, yyyy")}
+            {format(story.deleted_at, "MMM do, yyyy")}
           </p>
         )}
       </header>

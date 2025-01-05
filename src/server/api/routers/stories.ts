@@ -128,6 +128,7 @@ export const storyRouter = createTRPCRouter({
           redditPostId: input.post_id,
           subject: formatSubject(input.title),
           to: author,
+          from: ctx.session.user.id,
         });
 
         return true;

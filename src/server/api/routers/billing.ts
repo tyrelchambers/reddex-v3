@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { stripeClient } from "~/utils/stripe";
+import { getCustomerPortalLink, stripeClient } from "~/utils/stripe";
 import { prisma } from "~/server/db";
 import Stripe from "stripe";
 import { captureException } from "@sentry/nextjs";
@@ -75,8 +75,7 @@ export const billingRouter = createTRPCRouter({
   }),
   updateLink: protectedProcedure.mutation(() => {
     try {
-      const url = "https://billing.stripe.com/p/login/test_fZe4iffki7hw9lm9AA";
-      return url;
+      return getCustomerPortalLink();
     } catch (error) {
       captureException(error);
     }

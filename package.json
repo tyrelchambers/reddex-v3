@@ -13,6 +13,7 @@
     "stripe:listen": "stripe listen --forward-to http://localhost:3001/api/webhooks/stripe"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@eslint/eslintrc": "^3.2.0",

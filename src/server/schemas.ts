@@ -142,3 +142,12 @@ export const subscriptionSchema = z.object({
 });
 
 export const sendInboxMessage = z.ZodType<InboxMessage>;
+
+export const shopSchema = z.object({
+  id: z.string().optional(),
+  token: z.string().nullable(),
+  verifiedConnection: z.boolean().nullable(),
+  enabled: z.boolean(),
+  websiteId: z.string(),
+  type: z.string().nullable(),
+});

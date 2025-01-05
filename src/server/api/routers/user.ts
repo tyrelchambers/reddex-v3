@@ -112,24 +112,40 @@ export const userRouter = createTRPCRouter({
 
     const sub = subscriptionQuery.data[0];
 
+    let deleteOn;
+
     if (!sub) {
-      throw new Error("No subscription found");
+      console.log("No subscription found");
+    } else if (isActiveSubscription(sub)) {
+      const deletedSub = await stripeClient.subscriptions.update(sub.id, {
+        cancel_at_period_end: true,
+      });
+
+      if (deletedSub.cancel_at) {
+        deleteOn = new Date(deletedSub.cancel_at * 1000);
+      }
     }
 
-    const deletedSub = await stripeClient.subscriptions.update(sub.id, {
-      cancel_at_period_end: true,
-    });
+    if (!deleteOn) {
+      return await prisma.user.delete({
+        where: {
+          id: ctx.session.user.id,
+        },
+      });
+    } else {
+      await prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          deleteOnDate: deleteOn,
+        },
+      });
 
-    return await prisma.user.update({
-      where: {
-        id: ctx.session.user.id,
-      },
-      data: {
-        deleteOnDate: deletedSub.cancel_at
-          ? new Date(deletedSub.cancel_at * 1000)
-          : null,
-      },
-    });
+      return {
+        scheduled: true,
+      };
+    }
   }),
   cancelDeletion: protectedProcedure.mutation(async ({ ctx }) => {
     const subscriptionQuery = await stripeClient.subscriptions.search({

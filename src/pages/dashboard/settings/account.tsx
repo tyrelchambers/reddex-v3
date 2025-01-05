@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { settingsTabs } from "~/routes";
+import { routes, settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
 import SubscriptionCard from "~/components/SubscriptionCard";
 import { captureException } from "@sentry/nextjs";
@@ -10,15 +10,25 @@ import { getPrices } from "~/constants";
 import AccountDeletionBanner from "~/components/AccountDeletionBanner";
 import CancelAccountDeletionBanner from "~/components/CancelAccountDeletionBanner";
 import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 const Settings = () => {
+  const router = useRouter();
   const apiCtx = api.useUtils();
   const { data: currentUser } = api.user.me.useQuery();
   const subscriptionQuery = api.billing.info.useQuery();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const invoices = subscriptionQuery.data?.invoices;
   const paymentLink = api.stripe.createCheckout.useMutation();
-  const deleteMutation = api.user.deleteAccount.useMutation();
+  const deleteMutation = api.user.deleteAccount.useMutation({
+    onSuccess: async (data) => {
+      if (!("scheduled" in data)) {
+        await apiCtx.user.me.invalidate();
+        toast.success("Account deleted");
+        router.push(routes.HOME);
+      }
+    },
+  });
   const cancelDeletionMutation = api.user.cancelDeletion.useMutation();
 
   const [loadingPaymentLink, setLoadingPaymentLink] = useState(false);

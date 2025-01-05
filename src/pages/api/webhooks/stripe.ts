@@ -44,27 +44,6 @@ export default async function handler(
 
       const userId = subscription.metadata.userId;
 
-      if (isActiveSubscription(subscription)) {
-        await prisma.website.update({
-          where: {
-            userId,
-          },
-          data: {
-            canBeEnabled: true,
-          },
-        });
-      } else {
-        await prisma.website.update({
-          where: {
-            userId,
-          },
-          data: {
-            canBeEnabled: false,
-            hidden: true,
-          },
-        });
-      }
-
       if (!subscription.cancel_at_period_end) {
         await prisma.user.update({
           where: {
@@ -108,12 +87,16 @@ export default async function handler(
         return res.send(400);
       }
 
+      const customerQuery = await stripeClient.customers.retrieve(
+        customer as string,
+      );
+
       await prisma.user.update({
         where: {
           id: user.id,
         },
         data: {
-          customerId: isStripeCustomer(customer) ? customer.id : null,
+          email: isStripeCustomer(customerQuery) ? customerQuery.email : null,
         },
       });
 

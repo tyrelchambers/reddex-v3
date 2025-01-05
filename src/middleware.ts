@@ -5,6 +5,10 @@ const knownWebsites = [
   "/astheravendreams/submit",
   "/storiesaftermidnight",
   "/storiesaftermidnight/submit",
+  "/to_42reads",
+  "/to_42reads/submit",
+  "/gothicrose",
+  "/gothicrose/submit",
 ];
 
 export function middleware(request: NextRequest) {

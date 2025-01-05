@@ -74,6 +74,8 @@ export const websiteGeneralSchema = z.object({
   patreon: z.union([z.string(), z.undefined()]).nullable(),
   podcast: z.union([z.string(), z.undefined()]).nullable(),
   youtube: z.union([z.string(), z.undefined()]).nullable(),
+  tiktok: z.union([z.string(), z.undefined()]).nullable(),
+  ohcleo: z.union([z.string(), z.undefined()]).nullable(),
   banner: z.string().optional().nullable(),
   thumbnail: z.string().optional().nullable(),
 });

@@ -87,9 +87,7 @@ export const websiteRouter = createTRPCRouter({
           where: {
             userId: ctx.session.user.id,
           },
-          data: {
-            ...input,
-          },
+          data: input,
         });
       } catch (error) {
         captureException(error);
@@ -104,9 +102,7 @@ export const websiteRouter = createTRPCRouter({
           where: {
             userId: ctx.session.user.id,
           },
-          data: {
-            ...input,
-          },
+          data: input,
         });
       } catch (error) {
         captureException(error);

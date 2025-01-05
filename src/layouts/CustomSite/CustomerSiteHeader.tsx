@@ -4,8 +4,10 @@ import {
   faYoutube,
   faPatreon,
   faFacebook,
+  faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
+import { faHashtag } from "@fortawesome/pro-solid-svg-icons";
 import { SubmissionPage, Website } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,26 +26,42 @@ const CustomerSiteHeader = ({ website }: Props) => {
     {
       url: website.twitter,
       icon: faTwitter,
+      app: "twitter",
     },
     {
       url: website.instagram,
       icon: faInstagram,
+      app: "instagram",
     },
     {
       url: website.youtube,
       icon: faYoutube,
+      app: "youtube",
     },
     {
       url: website.patreon,
       icon: faPatreon,
+      app: "patreon",
     },
     {
       url: website.podcast,
       icon: faPodcast,
+      app: "podcast",
     },
     {
       url: website.facebook,
       icon: faFacebook,
+      app: "facebook",
+    },
+    {
+      url: website.ohcleo,
+      icon: faHashtag,
+      app: "ohcleo",
+    },
+    {
+      url: website.tiktok,
+      icon: faTiktok,
+      app: "tiktok",
     },
   ];
 

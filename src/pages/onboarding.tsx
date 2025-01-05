@@ -1,9 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import LoadingScreen from "~/components/LoadingScreen";
+import { useEffect } from "react";
 import { getPrices } from "~/constants";
-import AccountSetup from "~/layouts/AccountSetup";
 import { routes } from "~/routes";
 import { isActiveSubscription } from "~/utils";
 import { api } from "~/utils/api";
@@ -18,19 +16,13 @@ const Onboarding = () => {
   const checkoutMutation = api.stripe.createCheckout.useMutation();
   const user = userQuery.data;
 
-  const loading = userQuery.isLoading;
-
   useEffect(() => {
     const redirectTo = (router.query.redirectTo as string) || routes.HOME;
     const plan = router.query.plan as string;
 
     const fn = async () => {
       if (user) {
-        if (
-          user.email &&
-          user.subscription &&
-          isActiveSubscription(user.subscription)
-        ) {
+        if (user.subscription && isActiveSubscription(user.subscription)) {
           router.push(redirectTo);
         }
 
@@ -50,9 +42,7 @@ const Onboarding = () => {
     fn();
   }, [user, userQuery.data, router.isReady]);
 
-  if (loading) return <LoadingScreen />;
-
-  return <AccountSetup />;
+  return null;
 };
 
 export default Onboarding;

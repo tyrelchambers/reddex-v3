@@ -2,11 +2,12 @@ import {
   faFacebook,
   faInstagram,
   faPatreon,
-  faTwitter,
+  faTiktok,
+  faXTwitter,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
-import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons";
+import { faCheckCircle, faHashtag } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
@@ -88,6 +89,8 @@ const General = () => {
       patreon: "",
       podcast: "",
       youtube: "",
+      tiktok: "",
+      ohcleo: "",
     },
   });
   const formValues = form.getValues();
@@ -332,7 +335,7 @@ const General = () => {
                       <div className="flex items-center gap-4">
                         <FontAwesomeIcon
                           className="text-foreground/70"
-                          icon={faTwitter}
+                          icon={faXTwitter}
                         />
                         <Input placeholder="@username" {...field} />
                       </div>
@@ -415,6 +418,38 @@ const General = () => {
                         />
 
                         <Input placeholder="Podcast link" {...field} />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="tiktok"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center gap-4">
+                        <FontAwesomeIcon
+                          className="text-foreground/70"
+                          icon={faTiktok}
+                        />
+
+                        <Input placeholder="@username" {...field} />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="ohcleo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center gap-4">
+                        <FontAwesomeIcon
+                          className="text-foreground/70"
+                          icon={faHashtag}
+                        />
+
+                        <Input placeholder="OhCleo link" {...field} />
                       </div>
                     </FormItem>
                   )}

@@ -1,6 +1,6 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -160,6 +160,8 @@ model Website {
   patreon              String?
   youtube              String?
   podcast              String?
+  tiktok               String?
+  ohcleo               String?
   theme                String         @default("light")
   colour               String         @default("#000")
   banner               String?

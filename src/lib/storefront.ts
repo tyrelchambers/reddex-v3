@@ -26,6 +26,11 @@ export class Fourthwall implements Storefront {
     return query.data;
   }
 
+  public async getProducts(id: string) {
+    const query = await this.api().get(`/collections/${id}/products`);
+    return query.data;
+  }
+
   private api() {
     return axios.create({
       baseURL: this.url,

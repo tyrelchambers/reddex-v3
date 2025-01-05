@@ -151,3 +151,14 @@ export const shopSchema = z.object({
   websiteId: z.string(),
   type: z.string().nullable(),
 });
+
+export const collectionSchema = z.object({
+  id: z.string().optional(),
+  collectionId: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  description: z.string(),
+  shopId: z.string(),
+  enabled: z.boolean(),
+  products: z.array(z.any()).optional(),
+});

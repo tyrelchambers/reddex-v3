@@ -29,3 +29,11 @@ export const saveInboxMessage = async (
     },
   });
 };
+
+export const getCollectionFromDb = async (id: string) => {
+  return await prisma.shopCollection.findUnique({
+    where: {
+      collectionId: id,
+    },
+  });
+};

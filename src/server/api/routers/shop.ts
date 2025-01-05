@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { Fourthwall } from "~/lib/storefront";
 import { captureException } from "@sentry/node";
 import { prisma } from "~/server/db";
-import { shopSchema } from "~/server/schemas";
+import { collectionSchema, shopSchema } from "~/server/schemas";
+import { getCollectionFromDb } from "~/utils/index.server";
 
 export const shopRouter = createTRPCRouter({
   verifyConnection: protectedProcedure
@@ -68,5 +73,57 @@ export const shopRouter = createTRPCRouter({
           websiteId: input,
         },
       });
+    }),
+  collections: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      if (!input) return;
+      try {
+        const storefront = new Fourthwall(input);
+
+        const collections = await storefront.getCollections();
+        const payload = [];
+
+        if ("results" in collections) {
+          for (let index = 0; index < collections.results.length; index++) {
+            const element = collections.results[index];
+            const products = await storefront.getProducts(element.slug);
+
+            element.products = products.results;
+
+            const coll = await getCollectionFromDb(element.id);
+            if (coll) {
+              element.enabled = coll.enabled;
+            }
+
+            payload.push(element);
+          }
+        }
+
+        return payload;
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
+    }),
+  updateCollection: protectedProcedure
+    .input(collectionSchema)
+    .mutation(async ({ input }) => {
+      try {
+        return await prisma.shopCollection.upsert({
+          where: {
+            collectionId: input.collectionId,
+          },
+          create: {
+            ...input,
+          },
+          update: {
+            ...input,
+          },
+        });
+      } catch (error) {
+        captureException(error);
+        throw error;
+      }
     }),
 });

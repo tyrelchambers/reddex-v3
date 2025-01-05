@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { withSentryConfig } from "@sentry/nextjs";
+import { hostname } from "os";
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
@@ -20,6 +21,9 @@ const config = {
       },
       {
         hostname: "reddex.s3.amazonaws.com",
+      },
+      {
+        hostname: "cdn.fourthwall.com",
       },
     ],
   },

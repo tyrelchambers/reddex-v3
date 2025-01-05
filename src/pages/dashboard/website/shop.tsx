@@ -1,16 +1,11 @@
-import {
-  faCheckCircle,
-  faRefresh,
-  faTimesCircle,
-} from "@fortawesome/pro-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Shop } from "@prisma/client";
 import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
+import Collections from "~/components/dashboard/shop/Collections";
+import EnableShop from "~/components/dashboard/shop/EnableShop";
+import ShopConfig from "~/components/dashboard/shop/ShopConfig";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Switch } from "~/components/ui/switch";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
@@ -19,7 +14,6 @@ import { api } from "~/utils/api";
 
 const ShopIntegration = () => {
   const apiContext = api.useUtils();
-  const { data: user } = api.user.me.useQuery();
 
   const [integrationConfig, setIntegrationConfig] = useState<
     z.infer<typeof shopSchema>
@@ -51,6 +45,13 @@ const ShopIntegration = () => {
       apiContext.shop.invalidate();
     },
   });
+
+  const shopCollections = api.shop.collections.useQuery(
+    shopSettings.data?.token ?? "",
+    {
+      enabled: shopSettings.data?.token !== undefined,
+    },
+  );
 
   useEffect(() => {
     if (shopSettings.data) {
@@ -84,6 +85,12 @@ const ShopIntegration = () => {
     });
   };
 
+  const updateConfig = (data: Partial<Shop>) => {
+    setIntegrationConfig({
+      ...integrationConfig,
+      ...data,
+    });
+  };
   return (
     <WrapperWithNav tabs={websiteTabItems}>
       <BodyWithLoader
@@ -95,21 +102,13 @@ const ShopIntegration = () => {
           Integrate with Fourthwall to add a storefront to your Reddex website.
         </p>
 
-        <div className="mt-10 flex flex-col gap-4">
-          <div className="flex items-center gap-10 rounded-lg border border-border p-4">
-            <h2 className="text-xl font-medium">Enable shop</h2>
-            <Switch
-              checked={integrationConfig.enabled}
-              onCheckedChange={(v) =>
-                update({
-                  enabled: v,
-                })
-              }
-            />
-          </div>
+        <div className="mt-10 flex flex-col gap-8">
+          <EnableShop integrationConfig={integrationConfig} update={update} />
 
-          <div className="mt-4 rounded-lg border border-border p-4">
-            <h2 className="text-xl font-medium">Fourthwall configuration</h2>
+          <div className="rounded-lg border border-border p-4">
+            <h2 className="text-xl font-medium text-foreground">
+              Fourthwall configuration
+            </h2>
             <p className="text-muted-foreground">
               In order to authenticate with your store, add in your API key
               here. Visit your Fourthwall dashboard to find your API key.{" "}
@@ -119,49 +118,21 @@ const ShopIntegration = () => {
               &#34;your-storefront-name.fourthwall.com/admin/dashboard/settings/for-developers&#34;
             </p>
 
-            <div className="flex flex-col">
-              <div className="mt-4 flex items-center gap-2">
-                <Input
-                  placeholder="ptkn_***"
-                  value={integrationConfig.token ?? ""}
-                  onChange={(e) =>
-                    setIntegrationConfig({
-                      ...integrationConfig,
-                      token: e.target.value,
-                    })
-                  }
-                />
-                <Button
-                  type="button"
-                  disabled={!integrationConfig.token}
-                  onClick={verify}
-                >
-                  <FontAwesomeIcon icon={faRefresh} className="mr-2" />
-                  Verify connection
-                </Button>
-              </div>
-              {integrationConfig.verifiedConnection !== null && (
-                <>
-                  {integrationConfig.verifiedConnection ? (
-                    <div className="mt-2 flex items-center gap-2 rounded-md bg-green-50 p-2 px-4 text-green-500">
-                      <FontAwesomeIcon icon={faCheckCircle} />
-                      <span className="text-sm text-green-800">
-                        Connection verified!
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="mt-2 flex items-center gap-2 bg-red-50 p-2 px-4 text-red-500">
-                      <FontAwesomeIcon icon={faTimesCircle} />
-                      <span className="text-sm text-red-800">
-                        Connection not verified
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+            <ShopConfig
+              integrationConfig={integrationConfig}
+              update={updateConfig}
+              verify={verify}
+            />
           </div>
-          <Button type="button" className="mt-10 w-fit" onClick={save}>
+
+          {shopCollections.data && (
+            <Collections
+              shopId={shopSettings.data?.id ?? ""}
+              collections={shopCollections.data}
+            />
+          )}
+
+          <Button type="button" className="w-fit" onClick={save}>
             Save changes
           </Button>
         </div>

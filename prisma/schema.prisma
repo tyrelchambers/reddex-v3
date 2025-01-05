@@ -215,3 +215,13 @@ model Shop {
   websiteId          String   @unique
   enabled            Boolean  @default(false)
 }
+
+model ShopCollection {
+  id           String  @id @default(cuid())
+  collectionId String  @unique
+  name         String
+  slug         String
+  description  String
+  shopId       String
+  enabled      Boolean @default(false)
+}

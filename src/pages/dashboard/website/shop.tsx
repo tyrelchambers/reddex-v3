@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Shop } from "@prisma/client";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import Collections from "~/components/dashboard/shop/Collections";
 import EnableShop from "~/components/dashboard/shop/EnableShop";
@@ -43,6 +44,7 @@ const ShopIntegration = () => {
   const updateStore = api.shop.update.useMutation({
     onSuccess: () => {
       apiContext.shop.invalidate();
+      toast.success("Shop settings saved");
     },
   });
 

@@ -8,7 +8,6 @@ import { Fourthwall } from "~/lib/storefront";
 import { captureException } from "@sentry/node";
 import { prisma } from "~/server/db";
 import { collectionSchema, shopSchema } from "~/server/schemas";
-import { getCollectionFromDb } from "~/utils/index.server";
 
 export const shopRouter = createTRPCRouter({
   verifyConnection: protectedProcedure

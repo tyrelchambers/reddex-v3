@@ -57,7 +57,7 @@ const Integrations = () => {
             className="form mt-10"
           >
             <FormField
-              name="youtube"
+              name="youtubeIntegrationId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Youtube</FormLabel>

@@ -81,26 +81,9 @@ export const shopRouter = createTRPCRouter({
       try {
         const storefront = new Fourthwall(input);
 
-        const collections = await storefront.getCollections();
-        const payload = [];
+        const collections = await storefront.collectionsWithProducts();
 
-        if ("results" in collections) {
-          for (let index = 0; index < collections.results.length; index++) {
-            const element = collections.results[index];
-            const products = await storefront.getProducts(element.slug);
-
-            element.products = products.results;
-
-            const coll = await getCollectionFromDb(element.id);
-            if (coll) {
-              element.enabled = coll.enabled;
-            }
-
-            payload.push(element);
-          }
-        }
-
-        return payload;
+        return collections;
       } catch (error) {
         captureException(error);
         throw error;
@@ -125,5 +108,49 @@ export const shopRouter = createTRPCRouter({
         captureException(error);
         throw error;
       }
+    }),
+  collectionsFromDb: protectedProcedure
+    .input(z.string())
+    .query(async ({ input }) => {
+      const shop = await prisma.shop.findFirst({
+        where: {
+          websiteId: input,
+        },
+      });
+
+      if (!shop?.token) return;
+
+      const storefront = new Fourthwall(shop.token);
+
+      const collections = await prisma.shopCollection.findMany({
+        where: {
+          shopId: shop?.id,
+          enabled: true,
+        },
+      });
+
+      const payload = [];
+
+      for (let index = 0; index < collections.length; index++) {
+        const element = collections[index];
+        if (!element) continue;
+
+        const elementWithProducts = {
+          ...element,
+        };
+
+        const products = await storefront.getProducts(element.slug);
+
+        element.products = products.results;
+
+        const coll = await getCollectionFromDb(element.id);
+        if (coll) {
+          element.enabled = coll.enabled;
+        }
+
+        payload.push(element);
+      }
+
+      return collections;
     }),
 });

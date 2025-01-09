@@ -12,6 +12,7 @@ import {
   faTag,
   faUser,
   faBolt,
+  faStore,
 } from "@fortawesome/pro-solid-svg-icons";
 
 import { Tab } from "./types";
@@ -99,6 +100,7 @@ export const websiteTabItems = [
     slug: "integrations",
     icon: faPuzzlePiece,
   },
+  { label: "Shop", slug: "shop", icon: faStore },
 ];
 
 export const storiesTabs: Tab[] = [

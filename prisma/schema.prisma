@@ -206,3 +206,22 @@ model InboxMessage {
   createdAt    DateTime @default(now())
   from         String   @default("")
 }
+
+model Shop {
+  id                 String   @id @default(cuid())
+  type               String?
+  verifiedConnection Boolean?
+  token              String?
+  websiteId          String   @unique
+  enabled            Boolean  @default(false)
+}
+
+model ShopCollection {
+  id           String  @id @default(cuid())
+  collectionId String  @unique
+  name         String
+  slug         String
+  description  String
+  shopId       String
+  enabled      Boolean @default(false)
+}

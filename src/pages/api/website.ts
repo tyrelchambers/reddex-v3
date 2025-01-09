@@ -87,11 +87,16 @@ export default async function handler(
     },
   });
 
-  const storefront = new Fourthwall(shop?.token as string);
+  let shopCollections;
 
-  const collections = await storefront.collectionsWithProducts();
+  if (shop) {
+    const storefront = new Fourthwall(shop?.token as string);
 
-  console.log(collections);
+    const enabledCollections = await storefront.getEnabledCollections(shop?.id);
 
-  res.json({ website, shop: collections });
+    shopCollections =
+      await storefront.collectionsWithProducts(enabledCollections);
+  }
+
+  res.json({ website, shop: shopCollections });
 }

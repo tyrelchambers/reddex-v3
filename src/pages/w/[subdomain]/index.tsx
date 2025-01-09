@@ -9,7 +9,6 @@ import CustomerSiteHeader from "~/layouts/CustomSite/CustomerSiteHeader";
 import { useEffect } from "react";
 import Image from "next/image";
 import { api } from "~/utils/api";
-import CustomCollections from "~/components/customWebsite/CustomCollections";
 
 interface Props {
   website: (Website & { submissionPage: SubmissionPage }) | null;
@@ -36,12 +35,9 @@ interface YoutubeResponse {
 }
 
 const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
-  const collections = api.shop.collectionsFromDb.useQuery(
-    website?.id as string,
-    {
-      enabled: !!website?.id,
-    },
-  );
+  const collections = api.shop.collections.useQuery(website?.id as string, {
+    enabled: !!website?.id,
+  });
   useEffect(() => {
     const html = document.querySelector("html");
     if (html) {
@@ -75,8 +71,6 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
             </p>
           </div>
         )}
-
-        {collections.data && <CustomCollections websiteId={website.id} />}
 
         {youtubeVideos && (
           <section className="my-20">

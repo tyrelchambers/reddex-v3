@@ -41,6 +41,7 @@ const server = z.object({
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
   NEXT_PUBLIC_MIXPANEL_TOKEN: z.string(),
+  NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
 /**
@@ -67,6 +68,7 @@ const processEnv = {
   MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN,
   NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
   YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
+  NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
 };
 
 // Don't touch the part below

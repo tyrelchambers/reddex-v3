@@ -38,6 +38,7 @@ import { websiteGeneralSchema } from "~/server/schemas";
 import { z } from "zod";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { toast } from "sonner";
+import { env } from "~/env";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -47,7 +48,7 @@ registerPlugin(
 );
 
 const URL =
-  process.env.NEXT_PUBLIC_NODE_ENV === "production"
+  env.NEXT_PUBLIC_NODE_ENV === "production"
     ? `https://reddex.app/`
     : `http://localhost:3001/`;
 

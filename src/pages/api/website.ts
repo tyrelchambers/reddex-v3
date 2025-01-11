@@ -68,7 +68,7 @@ export default async function handler(
 
   const website = await prisma.website.findFirst({
     where: {
-      subdomain: site,
+      subdomain: regexSiteName,
     },
     include: {
       submissionPage: {

@@ -82,6 +82,7 @@ export default async function handler(
       },
     },
   });
+
   const shop = await prisma.shop.findFirst({
     where: {
       websiteId: website?.id,
@@ -98,6 +99,8 @@ export default async function handler(
     shopCollections =
       await storefront.collectionsWithProducts(enabledCollections);
   }
+
+  console.log("Returning website with ID: ", website?.id);
 
   res.json({ website, shop: shopCollections });
 }

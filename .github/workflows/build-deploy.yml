@@ -51,6 +51,7 @@ jobs:
             "MIXPANEL_TOKEN=${{ secrets.MIXPANEL_TOKEN }}"
             "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}"
             "NEXT_PUBLIC_MIXPANEL_TOKEN=${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}"
+            "NEXT_PUBLIC_NODE_ENV=production"
   deploy:
     needs: [build-web]
     runs-on: ubuntu-latest

@@ -68,6 +68,9 @@ export default async function handler(
 
   const site = req.query.site as string;
 
+  const regexSiteName = site.replace(/^([^.]+)\.reddex\.app$/, "");
+  console.log("Findin site for ", regexSiteName);
+
   const website = await prisma.website.findFirst({
     where: {
       subdomain: site,

@@ -15,14 +15,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const site = "storiesaftermidnight.reddex.app";
+
+  const regexSiteName = site.match(/^([^.]+)\.reddex\.app$/)?.[1];
+  console.log("Findin site for ", regexSiteName);
+
   if (req.method === "POST") {
+    const input = req.body as Props;
     try {
-      const site = req.query.site as string;
-      const input = req.body as Props;
-
-      const regexSiteName = site.replace(/^([^.]+)\.reddex\.app$/, "");
-      console.log("Findin site for ", regexSiteName);
-
       const website = await prisma.website.findFirst({
         where: {
           subdomain: regexSiteName,
@@ -65,12 +65,6 @@ export default async function handler(
       res.status(500);
     }
   }
-
-  const site = req.query.site as string;
-
-  const regexSiteName = site.replace(/^([^.]+)\.reddex\.app$/, "");
-  console.log("Findin site for ", regexSiteName);
-  console.log("Request", req);
 
   const website = await prisma.website.findFirst({
     where: {

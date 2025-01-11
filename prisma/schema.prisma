@@ -15,7 +15,7 @@ model Account {
   provider          String
   providerAccountId String
   refresh_token     String?
-  access_token      String? @db.Text
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
@@ -40,9 +40,9 @@ model User {
   email            String?            @unique
   emailVerified    DateTime?
   image            String?
+  customerId       String?
   deleteOnDate     DateTime?
   lastLogin        DateTime?
-  customerId       String?
   accounts         Account[]
   contact          Contact[]
   ContactedWriters ContactedWriters[]
@@ -160,8 +160,6 @@ model Website {
   patreon              String?
   youtube              String?
   podcast              String?
-  tiktok               String?
-  ohcleo               String?
   theme                String         @default("light")
   colour               String         @default("#000")
   banner               String?
@@ -170,6 +168,8 @@ model Website {
   submissionPageId     String         @unique
   youtubeIntegrationId String?
   canBeEnabled         Boolean?
+  ohcleo               String?
+  tiktok               String?
   submissionPage       SubmissionPage @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
   user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -224,4 +224,75 @@ model ShopCollection {
   description  String
   shopId       String
   enabled      Boolean @default(false)
+}
+
+model cache {
+  key        String @id @db.VarChar(255)
+  value      String
+  expiration Int
+}
+
+model cache_locks {
+  key        String @id @db.VarChar(255)
+  owner      String @db.VarChar(255)
+  expiration Int
+}
+
+model failed_jobs {
+  id         BigInt   @id @default(autoincrement())
+  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
+  connection String
+  queue      String
+  payload    String
+  exception  String
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model job_batches {
+  id             String  @id @db.VarChar(255)
+  name           String  @db.VarChar(255)
+  total_jobs     Int
+  pending_jobs   Int
+  failed_jobs    Int
+  failed_job_ids String
+  options        String?
+  cancelled_at   Int?
+  created_at     Int
+  finished_at    Int?
+}
+
+model jobs {
+  id           BigInt @id @default(autoincrement())
+  queue        String @db.VarChar(255)
+  payload      String
+  attempts     Int    @db.SmallInt
+  reserved_at  Int?
+  available_at Int
+  created_at   Int
+
+  @@index([queue], map: "jobs_queue_index")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement())
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model password_reset_tokens {
+  email      String    @id @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+}
+
+model sessions {
+  id            String  @id @db.VarChar(255)
+  user_id       BigInt?
+  ip_address    String? @db.VarChar(45)
+  user_agent    String?
+  payload       String
+  last_activity Int
+
+  @@index([last_activity], map: "sessions_last_activity_index")
+  @@index([user_id], map: "sessions_user_id_index")
 }

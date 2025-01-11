@@ -15,7 +15,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const site = "storiesaftermidnight.reddex.app";
+  const site = req.query.site as string;
 
   const regexSiteName = site.match(/^([^.]+)\.reddex\.app$/)?.[1];
   console.log("Findin site for ", regexSiteName);

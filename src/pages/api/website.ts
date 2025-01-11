@@ -70,7 +70,7 @@ export default async function handler(
 
   const regexSiteName = site.replace(/^([^.]+)\.reddex\.app$/, "");
   console.log("Findin site for ", regexSiteName);
-  console.log("Request", JSON.stringify(req));
+  console.log("Request", req);
 
   const website = await prisma.website.findFirst({
     where: {

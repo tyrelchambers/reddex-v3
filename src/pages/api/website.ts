@@ -66,7 +66,7 @@ export default async function handler(
     }
   }
 
-  const website = await prisma.website.findFirst({
+  const website = await prisma.website.findUnique({
     where: {
       subdomain: regexSiteName,
     },

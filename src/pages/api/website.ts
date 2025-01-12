@@ -83,7 +83,7 @@ export default async function handler(
     },
   });
 
-  const shop = await prisma.shop.findFirst({
+  const shop = await prisma.shop.findUnique({
     where: {
       websiteId: website?.id,
     },

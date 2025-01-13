@@ -43,6 +43,7 @@ export const shopRouter = createTRPCRouter({
             token: input.token,
             type: input.type,
             websiteId: input.websiteId,
+            shopUrl: input.shopUrl,
           },
           update: {
             token: input.token,
@@ -50,6 +51,7 @@ export const shopRouter = createTRPCRouter({
             verifiedConnection: input.verifiedConnection,
             enabled: input.enabled,
             websiteId: input.websiteId,
+            shopUrl: input.shopUrl,
           },
         });
       } catch (error) {
@@ -83,7 +85,6 @@ export const shopRouter = createTRPCRouter({
         const collectionsFromStore = await storefront.getCollections();
         const collections =
           await storefront.collectionsWithProducts(collectionsFromStore);
-        console.log(collections);
 
         return collections;
       } catch (error) {

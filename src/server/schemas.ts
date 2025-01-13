@@ -150,6 +150,7 @@ export const shopSchema = z.object({
   enabled: z.boolean(),
   websiteId: z.string(),
   type: z.string().nullable(),
+  shopUrl: z.string().nullable(),
 });
 
 export const collectionSchema = z.object({

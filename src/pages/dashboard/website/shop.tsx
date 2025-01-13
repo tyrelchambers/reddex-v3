@@ -7,6 +7,8 @@ import Collections from "~/components/dashboard/shop/Collections";
 import EnableShop from "~/components/dashboard/shop/EnableShop";
 import ShopConfig from "~/components/dashboard/shop/ShopConfig";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
@@ -24,6 +26,7 @@ const ShopIntegration = () => {
     enabled: false,
     websiteId: "",
     type: "fourthwall",
+    shopUrl: "",
   });
 
   const websiteSettings = api.website.settings.useQuery();
@@ -93,6 +96,14 @@ const ShopIntegration = () => {
       ...data,
     });
   };
+
+  const addShopUrl = () => {
+    update({
+      ...integrationConfig,
+      shopUrl: integrationConfig.shopUrl,
+    });
+  };
+
   return (
     <WrapperWithNav tabs={websiteTabItems}>
       <BodyWithLoader
@@ -106,6 +117,25 @@ const ShopIntegration = () => {
 
         <div className="mt-10 flex flex-col gap-8">
           <EnableShop integrationConfig={integrationConfig} update={update} />
+
+          <div className="rounded-xl bg-card p-4">
+            <Label>Shop URL</Label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="https://shop.example.com"
+                onChange={(e) =>
+                  setIntegrationConfig({
+                    ...integrationConfig,
+                    shopUrl: e.target.value,
+                  })
+                }
+                value={integrationConfig.shopUrl ?? ""}
+              />
+              <Button type="button" onClick={addShopUrl}>
+                Save
+              </Button>
+            </div>
+          </div>
 
           <div className="rounded-lg border border-border p-4">
             <h2 className="text-xl font-medium text-foreground">

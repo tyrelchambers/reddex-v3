@@ -212,6 +212,7 @@ model Shop {
   type               String?
   verifiedConnection Boolean?
   token              String?
+  shopUrl            String?
   websiteId          String   @unique
   enabled            Boolean  @default(false)
 }

@@ -100,7 +100,5 @@ export default async function handler(
       await storefront.collectionsWithProducts(enabledCollections);
   }
 
-  console.log("Returning website with ID: ", website?.id);
-
-  res.json({ website, shop: shopCollections });
+  res.json({ website, shop, shopCollections });
 }

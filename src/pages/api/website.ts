@@ -17,7 +17,9 @@ export default async function handler(
 ) {
   const site = req.query.site as string;
 
-  const regexSiteName = site.match(/^([^.]+)\.reddex\.app$/)?.[1];
+  const regexSiteName = site.match(
+    /^([a-zA-Z0-9_-]+)\.[^.]+$|^([a-zA-Z0-9_-]+)$/,
+  )?.[1];
   console.log("Findin site for ", regexSiteName);
 
   if (req.method === "POST") {

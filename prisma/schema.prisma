@@ -149,29 +149,31 @@ model SubmittedStory {
 }
 
 model Website {
-  id                   String         @id @default(cuid())
-  hidden               Boolean        @default(true)
-  subdomain            String?        @unique
-  name                 String?
-  description          String?
-  twitter              String?
-  facebook             String?
-  instagram            String?
-  patreon              String?
-  youtube              String?
-  podcast              String?
-  theme                String         @default("light")
-  colour               String         @default("#000")
-  banner               String?
-  thumbnail            String?
-  userId               String         @unique
-  submissionPageId     String         @unique
-  youtubeIntegrationId String?
-  canBeEnabled         Boolean?
-  ohcleo               String?
-  tiktok               String?
-  submissionPage       SubmissionPage @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
-  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                    String               @id @default(cuid())
+  hidden                Boolean              @default(true)
+  subdomain             String?              @unique
+  name                  String?
+  description           String?
+  twitter               String?
+  facebook              String?
+  instagram             String?
+  patreon               String?
+  youtube               String?
+  podcast               String?
+  theme                 String               @default("light")
+  colour                String               @default("#000")
+  banner                String?
+  thumbnail             String?
+  userId                String               @unique
+  submissionPageId      String               @unique
+  youtubeIntegrationId  String?
+  canBeEnabled          Boolean?
+  ohcleo                String?
+  tiktok                String?
+  customDomain          WebsiteCustomDomain? @relation(fields: [websiteCustomDomainId], references: [id])
+  websiteCustomDomainId String?              @unique
+  submissionPage        SubmissionPage       @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
+  user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SubmissionPage {
@@ -225,6 +227,13 @@ model ShopCollection {
   description  String
   shopId       String
   enabled      Boolean @default(false)
+}
+
+model WebsiteCustomDomain {
+  id       String   @id @default(cuid())
+  domain   String
+  verified Boolean
+  Website  Website?
 }
 
 model cache {

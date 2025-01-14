@@ -7,7 +7,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
-import { faCheckCircle, faHashtag } from "@fortawesome/pro-solid-svg-icons";
+import { faHashtag } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
@@ -30,15 +30,14 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
 import { Separator } from "~/components/ui/separator";
-import { Badge } from "~/components/ui/badge";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { websiteGeneralSchema } from "~/server/schemas";
 import { z } from "zod";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { toast } from "sonner";
-import { env } from "~/env";
+import SubdomainField from "~/components/dashboard/website/SubdomainField";
+import AddCustomDomainModal from "~/components/modals/AddCustomDomainModal";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -46,11 +45,6 @@ registerPlugin(
   FilePondPluginFileValidateSize,
   FilePondPluginImageResize,
 );
-
-const URL =
-  env.NEXT_PUBLIC_NODE_ENV === "production"
-    ? `https://reddex.app/`
-    : `http://localhost:3001/`;
 
 const General = () => {
   const apiContext = api.useUtils();
@@ -75,6 +69,16 @@ const General = () => {
   });
   const websiteSettings = api.website.settings.useQuery();
   const websiteVisibility = api.website.visibility.useQuery();
+  const deleteCustomDomain = api.website.removeCustomDomain.useMutation({
+    onSuccess: () => {
+      apiContext.website.invalidate();
+      toast.success("Domain removed");
+    },
+    onError: () => {
+      toast.error("Failed to remove domain");
+    },
+  });
+
   const thumbnailRef = useRef<FilePond | null>(null);
   const bannerRef = useRef<FilePond | null>(null);
 
@@ -162,6 +166,21 @@ const General = () => {
     hideWebsite.mutate(false);
   };
 
+  const deleteCustomDomainHandler = () => {
+    if (
+      !websiteSettings.data?.customDomain ||
+      !websiteSettings.data?.customDomain?.id ||
+      !websiteSettings.data?.customDomain?.domain
+    )
+      return;
+
+    deleteCustomDomain.mutate({
+      id: websiteSettings.data?.customDomain?.id,
+      domainName: websiteSettings.data?.customDomain?.domain,
+      websiteId: websiteSettings.data?.id,
+    });
+  };
+
   return (
     <WrapperWithNav tabs={websiteTabItems}>
       <BodyWithLoader
@@ -200,32 +219,45 @@ const General = () => {
             className="form my-10"
             onSubmit={form.handleSubmit(submitHandler)}
           >
-            <div className="flex w-full flex-col">
-              <FormField
-                name="subdomain"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Subdomain</FormLabel>
-                    <Input placeholder="Your custom subdomain" {...field} />
-                  </FormItem>
-                )}
-              />
-              <Link
-                href={`${URL}w/${
-                  websiteSettings.data?.subdomain ?? subdomainFormWatch ?? ""
-                }`}
-                target="_blank"
-              >
-                <Badge className="mt-2 w-fit" variant="outline">
-                  {URL}w/{subdomainFormWatch}
-                </Badge>
-              </Link>
-              {subdomainFormWatch && subdomainAvailable && (
-                <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
-                  <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
-                  available
-                </span>
+            <header className="mb-4">
+              <h3 className="text-2xl font-medium text-foreground">
+                Domain management
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                By default, your site will be hosted at:{" "}
+                {"[subdomain].reddex.app"}
+              </p>
+            </header>
+            <div className="overflow-hidden rounded-xl border border-border bg-card">
+              {websiteSettings.data?.customDomain ? (
+                <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-800 to-gray-500 p-4">
+                  <p className="mb-2 font-medium text-white">
+                    Using custom domain
+                  </p>
+
+                  <div className="rounded-md bg-background/50 p-2 px-6 text-foreground backdrop-blur-lg">
+                    {websiteSettings.data.customDomain.domain}
+                  </div>
+                </div>
+              ) : (
+                <SubdomainField
+                  subdomain={subdomainFormWatch ?? ""}
+                  subdomainAvailable={subdomainAvailable}
+                />
               )}
+
+              <footer className="bg-secondary-foreground/10 p-4">
+                {websiteSettings.data?.customDomain ? (
+                  <Button
+                    variant="destructive"
+                    onClick={deleteCustomDomainHandler}
+                  >
+                    Remove custom domain
+                  </Button>
+                ) : (
+                  <AddCustomDomainModal />
+                )}
+              </footer>
             </div>
 
             <FormField

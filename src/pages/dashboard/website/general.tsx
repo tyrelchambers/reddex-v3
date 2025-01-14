@@ -7,7 +7,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
-import { faHashtag } from "@fortawesome/pro-solid-svg-icons";
+import { faHashtag, faRotate } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
@@ -38,6 +38,8 @@ import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { toast } from "sonner";
 import SubdomainField from "~/components/dashboard/website/SubdomainField";
 import AddCustomDomainModal from "~/components/modals/AddCustomDomainModal";
+import { ping } from "~/utils";
+import Ping from "~/components/dashboard/website/Ping";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -248,12 +250,15 @@ const General = () => {
 
               <footer className="bg-secondary-foreground/10 p-4">
                 {websiteSettings.data?.customDomain ? (
-                  <Button
-                    variant="destructive"
-                    onClick={deleteCustomDomainHandler}
-                  >
-                    Remove custom domain
-                  </Button>
+                  <div className="flex items-center justify-between">
+                    <Button
+                      variant="destructive"
+                      onClick={deleteCustomDomainHandler}
+                    >
+                      Remove custom domain
+                    </Button>
+                    <Ping domain={websiteSettings.data.customDomain.domain} />
+                  </div>
                 ) : (
                   <AddCustomDomainModal />
                 )}

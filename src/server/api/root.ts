@@ -11,6 +11,7 @@ import { stripeRouter } from "./routers/stripe";
 import { statsRouter } from "./routers/stats";
 import { overviewRouter } from "./routers/overview";
 import { shopRouter } from "./routers/shop";
+import { pingRouter } from "./routers/ping";
 /**
  * This is the primary router for your server.
  *
@@ -29,6 +30,7 @@ export const appRouter = createTRPCRouter({
   stats: statsRouter,
   overview: overviewRouter,
   shop: shopRouter,
+  ping: pingRouter,
 });
 
 // export type definition of API

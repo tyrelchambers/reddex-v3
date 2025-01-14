@@ -12,6 +12,7 @@ import {
 import Stripe from "stripe";
 import { isDeletedCustomer, isStripeCustomer } from "./typeguards";
 import queryString, { ParsedQuery } from "query-string";
+import axios from "axios";
 
 export const addLastSearchedOrUpdate = async () => {
   const exists = await db.lastSearched.get(1);
@@ -240,4 +241,8 @@ export const isActiveSubscription = (subscription: Stripe.Subscription) => {
     subscription.status === "trialing" ||
     subscription.status === "past_due"
   );
+};
+
+export const ping = async (url: string) => {
+  return (await axios.get(`https://${url}`)).status === 200;
 };

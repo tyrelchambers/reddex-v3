@@ -100,7 +100,7 @@ export const websiteTabItems = [
     slug: "integrations",
     icon: faPuzzlePiece,
   },
-  // { label: "Shop", slug: "shop", icon: faStore },
+  { label: "Shop", slug: "shop", icon: faStore },
 ];
 
 export const storiesTabs: Tab[] = [

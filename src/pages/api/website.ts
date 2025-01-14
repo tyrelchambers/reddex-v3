@@ -16,18 +16,21 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const site = req.query.site as string;
+  console.log("site", site);
 
-  const regexSiteName = site.match(
-    /^([a-zA-Z0-9_-]+)\.[^.]+$|^([a-zA-Z0-9_-]+)$/,
-  )?.[1];
-  console.log("Findin site for ", regexSiteName);
+  console.log("Findin site for ", site);
+
+  if (!site) {
+    res.status(400);
+    return;
+  }
 
   if (req.method === "POST") {
     const input = req.body as Props;
     try {
       const website = await prisma.website.findFirst({
         where: {
-          subdomain: regexSiteName,
+          subdomain: site,
         },
         include: {
           user: true,
@@ -70,7 +73,7 @@ export default async function handler(
 
   const website = await prisma.website.findUnique({
     where: {
-      subdomain: regexSiteName,
+      subdomain: site,
     },
     include: {
       submissionPage: {

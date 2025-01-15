@@ -233,8 +233,16 @@ const General = () => {
             <div className="overflow-hidden rounded-xl border border-border bg-card">
               {websiteSettings.data?.customDomain ? (
                 <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-800 to-gray-500 p-4">
-                  <p className="mb-2 font-medium text-white">
-                    Using custom domain
+                  <p className="font-semibold text-white">Custom domain</p>
+                  <p className="mb-4 text-sm text-white">
+                    Add your custom domain below. After that, make sure to
+                    configure your DNS records. Want some{" "}
+                    <a
+                      href="https://reddex.mintlify.app/"
+                      className="text-link underline"
+                    >
+                      help?
+                    </a>
                   </p>
 
                   <div className="rounded-md bg-background/50 p-2 px-6 text-foreground backdrop-blur-lg">

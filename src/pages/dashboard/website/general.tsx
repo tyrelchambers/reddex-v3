@@ -246,14 +246,14 @@ const General = () => {
                       </a>
                     </p>
 
-                    <div className="flex items-center gap-4">
-                      <div className="flex flex-1 rounded-md bg-background/50 p-2 px-6 text-foreground backdrop-blur-lg">
+                    <div className="flex flex-col items-center gap-4 sm:flex-row">
+                      <div className="flex w-full rounded-md bg-background/50 p-2 px-2 text-foreground backdrop-blur-lg md:px-6">
                         {websiteSettings.data.customDomain.domain}
                       </div>
                       <a
                         href={`https://${websiteSettings.data.customDomain.domain}`}
                         target="_blank"
-                        className="flex h-full items-center gap-2 rounded-md bg-green-200/50 p-2 px-4 text-green-100 transition-all hover:bg-green-400 hover:text-foreground"
+                        className="flex h-full w-full items-center gap-2 rounded-md bg-green-200/50 p-2 px-4 text-green-100 transition-all hover:bg-green-400 hover:text-foreground sm:w-auto"
                       >
                         <FontAwesomeIcon
                           icon={faExternalLink}
@@ -272,7 +272,7 @@ const General = () => {
 
                 <footer className="bg-secondary-foreground/10 p-4">
                   {websiteSettings.data?.customDomain ? (
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col items-center justify-between gap-4 *:w-full md:flex-row md:*:w-auto">
                       <Button
                         variant="destructive"
                         onClick={deleteCustomDomainHandler}

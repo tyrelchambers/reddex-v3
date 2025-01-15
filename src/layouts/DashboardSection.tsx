@@ -22,14 +22,7 @@ const DashboardSection = ({
         )}
       </header>
 
-      <section
-        className={clsx(
-          "flex flex-col gap-4",
-          background && "rounded-2xl bg-card p-6",
-        )}
-      >
-        {children}
-      </section>
+      <section className={clsx("flex flex-col gap-4")}>{children}</section>
     </div>
   );
 };

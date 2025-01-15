@@ -25,21 +25,19 @@ const Ping = ({ domain }: Props) => {
     pingRouter.mutate(domain);
   };
   return (
-    <div>
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={checkConnection}
-        disabled={pingRouter.isPending}
-      >
-        <FontAwesomeIcon
-          icon={faRotate}
-          className="mr-2"
-          spin={pingRouter.isPending}
-        />
-        Check connection
-      </Button>
-    </div>
+    <Button
+      type="button"
+      variant="secondary"
+      onClick={checkConnection}
+      disabled={pingRouter.isPending}
+    >
+      <FontAwesomeIcon
+        icon={faRotate}
+        className="mr-2"
+        spin={pingRouter.isPending}
+      />
+      Check connection
+    </Button>
   );
 };
 

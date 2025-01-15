@@ -18,6 +18,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
+import DashboardSection from "~/layouts/DashboardSection";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { settingsTabs } from "~/routes";
 import { api } from "~/utils/api";
@@ -96,51 +97,51 @@ const Profile = () => {
   return (
     <WrapperWithNav tabs={settingsTabs}>
       <div className="flex w-full max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
-        <h1 className="text-3xl font-bold text-foreground">Profile</h1>
-        <Form {...profileForm}>
-          <form
-            className="form"
-            onSubmit={profileForm.handleSubmit(saveProfileHandler)}
-          >
-            <div className="flex flex-col gap-4">
-              <FormField
-                name="words_per_minute"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Words per minute</FormLabel>
-                    <FormDescription>
-                      This will help better calculate the time it takes to read
-                      a story.
-                    </FormDescription>
-                    <Input type="number" {...field} />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <DashboardSection
+          title="Profile"
+          subtitle="Update your profile details here"
+        >
+          <Form {...profileForm}>
+            <form
+              className="form"
+              onSubmit={profileForm.handleSubmit(saveProfileHandler)}
+            >
+              <div className="flex flex-col gap-4">
+                <FormField
+                  name="words_per_minute"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Words per minute</FormLabel>
+                      <FormDescription>
+                        This will help better calculate the time it takes to
+                        read a story.
+                      </FormDescription>
+                      <Input type="number" {...field} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Add your email</FormLabel>
-                    <Input
-                      type="email"
-                      placeholder="Add your email"
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Button type="submit">Save profile</Button>
-          </form>
-        </Form>
-        <Separator />
+                <FormField
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Add your email</FormLabel>
+                      <Input
+                        type="email"
+                        placeholder="Add your email"
+                        {...field}
+                      />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button type="submit">Save profile</Button>
+            </form>
+          </Form>
+        </DashboardSection>
 
-        <div className="flex flex-col">
-          <h2 className="mb-4 text-xl font-medium text-foreground">
-            Recent searches
-          </h2>
+        <DashboardSection title="Recent searches" background>
           {currentUser?.Profile?.searches &&
           currentUser?.Profile?.searches.length > 0 ? (
             <div className="flex gap-4">
@@ -160,17 +161,12 @@ const Profile = () => {
               ))}
             </div>
           ) : (
-            <div className="flex justify-center rounded-xl bg-card p-4">
-              <p className="fint-thin text-sm text-card-foreground">
-                Nothing searched yet.
-              </p>
-            </div>
+            <p className="fint-thin text-center text-sm text-card-foreground">
+              Nothing searched yet.
+            </p>
           )}
-        </div>
-        <Separator />
-        <div className="flex flex-col">
-          <h2 className="mb-4 text-xl font-medium text-foreground">Messages</h2>
-
+        </DashboardSection>
+        <DashboardSection title="Greetings" background>
           <Form {...messagesForm}>
             <form
               className="form"
@@ -207,7 +203,7 @@ const Profile = () => {
               </Button>
             </form>
           </Form>
-        </div>
+        </DashboardSection>
       </div>
     </WrapperWithNav>
   );

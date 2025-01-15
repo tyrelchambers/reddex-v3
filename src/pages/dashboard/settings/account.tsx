@@ -11,6 +11,7 @@ import AccountDeletionBanner from "~/components/AccountDeletionBanner";
 import CancelAccountDeletionBanner from "~/components/CancelAccountDeletionBanner";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
+import DashboardSection from "~/layouts/DashboardSection";
 
 const Settings = () => {
   const router = useRouter();
@@ -87,13 +88,11 @@ const Settings = () => {
       <section className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
         <h1 className="text-3xl font-bold text-foreground">Account</h1>
 
-        <div className="flex flex-col">
-          <h2 className="text-xl font-medium text-foreground">Billing</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            You can manage your subscription through Stripe. There you can
-            update your billing information, cancel or update your plan.
-          </p>
-
+        <DashboardSection
+          title="Billing details"
+          subtitle="You can manage your subscription through Stripe. There you can
+              update your billing information, cancel or update your plan."
+        >
           {currentUser?.subscription ? (
             <SubscriptionCard
               subscription={currentUser.subscription}
@@ -108,7 +107,7 @@ const Settings = () => {
               createSubscriptionHandler={createSubscriptionHandler}
             />
           )}
-        </div>
+        </DashboardSection>
 
         <Separator className="border-border" />
         {currentUser?.deleteOnDate ? (

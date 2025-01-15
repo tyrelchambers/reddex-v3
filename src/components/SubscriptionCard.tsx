@@ -39,7 +39,7 @@ const SubscriptionCard = ({ subscription, invoices }: Props) => {
   });
 
   return (
-    <div className="mt-4 flex flex-col gap-2 rounded-xl border-[1px] border-border p-4">
+    <div className="flex flex-col gap-2">
       <header className="flex justify-between text-card-foreground">
         <p className="text-sm">
           <span className="font-semibold">Your plan:</span>{" "}
@@ -85,7 +85,7 @@ const SubscriptionCard = ({ subscription, invoices }: Props) => {
         {invoices && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="ghost">
+              <Button variant="outline">
                 View invoices{" "}
                 <FontAwesomeIcon icon={faReceipt} className="ml-2" />
               </Button>

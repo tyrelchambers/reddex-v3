@@ -50,7 +50,7 @@ const Overview = () => {
           </Card>
 
           <Card>
-            <CardContent className="bg-background p-6">
+            <CardContent className="h-full bg-background p-6">
               <h2 className="text-xl text-foreground">
                 Recently approved stories
               </h2>

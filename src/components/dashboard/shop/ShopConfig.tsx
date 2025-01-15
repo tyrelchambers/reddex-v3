@@ -43,9 +43,9 @@ const ShopConfig = ({ integrationConfig, update, verify }: Props) => {
       {integrationConfig.verifiedConnection !== null && (
         <>
           {integrationConfig.verifiedConnection ? (
-            <div className="mt-2 flex items-center gap-2 rounded-md bg-green-50 p-2 px-4 text-green-500">
+            <div className="mt-2 flex items-center gap-2 rounded-md bg-green-50 p-2 px-4 text-green-500 dark:bg-green-900">
               <FontAwesomeIcon icon={faCheckCircle} />
-              <span className="text-sm text-green-800">
+              <span className="text-sm text-green-800 dark:text-green-300">
                 Connection verified!
               </span>
             </div>

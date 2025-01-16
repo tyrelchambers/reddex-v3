@@ -28,7 +28,7 @@ import FileUpload from "~/components/FileUpload";
 import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
@@ -233,9 +233,11 @@ const General = () => {
             >
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 {websiteSettings.data?.customDomain ? (
-                  <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-800 to-gray-500 p-4">
-                    <p className="font-semibold text-white">Custom domain</p>
-                    <p className="mb-4 text-sm text-white">
+                  <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-400 to-gray-200 p-4 dark:from-zinc-800 dark:to-zinc-600">
+                    <p className="font-semibold text-foreground">
+                      Custom domain
+                    </p>
+                    <p className="mb-4 text-sm text-foreground/70">
                       Add your custom domain below. After that, make sure to
                       configure your DNS records. Want some{" "}
                       <a
@@ -253,11 +255,11 @@ const General = () => {
                       <a
                         href={`https://${websiteSettings.data.customDomain.domain}`}
                         target="_blank"
-                        className="flex h-full w-full items-center gap-2 rounded-md bg-green-200/50 p-2 px-4 text-green-100 transition-all hover:bg-green-400 hover:text-foreground sm:w-auto"
+                        className={buttonVariants({ variant: "secondary" })}
                       >
                         <FontAwesomeIcon
                           icon={faExternalLink}
-                          className="text-sm"
+                          className="mr-2 text-sm"
                         />
                         <p>Visit</p>
                       </a>

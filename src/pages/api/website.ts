@@ -96,8 +96,8 @@ export default async function handler(
 
   let shopCollections;
 
-  if (shop) {
-    const storefront = new Fourthwall(shop?.token as string);
+  if (shop && shop.token) {
+    const storefront = new Fourthwall(shop.token);
 
     const enabledCollections = await storefront.getEnabledCollections(shop?.id);
 

@@ -105,7 +105,14 @@ export const storyRouter = createTRPCRouter({
           })
           .then(async (res) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (!res.data.success) throw new Error("Failed to send message");
+            if (!res.data.success) {
+              if (res.data instanceof Error) {
+                throw new Error(`Failed to send message: ${res.data.message}`);
+              }
+              console.log(JSON.stringify(res.data));
+
+              throw new Error("Failed to send message");
+            }
 
             const { message, ...rest } = input;
             await prisma.redditPost.create({

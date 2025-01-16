@@ -6,7 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fromUnixTime } from "date-fns";
 import { format } from "date-fns";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   FormattedMessagesList,
   MixpanelEvents,
@@ -96,6 +96,10 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
     },
   });
 
+  useEffect(() => {
+    form.reset();
+  }, [message]);
+
   if (!message) return null;
 
   const formattedMessages = formatInboxMessagesToList(message);
@@ -151,7 +155,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
             target="_blank"
           >
             <FontAwesomeIcon icon={faUserCircle} />
-            <span className="text-sm text-muted-foreground">
+            <span className="whitespace-nowrap text-sm text-muted-foreground">
               {message.dest}
             </span>
           </a>

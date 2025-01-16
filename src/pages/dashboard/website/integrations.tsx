@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
+import DashboardSection from "~/layouts/DashboardSection";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { websiteIntegrationsSchema } from "~/server/schemas";
@@ -46,31 +47,29 @@ const Integrations = () => {
         isLoading={websiteSettings.isPending}
         loadingMessage="Loading website integrations..."
       >
-        <h1 className="text-2xl font-bold text-foreground">Integrations</h1>
-        <p className="text-sm text-muted-foreground">
-          Any integration field that lacks a value will not show up on your
-          website.
-        </p>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(submitHandler)}
-            className="form mt-10"
-          >
-            <FormField
-              name="youtubeIntegrationId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Youtube</FormLabel>
-                  <Input placeholder="Youtube channel ID" {...field} />
-                </FormItem>
-              )}
-            />
+        <DashboardSection
+          title="Integrations"
+          subtitle="   Any integration field that lacks a value will not show up on your
+            website."
+        >
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(submitHandler)} className="form">
+              <FormField
+                name="youtubeIntegrationId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Youtube</FormLabel>
+                    <Input placeholder="Youtube channel ID" {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <Button type="submit" className="w-fit">
-              Save changes
-            </Button>
-          </form>
-        </Form>
+              <Button type="submit" className="w-fit">
+                Save changes
+              </Button>
+            </form>
+          </Form>
+        </DashboardSection>
       </BodyWithLoader>
     </WrapperWithNav>
   );

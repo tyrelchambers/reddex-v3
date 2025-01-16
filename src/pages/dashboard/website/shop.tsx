@@ -138,17 +138,20 @@ const ShopIntegration = () => {
           </div>
 
           <div className="rounded-lg border border-border p-4">
-            <h2 className="text-xl font-medium text-foreground">
-              Fourthwall configuration
-            </h2>
-            <p className="text-muted-foreground">
-              In order to authenticate with your store, add in your API key
-              here. Visit your Fourthwall dashboard to find your API key.{" "}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Your API key can be found at this URL (replace with your own name)
-              &#34;your-storefront-name.fourthwall.com/admin/dashboard/settings/for-developers&#34;
-            </p>
+            <header className="flex flex-col gap-2">
+              <h2 className="text-xl font-medium text-foreground">
+                Fourthwall configuration
+              </h2>
+              <p className="text-muted-foreground">
+                In order to authenticate with your store, add in your API key
+                here. Visit your Fourthwall dashboard to find your API key.{" "}
+              </p>
+              <p className="text-xs italic text-muted-foreground">
+                Your API key can be found at this URL (replace with your own
+                name)
+                &#34;your-storefront-name.fourthwall.com/admin/dashboard/settings/for-developers&#34;
+              </p>
+            </header>
 
             <ShopConfig
               integrationConfig={integrationConfig}

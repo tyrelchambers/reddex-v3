@@ -163,3 +163,10 @@ export const collectionSchema = z.object({
   enabled: z.boolean(),
   products: z.array(z.any()).optional(),
 });
+
+export const websiteCustomDomainSchema = z.object({
+  id: z.string().optional(),
+  domain: z.string(),
+  websiteId: z.string(),
+  verified: z.boolean(),
+});

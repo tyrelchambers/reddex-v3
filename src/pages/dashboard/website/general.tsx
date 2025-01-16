@@ -7,7 +7,11 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
-import { faCheckCircle, faHashtag } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faExternalLink,
+  faHashtag,
+  faRotate,
+} from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
@@ -24,21 +28,23 @@ import FileUpload from "~/components/FileUpload";
 import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
 import { Separator } from "~/components/ui/separator";
-import { Badge } from "~/components/ui/badge";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { websiteGeneralSchema } from "~/server/schemas";
 import { z } from "zod";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { toast } from "sonner";
-import { env } from "~/env";
+import SubdomainField from "~/components/dashboard/website/SubdomainField";
+import AddCustomDomainModal from "~/components/modals/AddCustomDomainModal";
+import { ping } from "~/utils";
+import Ping from "~/components/dashboard/website/Ping";
+import DashboardSection from "~/layouts/DashboardSection";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -46,11 +52,6 @@ registerPlugin(
   FilePondPluginFileValidateSize,
   FilePondPluginImageResize,
 );
-
-const URL =
-  env.NEXT_PUBLIC_NODE_ENV === "production"
-    ? `https://reddex.app/`
-    : `http://localhost:3001/`;
 
 const General = () => {
   const apiContext = api.useUtils();
@@ -75,6 +76,16 @@ const General = () => {
   });
   const websiteSettings = api.website.settings.useQuery();
   const websiteVisibility = api.website.visibility.useQuery();
+  const deleteCustomDomain = api.website.removeCustomDomain.useMutation({
+    onSuccess: () => {
+      apiContext.website.invalidate();
+      toast.success("Domain removed");
+    },
+    onError: () => {
+      toast.error("Failed to remove domain");
+    },
+  });
+
   const thumbnailRef = useRef<FilePond | null>(null);
   const bannerRef = useRef<FilePond | null>(null);
 
@@ -162,6 +173,21 @@ const General = () => {
     hideWebsite.mutate(false);
   };
 
+  const deleteCustomDomainHandler = () => {
+    if (
+      !websiteSettings.data?.customDomain ||
+      !websiteSettings.data?.customDomain?.id ||
+      !websiteSettings.data?.customDomain?.domain
+    )
+      return;
+
+    deleteCustomDomain.mutate({
+      id: websiteSettings.data?.customDomain?.id,
+      domainName: websiteSettings.data?.customDomain?.domain,
+      websiteId: websiteSettings.data?.id,
+    });
+  };
+
   return (
     <WrapperWithNav tabs={websiteTabItems}>
       <BodyWithLoader
@@ -200,263 +226,307 @@ const General = () => {
             className="form my-10"
             onSubmit={form.handleSubmit(submitHandler)}
           >
-            <div className="flex w-full flex-col">
+            <DashboardSection
+              title="Domain management"
+              subtitle="By default, your site will be hosted at: [subdomain].reddex.app"
+              background={false}
+            >
+              <div className="overflow-hidden rounded-xl border border-border bg-card">
+                {websiteSettings.data?.customDomain ? (
+                  <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-400 to-gray-200 p-4 dark:from-zinc-800 dark:to-zinc-600">
+                    <p className="font-semibold text-foreground">
+                      Custom domain
+                    </p>
+                    <p className="mb-4 text-sm text-foreground/70">
+                      Add your custom domain below. After that, make sure to
+                      configure your DNS records. Want some{" "}
+                      <a
+                        href="https://reddex.mintlify.app/"
+                        className="text-link underline"
+                      >
+                        help?
+                      </a>
+                    </p>
+
+                    <div className="flex flex-col items-center gap-4 sm:flex-row">
+                      <div className="flex w-full rounded-md bg-background/50 p-2 px-2 text-foreground backdrop-blur-lg md:px-6">
+                        {websiteSettings.data.customDomain.domain}
+                      </div>
+                      <a
+                        href={`https://${websiteSettings.data.customDomain.domain}`}
+                        target="_blank"
+                        className={buttonVariants({ variant: "secondary" })}
+                      >
+                        <FontAwesomeIcon
+                          icon={faExternalLink}
+                          className="mr-2 text-sm"
+                        />
+                        <p>Visit</p>
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <SubdomainField
+                    subdomain={subdomainFormWatch ?? ""}
+                    subdomainAvailable={subdomainAvailable}
+                  />
+                )}
+
+                <footer className="bg-secondary-foreground/10 p-4">
+                  {websiteSettings.data?.customDomain ? (
+                    <div className="flex flex-col items-center justify-between gap-4 *:w-full md:flex-row md:*:w-auto">
+                      <Button
+                        variant="destructive"
+                        onClick={deleteCustomDomainHandler}
+                      >
+                        Remove custom domain
+                      </Button>
+                      <Ping domain={websiteSettings.data.customDomain.domain} />
+                    </div>
+                  ) : (
+                    <AddCustomDomainModal />
+                  )}
+                </footer>
+              </div>
+            </DashboardSection>
+
+            <DashboardSection
+              title="General details"
+              subtitle="General details about your website."
+              background
+            >
               <FormField
-                name="subdomain"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Subdomain</FormLabel>
-                    <Input placeholder="Your custom subdomain" {...field} />
+                    <FormLabel>Name of your site</FormLabel>
+                    <Input
+                      placeholder="Name of your site"
+                      required
+                      {...field}
+                    />
                   </FormItem>
                 )}
               />
-              <Link
-                href={`${URL}w/${
-                  websiteSettings.data?.subdomain ?? subdomainFormWatch ?? ""
-                }`}
-                target="_blank"
-              >
-                <Badge className="mt-2 w-fit" variant="outline">
-                  {URL}w/{subdomainFormWatch}
-                </Badge>
-              </Link>
-              {subdomainFormWatch && subdomainAvailable && (
-                <span className="mt-2 flex items-center gap-2 text-sm text-green-500">
-                  <FontAwesomeIcon icon={faCheckCircle} /> Subdomain is
-                  available
-                </span>
-              )}
-            </div>
 
-            <FormField
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name of your site</FormLabel>
-                  <Input placeholder="Name of your site" required {...field} />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Site description</FormLabel>
-                  <Textarea
-                    placeholder="Let people know who you are"
-                    {...field}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex flex-col">
-              <p className="label text-foreground">Thumbnail</p>
-              <p className="sublabel text-muted-foreground">
-                Optimal image size 200 x 200
-              </p>
-              {!websiteSettings.data?.thumbnail ? (
-                <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
-              ) : (
-                <div className="flex flex-col">
-                  <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
-                    <Image
-                      src={websiteSettings.data.thumbnail}
-                      alt=""
-                      width={200}
-                      height={200}
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Site description</FormLabel>
+                    <Textarea
+                      placeholder="Let people know who you are"
+                      rows={10}
+                      {...field}
                     />
-                  </div>
-                  <Button
-                    variant="secondary"
-                    className="mt-4"
-                    onClick={() =>
-                      websiteSettings.data?.thumbnail &&
-                      removeImage.mutate({
-                        type: "thumbnail",
-                        url: websiteSettings.data?.thumbnail,
-                      })
-                    }
-                  >
-                    Remove thumbnail
-                  </Button>
-                </div>
-              )}
-            </div>
+                  </FormItem>
+                )}
+              />
 
-            <div className="flex flex-col">
-              <p className="label text-foreground">Cover image</p>
-              <p className="sublabel text-muted-foreground">
-                Optimal image size 1500 x 500
-              </p>
-              {!websiteSettings.data?.banner ? (
-                <FileUpload uploadRef={bannerRef} type="banner" />
-              ) : (
-                <div className="flex flex-col">
-                  <div className="overflow-hidden rounded-xl">
-                    <Image
-                      src={websiteSettings.data.banner}
-                      alt=""
-                      width={672}
-                      height={200}
-                    />
+              <div className="flex flex-col">
+                <p className="label text-foreground">Thumbnail</p>
+                <p className="sublabel text-muted-foreground">
+                  Optimal image size 200 x 200
+                </p>
+                {!websiteSettings.data?.thumbnail ? (
+                  <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
+                ) : (
+                  <div className="flex flex-col">
+                    <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
+                      <Image
+                        src={websiteSettings.data.thumbnail}
+                        alt=""
+                        width={200}
+                        height={200}
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="mt-4"
+                      onClick={() =>
+                        websiteSettings.data?.thumbnail &&
+                        removeImage.mutate({
+                          type: "thumbnail",
+                          url: websiteSettings.data?.thumbnail,
+                        })
+                      }
+                    >
+                      Remove thumbnail
+                    </Button>
                   </div>
-                  <Button
-                    variant="secondary"
-                    className="mt-4"
-                    onClick={() =>
-                      websiteSettings.data?.banner &&
-                      removeImage.mutate({
-                        type: "banner",
-                        url: websiteSettings.data?.banner,
-                      })
-                    }
-                  >
-                    Remove banner
-                  </Button>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+
+              <div className="flex flex-col">
+                <p className="label text-foreground">Cover image</p>
+                <p className="sublabel text-muted-foreground">
+                  Optimal image size 1500 x 500
+                </p>
+                {!websiteSettings.data?.banner ? (
+                  <FileUpload uploadRef={bannerRef} type="banner" />
+                ) : (
+                  <div className="flex flex-col">
+                    <div className="relative h-[300px] overflow-hidden rounded-xl">
+                      <Image
+                        src={websiteSettings.data.banner}
+                        objectFit="cover"
+                        alt=""
+                        fill
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="mt-4"
+                      onClick={() =>
+                        websiteSettings.data?.banner &&
+                        removeImage.mutate({
+                          type: "banner",
+                          url: websiteSettings.data?.banner,
+                        })
+                      }
+                    >
+                      Remove banner
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </DashboardSection>
             <Separator className="my-4" />
 
-            <section className="flex flex-col">
-              <h2 className="text-xl text-foreground">Social media</h2>
-              <p className="font-thin text-foreground/70">
-                The links below will appear as social icons on your site. These
-                are not required, and the icons will not appear on your site if
-                you leave them blank.
-              </p>
+            <DashboardSection
+              title="Social media"
+              subtitle=" The links below will appear as social icons on your site.
+                  These are not required, and the icons will not appear on your
+                  site if you leave them blank."
+              background
+            >
+              <FormField
+                name="twitter"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faXTwitter}
+                      />
+                      <Input placeholder="@username" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              <div className="mt-6 flex flex-col gap-3">
-                <FormField
-                  name="twitter"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faXTwitter}
-                        />
-                        <Input placeholder="@username" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="facebook"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faFacebook}
+                      />
 
-                <FormField
-                  name="facebook"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faFacebook}
-                        />
+                      <Input placeholder="Facebook link" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                        <Input placeholder="Facebook link" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="instagram"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faInstagram}
+                      />
 
-                <FormField
-                  name="instagram"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faInstagram}
-                        />
+                      <Input placeholder="@username" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                        <Input placeholder="@username" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="patreon"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faPatreon}
+                      />
 
-                <FormField
-                  name="patreon"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faPatreon}
-                        />
+                      <Input placeholder="Patreon link" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                        <Input placeholder="Patreon link" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="youtube"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faYoutube}
+                      />
 
-                <FormField
-                  name="youtube"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faYoutube}
-                        />
+                      <Input placeholder="Youtube link" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                        <Input placeholder="Youtube link" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="podcast"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faPodcast}
+                      />
 
-                <FormField
-                  name="podcast"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faPodcast}
-                        />
+                      <Input placeholder="Podcast link" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                        <Input placeholder="Podcast link" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="tiktok"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faTiktok}
+                      />
 
-                <FormField
-                  name="tiktok"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faTiktok}
-                        />
+                      <Input placeholder="@username" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                        <Input placeholder="@username" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="ohcleo"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-4">
+                      <FontAwesomeIcon
+                        className="text-foreground/70"
+                        icon={faHashtag}
+                      />
 
-                <FormField
-                  name="ohcleo"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center gap-4">
-                        <FontAwesomeIcon
-                          className="text-foreground/70"
-                          icon={faHashtag}
-                        />
-
-                        <Input placeholder="OhCleo link" {...field} />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </section>
+                      <Input placeholder="OhCleo link" {...field} />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </DashboardSection>
             <Separator className="my-4" />
 
             <Button

@@ -16,8 +16,10 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
+import DashboardSection from "~/layouts/DashboardSection";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
 import { websiteTabItems } from "~/routes";
 import { websiteSubmissionSchema } from "~/server/schemas";
@@ -120,75 +122,76 @@ const SubmissionForm = () => {
         isLoading={websiteSettings.isPending}
         loadingMessage="Loading submission form settings..."
       >
-        <h1 className="text-2xl font-bold text-foreground">Submission form</h1>
-
-        {submissionFormVisibility.data?.hidden ? (
-          <StatusBanner
-            title="Enable Submission Page"
-            subtitle="Enable this submission form to allow visitors to email you their own stories."
-            action={
-              <Button variant="defaultInvert" onClick={visibilityHandler}>
-                Enable submission form
-              </Button>
-            }
-          />
-        ) : (
-          <StatusBanner
-            type="secondary"
-            title="Hide Submission Page"
-            subtitle="Hide your submission page so others can't send you stories."
-            action={
-              <Button variant="default" onClick={visibilityHandler}>
-                Hide
-              </Button>
-            }
-          />
-        )}
-
+        <div className="mb-4">
+          {" "}
+          {submissionFormVisibility.data?.hidden ? (
+            <StatusBanner
+              title="Enable Submission Page"
+              subtitle="Enable this submission form to allow visitors to email you their own stories."
+              action={
+                <Button variant="defaultInvert" onClick={visibilityHandler}>
+                  Enable submission form
+                </Button>
+              }
+            />
+          ) : (
+            <StatusBanner
+              type="secondary"
+              title="Hide Submission Page"
+              subtitle="Hide your submission page so others can't send you stories."
+              action={
+                <Button variant="default" onClick={visibilityHandler}>
+                  Hide
+                </Button>
+              }
+            />
+          )}
+        </div>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(submitHandler)}
-            className="form mt-4"
-          >
-            <FormField
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Page title</FormLabel>
-                  <Input
-                    placeholder="Your submission form page title"
-                    {...field}
-                  />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="subtitle"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Page subtitle</Label>
-                  <Input placeholder="Subtitle" {...field} />
-                </FormItem>
-              )}
-            />
+          <form onSubmit={form.handleSubmit(submitHandler)} className="form">
+            <DashboardSection title="Submission form">
+              <FormField
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Page title</FormLabel>
+                    <Input
+                      placeholder="Your submission form page title"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="subtitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label>Page subtitle</Label>
+                    <Input placeholder="Subtitle" {...field} />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <Textarea
-                    placeholder="List any rules for submissions or any information you want people to know"
-                    {...field}
-                  />
-                </FormItem>
-              )}
-            />
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <Textarea
+                      placeholder="List any rules for submissions or any information you want people to know"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+            </DashboardSection>
 
-            <section className="flex flex-col gap-4">
-              <p className="text-xl text-foreground">Customize modules</p>
-
-              <div className="flex flex-col rounded-xl bg-card p-4">
+            <DashboardSection
+              title="Customize modules"
+              subtitle="Collect writer information using the modules below."
+              background
+            >
+              <div className="flex flex-col rounded-xl border border-border bg-background p-4">
                 <p className="label font-bold capitalize text-card-foreground">
                   Title
                 </p>
@@ -237,7 +240,8 @@ const SubmissionForm = () => {
                   />
                 </div>
               </div>
-              <div className="flex flex-col rounded-xl bg-card p-4">
+
+              <div className="flex flex-col rounded-xl border border-border bg-background p-4">
                 <p className="label font-bold capitalize text-card-foreground">
                   Author
                 </p>
@@ -286,7 +290,8 @@ const SubmissionForm = () => {
                   />
                 </div>
               </div>
-              <div className="flex flex-col rounded-xl bg-card p-4">
+
+              <div className="flex flex-col rounded-xl border border-border bg-background p-4">
                 <p className="label font-bold capitalize text-card-foreground">
                   Email
                 </p>
@@ -335,7 +340,7 @@ const SubmissionForm = () => {
                   />
                 </div>
               </div>
-            </section>
+            </DashboardSection>
 
             <Button type="submit" className="w-fit">
               Save changes

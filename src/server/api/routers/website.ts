@@ -4,6 +4,7 @@ import { prisma } from "~/server/db";
 import {
   removeImageSchema,
   submitSchema,
+  websiteCustomDomainSchema,
   websiteGeneralSchema,
   websiteIntegrationsSchema,
   websiteSubmissionSchema,
@@ -13,6 +14,7 @@ import axios from "axios";
 import { env } from "process";
 import { captureException } from "@sentry/nextjs";
 import { sendEmail } from "~/utils/sendMail";
+import { createDeployment, deleteDeployment } from "~/lib/k8s";
 
 export const websiteRouter = createTRPCRouter({
   checkAvailableSubdomain: protectedProcedure
@@ -36,6 +38,7 @@ export const websiteRouter = createTRPCRouter({
             submissionFormModules: true,
           },
         },
+        customDomain: true,
       },
     });
   }),
@@ -294,4 +297,46 @@ export const websiteRouter = createTRPCRouter({
       });
     }
   }),
+  addCustomDomain: protectedProcedure
+    .input(websiteCustomDomainSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (!input.domain || !input.websiteId) {
+        throw Error("Missing domain or website ID");
+      }
+
+      await createDeployment({
+        domainName: input.domain,
+        websiteId: input.websiteId,
+      });
+      return await prisma.websiteCustomDomain.create({
+        data: {
+          domain: input.domain,
+          Website: {
+            connect: {
+              id: input.websiteId,
+            },
+          },
+          verified: false,
+        },
+      });
+    }),
+  removeCustomDomain: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        domainName: z.string(),
+        websiteId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await deleteDeployment({
+        websiteId: input.websiteId,
+        domainName: input.domainName,
+      });
+      return await prisma.websiteCustomDomain.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });

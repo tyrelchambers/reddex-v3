@@ -47,9 +47,11 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
 
   return (
     <>
+      {/* button exists outside trigger or else dialog opens before there's content */}
       <Button
         type="button"
         className="flex items-center gap-2"
+        size="sm"
         variant="secondary"
         onClick={handleSummarize}
         title="Summarize story"

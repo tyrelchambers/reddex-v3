@@ -43,7 +43,7 @@ const Header = ({ sticky = false }: Props) => {
   return (
     <header
       className={clsx(
-        "sticky right-0 top-0 z-30 mx-auto flex h-[80px] items-center bg-background px-4 py-4 lg:justify-between",
+        "sticky right-0 top-0 z-30 mx-auto flex h-[80px] items-center bg-card px-4 py-4 lg:justify-between",
         sticky && "sticky",
       )}
     >

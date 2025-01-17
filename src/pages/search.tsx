@@ -129,7 +129,12 @@ const Search = () => {
           reset={resetFilters}
         />
 
-        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        <div
+          className="mt-4 grid gap-10"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill, minmax(600px, 1fr))",
+          }}
+        >
           {(!isSearching &&
             !loadingPosts &&
             paginatedSlice(
@@ -161,12 +166,19 @@ const Search = () => {
         </div>
 
         <div className="mt-6 flex flex-col justify-between gap-4 lg:flex-row">
-          {lastSearched && (
-            <p className="text-sm text-foreground/70 lg:mb-0">
-              Last searched:{" "}
-              {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
-            </p>
-          )}
+          <div className="flex flex-col gap-1">
+            {lastSearched && (
+              <p className="text-sm font-medium text-foreground/70 lg:mb-0">
+                Last searched:{" "}
+                {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
+              </p>
+            )}
+            {posts && (
+              <p className="mt-4 text-sm italic text-foreground/60 lg:mt-0">
+                *The default words per minute is set at 150wpm.
+              </p>
+            )}
+          </div>
           <Pagination
             classNames={mantinePaginationStyles}
             value={page}
@@ -174,11 +186,6 @@ const Search = () => {
             total={PAGINATION_TOTAL_PAGES}
           />
         </div>
-        {posts && (
-          <p className="mt-4 text-sm text-foreground/60 lg:mt-0">
-            *The default words per minute is set at 150wpm.
-          </p>
-        )}
       </div>
 
       <Dialog open={openQueue} onOpenChange={setOpenQueue}>

@@ -1,14 +1,43 @@
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faUserCircle } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const usedBy = [
-  "Mr.CreepyPasta",
-  "AsTheRavenDreams",
-  "Stories After Midnight",
-  "TheDarkNarrator",
-  "To_42",
-  "TheOminousDarkness",
-  "Margbot",
-  "GothicRose",
-  "OriginalGensen",
-  "Dead Leaf Clover",
+  {
+    name: "Mr.CreepyPasta",
+    channel: "@MrCreepyPasta",
+    subs: "1.69M",
+  },
+  {
+    name: "AsTheRavenDreams",
+    channel: "@AsTheRavenDreams",
+    subs: "40.6K",
+  },
+  {
+    name: "Stories After Midnight",
+    channel: "@StoriesAfterMidnight",
+    subs: "10.1K",
+  },
+  {
+    name: "To_42",
+    channel: "@To42Reads",
+    subs: "4.57K",
+  },
+  {
+    name: "Margbot",
+    channel: "@Margbot",
+    subs: "3.92K",
+  },
+  {
+    name: "GothicRose",
+    channel: "@GothicRose",
+    subs: "1.86K",
+  },
+  {
+    name: "Dead Leaf Clover",
+    channel: "@DeadLeafClover",
+    subs: "2.46K",
+  },
 ];
 
 const UsedBy = () => {
@@ -18,10 +47,24 @@ const UsedBy = () => {
         Trusted by these great narrators
       </p>
 
-      <ul className="mt-4 flex flex-wrap justify-center gap-3">
+      <ul className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
         {usedBy.map((u) => (
-          <li key={u} className="text-xl text-foreground/60 xl:text-3xl">
-            {u}
+          <li
+            key={u.channel}
+            className="relative flex flex-col items-start gap-4 overflow-hidden rounded-xl bg-gradient-to-tl from-gray-200 to-gray-100 p-4 text-xl shadow xl:text-2xl"
+          >
+            <div className="relative z-10 flex flex-col items-start gap-3">
+              <FontAwesomeIcon
+                icon={faUserCircle}
+                className="text-xl text-foreground/70"
+              />
+              <p className="font-medium">{u.name}</p>
+              <p className="text-foreground/50">{u.subs}</p>
+            </div>
+            <FontAwesomeIcon
+              icon={faYoutube}
+              className="absolute -right-14 top-1/2 -translate-y-1/2 text-[12rem] text-foreground/10"
+            />
           </li>
         ))}
       </ul>

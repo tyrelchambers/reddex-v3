@@ -25,9 +25,9 @@ const Overview = () => {
           }}
         />
 
-        <section className="my-20 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <section className="my-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Card>
-            <CardContent className="h-full bg-background p-6">
+            <CardContent className="h-full bg-card p-6">
               <h2 className="text-xl text-foreground">
                 Recently submitted stories
               </h2>
@@ -50,7 +50,7 @@ const Overview = () => {
           </Card>
 
           <Card>
-            <CardContent className="h-full bg-background p-6">
+            <CardContent className="h-full bg-card p-6">
               <h2 className="text-xl text-foreground">
                 Recently approved stories
               </h2>

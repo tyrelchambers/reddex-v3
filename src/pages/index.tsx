@@ -21,9 +21,8 @@ const Home: NextPage = () => {
           content="Helping YouTube narrators find the best stories."
         />
       </Head>
+      <Header />
       <main className="mx-auto max-w-screen-2xl">
-        <Header />
-
         <div className="mt-20 flex flex-col gap-36">
           <Hero />
           <UsedBy />

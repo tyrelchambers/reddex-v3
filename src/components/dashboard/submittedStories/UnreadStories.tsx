@@ -38,12 +38,15 @@ const UnreadStories = ({ stories, regex }: Props) => {
       <div className="mb-6 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
         {storyList}
       </div>
-      <Pagination
-        classNames={mantinePaginationStyles}
-        value={page}
-        onChange={setPage}
-        total={PAGINATION_TOTAL_PAGES}
-      />
+      <div className="flex justify-center">
+        {" "}
+        <Pagination
+          classNames={mantinePaginationStyles}
+          value={page}
+          onChange={setPage}
+          total={PAGINATION_TOTAL_PAGES}
+        />
+      </div>
     </section>
   );
 };

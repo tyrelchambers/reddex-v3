@@ -1,8 +1,3 @@
-import {
-  faCalendar,
-  faCircleUser,
-  faClock,
-} from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SubmittedStory } from "@prisma/client";
 import { format, formatDistanceToNowStrict } from "date-fns";
@@ -12,6 +7,12 @@ import { formatReadingTime } from "~/utils";
 import { Button } from "./ui/button";
 import { api } from "~/utils/api";
 import SummarizeStory from "./SummarizeStory";
+import { calculateReadingTime } from "~/lib/utils";
+import {
+  faCalendar,
+  faClock,
+  faFolder,
+} from "@fortawesome/pro-light-svg-icons";
 
 interface Props {
   story: SubmittedStory;
@@ -43,63 +44,53 @@ const StoryCard = ({ story }: Props) => {
   };
 
   return (
-    <div
-      key={story.id}
-      className="flex flex-col overflow-hidden rounded-xl border-[1px] border-border bg-background shadow-md"
-    >
-      <header
-        className={`flex flex-wrap items-center justify-between gap-3 bg-card p-3`}
-      >
-        <div className="flex items-center rounded-full text-sm text-card-foreground/70">
-          <FontAwesomeIcon icon={faCircleUser} className="mr-2" />
-          {story.author || "Unknown"}
+    <div className="flex flex-col gap-3 overflow-hidden rounded-xl bg-card p-5 shadow-lg">
+      <header className={`mb-2 flex gap-6`}>
+        <div className="-mt-2 flex flex-col gap-2">
+          <Link
+            className="text-xl font-bold text-foreground underline hover:text-rose-500"
+            href={`/story/${story.id}`}
+            target="_blank"
+          >
+            {story.title || "<This story is missing a title>"}
+          </Link>
+          <div className="flex items-center rounded-full text-sm text-foreground">
+            <span className="font-foreground/70 text-xs">by</span>{" "}
+            <span className="ml-1 font-semibold">{story.author}</span>
+          </div>
         </div>
-
-        {story.deleted_at && (
-          <p className="flex items-center gap-2 text-xs text-card-foreground/60">
-            <FontAwesomeIcon icon={faCalendar} /> Deleted on{" "}
-            {format(story.deleted_at, "MMM do, yyyy")}
-          </p>
-        )}
       </header>
-      <Link
-        className="block p-3 font-bold text-foreground underline hover:text-rose-500"
-        href={`/story/${story.id}`}
-      >
-        {story.title || "<This story is missing a title>"}
-      </Link>
 
-      <div className="flex gap-3 p-2 px-4">
-        <div className="flex items-center gap-2 text-xs text-card-foreground/70">
+      <div className="mt-auto flex flex-wrap gap-3">
+        <div className="flex items-center gap-2 text-xs text-foreground/70">
+          <FontAwesomeIcon icon={faClock} />
+          <p>
+            {calculateReadingTime(story.body, profile?.words_per_minute ?? 200)}{" "}
+            mins
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-foreground/70">
           <FontAwesomeIcon icon={faCalendar} />
           <p>{formatDistanceToNowStrict(story.date)} ago</p>
         </div>
-
-        {profile?.words_per_minute && (
-          <div className="flex items-center gap-2 text-xs text-card-foreground/70">
-            <FontAwesomeIcon icon={faClock} />
-            <p>
-              {formatReadingTime(story.body, profile?.words_per_minute)}
-              min
-            </p>
-          </div>
-        )}
       </div>
-      <footer className="mt-auto flex flex-wrap items-center justify-end gap-4 border-t border-border p-3">
-        <SummarizeStory postId={story.id} text={story.body} />
-        {story.deleted_at ? (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => restoreStoryHandler(story.id)}
-          >
-            Restore
-          </Button>
-        ) : (
-          <Button type="button" onClick={() => deleteHandler(story.id)}>
-            Delete
-          </Button>
-        )}
+      <footer className="flex flex-col items-center justify-end lg:flex-row">
+        <div className="mt-4 flex items-end gap-2 lg:mt-0">
+          <SummarizeStory postId={story.id} text={story.body} />
+          {story.deleted_at ? (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => restoreStoryHandler(story.id)}
+            >
+              Restore
+            </Button>
+          ) : (
+            <Button type="button" onClick={() => deleteHandler(story.id)}>
+              Delete
+            </Button>
+          )}
+        </div>
       </footer>
     </div>
   );

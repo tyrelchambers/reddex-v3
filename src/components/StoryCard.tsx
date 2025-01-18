@@ -76,12 +76,17 @@ const StoryCard = ({ story }: Props) => {
             <Button
               type="button"
               variant="secondary"
+              size="sm"
               onClick={() => restoreStoryHandler(story.id)}
             >
               Restore
             </Button>
           ) : (
-            <Button type="button" onClick={() => deleteHandler(story.id)}>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => deleteHandler(story.id)}
+            >
               Delete
             </Button>
           )}

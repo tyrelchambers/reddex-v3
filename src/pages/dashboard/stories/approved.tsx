@@ -51,6 +51,7 @@ const Approved = () => {
               <DialogTrigger asChild>
                 <Button
                   variant="secondary"
+                  className="bg-card text-foreground"
                   onClick={() => {
                     trackUiEvent(MixpanelEvents.IMPORT_STORY, {
                       userId: data?.user.id,

@@ -20,9 +20,9 @@ const TagListItem = ({ tag }: Props) => {
   return (
     <div
       key={tag.id}
-      className="flex flex-col justify-between overflow-hidden rounded-xl shadow-md"
+      className="flex flex-col justify-between overflow-hidden rounded-xl bg-card shadow-md"
     >
-      <header className="flex bg-card p-4">
+      <header className="flex p-4">
         <p className="flex items-center gap-3 text-card-foreground">
           <FontAwesomeIcon icon={faHashtag} />
           {tag.tag}

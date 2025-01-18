@@ -165,7 +165,11 @@ const SubredditSearchForm = () => {
 
           <Dialog open={filterModalOpen} onOpenChange={setFilterModalOpen}>
             <DialogTrigger asChild>
-              <Button type="button" variant="secondary" className="w-full">
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full bg-card"
+              >
                 Add filters
               </Button>
             </DialogTrigger>

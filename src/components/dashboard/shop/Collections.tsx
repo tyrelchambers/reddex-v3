@@ -35,19 +35,19 @@ const Collections = ({ shopId, collections }: Props) => {
         {collections.map((c) => (
           <div
             key={c.name}
-            className="flex flex-col items-center justify-between rounded-lg border border-border p-4"
+            className="flex flex-col items-center justify-between rounded-xl bg-card p-4"
           >
-            <div className="flex w-full items-center justify-between">
-              <div className="flex flex-col">
-                <h3 className="font-medium text-foreground">
-                  {c.name}{" "}
-                  <span className="ml-2 text-xs text-muted-foreground">
-                    ID: {c.id}
-                  </span>
-                  <span className="ml-2 text-xs text-muted-foreground">
+            <div className="flex w-full flex-col items-start justify-between lg:flex-row">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col items-start gap-2 md:flex-row lg:items-center">
+                  <h3 className="text-xl font-medium text-foreground">
+                    {c.name}{" "}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">ID: {c.id}</p>
+                  <p className="text-xs text-muted-foreground">
                     Slug: {c.slug}
-                  </span>
-                </h3>
+                  </p>
+                </div>
                 <p className="text-sm text-muted-foreground">{c.description}</p>
               </div>
 
@@ -60,7 +60,7 @@ const Collections = ({ shopId, collections }: Props) => {
               </Button>
             </div>
 
-            <div className="mt-6 grid w-full grid-cols-4 gap-6">
+            <div className="mt-6 grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {c.products?.map((p) => (
                 <div
                   key={p.id}

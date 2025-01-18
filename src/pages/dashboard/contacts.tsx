@@ -19,7 +19,6 @@ const Contacts = () => {
 
           <AddContactModal>
             <Button
-              variant="secondary"
               onClick={() => {
                 trackUiEvent(MixpanelEvents.OPEN_ADD_CONTACT_MODAL);
               }}

@@ -24,7 +24,7 @@ const OverviewStats = ({ data }: Props) => {
   return (
     <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card className="overflow-hidden">
-        <CardContent className="bg-background p-6">
+        <CardContent className="bg-card p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Submitted stories{" "}
             <FontAwesomeIcon
@@ -44,7 +44,7 @@ const OverviewStats = ({ data }: Props) => {
       </Card>
 
       <Card className="overflow-hidden">
-        <CardContent className="h-full bg-background p-6">
+        <CardContent className="h-full bg-card p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Approved stories{" "}
             <FontAwesomeIcon
@@ -59,7 +59,7 @@ const OverviewStats = ({ data }: Props) => {
       </Card>
 
       <Card className="overflow-hidden">
-        <CardContent className="bg-background p-6">
+        <CardContent className="bg-card p-6">
           <p className="mb-2 flex items-center justify-between text-sm text-foreground">
             Completed stories{" "}
             <FontAwesomeIcon icon={faBolt} className="text-muted-foreground" />

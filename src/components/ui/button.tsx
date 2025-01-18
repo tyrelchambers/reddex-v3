@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-md",
+          "bg-foreground text-background hover:bg-primary/90 hover:shadow-md",
         defaultInvert:
           "bg-secondary text-secondary-foreground hover:bg-secondary/90",
         destructive:
@@ -18,7 +18,7 @@ const buttonVariants = cva(
         outline:
           "border hover:border-accent text-foreground/80 hover:bg-foreground/10 hover:text-card-foreground",
         secondary:
-          "bg-card text-card-foreground hover:bg-card/80 hover:text-primary",
+          "bg-secondary text-secondary-foreground hover:bg-card/80 hover:text-primary",
         ghost: "hover:bg-accent hover:text-accent-foreground text-foreground",
         link: "underline-offset-4 hover:underline text-primary !px-0",
       },
@@ -26,7 +26,7 @@ const buttonVariants = cva(
         default: "h-10 py-2 px-4",
         sm: "h-9 px-3 rounded-md",
         lg: "h-11 px-8 rounded-md",
-        xs: "h-7 px-3 rounded-md text-xs",
+        xs: "h-7 px-3 rounded-md text-sm",
       },
     },
     defaultVariants: {

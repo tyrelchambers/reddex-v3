@@ -48,6 +48,7 @@ const Completed = () => {
             />
             <Button
               variant="secondary"
+              className="bg-card"
               onClick={() => {
                 trackUiEvent(MixpanelEvents.REMOVE_ALL_COMPLETED_STORIES, {
                   userId: data?.user?.id,

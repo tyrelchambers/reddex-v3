@@ -7,7 +7,7 @@ const CancelAccountDeletionBanner = ({
   cancelHandler: () => void;
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col rounded-xl bg-card p-4">
       <h2 className="text-xl text-foreground">
         Your account is scheduled for deletion
       </h2>

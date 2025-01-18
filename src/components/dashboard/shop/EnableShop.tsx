@@ -11,7 +11,7 @@ interface Props {
 
 const EnableShop = ({ integrationConfig, update }: Props) => {
   return (
-    <div className="flex items-center gap-10 rounded-lg border border-border p-4">
+    <div className="flex items-center gap-10">
       <h2 className="text-xl font-medium text-foreground">Enable shop</h2>
       <Switch
         checked={integrationConfig.enabled}

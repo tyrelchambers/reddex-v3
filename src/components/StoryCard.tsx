@@ -1,18 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SubmittedStory } from "@prisma/client";
-import { format, formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import React from "react";
-import { formatReadingTime } from "~/utils";
 import { Button } from "./ui/button";
 import { api } from "~/utils/api";
 import SummarizeStory from "./SummarizeStory";
 import { calculateReadingTime } from "~/lib/utils";
-import {
-  faCalendar,
-  faClock,
-  faFolder,
-} from "@fortawesome/pro-light-svg-icons";
+import { faCalendar, faClock } from "@fortawesome/pro-light-svg-icons";
 
 interface Props {
   story: SubmittedStory;

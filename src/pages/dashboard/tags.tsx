@@ -63,9 +63,8 @@ const Tags = () => {
           <h1 className="text-2xl font-bold text-foreground">Tags</h1>
 
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button
-                variant="secondary"
                 onClick={() => {
                   trackUiEvent(MixpanelEvents.OPEN_TAG_MODAL);
                 }}
@@ -83,7 +82,7 @@ const Tags = () => {
                   className="flex flex-col gap-4"
                 >
                   <FormField
-                    name="name"
+                    name="tag"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Name</FormLabel>

@@ -78,9 +78,9 @@ const ContactItem = ({ contact }: Props) => {
   return (
     <div
       key={contact.id}
-      className="overflow-hidden rounded-xl border shadow-md"
+      className="flex flex-col gap-3 overflow-hidden rounded-xl border bg-card p-4 shadow-md"
     >
-      <header className="flex bg-card p-4">
+      <header className="flex">
         <p className="flex items-center gap-3 text-card-foreground">
           <FontAwesomeIcon icon={faUserCircle} />
           {contact.name}
@@ -88,9 +88,9 @@ const ContactItem = ({ contact }: Props) => {
       </header>
 
       {contact.notes ? (
-        <p className="p-3 font-medium text-foreground/70">{contact.notes}</p>
+        <p className="text-xl font-medium text-foreground">{contact.notes}</p>
       ) : (
-        <p className="p-3 font-medium italic text-muted-foreground">No notes</p>
+        <p className="font-medium italic text-muted-foreground">No notes</p>
       )}
 
       <footer className="flex justify-end p-2 px-4">

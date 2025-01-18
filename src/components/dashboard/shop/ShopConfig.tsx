@@ -21,7 +21,7 @@ interface Props {
 const ShopConfig = ({ integrationConfig, update, verify }: Props) => {
   return (
     <div className="flex flex-col">
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-4 flex flex-col items-center gap-2 md:flex-row">
         <Input
           placeholder="ptkn_***"
           value={integrationConfig.token ?? ""}
@@ -35,6 +35,7 @@ const ShopConfig = ({ integrationConfig, update, verify }: Props) => {
           type="button"
           disabled={!integrationConfig.token}
           onClick={verify}
+          className="w-full md:w-auto"
         >
           <FontAwesomeIcon icon={faRefresh} className="mr-2" />
           Verify connection

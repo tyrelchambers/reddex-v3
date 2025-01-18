@@ -7,7 +7,7 @@ const AccountDeletionBanner = ({
   deleteHandler: () => void;
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col rounded-xl bg-card p-4">
       <h2 className="text-xl text-foreground">Delete account</h2>
       <p className="mb-4 text-sm text-muted-foreground">
         If you delete your account, your subscription will be canceled at the

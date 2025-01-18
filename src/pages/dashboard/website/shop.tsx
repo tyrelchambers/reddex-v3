@@ -81,15 +81,6 @@ const ShopIntegration = () => {
     verifyIntegration.mutate(integrationConfig.token);
   };
 
-  const save = () => {
-    if (!websiteSettings.data) return;
-
-    updateStore.mutate({
-      ...integrationConfig,
-      websiteId: websiteSettings.data.id,
-    });
-  };
-
   const updateConfig = (data: Partial<Shop>) => {
     setIntegrationConfig({
       ...integrationConfig,
@@ -116,40 +107,37 @@ const ShopIntegration = () => {
         </p>
 
         <div className="mt-10 flex flex-col gap-8">
-          <EnableShop integrationConfig={integrationConfig} update={update} />
-
-          <div className="rounded-xl bg-card p-4">
-            <Label>Shop URL</Label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="https://shop.example.com"
-                onChange={(e) =>
-                  setIntegrationConfig({
-                    ...integrationConfig,
-                    shopUrl: e.target.value,
-                  })
-                }
-                value={integrationConfig.shopUrl ?? ""}
-              />
-              <Button type="button" onClick={addShopUrl}>
-                Save
-              </Button>
+          <div className="flex flex-col gap-4 rounded-xl bg-card p-4">
+            {" "}
+            <EnableShop integrationConfig={integrationConfig} update={update} />
+            <div className="flex flex-col">
+              <Label>Shop URL</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="https://shop.example.com"
+                  onChange={(e) =>
+                    setIntegrationConfig({
+                      ...integrationConfig,
+                      shopUrl: e.target.value,
+                    })
+                  }
+                  value={integrationConfig.shopUrl ?? ""}
+                />
+                <Button type="button" onClick={addShopUrl}>
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
 
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-xl bg-card p-4">
             <header className="flex flex-col gap-2">
               <h2 className="text-xl font-medium text-foreground">
                 Fourthwall configuration
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 In order to authenticate with your store, add in your API key
                 here. Visit your Fourthwall dashboard to find your API key.{" "}
-              </p>
-              <p className="text-xs italic text-muted-foreground">
-                Your API key can be found at this URL (replace with your own
-                name)
-                &#34;your-storefront-name.fourthwall.com/admin/dashboard/settings/for-developers&#34;
               </p>
             </header>
 
@@ -166,10 +154,6 @@ const ShopIntegration = () => {
               collections={shopCollections.data}
             />
           )}
-
-          <Button type="button" className="w-fit" onClick={save}>
-            Save changes
-          </Button>
         </div>
       </BodyWithLoader>
     </WrapperWithNav>

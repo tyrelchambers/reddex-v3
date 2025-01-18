@@ -191,153 +191,155 @@ const SubmissionForm = () => {
               subtitle="Collect writer information using the modules below."
               background
             >
-              <div className="flex flex-col rounded-xl border border-border bg-background p-4">
-                <p className="label font-bold capitalize text-card-foreground">
-                  Title
-                </p>
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col">
+                  <p className="font-bold capitalize text-card-foreground">
+                    Title
+                  </p>
 
-                <div className="mt-2 flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name={`submissionFormModules.title.enabled`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="flex flex-col">
-                          <FormLabel>Enabled</FormLabel>
-                          <FormDescription>
-                            Show this module on your submission page
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                  <div className="mt-2 flex flex-col gap-4 md:flex-row">
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.title.enabled`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Enabled</FormLabel>
+                            <FormDescription>
+                              Show this module on your submission page
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name={`submissionFormModules.title.required`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="flex flex-col">
-                          <FormLabel>Required</FormLabel>
-                          <FormDescription>
-                            Make this field required
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.title.required`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Required</FormLabel>
+                            <FormDescription>
+                              Make this field required
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col rounded-xl border border-border bg-background p-4">
-                <p className="label font-bold capitalize text-card-foreground">
-                  Author
-                </p>
+                <div className="flex flex-col rounded-xl">
+                  <p className="font-bold capitalize text-card-foreground">
+                    Author
+                  </p>
 
-                <div className="mt-2 flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name={`submissionFormModules.author.enabled`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="flex flex-col">
-                          <FormLabel>Enabled</FormLabel>
-                          <FormDescription>
-                            Show this module on your submission page
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                  <div className="mt-2 flex flex-col gap-4 md:flex-row">
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.author.enabled`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Enabled</FormLabel>
+                            <FormDescription>
+                              Show this module on your submission page
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name={`submissionFormModules.author.required`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="flex flex-col">
-                          <FormLabel>Required</FormLabel>
-                          <FormDescription>
-                            Make this field required
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.author.required`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Required</FormLabel>
+                            <FormDescription>
+                              Make this field required
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col rounded-xl border border-border bg-background p-4">
-                <p className="label font-bold capitalize text-card-foreground">
-                  Email
-                </p>
+                <div className="flex flex-col rounded-xl">
+                  <p className="font-bold capitalize text-card-foreground">
+                    Email
+                  </p>
 
-                <div className="mt-2 flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name={`submissionFormModules.email.enabled`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="flex flex-col">
-                          <FormLabel>Enabled</FormLabel>
-                          <FormDescription>
-                            Show this module on your submission page
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                  <div className="mt-2 flex flex-col gap-4 md:flex-row">
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.email.enabled`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Enabled</FormLabel>
+                            <FormDescription>
+                              Show this module on your submission page
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name={`submissionFormModules.email.required`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="flex flex-col">
-                          <FormLabel>Required</FormLabel>
-                          <FormDescription>
-                            Make this field required
-                          </FormDescription>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name={`submissionFormModules.email.required`}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel>Required</FormLabel>
+                            <FormDescription>
+                              Make this field required
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </DashboardSection>

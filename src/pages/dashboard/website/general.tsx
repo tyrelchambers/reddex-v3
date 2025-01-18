@@ -231,7 +231,7 @@ const General = () => {
               subtitle="By default, your site will be hosted at: [subdomain].reddex.app"
               background={false}
             >
-              <div className="overflow-hidden rounded-xl border border-border bg-card">
+              <div className="overflow-hidden rounded-xl bg-card">
                 {websiteSettings.data?.customDomain ? (
                   <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-400 to-gray-200 p-4 dark:from-zinc-800 dark:to-zinc-600">
                     <p className="font-semibold text-foreground">
@@ -272,7 +272,7 @@ const General = () => {
                   />
                 )}
 
-                <footer className="bg-secondary-foreground/10 p-4">
+                <footer className="bg-secondary p-4">
                   {websiteSettings.data?.customDomain ? (
                     <div className="flex flex-col items-center justify-between gap-4 *:w-full md:flex-row md:*:w-auto">
                       <Button

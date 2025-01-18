@@ -32,6 +32,7 @@ const server = z.object({
   NEXT_PUBLIC_SENTRY_DSN: z.string(),
   MIXPANEL_TOKEN: z.string(),
   YOUTUBE_API_KEY: z.string(),
+  K8S_URL: z.string(),
 });
 
 /**
@@ -69,6 +70,7 @@ const processEnv = {
   NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
   YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
   NEXT_PUBLIC_NODE_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
+  K8S_URL: process.env.K8S_URL,
 };
 
 // Don't touch the part below

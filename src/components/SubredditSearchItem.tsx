@@ -62,7 +62,7 @@ const SubredditSearchItem = ({
         activeClasses.header,
       )}
     >
-      <header className={`mb-2 flex gap-6`}>
+      <header className={`mb-2 flex flex-col items-start gap-6 md:flex-row`}>
         <div
           className={`flex flex-col items-center rounded-full font-black text-foreground ${activeClasses.headerText}`}
         >
@@ -73,13 +73,13 @@ const SubredditSearchItem = ({
         <div className="-mt-2 flex flex-col gap-2">
           {" "}
           <Link
-            className="text-xl font-bold text-foreground underline hover:text-rose-500"
+            className="whitespace-pre-line text-xl font-bold text-foreground underline hover:text-rose-500"
             href={post.url}
             target="_blank"
           >
             {post.title}
           </Link>
-          <div className="flex gap-3">
+          <div className="flex flex-col flex-wrap gap-3 sm:flex-row">
             <div
               className={`flex items-center rounded-full text-sm text-foreground ${activeClasses.headerText}`}
             >
@@ -87,7 +87,9 @@ const SubredditSearchItem = ({
               <span className="ml-1 font-semibold">{post.author}</span>
             </div>
 
-            <Badge>{(post.upvote_ratio * 100).toFixed(0)}% Rating</Badge>
+            <Badge className="whitespace-nowrap">
+              {(post.upvote_ratio * 100).toFixed(0)}% Rating
+            </Badge>
           </div>
         </div>
       </header>
@@ -116,7 +118,7 @@ const SubredditSearchItem = ({
           </div>
         )}
       </div>
-      <footer className="flex flex-col items-center justify-between lg:flex-row">
+      <footer className="mt-4 flex flex-row items-center justify-between">
         <div className="flex items-center">
           {hasBeenUsed && (
             <TooltipProvider>
@@ -138,7 +140,7 @@ const SubredditSearchItem = ({
           )}
         </div>
         {canAddToQueue && (
-          <div className="mt-4 flex items-end gap-2 lg:mt-0">
+          <div className="flex items-end gap-2 lg:mt-0">
             <SummarizeStory postId={post.id} text={post.selftext} />
             {isInQueue ? (
               <Button

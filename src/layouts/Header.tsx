@@ -109,7 +109,7 @@ const Header = ({ sticky = false }: Props) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-8 xl:hidden">
+        <div className="flex items-center gap-2 md:gap-8 xl:hidden">
           <button
             type="button"
             onClick={() => {

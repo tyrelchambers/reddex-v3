@@ -130,10 +130,10 @@ const Search = () => {
         />
 
         <div
-          className="mt-4 grid gap-10"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(600px, 1fr))",
-          }}
+          className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+          // style={{
+          //   gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          // }}
         >
           {(!isSearching &&
             !loadingPosts &&

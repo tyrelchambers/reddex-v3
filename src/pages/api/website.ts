@@ -9,6 +9,7 @@ interface Props {
   title: string;
   email: string;
   content: string;
+  siteId: string;
 }
 
 export default async function handler(
@@ -16,21 +17,19 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const site = req.query.site as string;
-  console.log("site", site);
 
   console.log("Findin site for ", site);
 
-  if (!site) {
-    res.status(400);
-    return;
-  }
+  console.log(req.method);
 
   if (req.method === "POST") {
     const input = req.body as Props;
+    console.log(input);
+
     try {
       const website = await prisma.website.findFirst({
         where: {
-          subdomain: site,
+          id: input.siteId,
         },
         include: {
           user: true,
@@ -64,11 +63,15 @@ export default async function handler(
           },
         });
       }
-      res.send("ok");
+      return res.send("ok");
     } catch (error) {
       captureException(error);
-      res.status(500);
+      return res.status(500);
     }
+  }
+
+  if (!site) {
+    return res.status(400);
   }
 
   const website = await prisma.website.findUnique({

@@ -55,10 +55,7 @@ const StoryListItem = ({ story, list }: Props) => {
       <div className="mt-auto flex flex-wrap gap-3">
         <div className="flex items-center gap-2 text-xs text-foreground/70">
           <FontAwesomeIcon icon={faClock} />
-          <p>
-            readingTime
-            {calculateReadingTime(story.content, readingTime ?? 150)} mins
-          </p>
+          <p>{calculateReadingTime(story.content, readingTime ?? 150)} mins</p>
         </div>
         <div className="flex items-center gap-2 text-xs text-foreground/70">
           <FontAwesomeIcon icon={faCalendar} />

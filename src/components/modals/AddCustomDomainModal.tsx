@@ -24,10 +24,15 @@ const AddCustomDomainModal = () => {
   const [customDomain, setCustomDomain] = useState("");
 
   const save = () => {
-    if (!website.data) return;
+    if (!website.data || !customDomain.trim()) return;
+
+    const formattedUrl = customDomain
+      .replace(/http(s)?:\/\//, "")
+      .replace("www.", "")
+      .trim();
 
     domain.mutate({
-      domain: customDomain,
+      domain: formattedUrl,
       verified: false,
       websiteId: website.data?.id,
     });

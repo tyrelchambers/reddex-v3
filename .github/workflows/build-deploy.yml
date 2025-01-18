@@ -52,6 +52,7 @@ jobs:
             "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}"
             "NEXT_PUBLIC_MIXPANEL_TOKEN=${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}"
             "NEXT_PUBLIC_NODE_ENV=production"
+            "K8S_URL=${{ secrets.K8S_URL }}"
   deploy:
     needs: [build-web]
     runs-on: ubuntu-latest

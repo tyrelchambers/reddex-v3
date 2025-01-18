@@ -51,6 +51,7 @@ RUN --mount=type=secret,id=FONTAWESOME_NPM_AUTH_TOKEN,env=FONTAWESOME_NPM_AUTH_T
     --mount=type=secret,id=YOUTUBE_API_KEY,env=YOUTUBE_API_KEY,required=true \  
     --mount=type=secret,id=NEXT_PUBLIC_MIXPANEL_TOKEN,env=NEXT_PUBLIC_MIXPANEL_TOKEN,required=true \  
     --mount=type=secret,id=NEXT_PUBLIC_NODE_ENV,env=NEXT_PUBLIC_NODE_ENV,required=true \  
+    --mount=type=secret,id=K8S_URL,env=K8S_URL,required=true \
      npm run build
 
 # Production image, copy all the files and run next

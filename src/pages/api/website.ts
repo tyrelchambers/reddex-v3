@@ -9,27 +9,23 @@ interface Props {
   title: string;
   email: string;
   content: string;
-  siteId: string;
+  to: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const site = req.query.site as string;
+  try {
+    const site = req.query.site as string;
 
-  console.log("Findin site for ", site);
+    if (req.method === "POST") {
+      const input = req.body as Props;
+      console.log(input);
 
-  console.log(req.method);
-
-  if (req.method === "POST") {
-    const input = req.body as Props;
-    console.log(input);
-
-    try {
       const website = await prisma.website.findFirst({
         where: {
-          id: input.siteId,
+          id: input.to,
         },
         include: {
           user: true,
@@ -64,49 +60,52 @@ export default async function handler(
         });
       }
       return res.send("ok");
-    } catch (error) {
-      captureException(error);
-      return res.status(500);
     }
-  }
+    console.log("Findin site for ", site);
 
-  if (!site) {
-    return res.status(400);
-  }
+    if (!site) {
+      return res.status(400);
+    }
 
-  const website = await prisma.website.findUnique({
-    where: {
-      subdomain: site,
-    },
-    include: {
-      submissionPage: {
-        include: {
-          submissionFormModules: {
-            where: {
-              enabled: true,
+    const website = await prisma.website.findUnique({
+      where: {
+        subdomain: site,
+      },
+      include: {
+        submissionPage: {
+          include: {
+            submissionFormModules: {
+              where: {
+                enabled: true,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
 
-  const shop = await prisma.shop.findUnique({
-    where: {
-      websiteId: website?.id,
-    },
-  });
+    const shop = await prisma.shop.findUnique({
+      where: {
+        websiteId: website?.id,
+      },
+    });
 
-  let shopCollections;
+    let shopCollections;
 
-  if (shop && shop.token) {
-    const storefront = new Fourthwall(shop.token);
+    if (shop && shop.token) {
+      const storefront = new Fourthwall(shop.token);
 
-    const enabledCollections = await storefront.getEnabledCollections(shop?.id);
+      const enabledCollections = await storefront.getEnabledCollections(
+        shop?.id,
+      );
 
-    shopCollections =
-      await storefront.collectionsWithProducts(enabledCollections);
+      shopCollections =
+        await storefront.collectionsWithProducts(enabledCollections);
+    }
+
+    res.json({ website, shop, shopCollections });
+  } catch (error) {
+    captureException(error);
+    return res.status(500);
   }
-
-  res.json({ website, shop, shopCollections });
 }

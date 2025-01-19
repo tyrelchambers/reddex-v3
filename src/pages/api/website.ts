@@ -84,6 +84,9 @@ export default async function handler(
       },
     });
 
+    if (!website) {
+      return res.status(404);
+    }
     const shop = await prisma.shop.findUnique({
       where: {
         websiteId: website?.id,

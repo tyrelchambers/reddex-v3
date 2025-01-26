@@ -8,7 +8,7 @@ interface Props {
   author: string;
   title: string;
   email: string;
-  content: string;
+  story: string;
   to: string;
 }
 
@@ -21,7 +21,6 @@ export default async function handler(
 
     if (req.method === "POST") {
       const input = req.body as Props;
-      console.log(input);
 
       const website = await prisma.website.findFirst({
         where: {
@@ -42,7 +41,7 @@ export default async function handler(
           email: input.email,
           author: input.author,
           title: input.title,
-          body: input.content,
+          body: input.story,
           userId: siteOwner.id,
         },
       });
@@ -59,7 +58,7 @@ export default async function handler(
           },
         });
       }
-      return res.send("ok");
+      return res.send(200);
     }
     console.log("Findin site for ", site);
 
@@ -81,11 +80,12 @@ export default async function handler(
             },
           },
         },
+        user: true,
       },
     });
 
     if (!website) {
-      return res.status(404);
+      return res.status(404).send("Website not found");
     }
     const shop = await prisma.shop.findUnique({
       where: {
@@ -106,9 +106,15 @@ export default async function handler(
         await storefront.collectionsWithProducts(enabledCollections);
     }
 
-    res.json({ website, shop, shopCollections });
+    const submittedStories = await prisma.submittedStory.findMany({
+      where: {
+        userId: website.user.id,
+      },
+    });
+
+    res.json({ website, shop, shopCollections, submittedStories });
   } catch (error) {
     captureException(error);
-    return res.status(500);
+    return res.status(500).send({ error: "Something went wrong" });
   }
 }

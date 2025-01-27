@@ -175,6 +175,7 @@ model Website {
   submissionPage        SubmissionPage       @relation(fields: [submissionPageId], references: [id], onDelete: Cascade)
   user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   WebsiteLayouts        WebsiteLayouts[]
+  openForCollabs        Boolean              @default(false)
 }
 
 model WebsiteLayouts {

@@ -78,6 +78,7 @@ export const websiteGeneralSchema = z.object({
   ohcleo: z.union([z.string(), z.undefined()]).nullable(),
   banner: z.string().optional().nullable(),
   thumbnail: z.string().optional().nullable(),
+  openForCollabs: z.boolean().optional(),
 });
 
 export const websiteIntegrationsSchema = z.object({

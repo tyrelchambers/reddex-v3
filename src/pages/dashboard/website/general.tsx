@@ -42,6 +42,7 @@ import Ping from "~/components/dashboard/website/Ping";
 import DashboardSection from "~/layouts/DashboardSection";
 import ThumbnailUploader from "~/components/ThumbnailUploader";
 import BannerUploader from "~/components/BannerUploader";
+import { Switch } from "~/components/ui/switch";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -185,6 +186,15 @@ const General = () => {
     });
   };
 
+  const updateCollabs = (val: boolean) => {
+    if (websiteSettings.data) {
+      websiteSave.mutate({
+        ...websiteSettings.data,
+        openForCollabs: val,
+      });
+    }
+  };
+
   return (
     <WrapperWithNav tabs={websiteTabItems}>
       <BodyWithLoader
@@ -292,58 +302,74 @@ const General = () => {
               subtitle="General details about your website."
               background
             >
-              <FormField
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name of your site</FormLabel>
-                    <Input
-                      placeholder="Name of your site"
-                      required
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Site description</FormLabel>
-                    <Textarea
-                      placeholder="Let people know who you are"
-                      rows={10}
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-[300px_1fr]">
-                <ThumbnailUploader
-                  thumbnail={websiteSettings.data?.thumbnail}
-                  thumbnailRef={thumbnailRef}
-                  removeImage={() =>
-                    websiteSettings.data?.thumbnail &&
-                    removeImage.mutate({
-                      type: "thumbnail",
-                      url: websiteSettings.data?.thumbnail,
-                    })
-                  }
+              <div className="flex flex-col gap-10">
+                <FormField
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name of your site</FormLabel>
+                      <Input
+                        placeholder="Name of your site"
+                        required
+                        {...field}
+                      />
+                    </FormItem>
+                  )}
                 />
 
-                <BannerUploader
-                  image={websiteSettings.data?.banner}
-                  imageRef={bannerRef}
-                  removeImage={() =>
-                    websiteSettings.data?.banner &&
-                    removeImage.mutate({
-                      type: "banner",
-                      url: websiteSettings.data?.banner,
-                    })
-                  }
+                <FormField
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Site description</FormLabel>
+                      <Textarea
+                        placeholder="Let people know who you are"
+                        rows={10}
+                        {...field}
+                      />
+                    </FormItem>
+                  )}
                 />
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-[300px_1fr]">
+                  <ThumbnailUploader
+                    thumbnail={websiteSettings.data?.thumbnail}
+                    thumbnailRef={thumbnailRef}
+                    removeImage={() =>
+                      websiteSettings.data?.thumbnail &&
+                      removeImage.mutate({
+                        type: "thumbnail",
+                        url: websiteSettings.data?.thumbnail,
+                      })
+                    }
+                  />
+
+                  <BannerUploader
+                    image={websiteSettings.data?.banner}
+                    imageRef={bannerRef}
+                    removeImage={() =>
+                      websiteSettings.data?.banner &&
+                      removeImage.mutate({
+                        type: "banner",
+                        url: websiteSettings.data?.banner,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="flex w-full flex-col">
+                    <p className="text-sm font-medium">Open for collabs</p>
+                    <p className="text-sm text-muted-foreground">
+                      Show a badge on your website indicating you&apos;re open
+                      for collabs with other narrators.
+                    </p>
+                  </div>
+                  <Switch
+                    defaultChecked={websiteSettings.data?.openForCollabs}
+                    onCheckedChange={updateCollabs}
+                  />
+                </div>
               </div>
             </DashboardSection>
             <Separator className="my-4" />

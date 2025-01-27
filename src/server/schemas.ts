@@ -170,3 +170,18 @@ export const websiteCustomDomainSchema = z.object({
   websiteId: z.string(),
   verified: z.boolean(),
 });
+
+export const layoutEnums = z.enum([
+  "youtube_stats",
+  "latest_episodes",
+  "story_submissions_graph",
+  "leaderboards_graph",
+]);
+
+export type LayoutEnum = z.infer<typeof layoutEnums>;
+
+export const websiteLayoutSchema = z.object({
+  id: z.string().optional(),
+  layout: layoutEnums,
+  enabled: z.boolean(),
+});

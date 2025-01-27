@@ -7,6 +7,7 @@ import {
   websiteCustomDomainSchema,
   websiteGeneralSchema,
   websiteIntegrationsSchema,
+  websiteLayoutSchema,
   websiteSubmissionSchema,
   websiteThemeSchema,
 } from "~/server/schemas";
@@ -39,6 +40,7 @@ export const websiteRouter = createTRPCRouter({
           },
         },
         customDomain: true,
+        WebsiteLayouts: true,
       },
     });
   }),
@@ -338,5 +340,39 @@ export const websiteRouter = createTRPCRouter({
           id: input.id,
         },
       });
+    }),
+  layouts: protectedProcedure
+    .input(websiteLayoutSchema)
+    .mutation(async ({ ctx, input }) => {
+      const website = await prisma.website.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+
+      if (!website) {
+        captureException(
+          new Error("[ROUTER] [WEBSITE] [LAYOUTS] Website not found"),
+        );
+        return;
+      }
+
+      if (input.id) {
+        await prisma.websiteLayouts.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            ...input,
+          },
+        });
+      } else {
+        await prisma.websiteLayouts.create({
+          data: {
+            ...input,
+            websiteId: website.id,
+          },
+        });
+      }
     }),
 });

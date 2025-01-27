@@ -13,6 +13,7 @@ import {
   faUser,
   faBolt,
   faStore,
+  faGrid,
 } from "@fortawesome/pro-solid-svg-icons";
 
 import { Tab } from "./types";
@@ -89,6 +90,11 @@ export const websiteTabItems = [
     label: "Theme",
     slug: "theme",
     icon: faPalette,
+  },
+  {
+    label: "Layout",
+    slug: "layout",
+    icon: faGrid,
   },
   {
     label: "Submission Form",

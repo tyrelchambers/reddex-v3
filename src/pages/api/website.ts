@@ -81,6 +81,11 @@ export default async function handler(
           },
         },
         user: true,
+        WebsiteLayouts: {
+          where: {
+            enabled: true,
+          },
+        },
       },
     });
 

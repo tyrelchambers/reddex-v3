@@ -14,7 +14,7 @@ const TabsList = ({ tabs }: Props) => {
   return (
     <ul
       role="tablist"
-      className="sticky flex w-full flex-row gap-2 overflow-x-auto rounded-lg bg-card p-1 text-sm lg:flex-col xl:top-36"
+      className="sticky flex w-full flex-row gap-2 overflow-x-auto rounded-lg bg-card p-1 text-sm xl:top-36 xl:flex-col"
     >
       {tabs.map((item, idx) => (
         <li

@@ -5,12 +5,14 @@ interface Props {
   subtitle?: string;
   children: React.ReactNode | React.ReactNode[];
   background?: boolean;
+  className?: string;
 }
 
 const DashboardSection = ({
   title,
   subtitle,
   background = true,
+  className,
   children,
 }: Props) => {
   return (
@@ -26,6 +28,7 @@ const DashboardSection = ({
         className={clsx(
           "flex flex-col gap-4",
           background && "rounded-xl bg-card p-4",
+          className,
         )}
       >
         {children}

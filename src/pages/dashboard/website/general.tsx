@@ -279,7 +279,7 @@ const General = () => {
                   />
                 )}
 
-                <footer className="bg-secondary p-4">
+                <footer className="bg-card p-4">
                   {websiteSettings.data?.customDomain ? (
                     <div className="flex flex-col items-center justify-between gap-4 *:w-full md:flex-row md:*:w-auto">
                       <Button

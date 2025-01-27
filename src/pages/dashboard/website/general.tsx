@@ -7,11 +7,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPodcast } from "@fortawesome/pro-regular-svg-icons";
-import {
-  faExternalLink,
-  faHashtag,
-  faRotate,
-} from "@fortawesome/pro-solid-svg-icons";
+import { faExternalLink, faHashtag } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
@@ -42,9 +38,10 @@ import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { toast } from "sonner";
 import SubdomainField from "~/components/dashboard/website/SubdomainField";
 import AddCustomDomainModal from "~/components/modals/AddCustomDomainModal";
-import { ping } from "~/utils";
 import Ping from "~/components/dashboard/website/Ping";
 import DashboardSection from "~/layouts/DashboardSection";
+import ThumbnailUploader from "~/components/ThumbnailUploader";
+import BannerUploader from "~/components/BannerUploader";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -323,72 +320,30 @@ const General = () => {
                 )}
               />
 
-              <div className="flex flex-col">
-                <p className="label text-foreground">Thumbnail</p>
-                <p className="sublabel text-muted-foreground">
-                  Optimal image size 200 x 200
-                </p>
-                {!websiteSettings.data?.thumbnail ? (
-                  <FileUpload uploadRef={thumbnailRef} type="thumbnail" />
-                ) : (
-                  <div className="flex flex-col">
-                    <div className="h-[200px] w-[200px] overflow-hidden rounded-xl">
-                      <Image
-                        src={websiteSettings.data.thumbnail}
-                        alt=""
-                        width={200}
-                        height={200}
-                      />
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="mt-4"
-                      onClick={() =>
-                        websiteSettings.data?.thumbnail &&
-                        removeImage.mutate({
-                          type: "thumbnail",
-                          url: websiteSettings.data?.thumbnail,
-                        })
-                      }
-                    >
-                      Remove thumbnail
-                    </Button>
-                  </div>
-                )}
-              </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-[300px_1fr]">
+                <ThumbnailUploader
+                  thumbnail={websiteSettings.data?.thumbnail}
+                  thumbnailRef={thumbnailRef}
+                  removeImage={() =>
+                    websiteSettings.data?.thumbnail &&
+                    removeImage.mutate({
+                      type: "thumbnail",
+                      url: websiteSettings.data?.thumbnail,
+                    })
+                  }
+                />
 
-              <div className="flex flex-col">
-                <p className="label text-foreground">Cover image</p>
-                <p className="sublabel text-muted-foreground">
-                  Optimal image size 1500 x 500
-                </p>
-                {!websiteSettings.data?.banner ? (
-                  <FileUpload uploadRef={bannerRef} type="banner" />
-                ) : (
-                  <div className="flex flex-col">
-                    <div className="relative h-[300px] overflow-hidden rounded-xl">
-                      <Image
-                        src={websiteSettings.data.banner}
-                        objectFit="cover"
-                        alt=""
-                        fill
-                      />
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="mt-4"
-                      onClick={() =>
-                        websiteSettings.data?.banner &&
-                        removeImage.mutate({
-                          type: "banner",
-                          url: websiteSettings.data?.banner,
-                        })
-                      }
-                    >
-                      Remove banner
-                    </Button>
-                  </div>
-                )}
+                <BannerUploader
+                  image={websiteSettings.data?.banner}
+                  imageRef={bannerRef}
+                  removeImage={() =>
+                    websiteSettings.data?.banner &&
+                    removeImage.mutate({
+                      type: "banner",
+                      url: websiteSettings.data?.banner,
+                    })
+                  }
+                />
               </div>
             </DashboardSection>
             <Separator className="my-4" />

@@ -38,7 +38,6 @@ const WebsiteLayout = () => {
     const existingLayout = websiteSettings.data?.WebsiteLayouts.find(
       (l) => l.layout === data,
     );
-    console.log(existingLayout);
 
     updateLayout.mutate({
       enabled,

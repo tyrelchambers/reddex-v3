@@ -85,7 +85,7 @@ export default async function handler(
     });
 
     if (!website) {
-      return res.status(404).send("Website not found");
+      return res.status(404).send({ error: "Website not found" });
     }
     const shop = await prisma.shop.findUnique({
       where: {

@@ -188,6 +188,7 @@ export const websiteRouter = createTRPCRouter({
           },
           data: {
             youtubeIntegrationId: input.youtubeIntegrationId,
+            rssFeed: input.rssFeed,
           },
         });
       } catch (error) {

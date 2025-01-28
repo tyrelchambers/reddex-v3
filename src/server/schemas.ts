@@ -83,6 +83,7 @@ export const websiteGeneralSchema = z.object({
 
 export const websiteIntegrationsSchema = z.object({
   youtubeIntegrationId: z.string().optional(),
+  rssFeed: z.string().optional(),
 });
 
 export const websiteSubmissionSchema = z.object({

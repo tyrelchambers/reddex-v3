@@ -1,9 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
-import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
+import {
+  Form,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashboardSection from "~/layouts/DashboardSection";
@@ -23,6 +30,7 @@ const Integrations = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       youtubeIntegrationId: "",
+      rssFeed: "",
     },
   });
 
@@ -30,7 +38,8 @@ const Integrations = () => {
     if (websiteSettings.data) {
       form.reset({
         youtubeIntegrationId:
-          websiteSettings.data?.youtubeIntegrationId || undefined,
+          websiteSettings.data?.youtubeIntegrationId ?? undefined,
+        rssFeed: websiteSettings.data?.rssFeed ?? undefined,
       });
     }
   }, [websiteSettings.data]);
@@ -38,7 +47,14 @@ const Integrations = () => {
   const submitHandler = (data: z.infer<typeof formSchema>) => {
     trackUiEvent(MixpanelEvents.SAVE_INTERGRATIONS_SETTINGS);
 
-    saveIntegrations.mutate(data);
+    saveIntegrations.mutate(data, {
+      onSuccess: () => {
+        toast.success("Integrations saved");
+      },
+      onError: () => {
+        toast.error("Error saving integrations");
+      },
+    });
   };
 
   return (
@@ -60,6 +76,20 @@ const Integrations = () => {
                   <FormItem>
                     <FormLabel>Youtube</FormLabel>
                     <Input placeholder="Youtube channel ID" {...field} />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="rssFeed"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>RSS Feed</FormLabel>
+                    <FormDescription>
+                      Enables showing your latest podcast episode. Input your
+                      podcast&apos;s RSS feed.
+                    </FormDescription>
+                    <Input placeholder="Your RSS feed" {...field} />
                   </FormItem>
                 )}
               />

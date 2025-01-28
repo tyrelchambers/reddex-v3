@@ -176,6 +176,7 @@ model Website {
   user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   WebsiteLayouts        WebsiteLayouts[]
   openForCollabs        Boolean              @default(false)
+  rssFeed               String?
 }
 
 model WebsiteLayouts {

@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { checkCache } from "~/lib/redis";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { fetchAiResponse } from "~/utils/openai-helpers";
-import { responseSchema } from "~/server/schemas";
 
 export const reddexAiRouter = createTRPCRouter({
   talk: protectedProcedure
@@ -13,7 +11,7 @@ export const reddexAiRouter = createTRPCRouter({
         input: z.string(),
       }),
     )
-    .query(function ({ input }) {
+    .mutation(async function ({ input }) {
       const prompt = input.input;
 
       console.log("Creating AI prompt for input: ", prompt);
@@ -60,8 +58,7 @@ export const reddexAiRouter = createTRPCRouter({
         },
       ];
 
-      const resp = fetchAiResponse(structure);
-      console.log(resp);
+      const resp = await fetchAiResponse(structure);
 
       return resp;
     }),

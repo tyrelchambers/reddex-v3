@@ -3,8 +3,13 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faSpinner } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faClipboard,
+  faCommentDots,
+  faSpinner,
+} from "@fortawesome/pro-solid-svg-icons";
 import { api } from "~/utils/api";
+import { copyToClipboard } from "~/utils/copyToClipboard";
 
 const ReddexAi = ({ story }: { story: string }) => {
   const reddexai = api.reddexai.talk.useMutation();
@@ -84,6 +89,21 @@ const ReddexAi = ({ story }: { story: string }) => {
 
         <div className="mt-10">
           <p className="mt-2 font-semibold text-foreground">Chat</p>
+          {reddexai.data && (
+            <div>
+              <p className="mt-2 font-mono text-foreground">{reddexai.data}</p>
+              <footer>
+                <button
+                  type="button"
+                  className="mt-2 flex w-fit items-center gap-2 rounded-md bg-background p-2 text-xs font-medium text-muted-foreground"
+                  onClick={() => copyToClipboard(reddexai.data)}
+                >
+                  <FontAwesomeIcon icon={faClipboard} />
+                  Copy
+                </button>
+              </footer>
+            </div>
+          )}
         </div>
       </div>
     </section>

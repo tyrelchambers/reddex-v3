@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { api } from "~/utils/api";
 import { Button } from "./ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,6 +32,14 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
     }
   }, [summarize.data]);
 
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [open]);
+
   const handleSummarize = () => {
     summarize.mutate({ body: text, postId });
   };
@@ -60,7 +68,7 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
       </Button>
 
       {open && parsedSummary && (
-        <div className="absolute inset-0 z-50 bg-background">
+        <div className="fixed inset-0 z-50 h-screen overflow-y-auto bg-background">
           <header className="flex w-full items-center justify-between border-b border-border py-2">
             <p className="px-4 font-semibold text-foreground">
               Summarize Story

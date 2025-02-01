@@ -193,6 +193,10 @@
 
     --link: 210 89% 60%;
   }
+
+  body {
+    @apply font-sans;
+  }
 }
 
 @layer base {

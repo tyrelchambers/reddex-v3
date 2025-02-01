@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
+import { font, fontMono } from "~/utils/font";
 
 export default class _Document extends Document {
   render() {
@@ -12,7 +13,7 @@ export default class _Document extends Document {
             src="https://plausible.io/js/script.js"
           ></script>
         </Head>
-        <body className="bg-background">
+        <body className={`bg-background ${font.variable} ${fontMono.variable}`}>
           <Main />
           <NextScript />
         </body>

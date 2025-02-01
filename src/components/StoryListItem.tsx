@@ -49,30 +49,34 @@ const StoryListItem = ({ story, list }: Props) => {
 
             <Badge>{(story.upvote_ratio * 100).toFixed(0)}% Rating</Badge>
           </div>
+          <div className="mt-auto flex flex-wrap gap-3">
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <FontAwesomeIcon icon={faClock} />
+              <p>
+                {calculateReadingTime(story.content, readingTime ?? 150)} mins
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <FontAwesomeIcon icon={faCalendar} />
+              <p>
+                {formatDistanceToNowStrict(new Date(story.created * 1000))} ago
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <FontAwesomeIcon icon={faFolder} />
+              <p>{story.subreddit}</p>
+            </div>
+
+            {story.flair && (
+              <div className="flex items-center gap-2 text-xs text-foreground/70">
+                <FontAwesomeIcon icon={faHashtag} />
+                <p>{story.flair}</p>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      <div className="mt-auto flex flex-wrap gap-3">
-        <div className="flex items-center gap-2 text-xs text-foreground/70">
-          <FontAwesomeIcon icon={faClock} />
-          <p>{calculateReadingTime(story.content, readingTime ?? 150)} mins</p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-foreground/70">
-          <FontAwesomeIcon icon={faCalendar} />
-          <p>{formatDistanceToNowStrict(new Date(story.created * 1000))} ago</p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-foreground/70">
-          <FontAwesomeIcon icon={faFolder} />
-          <p>{story.subreddit}</p>
-        </div>
-
-        {story.flair && (
-          <div className="flex items-center gap-2 text-xs text-foreground/70">
-            <FontAwesomeIcon icon={faHashtag} />
-            <p>{story.flair}</p>
-          </div>
-        )}
-      </div>
       <footer className="flex flex-col items-center justify-end lg:flex-row">
         {list === "approved" && (
           <ApprovedItemActions postId={story.id} post={story} />

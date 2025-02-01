@@ -187,3 +187,11 @@ export const websiteLayoutSchema = z.object({
   layout: layoutEnums,
   enabled: z.boolean(),
 });
+
+export const responseSchema = z.object({
+  characters: z.array(z.string()),
+  summary: z.string(),
+  grade: z.number(),
+  topics: z.array(z.string()),
+});
+export type AiResponse = z.infer<typeof responseSchema>;

@@ -19,6 +19,7 @@ import { isActiveSubscription } from "~/utils";
 import { Poppins } from "next/font/google";
 import { Toaster } from "~/components/ui/sonner";
 import { toast } from "sonner";
+import { createRoot } from "react-dom/client";
 
 const font = Poppins({
   weight: ["300", "400", "500", "700"],
@@ -78,6 +79,7 @@ const MyApp: AppType<MyAppProps> = ({
       >
         <main className={font.className}>
           <Component {...pageProps} />
+          <div id="portal-body"></div>
         </main>
       </MantineProvider>
       <Toaster richColors />

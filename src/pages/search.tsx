@@ -114,7 +114,7 @@ const Search = () => {
         </section>
       )}
 
-      <div className="relative flex flex-col p-4">
+      <div className="flex flex-col p-4">
         <QueueBanner openQueue={() => setOpenQueue(true)} />
 
         {(isSearching || loadingPosts) && (

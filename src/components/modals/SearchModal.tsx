@@ -25,11 +25,8 @@ const SearchModal = () => {
             trackUiEvent(MixpanelEvents.OPEN_SEARCH_DRAWER);
           }}
         >
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="mr-4 text-xs text-accent-foreground"
-          />
-          <p className="text-sm text-accent-foreground">Search</p>
+          <FontAwesomeIcon icon={faSearch} className="mr-4 text-xs" />
+          <p className="text-sm">Search</p>
         </Button>
       </SheetTrigger>
       <SheetContent side="right">

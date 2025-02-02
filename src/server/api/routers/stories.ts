@@ -1,4 +1,4 @@
-import { postSchema } from "~/server/schemas";
+import { postSchema, responseSchema } from "~/server/schemas";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { prisma } from "~/server/db";
@@ -310,6 +310,11 @@ export const storyRouter = createTRPCRouter({
           role: "user",
           content: prompt,
         },
+        {
+          role: "system",
+          content:
+            "You are a creative writing genious. Extract the proper information from the prompt. The characters property will be all the characters in the story, including the narrator. The grade is how well written you think the prompt is (which is a story). Take into considering writing style, spelling and grammar mistakes and writing flow. A grade of 1 should be the lowest grade and a grade of 10 is the best. The topics property will be the topics of the story. The summary property will be a summary of the story.",
+        },
       ];
 
       console.log("Checking cache for", input.postId);
@@ -323,11 +328,14 @@ export const storyRouter = createTRPCRouter({
         } catch (error) {
           console.log("Cache error");
         }
+      } else {
+        console.log("Cache miss -- fetching from OpenAI");
       }
 
-      const resp = await fetchAiResponse(structure);
+      const resp = await fetchAiResponse(structure, responseSchema);
 
       if (!resp) {
+        console.log("No response from OpenAI", JSON.stringify(resp));
         return;
       }
 

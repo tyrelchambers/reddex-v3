@@ -62,7 +62,9 @@ const SubredditSearchItem = ({
         activeClasses.header,
       )}
     >
-      <header className={`mb-2 flex flex-col items-start gap-6 md:flex-row`}>
+      <header
+        className={`mb-2 flex h-full flex-col items-start gap-6 md:flex-row`}
+      >
         <div
           className={`flex flex-col items-center rounded-full font-black text-foreground ${activeClasses.headerText}`}
         >
@@ -91,33 +93,38 @@ const SubredditSearchItem = ({
               {(post.upvote_ratio * 100).toFixed(0)}% Rating
             </Badge>
           </div>
+          <div className="mt-2 flex flex-wrap gap-3">
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <FontAwesomeIcon icon={faClock} />
+              <p>
+                {calculateReadingTime(
+                  post.selftext,
+                  usersWordsPerMinute ?? 200,
+                )}{" "}
+                mins
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <FontAwesomeIcon icon={faCalendar} />
+              <p>
+                {formatDistanceToNowStrict(new Date(post.created * 1000))} ago
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <FontAwesomeIcon icon={faFolder} />
+              <p>{post.subreddit}</p>
+            </div>
+
+            {post.link_flair_text && (
+              <div className="flex items-center gap-2 text-xs text-foreground/70">
+                <FontAwesomeIcon icon={faHashtag} />
+                <p>{post.link_flair_text}</p>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      <div className="mt-auto flex flex-wrap gap-3">
-        <div className="flex items-center gap-2 text-xs text-foreground/70">
-          <FontAwesomeIcon icon={faClock} />
-          <p>
-            {calculateReadingTime(post.selftext, usersWordsPerMinute ?? 200)}{" "}
-            mins
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-foreground/70">
-          <FontAwesomeIcon icon={faCalendar} />
-          <p>{formatDistanceToNowStrict(new Date(post.created * 1000))} ago</p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-foreground/70">
-          <FontAwesomeIcon icon={faFolder} />
-          <p>{post.subreddit}</p>
-        </div>
-
-        {post.link_flair_text && (
-          <div className="flex items-center gap-2 text-xs text-foreground/70">
-            <FontAwesomeIcon icon={faHashtag} />
-            <p>{post.link_flair_text}</p>
-          </div>
-        )}
-      </div>
       <footer className="mt-4 flex flex-row items-center justify-between">
         <div className="flex items-center">
           {hasBeenUsed && (

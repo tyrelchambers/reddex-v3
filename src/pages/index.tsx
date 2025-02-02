@@ -22,7 +22,7 @@ const Home: NextPage = () => {
         />
       </Head>
       <Header />
-      <main className="mx-auto max-w-screen-2xl">
+      <main className="mx-auto max-w-(--breakpoint-2xl)">
         <div className="mt-20 flex flex-col gap-36">
           <Hero />
           <UsedBy />

@@ -14,7 +14,7 @@ const PricingFrequencySelect = ({ frequency, setFrequency }: Props) => {
           className={clsx(
             "rounded-full px-4 py-2 text-sm font-semibold text-foreground duration-150",
             {
-              "bg-accent !text-accent-foreground": frequency === "yearly",
+              "bg-accent text-accent-foreground!": frequency === "yearly",
             }
           )}
           type="button"
@@ -27,7 +27,7 @@ const PricingFrequencySelect = ({ frequency, setFrequency }: Props) => {
           className={clsx(
             "rounded-full px-4 py-2 text-sm font-semibold text-foreground duration-150",
             {
-              "bg-accent !text-accent-foreground": frequency === "monthly",
+              "bg-accent text-accent-foreground!": frequency === "monthly",
             }
           )}
           type="button"

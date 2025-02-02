@@ -85,7 +85,7 @@ const Settings = () => {
       loadingMessage="Loading account data..."
       tabs={settingsTabs}
     >
-      <section className="flex max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
+      <section className="flex max-w-(--breakpoint-sm) flex-col gap-8 px-4 lg:px-0">
         <h1 className="text-3xl font-bold text-foreground">Account</h1>
 
         <DashboardSection

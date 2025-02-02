@@ -51,7 +51,7 @@ const UsedBy = () => {
         {usedBy.map((u) => (
           <li
             key={u.channel}
-            className="relative flex flex-col items-start gap-4 overflow-hidden rounded-xl bg-gradient-to-tl from-gray-200 to-gray-100 p-4 text-xl shadow xl:text-2xl"
+            className="relative flex flex-col items-start gap-4 overflow-hidden rounded-xl bg-linear-to-tl from-gray-200 to-gray-100 p-4 text-xl shadow-sm xl:text-2xl"
           >
             <div className="relative z-10 flex flex-col items-start gap-3">
               <FontAwesomeIcon

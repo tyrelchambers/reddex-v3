@@ -12,6 +12,7 @@ import { statsRouter } from "./routers/stats";
 import { overviewRouter } from "./routers/overview";
 import { shopRouter } from "./routers/shop";
 import { pingRouter } from "./routers/ping";
+import { reddexAiRouter } from "./routers/reddexai";
 /**
  * This is the primary router for your server.
  *
@@ -31,6 +32,7 @@ export const appRouter = createTRPCRouter({
   overview: overviewRouter,
   shop: shopRouter,
   ping: pingRouter,
+  reddexai: reddexAiRouter,
 });
 
 // export type definition of API

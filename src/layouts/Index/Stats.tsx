@@ -23,7 +23,7 @@ const Stats = () => {
   ];
   return (
     <section className="relative mx-2 rounded-xl bg-gray-900 py-28 xl:mx-0">
-      <div className="relative z-10 mx-auto max-w-screen-xl px-4 md:px-8">
+      <div className="relative z-10 mx-auto max-w-(--breakpoint-xl) px-4 md:px-8">
         <div className="max-w-2xl lg:mx-auto lg:text-center">
           <h3 className="text-3xl font-semibold text-white sm:text-4xl">
             Narrators love Reddex!

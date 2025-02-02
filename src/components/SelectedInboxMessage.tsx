@@ -132,7 +132,7 @@ const SelectedInboxMessage = ({ message, handleBack }: Props) => {
   return (
     <div
       className={clsx(
-        "w-full max-w-screen-xl flex-1 overflow-auto xl:m-5 xl:my-6 xl:p-5",
+        "w-full max-w-(--breakpoint-xl) flex-1 overflow-auto xl:m-5 xl:my-6 xl:p-5",
       )}
     >
       <button

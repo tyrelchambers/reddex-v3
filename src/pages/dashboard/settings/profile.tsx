@@ -96,7 +96,7 @@ const Profile = () => {
 
   return (
     <WrapperWithNav tabs={settingsTabs}>
-      <div className="flex w-full max-w-screen-sm flex-col gap-8 px-4 lg:px-0">
+      <div className="flex w-full max-w-(--breakpoint-sm) flex-col gap-8 px-4 lg:px-0">
         <DashboardSection
           title="Profile"
           subtitle="Update your profile details here"

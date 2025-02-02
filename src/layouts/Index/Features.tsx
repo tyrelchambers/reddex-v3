@@ -78,7 +78,7 @@ const additionalFeatures = [
 
 const Features = () => {
   return (
-    <section className="mx-auto max-w-screen-lg px-2 xl:px-0">
+    <section className="mx-auto max-w-(--breakpoint-lg) px-2 xl:px-0">
       <div className="my-20 flex flex-col gap-20">
         {features.map((f, idx) => (
           <BlurFade key={f.title} delay={idx * 0.25} inView>

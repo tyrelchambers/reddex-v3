@@ -57,7 +57,7 @@ const WrapperWithNav = ({
 
   const classes = className
     ? className
-    : `mx-auto xl:my-6 flex  ${tabs ? "xl:grid xl:grid-cols-[250px_1fr]" : ""} w-full max-w-screen-2xl flex-col xl:flex-row gap-6`;
+    : `mx-auto xl:my-6 flex  ${tabs ? "xl:grid xl:grid-cols-[250px_1fr]" : ""} w-full max-w-(--breakpoint-2xl) flex-col xl:flex-row gap-6`;
   const bodyClasses = "flex w-full px-4 xl:px-0";
 
   return (

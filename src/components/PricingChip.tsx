@@ -22,7 +22,7 @@ const PricingChip = ({
         className={clsx(
           "rounded-2xl border-2 border-transparent bg-background p-4 text-start shadow-xl hover:border-accent",
           {
-            "!border-accent !bg-accent/10": isSelected,
+            "border-accent! bg-accent/10!": isSelected,
           },
         )}
       >

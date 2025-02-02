@@ -5,7 +5,7 @@ import { Badge } from "~/components/ui/badge";
 import BlurFade from "~/components/ui/blur-fade";
 
 const Hero = () => (
-  <section className="hero mb-20 flex w-full max-w-screen-lg flex-col items-center justify-center gap-10 px-2 md:mx-auto">
+  <section className="hero mb-20 flex w-full max-w-(--breakpoint-lg) flex-col items-center justify-center gap-10 px-2 md:mx-auto">
     <BlurFade delay={0} inView>
       <Badge className="w-fit">Thousands of stories read</Badge>
     </BlurFade>
@@ -32,7 +32,7 @@ const Hero = () => (
         <div id="cta-bg"></div>
         <Link
           href={routes.SEARCH}
-          className="absolute z-10 flex w-full justify-center rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
+          className="absolute z-10 flex w-full justify-center rounded-xl bg-linear-to-tr from-purple-400 to-pink-400 px-8 py-3 font-bold text-background shadow-xl"
         >
           Start searching
         </Link>

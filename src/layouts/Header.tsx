@@ -46,7 +46,7 @@ const Header = ({ sticky = false }: Props) => {
         "sticky right-0 top-0 z-30 mx-auto flex h-[80px] w-full items-center bg-card px-4 py-4 lg:justify-between",
       )}
     >
-      <div className="mx-auto flex w-full max-w-screen-2xl items-center">
+      <div className="mx-auto flex w-full max-w-(--breakpoint-2xl) items-center">
         <div className="flex flex-1 items-center">
           {isDark ? (
             <LogoLight alt="" className="z-0 w-12" />

@@ -21,7 +21,7 @@ const InboxHeaderTablet = ({ search, setSearch, resetSearch }: Props) => {
         />
         <Button
           variant="secondary"
-          className="flex-grow-0"
+          className="grow-0"
           onClick={resetSearch}
         >
           Reset

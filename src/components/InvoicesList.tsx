@@ -19,17 +19,17 @@ interface Props {
 
 const InvoicesList = ({ invoices }: Props) => {
   const rows = invoices.map((invoice) => (
-    <TableRow key={invoice.id} className="!border-border">
-      <TableCell className="!border-border !text-foreground">
+    <TableRow key={invoice.id} className="border-border!">
+      <TableCell className="border-border! text-foreground!">
         <Badge variant="secondary">{invoice.status}</Badge>
       </TableCell>
-      <TableCell className="!border-border !text-foreground">
+      <TableCell className="border-border! text-foreground!">
         {formatStripeTime(invoice.created)}
       </TableCell>
-      <TableCell className="!border-border !text-foreground">
+      <TableCell className="border-border! text-foreground!">
         {formatCurrency(invoice.amount_paid, invoice.currency)}
       </TableCell>
-      <TableCell className="!border-border">
+      <TableCell className="border-border!">
         {invoice.invoice_pdf && (
           <a href={invoice.invoice_pdf} download className="text-rose-500">
             Download <FontAwesomeIcon icon={faDownload} className="ml-2" />

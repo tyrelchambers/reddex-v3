@@ -11,7 +11,7 @@ const DashNav = () => {
 
   return (
     <nav className="z-20 hidden w-full justify-start overflow-x-auto bg-card xl:sticky xl:top-20 xl:flex">
-      <ul className="mx-auto flex w-full max-w-screen-2xl gap-2 px-4 text-sm text-gray-500">
+      <ul className="mx-auto flex w-full max-w-(--breakpoint-2xl) gap-2 px-4 text-sm text-gray-500">
         {dashNavRoutes.map((r) => (
           <li key={r.label}>
             <Link

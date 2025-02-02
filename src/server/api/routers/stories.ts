@@ -158,6 +158,8 @@ export const storyRouter = createTRPCRouter({
     return await prisma.submittedStory.findMany({
       where: {
         userId: ctx.session.user.id,
+        read: false,
+        deleted_at: null,
       },
     });
   }),

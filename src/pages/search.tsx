@@ -1,4 +1,3 @@
-import { Pagination } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import Header from "~/layouts/Header";
@@ -26,6 +25,7 @@ import { faSpinner } from "@fortawesome/pro-duotone-svg-icons";
 import { filterPosts, paginatedSlice } from "~/utils/searchHelpers";
 import { useSearchStore } from "~/stores/searchStore";
 import queryString from "query-string";
+import { Pagination } from "@mui/material";
 
 const Search = () => {
   const {
@@ -55,9 +55,10 @@ const Search = () => {
   const [openQueue, setOpenQueue] = useState(false);
 
   const PAGINATION_LIMIT_PER_PAGE = 15;
-  const PAGINATION_TOTAL_PAGES =
+  const PAGINATION_TOTAL_PAGES = Math.ceil(
     filterPosts(filters, posts, currentUser.data?.Profile?.words_per_minute)
-      .length / PAGINATION_LIMIT_PER_PAGE;
+      .length / PAGINATION_LIMIT_PER_PAGE,
+  );
 
   useEffect(() => {
     const fn = async () => {
@@ -129,12 +130,7 @@ const Search = () => {
           reset={resetFilters}
         />
 
-        <div
-          className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-          // style={{
-          //   gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          // }}
-        >
+        <div className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {(!isSearching &&
             !loadingPosts &&
             paginatedSlice(
@@ -168,23 +164,24 @@ const Search = () => {
         <div className="mt-6 flex flex-col justify-between gap-4 lg:flex-row">
           <div className="flex flex-col gap-1">
             {lastSearched && (
-              <p className="text-sm font-medium text-foreground/70 lg:mb-0">
+              <p className="text-foreground/70 text-sm font-medium lg:mb-0">
                 Last searched:{" "}
                 {format(lastSearched.time, "MMMM do, yyyy hh:mm aa")}
               </p>
             )}
             {posts && (
-              <p className="mt-4 text-sm italic text-foreground/60 lg:mt-0">
+              <p className="text-foreground/60 mt-4 text-sm italic lg:mt-0">
                 *The default words per minute is set at 150wpm.
               </p>
             )}
           </div>
-          <Pagination
-            classNames={mantinePaginationStyles}
-            value={page}
-            onChange={setPage}
-            total={PAGINATION_TOTAL_PAGES}
-          />
+          <footer className="mt-4 flex justify-center">
+            <Pagination
+              count={PAGINATION_TOTAL_PAGES}
+              page={page}
+              onChange={(_, page) => setPage(page)}
+            />
+          </footer>
         </div>
       </div>
 

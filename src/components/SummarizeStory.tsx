@@ -73,7 +73,11 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
             <p className="text-foreground px-4 font-semibold">
               Summarize Story
             </p>
-            <button type="button" onClick={close}>
+            <button
+              type="button"
+              onClick={close}
+              className="hover:cursor-pointer"
+            >
               <FontAwesomeIcon
                 icon={faTimes}
                 className="border-border border-l p-4 text-xl"

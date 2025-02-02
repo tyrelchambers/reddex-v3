@@ -1,8 +1,7 @@
-import { Pagination } from "@mantine/core";
+import { Pagination } from "@mui/material";
 import { SubmittedStory } from "@prisma/client";
 import React, { useState } from "react";
 import StoryCard from "~/components/StoryCard";
-import { mantinePaginationStyles } from "~/lib/styles";
 
 interface Props {
   stories: SubmittedStory[];
@@ -38,15 +37,13 @@ const UnreadStories = ({ stories, regex }: Props) => {
       <div className="mb-6 grid flex-1 grid-cols-1 gap-4 lg:grid-cols-2">
         {storyList}
       </div>
-      <div className="flex justify-center">
-        {" "}
+      <footer className="flex justify-center">
         <Pagination
-          classNames={mantinePaginationStyles}
-          value={page}
-          onChange={setPage}
-          total={PAGINATION_TOTAL_PAGES}
+          count={PAGINATION_TOTAL_PAGES}
+          page={page}
+          onChange={(_, page) => setPage(page)}
         />
-      </div>
+      </footer>
     </section>
   );
 };

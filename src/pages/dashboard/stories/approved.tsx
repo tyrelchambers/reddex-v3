@@ -1,6 +1,6 @@
+import { Pagination } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import EmptyState from "~/components/EmptyState";
 import StoryListItem from "~/components/StoryListItem";
 import { Button } from "~/components/ui/button";
 import {
@@ -20,10 +20,40 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Approved = () => {
   const { data } = useSession();
+  const [page, setPage] = useState(1);
+
   const approvedListQuery = api.story.getApprovedList.useQuery();
 
   const [query, setQuery] = useState("");
   const regex = new RegExp(query, "gi");
+
+  const PAGINATION_LIMIT_PER_PAGE = 8;
+  const PAGINATION_TOTAL_PAGES = approvedListQuery.data
+    ? Math.ceil(
+        approvedListQuery.data?.filter(
+          (item) =>
+            (item.title?.match(regex) || item.author?.match(regex)) &&
+            !item.deleted_at,
+        ).length / PAGINATION_LIMIT_PER_PAGE,
+      )
+    : 0;
+
+  const storyList = approvedListQuery.data
+    ?.filter(
+      (item) =>
+        (item.title?.match(regex) || item.author?.match(regex)) &&
+        !item.deleted_at,
+    )
+    ?.sort(
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
+    )
+    .slice(
+      (page - 1) * PAGINATION_LIMIT_PER_PAGE,
+      page * PAGINATION_LIMIT_PER_PAGE,
+    )
+    .map((story) => (
+      <StoryListItem key={story.id} story={story} list="approved" />
+    ));
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
@@ -31,10 +61,10 @@ const Approved = () => {
         {" "}
         <header className="flex flex-1 flex-col justify-between lg:px-0 xl:flex-row">
           <div className="mb-6 flex flex-col xl:mb-0">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-foreground text-2xl font-bold">
               Approved list
             </h1>
-            <p className="font-light text-muted-foreground">
+            <p className="text-muted-foreground font-light">
               Your list of stories for which you have permission to read.
             </p>
           </div>
@@ -70,19 +100,16 @@ const Approved = () => {
             </Dialog>
           </div>
         </header>
-        {approvedListQuery.data && approvedListQuery.data.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
-            {approvedListQuery.data
-              .filter(
-                (item) => item.title.match(regex) || item.author.match(regex),
-              )
-              ?.map((item) => (
-                <StoryListItem key={item.id} story={item} list="approved" />
-              )) || null}
-          </div>
-        ) : (
-          <EmptyState label="approved stories" />
-        )}
+        <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          {storyList}
+        </div>
+        <footer className="mt-4 flex justify-center">
+          <Pagination
+            count={PAGINATION_TOTAL_PAGES}
+            page={page}
+            onChange={(_, page) => setPage(page)}
+          />
+        </footer>
       </div>
     </WrapperWithNav>
   );

@@ -1,3 +1,4 @@
+import { Pagination } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import EmptyState from "~/components/EmptyState";
@@ -12,6 +13,8 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Completed = () => {
   const { data } = useSession();
+  const [page, setPage] = useState(1);
+
   const apiContext = api.useUtils();
   const completedListQuery = api.story.getCompletedList.useQuery(undefined, {
     select(data) {
@@ -25,16 +28,43 @@ const Completed = () => {
   });
   const [query, setQuery] = useState("");
   const regex = new RegExp(query, "gi");
+  const PAGINATION_LIMIT_PER_PAGE = 8;
+  const PAGINATION_TOTAL_PAGES = completedListQuery.data
+    ? Math.ceil(
+        completedListQuery.data?.filter(
+          (item) =>
+            (item.title?.match(regex) || item.author?.match(regex)) &&
+            !item.deleted_at,
+        ).length / PAGINATION_LIMIT_PER_PAGE,
+      )
+    : 0;
+
+  const storyList = completedListQuery.data
+    ?.filter(
+      (item) =>
+        (item.title?.match(regex) || item.author?.match(regex)) &&
+        !item.deleted_at,
+    )
+    ?.sort(
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
+    )
+    .slice(
+      (page - 1) * PAGINATION_LIMIT_PER_PAGE,
+      page * PAGINATION_LIMIT_PER_PAGE,
+    )
+    .map((story) => (
+      <StoryListItem key={story.id} story={story} list="approved" />
+    ));
 
   return (
     <WrapperWithNav tabs={storiesTabs}>
       <section className="flex w-full flex-col px-4">
         <header className="flex w-full flex-1 flex-col justify-between gap-2 lg:flex-row lg:px-0">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-foreground text-2xl font-bold">
               Completed list
             </h1>
-            <p className="font-light text-muted-foreground">
+            <p className="text-muted-foreground font-light">
               Your list of stories for which you have read.
             </p>
           </div>
@@ -61,19 +91,17 @@ const Completed = () => {
           </div>
         </header>
 
-        {completedListQuery.data && completedListQuery.data.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
-            {completedListQuery.data
-              ?.filter(
-                (item) => item.title.match(regex) || item.author.match(regex),
-              )
-              .map((item) => (
-                <StoryListItem key={item.id} story={item} list="completed" />
-              )) || null}
-          </div>
-        ) : (
-          <EmptyState label="completed stories" />
-        )}
+        <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          {storyList}
+        </div>
+
+        <footer className="mt-4 flex justify-center">
+          <Pagination
+            count={PAGINATION_TOTAL_PAGES}
+            page={page}
+            onChange={(_, page) => setPage(page)}
+          />
+        </footer>
       </section>
     </WrapperWithNav>
   );

@@ -304,7 +304,7 @@ export const storyRouter = createTRPCRouter({
           id: input,
         },
         data: {
-          deleted_at: null,
+          read: false,
         },
       });
     }),

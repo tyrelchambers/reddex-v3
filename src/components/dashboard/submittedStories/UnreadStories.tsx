@@ -15,7 +15,8 @@ const UnreadStories = ({ stories, regex }: Props) => {
     stories.filter(
       (item) =>
         (item.title?.match(regex) || item.author?.match(regex)) &&
-        !item.deleted_at,
+        !item.deleted_at &&
+        !item.read,
     ).length / PAGINATION_LIMIT_PER_PAGE,
   );
 

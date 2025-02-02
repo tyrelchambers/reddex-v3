@@ -36,6 +36,8 @@ export default async function handler(
         throw new Error("Site not found");
       }
 
+      console.log(input);
+
       await prisma.submittedStory.create({
         data: {
           email: input.email,

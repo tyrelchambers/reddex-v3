@@ -19,22 +19,19 @@ const ReadStories = ({ stories, regex }: Props) => {
   });
   const [page, setPage] = useState(1);
 
-  const PAGINATION_LIMIT_PER_PAGE = 8;
-  const PAGINATION_TOTAL_PAGES = Math.ceil(
-    stories.filter(
-      (item) =>
-        (item.title?.match(regex) || item.author?.match(regex)) &&
-        item.deleted_at,
-    ).length / PAGINATION_LIMIT_PER_PAGE,
+  const filteredStories = stories?.filter(
+    (item) =>
+      (item.title?.match(regex) || item.author?.match(regex)) &&
+      item.read &&
+      !item.deleted_at,
   );
 
-  const storyList = stories
-    ?.filter(
-      (item) =>
-        (item.title?.match(regex) || item.author?.match(regex)) &&
-        item.read &&
-        !item.deleted_at,
-    )
+  const PAGINATION_LIMIT_PER_PAGE = 8;
+  const PAGINATION_TOTAL_PAGES = Math.ceil(
+    filteredStories.length / PAGINATION_LIMIT_PER_PAGE,
+  );
+
+  const storyList = filteredStories
     ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(
       (page - 1) * PAGINATION_LIMIT_PER_PAGE,

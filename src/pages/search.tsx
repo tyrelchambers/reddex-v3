@@ -8,7 +8,6 @@ import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
 import { FilterState, PostFromReddit } from "~/types";
 import { useSession } from "next-auth/react";
-import { mantinePaginationStyles } from "~/lib/styles";
 import ActiveFilterList from "~/components/ActiveFilterList";
 import { format } from "date-fns";
 import EmptyState from "~/components/EmptyState";

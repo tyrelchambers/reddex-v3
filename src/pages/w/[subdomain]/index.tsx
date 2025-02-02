@@ -35,20 +35,19 @@ interface YoutubeResponse {
 }
 
 const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
-  const collections = api.shop.collections.useQuery(website?.id as string, {
-    enabled: !!website?.id,
-  });
   useEffect(() => {
     const html = document.querySelector("html");
-    if (html) {
-      html.setAttribute("data-mantine-color-scheme", website?.theme ?? "light");
+    if (html && website) {
+      console.log(website.theme);
+
+      html.className = website.theme;
     }
   }, [website]);
 
   if (!website) return null;
 
   return (
-    <section className="min-h-screen bg-background">
+    <section className="bg-background min-h-screen">
       <CustomerSiteHeader website={website} />
 
       <section className="mx-auto mt-10 w-full max-w-[1500px] p-4 lg:p-0">
@@ -64,9 +63,9 @@ const Home: NextPage<Props> = ({ website, youtubeVideos }) => {
           />
         </section>
         {website.description && (
-          <div className="my-8 max-w-3xl text-foreground">
+          <div className="text-foreground my-8 max-w-3xl">
             <h2 className="text-3xl font-semibold">Welcome!</h2>
-            <p className="mt-2 whitespace-pre-wrap text-sm leading-loose text-foreground/70">
+            <p className="text-foreground/70 mt-2 text-sm leading-loose whitespace-pre-wrap">
               {website.description}
             </p>
           </div>

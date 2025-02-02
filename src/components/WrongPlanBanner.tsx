@@ -23,7 +23,7 @@ const WrongPlanBanner = ({ title, text, actions, type }: Props) => {
   });
 
   return (
-    <div className="mx-auto my-10 mb-4 w-full max-w-screen-2xl rounded-2xl bg-card p-4">
+    <div className="mx-auto my-10 mb-4 w-full max-w-(--breakpoint-2xl) rounded-2xl bg-card p-4">
       <p className="mb-2 text-card-foreground">
         <FontAwesomeIcon icon={faWarning} className="mr-3" />
         {title}

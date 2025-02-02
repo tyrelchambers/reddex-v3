@@ -12,7 +12,7 @@ const Footer = () => {
 
   return (
     <footer className="w-full bg-card">
-      <div className="mx-auto mt-8 max-w-screen-xl px-4 py-5 text-gray-500 md:px-8">
+      <div className="mx-auto mt-8 max-w-(--breakpoint-xl) px-4 py-5 text-gray-500 md:px-8">
         <div className="flex max-w-3xl flex-col items-center gap-3 sm:mx-auto sm:text-center">
           {isDark ? (
             <LogoLight className="h-12 w-12" />

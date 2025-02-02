@@ -100,7 +100,7 @@ const Submit = ({ website }: Props) => {
   return (
     <section className="min-h-screen bg-background">
       <CustomerSiteHeader website={website} />
-      <main className="mx-auto mt-10 w-full max-w-screen-md p-4">
+      <main className="mx-auto mt-10 w-full max-w-(--breakpoint-md) p-4">
         <header className="flex flex-col gap-3 text-foreground">
           <h1 className="text-3xl font-semibold">
             {website?.submissionPage.name}

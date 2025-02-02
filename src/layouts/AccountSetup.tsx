@@ -67,7 +67,7 @@ const AccountSetup = () => {
   const plan = plans[0];
 
   return (
-    <main className="mx-auto max-w-screen-md py-20">
+    <main className="mx-auto max-w-(--breakpoint-md) py-20">
       <h1 className="mb-6 text-3xl font-medium text-foreground">Onboarding</h1>
 
       <p className="text-foreground/70">

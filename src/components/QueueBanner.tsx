@@ -22,7 +22,7 @@ const QueueBanner = ({ openQueue }: Props) => {
       <div className="flex w-full bg-black/20 p-2 md:w-fit md:bg-transparent">
         <Button
           variant="ghost"
-          className="!text-white"
+          className="text-white!"
           onClick={() => queueStore.clear()}
           type="button"
         >

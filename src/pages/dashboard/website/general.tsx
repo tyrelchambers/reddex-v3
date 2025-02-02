@@ -240,7 +240,7 @@ const General = () => {
             >
               <div className="overflow-hidden rounded-xl bg-card">
                 {websiteSettings.data?.customDomain ? (
-                  <div className="rounded-tl-md rounded-tr-md bg-gradient-to-tl from-gray-400 to-gray-200 p-4 dark:from-zinc-800 dark:to-zinc-600">
+                  <div className="rounded-tl-md rounded-tr-md bg-linear-to-tl from-gray-400 to-gray-200 p-4 dark:from-zinc-800 dark:to-zinc-600">
                     <p className="font-semibold text-foreground">
                       Custom domain
                     </p>

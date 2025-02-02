@@ -80,7 +80,7 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
               />
             </button>
           </header>
-          <div className="mx-auto my-20 flex max-w-screen-xl flex-col gap-4">
+          <div className="mx-auto my-20 flex max-w-(--breakpoint-xl) flex-col gap-4">
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div className="rounded-xl bg-card p-4">
                 <header className="mb-2 flex items-center gap-4">

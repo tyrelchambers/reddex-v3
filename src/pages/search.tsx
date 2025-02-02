@@ -109,7 +109,7 @@ const Search = () => {
       <Header />
 
       {!isSearching && !loadingPosts && !posts.length && (
-        <section className="mx-auto max-w-screen-2xl">
+        <section className="mx-auto max-w-(--breakpoint-2xl)">
           <EmptyState label="subreddit posts" />
         </section>
       )}
@@ -189,7 +189,7 @@ const Search = () => {
       </div>
 
       <Dialog open={openQueue} onOpenChange={setOpenQueue}>
-        <DialogContent className="w-full max-w-screen-lg">
+        <DialogContent className="w-full max-w-(--breakpoint-lg)">
           <DialogHeader>
             <DialogTitle>Story queue</DialogTitle>
           </DialogHeader>

@@ -1,65 +1,238 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer components {
-  .button {
-    @apply h-full rounded-md px-5 py-2 text-xs font-bold text-white transition-all hover:shadow-lg;
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  --color-link: hsl(var(--link));
+  --color-link-foreground: hsl(var(--link-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
 
-  .button.main {
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility button {
+  @apply h-full rounded-md px-5 py-2 text-xs font-bold text-white transition-all hover:shadow-lg;
+
+  &.main {
     @apply bg-rose-500 hover:bg-rose-600;
   }
 
-  .button.danger {
+  &.danger {
     @apply bg-red-100 text-red-500;
   }
 
-  .button.secondary {
+  &.secondary {
     @apply bg-white text-rose-500 hover:bg-rose-100;
   }
 
-  .button.third {
+  &.third {
     @apply border-[1px] border-gray-300 bg-white text-gray-600;
   }
-  .button.main:disabled {
+  &.main:disabled {
     @apply cursor-not-allowed bg-rose-300 text-rose-500 shadow-none;
   }
 
-  .button.alt {
+  &.alt {
     @apply bg-gray-100 text-rose-500 shadow-none hover:bg-gray-200;
   }
 
-  .button.simple {
+  &.simple {
     @apply p-0 text-sm text-rose-500 underline shadow-none;
   }
+}
 
-  .inbox-message-list-item:hover {
+@utility main {
+  &.button {
+    @apply bg-rose-500 hover:bg-rose-600;
+  }
+  &.button:disabled {
+    @apply cursor-not-allowed bg-rose-300 text-rose-500 shadow-none;
+  }
+}
+
+@utility danger {
+  &.button {
+    @apply bg-red-100 text-red-500;
+  }
+}
+
+@utility secondary {
+  &.button {
+    @apply bg-white text-rose-500 hover:bg-rose-100;
+  }
+}
+
+@utility third {
+  &.button {
+    @apply border-[1px] border-gray-300 bg-white text-gray-600;
+  }
+}
+
+@utility alt {
+  &.button {
+    @apply bg-gray-100 text-rose-500 shadow-none hover:bg-gray-200;
+  }
+}
+
+@utility simple {
+  &.button {
+    @apply p-0 text-sm text-rose-500 underline shadow-none;
+  }
+}
+
+@utility inbox-message-list-item {
+  &:hover {
     @apply bg-rose-500 shadow-md;
   }
-  .inbox-message-list-item:hover * {
+  &:hover * {
     @apply text-white;
   }
-  .inbox-message-list-item.active {
+  &.active {
     @apply bg-rose-500 shadow-xl;
   }
-  .inbox-message-list-item.active * {
+  &.active * {
     @apply text-white;
   }
+}
 
-  .label {
-    @apply text-sm font-medium text-gray-700;
+@utility active {
+  &.inbox-message-list-item {
+    @apply bg-rose-500 shadow-xl;
   }
-  .sublabel {
-    @apply mb-2 text-xs text-gray-500;
+  &.inbox-message-list-item * {
+    @apply text-white;
   }
+}
 
-  .form {
-    @apply flex flex-col gap-3;
-  }
+@utility label {
+  @apply text-sm font-medium text-gray-700;
+}
 
+@utility sublabel {
+  @apply mb-2 text-xs text-gray-500;
+}
+
+@utility form {
+  @apply flex flex-col gap-3;
+}
+
+@utility filepond--panel-root {
+  background-color: var(--card);
+}
+
+@utility required {
+  &:after {
+    content: " *";
+    color: red;
+  }
+}
+
+@layer components {
   button[data-active="true"] {
-    @apply !bg-accent;
+    @apply bg-accent!;
   }
 
   #cta-bg {
@@ -75,11 +248,7 @@
     transform: scale(1.01);
     z-index: 1;
     filter: blur(20px);
-    @apply rounded-xl bg-gradient-to-tr from-purple-400 to-pink-400;
-  }
-
-  .filepond--panel-root {
-    background-color: var(--card);
+    @apply rounded-xl bg-linear-to-tr from-purple-400 to-pink-400;
   }
   #svg-squig path {
     fill: hsl(var(--accent));
@@ -96,10 +265,6 @@
 
   #svg-empty {
     scale: 0.25;
-  }
-  .required:after {
-    content: " *";
-    color: red;
   }
 }
 
@@ -192,10 +357,6 @@
     --border: 240 4% 36%;
 
     --link: 210 89% 60%;
-  }
-
-  body {
-    @apply font-sans;
   }
 }
 

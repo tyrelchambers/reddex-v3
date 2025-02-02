@@ -16,6 +16,8 @@ import { env } from "~/env";
 import { isActiveSubscription } from "~/utils";
 import { Toaster } from "~/components/ui/sonner";
 import { toast } from "sonner";
+import { font, fontMono } from "~/utils/font";
+import clsx from "clsx";
 
 type MyAppProps = {
   session: Session | null;
@@ -31,7 +33,7 @@ const MyApp: AppType<MyAppProps> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const { colorScheme } = useTheme();
+  useTheme();
   const userQuery = api.user.me.useQuery(undefined, {
     retry: false,
   });
@@ -50,17 +52,9 @@ const MyApp: AppType<MyAppProps> = ({
     }
   }, [userQuery.data]);
 
-  useEffect(() => {
-    const document = window.document.querySelector("html");
-
-    if (document) {
-      document.className = colorScheme;
-    }
-  }, [colorScheme]);
-
   return (
     <SessionProvider session={session}>
-      <main>
+      <main className={clsx(font.variable, fontMono.variable, "font-sans")}>
         <Component {...pageProps} />
       </main>
       <Toaster richColors />

@@ -114,6 +114,7 @@ export default async function handler(
     const submittedStories = await prisma.submittedStory.findMany({
       where: {
         userId: website.user.id,
+        deleted_at: null,
       },
     });
 

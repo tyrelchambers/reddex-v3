@@ -22,8 +22,7 @@ const UnreadStories = ({ stories, regex }: Props) => {
   const storyList = stories
     ?.filter(
       (item) =>
-        (item.title?.match(regex) || item.author?.match(regex)) &&
-        !item.deleted_at,
+        (item.title?.match(regex) || item.author?.match(regex)) && !item.read,
     )
     ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(

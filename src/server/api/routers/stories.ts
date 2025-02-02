@@ -281,6 +281,19 @@ export const storyRouter = createTRPCRouter({
         },
       });
     }),
+  readSubmittedStory: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return prisma.submittedStory.update({
+        where: {
+          userId: ctx.session.user.id,
+          id: input,
+        },
+        data: {
+          read: true,
+        },
+      });
+    }),
   restoreSubmittedStory: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {

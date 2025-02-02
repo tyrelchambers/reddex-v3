@@ -33,7 +33,7 @@ export const reddexAiRouter = createTRPCRouter({
               </GenerateAThumbnailPrompt>
 
               <GiveMeATitle>
-                This prompt will generate a title for the story given in your context primarily for youtube. Keep the title engaging and not so fantastical. it should draw people in without being too hyperbolic.
+                This prompt will generate a title for the story given in your context primarily for youtube. Keep the title engaging and not so fantastical. it should draw people in without being too hyperbolic. Don't follow this layout: "Whispers from the Past: A Mother's Nightmare". Title should be first person as if the person is describing their experience. This is an example of a title that would be closer to acceptable: "A message appeared on every screen in the world: HIDE." Notice how it's a sentence, descriptive and not totally cliche. Keep the title sentence case with a capitalized first word.
               </GiveMeATitle>
 
               <GiveMeAYoutubeSummary>

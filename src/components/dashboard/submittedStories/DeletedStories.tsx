@@ -1,4 +1,3 @@
-import { Pagination } from "@mantine/core";
 import { SubmittedStory } from "@prisma/client";
 import React, { useState } from "react";
 import StoryCard from "~/components/StoryCard";

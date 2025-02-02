@@ -29,9 +29,9 @@ const ReddexAi = ({ story }: { story: string }) => {
         Talk to Reddex AI and ask questions about the story in question.
       </p>
 
-      <div className="mt-4 rounded-lg bg-card p-4">
+      <div className="bg-card mt-4 rounded-lg p-4">
         <Label>Input</Label>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 md:flex-row">
           <Input
             placeholder="Type your question or command here..."
             value={input}
@@ -49,11 +49,12 @@ const ReddexAi = ({ story }: { story: string }) => {
             )}
           </Button>
         </div>
-        <div className="mt-2 flex gap-3">
+        <div className="mt-2 flex flex-wrap gap-3">
           <Button
             variant="outline"
             type="button"
             onClick={() => sendPrebuilt("generate a thumbnail prompt")}
+            className="text-xs"
           >
             <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
             Generate a thumbnail prompt
@@ -63,6 +64,7 @@ const ReddexAi = ({ story }: { story: string }) => {
             variant="outline"
             type="button"
             onClick={() => sendPrebuilt("give me a title")}
+            className="text-xs"
           >
             <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
             Give me a title
@@ -72,6 +74,7 @@ const ReddexAi = ({ story }: { story: string }) => {
             variant="outline"
             type="button"
             onClick={() => sendPrebuilt("give me a youtube summary")}
+            className="text-xs"
           >
             <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
             Give me a Youtube summary
@@ -81,6 +84,7 @@ const ReddexAi = ({ story }: { story: string }) => {
             variant="outline"
             type="button"
             onClick={() => sendPrebuilt("suggest hashtags for youtube")}
+            className="text-xs"
           >
             <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
             Suggest hashtags
@@ -88,14 +92,14 @@ const ReddexAi = ({ story }: { story: string }) => {
         </div>
 
         <div className="mt-10">
-          <p className="mt-2 font-semibold text-foreground">Chat</p>
+          <p className="text-foreground mt-2 font-semibold">Chat</p>
           {reddexai.data && (
             <div>
-              <p className="mt-2 font-mono text-foreground">{reddexai.data}</p>
+              <p className="text-foreground mt-2 font-mono">{reddexai.data}</p>
               <footer>
                 <button
                   type="button"
-                  className="mt-2 flex w-fit items-center gap-2 rounded-md bg-background p-2 text-xs font-medium text-muted-foreground"
+                  className="bg-background text-muted-foreground mt-2 flex w-fit items-center gap-2 rounded-md p-2 text-xs font-medium"
                   onClick={() => copyToClipboard(reddexai.data)}
                 >
                   <FontAwesomeIcon icon={faClipboard} />

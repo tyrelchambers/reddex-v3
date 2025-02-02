@@ -68,24 +68,24 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
       </Button>
 
       {open && parsedSummary && (
-        <div className="fixed inset-0 z-50 h-screen overflow-y-auto bg-background">
-          <header className="flex w-full items-center justify-between border-b border-border py-2">
-            <p className="px-4 font-semibold text-foreground">
+        <div className="bg-background fixed inset-0 z-50 h-screen overflow-y-auto">
+          <header className="border-border flex w-full items-center justify-between border-b py-2">
+            <p className="text-foreground px-4 font-semibold">
               Summarize Story
             </p>
             <button type="button" onClick={close}>
               <FontAwesomeIcon
                 icon={faTimes}
-                className="border-l border-border p-4 text-xl"
+                className="border-border border-l p-4 text-xl"
               />
             </button>
           </header>
-          <div className="mx-auto my-20 flex max-w-(--breakpoint-xl) flex-col gap-4">
+          <div className="mx-auto my-20 flex max-w-(--breakpoint-xl) flex-col gap-4 p-4">
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <div className="rounded-xl bg-card p-4">
+              <div className="bg-card rounded-xl p-4">
                 <header className="mb-2 flex items-center gap-4">
                   <FontAwesomeIcon icon={faUser} />
-                  <h3 className="font-medium text-foreground">Characters</h3>
+                  <h3 className="text-foreground font-medium">Characters</h3>
                 </header>
                 <div className="flex flex-wrap gap-1">
                   {parsedSummary.characters.map((c, idx) => (
@@ -94,7 +94,7 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
                 </div>
               </div>
 
-              <div className="rounded-xl bg-card p-4">
+              <div className="bg-card rounded-xl p-4">
                 <header className="mb-2 flex items-center gap-4">
                   <FontAwesomeIcon icon={faTag} />
                   <h3 className="font-medium">Topics/themes</h3>
@@ -107,7 +107,7 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
               </div>
             </div>
             <div className="flex flex-col">
-              <h3 className="mb-2 font-medium text-foreground">
+              <h3 className="text-foreground mb-2 font-medium">
                 <FontAwesomeIcon icon={faInputText} className="mr-2" />
                 Summary
               </h3>
@@ -115,17 +115,17 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
             </div>
 
             <div>
-              <h3 className="font-medium text-foreground">
+              <h3 className="text-foreground font-medium">
                 <FontAwesomeIcon icon={faChartSimple} className="mr-2" />
                 Grade
               </h3>
-              <p className="mb-2 text-sm text-muted-foreground">
+              <p className="text-muted-foreground mb-2 text-sm">
                 Grade is a measure of the quality of the story. 1 is the lowest
                 score and 10 is the highest.
               </p>
               <p className="text-3xl font-bold">{parsedSummary.grade}</p>
             </div>
-            <Separator className="my-10 bg-border" />
+            <Separator className="bg-border my-10" />
             <ReddexAi story={text} />
           </div>
         </div>

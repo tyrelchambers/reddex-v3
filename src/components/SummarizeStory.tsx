@@ -16,12 +16,14 @@ import { faTimes } from "@fortawesome/pro-light-svg-icons";
 import { Separator } from "./ui/separator";
 import ReddexAi from "./ReddexAi";
 import { AiResponse } from "~/server/schemas";
+import { useRouter } from "next/router";
 
 const parseSummary = (summary: string) => {
   return JSON.parse(summary) as AiResponse;
 };
 
 const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
+  const router = useRouter();
   const summarize = api.story.summarize.useMutation();
   const [open, setOpen] = useState(false);
 
@@ -34,6 +36,11 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
 
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
+
+    router.beforePopState(() => {
+      setOpen(false);
+      return false;
+    });
 
     return () => {
       document.body.classList.remove("overflow-hidden");

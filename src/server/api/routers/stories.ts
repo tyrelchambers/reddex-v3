@@ -342,9 +342,8 @@ export const storyRouter = createTRPCRouter({
         } catch (error) {
           console.log("Cache error");
         }
-      } else {
-        console.log("Cache miss -- fetching from OpenAI");
       }
+      console.log("Cache miss -- fetching from OpenAI");
 
       const resp = await fetchAiResponse(structure, responseSchema);
 
@@ -353,7 +352,9 @@ export const storyRouter = createTRPCRouter({
         return;
       }
 
+      console.log("Setting cache for", input.postId);
       await setCache(input.postId, resp);
+      console.log("Cache set. Returning response" + JSON.stringify(resp));
       return resp;
     }),
   all: protectedProcedure.query(async ({ ctx }) => {

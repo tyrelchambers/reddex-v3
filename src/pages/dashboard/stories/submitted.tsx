@@ -4,6 +4,7 @@ import UnreadStories from "~/components/dashboard/submittedStories/UnreadStories
 import { Input } from "~/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
+import { logger } from "~/lib/logger";
 import { storiesTabs } from "~/routes";
 import { api } from "~/utils/api";
 

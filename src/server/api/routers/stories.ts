@@ -13,6 +13,7 @@ import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { checkCache, setCache } from "~/lib/redis";
 import { fetchAiResponse } from "~/utils/openai-helpers";
 import { saveInboxMessage } from "~/utils/index.server";
+import { logger } from "~/lib/logger";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -155,6 +156,7 @@ export const storyRouter = createTRPCRouter({
     });
   }),
   submittedList: protectedProcedure.query(async ({ ctx }) => {
+    logger.debug("Getting submitted list");
     return await prisma.submittedStory.findMany({
       where: {
         userId: ctx.session.user.id,

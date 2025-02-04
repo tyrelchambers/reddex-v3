@@ -367,4 +367,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  button.MuiPaginationItem-root {
+    @apply !text-foreground !bg-card;
+  }
 }

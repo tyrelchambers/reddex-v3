@@ -35,12 +35,14 @@ const SummarizeStory = ({ text, postId }: { postId: string; text: string }) => {
   }, [summarize.data]);
 
   useEffect(() => {
-    document.body.classList.add("overflow-hidden");
+    if (open) {
+      document.body.classList.add("overflow-hidden");
 
-    router.beforePopState(() => {
-      setOpen(false);
-      return false;
-    });
+      router.beforePopState(() => {
+        setOpen(false);
+        return false;
+      });
+    }
 
     return () => {
       document.body.classList.remove("overflow-hidden");

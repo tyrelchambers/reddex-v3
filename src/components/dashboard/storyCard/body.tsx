@@ -5,7 +5,7 @@ const StoryCardBody = ({
 }: {
   children: React.ReactNode | React.ReactNode[];
 }) => {
-  return <div className="flex gap-3">{children}</div>;
+  return <div className="flex flex-col gap-3 sm:flex-row">{children}</div>;
 };
 
 export default StoryCardBody;

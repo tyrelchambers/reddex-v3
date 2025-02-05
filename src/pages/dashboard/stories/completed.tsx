@@ -3,11 +3,10 @@ import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import StoryCardBody from "~/components/dashboard/storyCard/body";
 import StoryCardDetails from "~/components/dashboard/storyCard/details";
+import { StoryCardPermissionFooter } from "~/components/dashboard/storyCard/footer";
 import StoryCardHeader from "~/components/dashboard/storyCard/header";
 import StoryCardInfo from "~/components/dashboard/storyCard/mainInfo";
-import StoryCard, {
-  StoryCardPermissionFooter,
-} from "~/components/dashboard/storyCard/StoryCard";
+import StoryCard from "~/components/dashboard/storyCard/StoryCard";
 import Ups from "~/components/dashboard/storyCard/ups";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";

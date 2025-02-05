@@ -1,15 +1,14 @@
 import { Pagination } from "@mui/material";
 import { SubmittedStory } from "@prisma/client";
 import React, { useState } from "react";
-import StoryCard, {
-  SubmittedStoryFooter,
-} from "~/components/dashboard/storyCard/StoryCard";
+import StoryCard from "~/components/dashboard/storyCard/StoryCard";
 import StoryCardBody from "../storyCard/body";
 import StoryCardInfo from "../storyCard/mainInfo";
 import StoryCardHeader from "../storyCard/header";
 import StoryCardDetails from "../storyCard/details";
 import { api } from "~/utils/api";
 import { getUnixTime } from "date-fns";
+import { SubmittedStoryFooter } from "../storyCard/footer";
 
 interface Props {
   stories: SubmittedStory[];

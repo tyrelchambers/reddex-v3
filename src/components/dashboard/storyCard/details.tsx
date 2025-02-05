@@ -28,7 +28,7 @@ const StoryCardDetails = ({
   upvote_ratio,
 }: Props) => {
   return (
-    <div className="mt-auto flex flex-wrap gap-3">
+    <div className="mt-auto mb-4 flex flex-wrap gap-3">
       {upvote_ratio && (
         <Badge className="w-fit">
           {(upvote_ratio * 100).toFixed(0)}% Rating

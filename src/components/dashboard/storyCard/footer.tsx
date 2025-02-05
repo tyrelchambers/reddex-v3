@@ -46,7 +46,7 @@ export const SearchedPostFooter = ({ post, hasBeenUsed }: Props) => {
           </Tooltip>
         </TooltipProvider>
       )}
-      <div className="ml-auto flex items-center">
+      <div className="ml-auto flex items-center gap-2">
         <SummarizeStory postId={post.id} text={post.selftext} />
         {isInQueue ? (
           <Button

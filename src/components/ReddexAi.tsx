@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { api } from "~/utils/api";
 import { copyToClipboard } from "~/utils/copyToClipboard";
+import { Skeleton } from "./ui/skeleton";
 
 const ReddexAi = ({ story }: { story: string }) => {
   const reddexai = api.reddexai.talk.useMutation();
@@ -93,7 +94,9 @@ const ReddexAi = ({ story }: { story: string }) => {
 
         <div className="mt-10">
           <p className="text-foreground mt-2 font-semibold">Chat</p>
-          {reddexai.data && (
+          {reddexai.isPending ? (
+            <Skeleton className="bg-background h-[200px] w-full" />
+          ) : reddexai.data ? (
             <div>
               <p className="text-foreground mt-2 font-mono">{reddexai.data}</p>
               <footer>
@@ -107,7 +110,7 @@ const ReddexAi = ({ story }: { story: string }) => {
                 </button>
               </footer>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import { SubmittedStory } from "@prisma/client";
 import React, { useState } from "react";
-import StoryCard from "~/components/StoryCard";
+import StoryCard from "~/components/dashboard/storyCard/StoryCard";
 import Pagination from "@mui/material/Pagination";
 import { Button } from "~/components/ui/button";
 import { api } from "~/utils/api";

@@ -1,7 +1,15 @@
 import { Pagination } from "@mui/material";
 import { SubmittedStory } from "@prisma/client";
 import React, { useState } from "react";
-import StoryCard from "~/components/StoryCard";
+import StoryCard, {
+  SubmittedStoryFooter,
+} from "~/components/dashboard/storyCard/StoryCard";
+import StoryCardBody from "../storyCard/body";
+import StoryCardInfo from "../storyCard/mainInfo";
+import StoryCardHeader from "../storyCard/header";
+import StoryCardDetails from "../storyCard/details";
+import { api } from "~/utils/api";
+import { getUnixTime } from "date-fns";
 
 interface Props {
   stories: SubmittedStory[];
@@ -10,7 +18,8 @@ interface Props {
 
 const UnreadStories = ({ stories, regex }: Props) => {
   const [page, setPage] = useState(1);
-
+  const profile = api.user.me.useQuery();
+  const wpm = profile.data?.Profile?.words_per_minute;
   const filteredStories = stories?.filter(
     (item) =>
       (item.title?.match(regex) || item.author?.match(regex)) && !item.read,
@@ -27,7 +36,25 @@ const UnreadStories = ({ stories, regex }: Props) => {
       (page - 1) * PAGINATION_LIMIT_PER_PAGE,
       page * PAGINATION_LIMIT_PER_PAGE,
     )
-    .map((story) => <StoryCard key={story.id} story={story} />);
+    .map((story) => (
+      <StoryCard key={story.id}>
+        <StoryCardBody>
+          <StoryCardInfo>
+            <StoryCardHeader
+              author={story.author}
+              url={`/story/${story.id}`}
+              title={story.title}
+            />
+            <StoryCardDetails
+              body={story.body}
+              wpm={wpm}
+              dateCreated={getUnixTime(new Date(story.date))}
+            />
+          </StoryCardInfo>
+        </StoryCardBody>
+        <SubmittedStoryFooter story={story} />
+      </StoryCard>
+    ));
 
   return (
     <section className="mt-4 flex w-full flex-col">

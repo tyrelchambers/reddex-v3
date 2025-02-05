@@ -1,7 +1,14 @@
 import { Pagination } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import StoryListItem from "~/components/StoryListItem";
+import StoryCardBody from "~/components/dashboard/storyCard/body";
+import StoryCardDetails from "~/components/dashboard/storyCard/details";
+import StoryCardHeader from "~/components/dashboard/storyCard/header";
+import StoryCardInfo from "~/components/dashboard/storyCard/mainInfo";
+import StoryCard, {
+  StoryCardPermissionFooter,
+} from "~/components/dashboard/storyCard/StoryCard";
+import Ups from "~/components/dashboard/storyCard/ups";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -19,6 +26,9 @@ import { api } from "~/utils/api";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 
 const Approved = () => {
+  const profile = api.user.me.useQuery();
+  const wpm = profile.data?.Profile?.words_per_minute;
+
   const { data } = useSession();
   const [page, setPage] = useState(1);
 
@@ -52,7 +62,27 @@ const Approved = () => {
       page * PAGINATION_LIMIT_PER_PAGE,
     )
     .map((story) => (
-      <StoryListItem key={story.id} story={story} list="approved" />
+      <StoryCard key={story.id}>
+        <StoryCardBody>
+          <Ups ups={story.ups} />
+          <StoryCardInfo>
+            <StoryCardHeader
+              author={story.author}
+              url={story.url}
+              title={story.title}
+            />
+            <StoryCardDetails
+              body={story.content}
+              wpm={wpm}
+              dateCreated={story.created}
+              upvote_ratio={story.upvote_ratio}
+              flair={story.flair}
+              subreddit={story.subreddit}
+            />
+          </StoryCardInfo>
+        </StoryCardBody>
+        <StoryCardPermissionFooter list="approved" story={story} />
+      </StoryCard>
     ));
 
   return (

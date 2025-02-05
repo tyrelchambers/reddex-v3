@@ -45,7 +45,7 @@ const CompletedItemActions = ({ postId }: Props) => {
           addToApproved.mutate(postId);
         }}
       >
-        Add to reading list
+        Mark as unread
       </Button>
     </div>
   );

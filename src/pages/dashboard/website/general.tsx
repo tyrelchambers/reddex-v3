@@ -13,14 +13,9 @@ import React, { useEffect, useRef } from "react";
 import { websiteTabItems } from "~/routes";
 import { MixpanelEvents } from "~/types";
 import { api } from "~/utils/api";
-import { FilePond, registerPlugin } from "react-filepond";
+import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-import FilePondPluginImageResize from "filepond-plugin-image-resize";
-import FileUpload from "~/components/FileUpload";
+
 import StatusBanner from "~/components/StatusBanner";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
@@ -28,7 +23,6 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { trackUiEvent } from "~/utils/mixpanelClient";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import Image from "next/image";
 import { Separator } from "~/components/ui/separator";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,13 +37,6 @@ import DashboardSection from "~/layouts/DashboardSection";
 import ThumbnailUploader from "~/components/ThumbnailUploader";
 import BannerUploader from "~/components/BannerUploader";
 import { Switch } from "~/components/ui/switch";
-
-registerPlugin(
-  FilePondPluginImageExifOrientation,
-  FilePondPluginImagePreview,
-  FilePondPluginFileValidateSize,
-  FilePondPluginImageResize,
-);
 
 const General = () => {
   const apiContext = api.useUtils();
@@ -102,6 +89,7 @@ const General = () => {
       tiktok: "",
       ohcleo: "",
     },
+    mode: "onBlur",
   });
   const formValues = form.getValues();
   const subdomainFormWatch = form.watch("subdomain");
@@ -201,7 +189,7 @@ const General = () => {
         isLoading={websiteSettings.isPending}
         loadingMessage="Loading website settings..."
       >
-        <h1 className="text-2xl font-bold text-foreground">General</h1>
+        <h1 className="text-foreground text-2xl font-bold">General</h1>
         {websiteVisibility.data?.hidden ? (
           <StatusBanner
             title="Enable Website"
@@ -238,13 +226,13 @@ const General = () => {
               subtitle="By default, your site will be hosted at: [subdomain].reddex.app"
               background={false}
             >
-              <div className="overflow-hidden rounded-xl bg-card">
+              <div className="bg-card overflow-hidden rounded-xl">
                 {websiteSettings.data?.customDomain ? (
                   <div className="rounded-tl-md rounded-tr-md bg-linear-to-tl from-gray-400 to-gray-200 p-4 dark:from-zinc-800 dark:to-zinc-600">
-                    <p className="font-semibold text-foreground">
+                    <p className="text-foreground font-semibold">
                       Custom domain
                     </p>
-                    <p className="mb-4 text-sm text-foreground/70">
+                    <p className="text-foreground/70 mb-4 text-sm">
                       Add your custom domain below. After that, make sure to
                       configure your DNS records. Want some{" "}
                       <a
@@ -256,7 +244,7 @@ const General = () => {
                     </p>
 
                     <div className="flex flex-col items-center gap-4 sm:flex-row">
-                      <div className="flex w-full rounded-md bg-background/50 p-2 px-2 text-foreground backdrop-blur-lg md:px-6">
+                      <div className="bg-background/50 text-foreground flex w-full rounded-md p-2 px-2 backdrop-blur-lg md:px-6">
                         {websiteSettings.data.customDomain.domain}
                       </div>
                       <a
@@ -360,7 +348,7 @@ const General = () => {
                 <div className="flex items-center gap-4">
                   <div className="flex w-full flex-col">
                     <p className="text-sm font-medium">Open for collabs</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Show a badge on your website indicating you&apos;re open
                       for collabs with other narrators.
                     </p>
@@ -485,7 +473,6 @@ const General = () => {
                         className="text-foreground/70"
                         icon={faTiktok}
                       />
-
                       <Input placeholder="@username" {...field} />
                     </div>
                   </FormItem>

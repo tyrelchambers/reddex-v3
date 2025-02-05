@@ -18,6 +18,19 @@ import { Toaster } from "~/components/ui/sonner";
 import { toast } from "sonner";
 import { font, fontMono } from "~/utils/font";
 import clsx from "clsx";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginImageResize from "filepond-plugin-image-resize";
+import { registerPlugin } from "filepond";
+
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateSize,
+  FilePondPluginImageResize,
+);
 
 type MyAppProps = {
   session: Session | null;

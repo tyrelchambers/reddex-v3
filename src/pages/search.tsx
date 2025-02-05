@@ -2,7 +2,6 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import Header from "~/layouts/Header";
 import { api } from "~/utils/api";
-import SubredditSearchItem from "~/components/SubredditSearchItem";
 import QueueBanner from "~/components/QueueBanner";
 import QueueModal from "~/components/QueueModal";
 import { db } from "~/utils/dexie";
@@ -25,6 +24,14 @@ import { filterPosts, paginatedSlice } from "~/utils/searchHelpers";
 import { useSearchStore } from "~/stores/searchStore";
 import queryString from "query-string";
 import { Pagination } from "@mui/material";
+import StoryCard from "~/components/dashboard/storyCard/StoryCard";
+import StoryCardBody from "~/components/dashboard/storyCard/body";
+import Ups from "~/components/dashboard/storyCard/ups";
+import StoryCardInfo from "~/components/dashboard/storyCard/mainInfo";
+import StoryCardHeader from "~/components/dashboard/storyCard/header";
+import StoryCardDetails from "~/components/dashboard/storyCard/details";
+import { SearchedPostFooter } from "~/components/dashboard/storyCard/footer";
+import { useQueueStore } from "~/stores/queueStore";
 
 const Search = () => {
   const {
@@ -58,6 +65,8 @@ const Search = () => {
     filterPosts(filters, posts, currentUser.data?.Profile?.words_per_minute)
       .length / PAGINATION_LIMIT_PER_PAGE,
   );
+
+  const queueStore = useQueueStore();
 
   useEffect(() => {
     const fn = async () => {
@@ -129,7 +138,7 @@ const Search = () => {
           reset={resetFilters}
         />
 
-        <div className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
           {(!isSearching &&
             !loadingPosts &&
             paginatedSlice(
@@ -142,21 +151,40 @@ const Search = () => {
               page,
             )
               .sort((a, b) => b.created - a.created)
-              .map((item) => (
-                <SubredditSearchItem
-                  key={item.id}
-                  post={item}
-                  hasBeenUsed={
-                    !!usedPostIdsQuery.data?.find(
-                      (id) => id.post_id === item.id,
-                    )
-                  }
-                  usersWordsPerMinute={
-                    currentUser.data?.Profile?.words_per_minute
-                  }
-                  canAddToQueue={session.status === "authenticated" || false}
-                />
-              ))) ||
+              .map((story) => {
+                const isInQueue = queueStore.exists(story);
+
+                return (
+                  <StoryCard key={story.id} isInQueue={isInQueue}>
+                    <StoryCardBody>
+                      <Ups ups={story.ups} />
+                      <StoryCardInfo>
+                        <StoryCardHeader
+                          author={story.author}
+                          url={story.url}
+                          title={story.title}
+                        />
+                        <StoryCardDetails
+                          body={story.selftext}
+                          wpm={currentUser.data?.Profile?.words_per_minute}
+                          dateCreated={story.created}
+                          upvote_ratio={story.upvote_ratio}
+                          flair={story.link_flair_text}
+                          subreddit={story.subreddit}
+                        />
+                      </StoryCardInfo>
+                    </StoryCardBody>
+                    <SearchedPostFooter
+                      hasBeenUsed={
+                        !!usedPostIdsQuery.data?.find(
+                          (id) => id.post_id === story.id,
+                        )
+                      }
+                      post={story}
+                    />
+                  </StoryCard>
+                );
+              })) ||
             null}
         </div>
 
@@ -185,7 +213,7 @@ const Search = () => {
       </div>
 
       <Dialog open={openQueue} onOpenChange={setOpenQueue}>
-        <DialogContent className="w-full max-w-(--breakpoint-lg)">
+        <DialogContent className="w-full max-w-3xl">
           <DialogHeader>
             <DialogTitle>Story queue</DialogTitle>
           </DialogHeader>

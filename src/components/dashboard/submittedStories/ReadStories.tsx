@@ -1,9 +1,15 @@
 import { SubmittedStory } from "@prisma/client";
 import React, { useState } from "react";
-import StoryCard from "~/components/StoryCard";
+import StoryCard from "~/components/dashboard/storyCard/StoryCard";
 import Pagination from "@mui/material/Pagination";
 import { Button } from "~/components/ui/button";
 import { api } from "~/utils/api";
+import StoryCardBody from "../storyCard/body";
+import StoryCardInfo from "../storyCard/mainInfo";
+import StoryCardHeader from "../storyCard/header";
+import StoryCardDetails from "../storyCard/details";
+import { SubmittedStoryFooter } from "../storyCard/footer";
+import { getUnixTime } from "date-fns";
 
 interface Props {
   stories: SubmittedStory[];
@@ -12,6 +18,8 @@ interface Props {
 
 const ReadStories = ({ stories, regex }: Props) => {
   const apiCtx = api.useUtils();
+  const profile = api.user.me.useQuery();
+  const wpm = profile.data?.Profile?.words_per_minute;
   const permanentDelete = api.story.deleteSubmittedStory.useMutation({
     onSuccess: () => {
       apiCtx.story.submittedList.invalidate();
@@ -38,19 +46,34 @@ const ReadStories = ({ stories, regex }: Props) => {
       page * PAGINATION_LIMIT_PER_PAGE,
     )
     .map((story) => (
-      <StoryCard
-        key={story.id}
-        story={story}
-        extraActions={
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => permanentDelete.mutate(story.id)}
-          >
-            Permanent delete
-          </Button>
-        }
-      />
+      <StoryCard key={story.id}>
+        <StoryCardBody>
+          <StoryCardInfo>
+            <StoryCardHeader
+              author={story.author}
+              url={`/story/${story.id}`}
+              title={story.title}
+            />
+            <StoryCardDetails
+              body={story.body}
+              wpm={wpm}
+              dateCreated={getUnixTime(new Date(story.date))}
+            />
+          </StoryCardInfo>
+        </StoryCardBody>
+        <SubmittedStoryFooter
+          extraActions={
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => permanentDelete.mutate(story.id)}
+            >
+              Permanent delete
+            </Button>
+          }
+          story={story}
+        />
+      </StoryCard>
     ));
 
   return (

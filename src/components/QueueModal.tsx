@@ -119,7 +119,7 @@ const QueueModal = ({ close }: Props) => {
 
         <div className="mt-4 flex flex-col">
           <div className="flex flex-col items-baseline lg:flex-row lg:gap-4">
-            <p className="font-bold text-foreground">Message</p>
+            <p className="text-foreground font-bold">Message</p>
 
             <div className="flex gap-4">
               <Button
@@ -146,13 +146,13 @@ const QueueModal = ({ close }: Props) => {
 
         <footer className="mt-6 flex flex-col justify-between gap-3 lg:flex-row">
           <div className="flex flex-col gap-3 lg:flex-row">
-            <Button variant="secondary" type="button" onClick={removeFromQueue}>
+            <Button variant="outline" type="button" onClick={removeFromQueue}>
               Remove from queue
             </Button>
             {!contactQuery.data && (
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 onClick={saveContactHandler}
                 className="whitespace-pre-wrap"
               >
@@ -187,18 +187,18 @@ const ActiveQueueItem = ({
 
   return (
     <header className="flex flex-col gap-3">
-      <div className="flex flex-col rounded-xl bg-card p-2">
-        <p className="text-xs font-normal uppercase text-card-foreground">
+      <div className="bg-card flex flex-col rounded-xl p-2">
+        <p className="text-card-foreground text-xs font-normal uppercase">
           Subject
         </p>
-        <p className="mt-1 font-bold text-card-foreground">{post.title}</p>
+        <p className="text-card-foreground mt-1 font-bold">{post.title}</p>
       </div>
 
-      <div className="flex flex-col rounded-xl bg-card p-2">
-        <p className="text-xs font-normal uppercase text-card-foreground">
+      <div className="bg-card flex flex-col rounded-xl p-2">
+        <p className="text-card-foreground text-xs font-normal uppercase">
           Author
         </p>
-        <div className="mt-1 flex items-center gap-4 break-all font-bold text-card-foreground">
+        <div className="text-card-foreground mt-1 flex items-center gap-4 font-bold break-all">
           <p>{post.author}</p>{" "}
           {contact && (
             <button type="button" onClick={() => setShowNote((prev) => !prev)}>
@@ -208,14 +208,14 @@ const ActiveQueueItem = ({
         </div>
 
         {showNote && (
-          <p className="mt-2 rounded-md border border-border bg-background p-2 text-sm text-card-foreground">
+          <p className="border-border bg-background text-card-foreground mt-2 rounded-md border p-2 text-sm">
             {contact?.notes}
           </p>
         )}
       </div>
 
       {lastMessage && (
-        <div className="rounded-lg border border-border p-4">
+        <div className="border-border rounded-lg border p-4">
           <p className="text-xs font-medium uppercase">
             <FontAwesomeIcon icon={faTimer} className="mr-2" />
             Last messaged on {format(lastMessage.createdAt, "MMM do, yyyy")}

@@ -1,8 +1,15 @@
 import { Pagination } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import EmptyState from "~/components/EmptyState";
-import StoryListItem from "~/components/StoryListItem";
+import StoryCardBody from "~/components/dashboard/storyCard/body";
+import StoryCardDetails from "~/components/dashboard/storyCard/details";
+import { StoryCardPermissionFooter } from "~/components/dashboard/storyCard/footer";
+import StoryCardHeader from "~/components/dashboard/storyCard/header";
+import StoryCardInfo from "~/components/dashboard/storyCard/mainInfo";
+import StoryCard, {
+  StoryCardSkeleton,
+} from "~/components/dashboard/storyCard/StoryCard";
+import Ups from "~/components/dashboard/storyCard/ups";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import WrapperWithNav from "~/layouts/WrapperWithNav";
@@ -14,6 +21,8 @@ import { trackUiEvent } from "~/utils/mixpanelClient";
 const Completed = () => {
   const { data } = useSession();
   const [page, setPage] = useState(1);
+  const profile = api.user.me.useQuery();
+  const wpm = profile.data?.Profile?.words_per_minute;
 
   const apiContext = api.useUtils();
   const completedListQuery = api.story.getCompletedList.useQuery(undefined, {
@@ -53,7 +62,25 @@ const Completed = () => {
       page * PAGINATION_LIMIT_PER_PAGE,
     )
     .map((story) => (
-      <StoryListItem key={story.id} story={story} list="approved" />
+      <StoryCard key={story.id}>
+        <StoryCardBody>
+          <Ups ups={story.ups} />
+          <StoryCardInfo>
+            <StoryCardHeader
+              author={story.author}
+              url={story.url}
+              title={story.title}
+            />
+            <StoryCardDetails
+              body={story.content}
+              wpm={wpm}
+              dateCreated={story.created}
+              upvote_ratio={story.upvote_ratio}
+            />
+          </StoryCardInfo>
+        </StoryCardBody>
+        <StoryCardPermissionFooter list="completed" story={story} />
+      </StoryCard>
     ));
 
   return (
@@ -92,7 +119,16 @@ const Completed = () => {
         </header>
 
         <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
-          {storyList}
+          {completedListQuery.isFetching ? (
+            <>
+              <StoryCardSkeleton />
+              <StoryCardSkeleton />
+              <StoryCardSkeleton />
+              <StoryCardSkeleton />
+            </>
+          ) : (
+            storyList
+          )}
         </div>
 
         <footer className="mt-4 flex justify-center">

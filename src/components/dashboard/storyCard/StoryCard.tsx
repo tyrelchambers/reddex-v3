@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React from "react";
+import { Skeleton } from "~/components/ui/skeleton";
 
 interface Props {
   isInQueue?: boolean;
@@ -21,5 +22,9 @@ const StoryCard = ({ children, isInQueue }: Props) => {
     </div>
   );
 };
+
+export const StoryCardSkeleton = () => (
+  <Skeleton className="h-[200px] w-full"></Skeleton>
+);
 
 export default StoryCard;

@@ -6,7 +6,9 @@ import StoryCardDetails from "~/components/dashboard/storyCard/details";
 import { StoryCardPermissionFooter } from "~/components/dashboard/storyCard/footer";
 import StoryCardHeader from "~/components/dashboard/storyCard/header";
 import StoryCardInfo from "~/components/dashboard/storyCard/mainInfo";
-import StoryCard from "~/components/dashboard/storyCard/StoryCard";
+import StoryCard, {
+  StoryCardSkeleton,
+} from "~/components/dashboard/storyCard/StoryCard";
 import Ups from "~/components/dashboard/storyCard/ups";
 import { Button } from "~/components/ui/button";
 import {
@@ -130,7 +132,16 @@ const Approved = () => {
           </div>
         </header>
         <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2">
-          {storyList}
+          {approvedListQuery.isFetching ? (
+            <>
+              <StoryCardSkeleton />
+              <StoryCardSkeleton />
+              <StoryCardSkeleton />
+              <StoryCardSkeleton />
+            </>
+          ) : (
+            storyList
+          )}
         </div>
         <footer className="mt-4 flex justify-center">
           <Pagination

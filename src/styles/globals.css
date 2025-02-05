@@ -371,4 +371,8 @@
   button.MuiPaginationItem-root {
     @apply !text-foreground !bg-card;
   }
+
+  button[aria-current="page"] {
+    @apply !bg-accent !text-accent-foreground;
+  }
 }

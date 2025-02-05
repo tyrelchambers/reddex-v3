@@ -213,7 +213,7 @@ const Search = () => {
       </div>
 
       <Dialog open={openQueue} onOpenChange={setOpenQueue}>
-        <DialogContent className="w-full max-w-(--breakpoint-lg)">
+        <DialogContent className="w-full max-w-3xl">
           <DialogHeader>
             <DialogTitle>Story queue</DialogTitle>
           </DialogHeader>

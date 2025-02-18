@@ -82,7 +82,7 @@ const WebsiteLayout = () => {
         </DashboardSection>
         <DashboardSection
           title="Top 3"
-          subtitle="List your top 6 videos or stories that you've read. Empty links will not be shown on your website."
+          subtitle="List your top 3 videos or stories that you've read. Empty URLs will not be shown on your website."
           className="max-w-2xl"
         >
           <Top3 />

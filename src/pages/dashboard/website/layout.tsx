@@ -1,5 +1,5 @@
 import React from "react";
-import Top6 from "~/components/dashboard/website/Top6";
+import Top3 from "~/components/dashboard/website/Top3";
 import { Switch } from "~/components/ui/switch";
 import BodyWithLoader from "~/layouts/BodyWithLoader";
 import DashboardSection from "~/layouts/DashboardSection";
@@ -81,11 +81,11 @@ const WebsiteLayout = () => {
           </div>
         </DashboardSection>
         <DashboardSection
-          title="Top 6"
+          title="Top 3"
           subtitle="List your top 6 videos or stories that you've read. Empty links will not be shown on your website."
           className="max-w-2xl"
         >
-          <Top6 />
+          <Top3 />
         </DashboardSection>
       </BodyWithLoader>
     </WrapperWithNav>

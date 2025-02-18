@@ -10,6 +10,7 @@ import {
   websiteLayoutSchema,
   websiteSubmissionSchema,
   websiteThemeSchema,
+  websiteTop3Schema,
 } from "~/server/schemas";
 import axios from "axios";
 import { env } from "process";
@@ -41,6 +42,7 @@ export const websiteRouter = createTRPCRouter({
         },
         customDomain: true,
         WebsiteLayouts: true,
+        top3: true,
       },
     });
   }),
@@ -374,6 +376,41 @@ export const websiteRouter = createTRPCRouter({
             websiteId: website.id,
           },
         });
+      }
+    }),
+  updateTop3: protectedProcedure
+    .input(websiteTop3Schema)
+    .mutation(async ({ ctx, input }) => {
+      if (!input.websiteId) throw new Error("Missing website ID");
+
+      for (let index = 0; index < input.data.length; index++) {
+        const element = input.data[index];
+
+        if (!element) continue;
+
+        if (element.id) {
+          await prisma.top3.update({
+            where: {
+              id: element.id,
+            },
+            data: {
+              url: element.url,
+              type: element.type,
+              label: element.label,
+            },
+          });
+          continue;
+        } else {
+          await prisma.top3.create({
+            data: {
+              url: element.url,
+              type: element.type,
+              websiteId: input.websiteId,
+              index: element.index,
+              label: element.label,
+            },
+          });
+        }
       }
     }),
 });

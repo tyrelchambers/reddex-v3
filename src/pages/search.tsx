@@ -123,7 +123,7 @@ const Search = () => {
         </section>
       )}
 
-      <div className="flex flex-col p-4">
+      <div className="mx-auto flex max-w-[2000px] flex-col p-4">
         <QueueBanner openQueue={() => setOpenQueue(true)} />
 
         {(isSearching || loadingPosts) && (
@@ -138,7 +138,7 @@ const Search = () => {
           reset={resetFilters}
         />
 
-        <div className="mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mx-auto mt-4 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
           {(!isSearching &&
             !loadingPosts &&
             paginatedSlice(

@@ -178,6 +178,17 @@ model Website {
   WebsiteLayouts        WebsiteLayouts[]
   openForCollabs        Boolean              @default(false)
   rssFeed               String?
+  top3                  Top3[]
+}
+
+model Top3 {
+  id        String  @id @default(cuid())
+  index     Int
+  url       String
+  label     String  @default("")
+  type      String
+  websiteId String
+  Website   Website @relation(fields: [websiteId], references: [id])
 }
 
 model WebsiteLayouts {

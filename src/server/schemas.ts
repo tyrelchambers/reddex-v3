@@ -195,3 +195,16 @@ export const responseSchema = z.object({
   topics: z.array(z.string()),
 });
 export type AiResponse = z.infer<typeof responseSchema>;
+
+export const websiteTop3Schema = z.object({
+  websiteId: z.string().optional(),
+  data: z.array(
+    z.object({
+      index: z.number(),
+      url: z.string(),
+      type: z.string(),
+      id: z.string().optional(),
+      label: z.string().optional(),
+    }),
+  ),
+});

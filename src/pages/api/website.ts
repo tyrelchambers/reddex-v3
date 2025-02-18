@@ -86,6 +86,13 @@ export default async function handler(
             enabled: true,
           },
         },
+        top3: {
+          where: {
+            url: {
+              not: "",
+            },
+          },
+        },
       },
     });
 

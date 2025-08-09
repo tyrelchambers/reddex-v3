@@ -36,7 +36,7 @@ const InboxMessageList = ({
   return (
     <div
       className={clsx(
-        "flex w-full flex-col overflow-auto border-r border-card p-4 xl:max-w-sm",
+        "border-card bg-card flex w-full flex-col overflow-auto border-r p-4 xl:max-w-sm",
         selectedMessage && "hidden xl:flex",
       )}
     >
@@ -62,15 +62,15 @@ const InboxMessageList = ({
                 m.id === selectedMessage ? "active" : ""
               }`}
             >
-              <p className="text-left font-medium text-foreground">
+              <p className="text-foreground text-left font-medium">
                 {m.subject}
               </p>
               <footer className="mt-4 flex justify-between">
-                <p className="text-sm font-thin text-muted-foreground">
+                <p className="text-muted-foreground text-sm font-thin">
                   <FontAwesomeIcon icon={faUserCircle} className="mr-1" />{" "}
                   {m.dest}
                 </p>
-                <p className="text-sm font-thin text-muted-foreground">
+                <p className="text-muted-foreground text-sm font-thin">
                   {format(fromUnixTime(m.created), "MMM do, yyyy")}
                 </p>
               </footer>

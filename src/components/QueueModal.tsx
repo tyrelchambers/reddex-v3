@@ -12,6 +12,7 @@ import { faLoader } from "@fortawesome/pro-regular-svg-icons";
 import { Badge } from "./ui/badge";
 import { faTimer } from "@fortawesome/pro-solid-svg-icons";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 interface ActiveQueueItemProps {
   post: PostFromReddit;
@@ -81,15 +82,22 @@ const QueueModal = ({ close }: Props) => {
     // send message ->
     if (!currentPost) return;
 
-    redditPost.mutate({
-      ...currentPost,
-      content: currentPost.selftext,
-      story_length: currentPost.selftext.length,
-      flair: currentPost.link_flair_text,
-      post_id: currentPost.id,
-      reading_time: Math.round(currentPost.selftext.length / 200),
-      message: form.getValues().message,
-    });
+    redditPost.mutate(
+      {
+        ...currentPost,
+        content: currentPost.selftext,
+        story_length: currentPost.selftext.length,
+        flair: currentPost.link_flair_text,
+        post_id: currentPost.id,
+        reading_time: Math.round(currentPost.selftext.length / 200),
+        message: form.getValues().message,
+      },
+      {
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      },
+    );
   };
 
   const saveContactHandler = () => {

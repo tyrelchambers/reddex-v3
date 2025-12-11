@@ -13,6 +13,7 @@ import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { checkCache, setCache } from "~/lib/redis";
 import { fetchAiResponse } from "~/utils/openai-helpers";
 import { saveInboxMessage } from "~/utils/index.server";
+import queryString from "query-string";
 
 export const storyRouter = createTRPCRouter({
   getApprovedList: protectedProcedure.query(async ({ ctx }) => {
@@ -85,27 +86,32 @@ export const storyRouter = createTRPCRouter({
           throw new Error("Missing access token");
         }
 
-        const body = new FormData();
-
-        const author =
-          process.env.NODE_ENV === "production"
-            ? input.author
-            : "StoriesAfterMidnight";
-
-        body.set("to", author);
-        body.set("subject", formatSubject(input.title));
-        body.set("text", input.message);
+        const body = {
+          to:
+            process.env.NODE_ENV === "production"
+              ? input.author
+              : "StoriesAfterMidnight",
+          subject: formatSubject(input.title),
+          text: input.message,
+        };
 
         await axios
-          .post(COMPOSE_MESSAGE_URL, body, {
+          .post(COMPOSE_MESSAGE_URL, queryString.stringify(body), {
             headers: {
-              Authorization: `bearer ${accessToken}`,
-              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${accessToken}`,
             },
           })
           .then(async (res) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (!res.data.success) {
+              const dataStr = JSON.stringify(res.data);
+
+              if (dataStr.includes("NOT_WHITELISTED_BY_USER_MESSAGE")) {
+                throw new Error(
+                  `This user does not allow private messages: ${body.to}`,
+                );
+              }
+
               if (res.data instanceof Error) {
                 throw new Error(`Failed to send message: ${res.data.message}`);
               }
@@ -134,7 +140,7 @@ export const storyRouter = createTRPCRouter({
         await saveInboxMessage({
           redditPostId: input.post_id,
           subject: formatSubject(input.title),
-          to: author,
+          to: body.to,
           from: ctx.session.user.id,
         });
 

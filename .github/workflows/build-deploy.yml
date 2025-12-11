@@ -22,6 +22,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up SCP 🔑
+        run: |
+          mkdir -v -m 700 $HOME/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > $HOME/.ssh/known_hosts
+          echo "${{ secrets.SSH_KEY }}" > $HOME/.ssh/id_rsa
+          chmod 400 $HOME/.ssh/id_rsa
+      - name: Get ENV keys
+        run: |
+          scp -v -i $HOME/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/envs/reddex/.env .
+      - name: Build application
+        run: |
+          docker build --secret id=env,src=.env -t ghcr.io/${{ github.repository_owner }}/reddex:latest .
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

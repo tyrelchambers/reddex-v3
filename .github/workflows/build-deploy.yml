@@ -43,28 +43,7 @@ jobs:
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/reddex
           cache-to: type=gha,mode=max
-          secrets: |
-            "FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}"
-            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
-            "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}"
-            "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}"
-            "NEXTAUTH_URL_INTERNAL=${{ secrets.NEXTAUTH_URL_INTERNAL }}"
-            "REDDIT_CLIENT_ID=${{ secrets.REDDIT_CLIENT_ID }}"
-            "REDDIT_CLIENT_SECRET=${{ secrets.REDDIT_CLIENT_SECRET }}"
-            "BUNNY_PASSWORD=${{ secrets.BUNNY_PASSWORD }}"
-            "STRIPE_TEST_KEY=${{ secrets.STRIPE_TEST_KEY }}"
-            "STRIPE_LIVE_KEY=${{ secrets.STRIPE_LIVE_KEY }}"
-            "STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}"
-            "NEXT_URL=${{ secrets.NEXT_URL }}"
-            "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}"
-            "SENTRY_DSN=${{ secrets.SENTRY_DSN }}"
-            "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}"
-            "NEXT_PUBLIC_SENTRY_DSN=${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}"
-            "MIXPANEL_TOKEN=${{ secrets.MIXPANEL_TOKEN }}"
-            "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}"
-            "NEXT_PUBLIC_MIXPANEL_TOKEN=${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}"
-            "NEXT_PUBLIC_NODE_ENV=production"
-            "K8S_URL=${{ secrets.K8S_URL }}"
+
   deploy:
     needs: [build-web]
     runs-on: ubuntu-latest

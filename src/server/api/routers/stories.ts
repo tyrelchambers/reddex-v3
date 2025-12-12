@@ -227,7 +227,11 @@ export const storyRouter = createTRPCRouter({
         const newUrl = `https://reddit.com${url.pathname}`;
 
         const storyResponse = await axios
-          .get(`${newUrl}.json`)
+          .get(`${newUrl}.json`, {
+            headers: {
+              "User-Agent": "reddex-v3/1.0.0",
+            },
+          })
           .catch((error) => {
             console.error(
               `Error fetching story from Reddit: ${JSON.stringify(error)}`,

@@ -58,7 +58,6 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/reddex:latest
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/reddex
-          cache-to: type=gha,mode=max
           secrets: |
             "FONTAWESOME_NPM_AUTH_TOKEN=${{ env.FONTAWESOME_NPM_AUTH_TOKEN }}"
             "DATABASE_URL=${{ env.DATABASE_URL }}"

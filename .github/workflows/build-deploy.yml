@@ -22,15 +22,32 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up SCP 🔑
-        run: |
-          mkdir -v -m 700 $HOME/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > $HOME/.ssh/known_hosts
-          echo "${{ secrets.SSH_KEY }}" > $HOME/.ssh/id_rsa
-          chmod 400 $HOME/.ssh/id_rsa
-      - name: Get ENV keys
-        run: |
-          scp -v -i $HOME/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/envs/reddex/.env .
+      - name: Load secret
+        id: load_secrets
+        uses: 1password/load-secrets-action@v3
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          FONTAWESOME_NPM_AUTH_TOKEN: op://App Secrets/Reddex/FONTAWESOME_NPM_AUTH_TOKEN
+          DATABASE_URL: op://App Secrets/Reddex/DATABASE_URL
+          NEXTAUTH_SECRET: op://App Secrets/Reddex/NEXTAUTH_SECRET
+          NEXTAUTH_URL: op://App Secrets/Reddex/NEXTAUTH_URL
+          NEXTAUTH_URL_INTERNAL: op://App Secrets/Reddex/NEXTAUTH_URL_INTERNAL
+          REDDIT_CLIENT_ID: op://App Secrets/Reddex/REDDIT_CLIENT_ID
+          REDDIT_CLIENT_SECRET: op://App Secrets/Reddex/REDDIT_CLIENT_SECRET
+          BUNNY_PASSWORD: op://App Secrets/Reddex/BUNNY_PASSWORD
+          STRIPE_TEST_KEY: op://App Secrets/Reddex/STRIPE_TEST_KEY
+          STRIPE_LIVE_KEY: op://App Secrets/Reddex/STRIPE_LIVE_KEY
+          STRIPE_WEBHOOK_SECRET: op://App Secrets/Reddex/STRIPE_WEBHOOK_SECRET
+          NEXT_URL: op://App Secrets/Reddex/NEXT_URL
+          SENDGRID_API_KEY: op://App Secrets/Reddex/SENDGRID_API_KEY
+          SENTRY_DSN: op://App Secrets/Reddex/SENTRY_DSN
+          SENTRY_AUTH_TOKEN: op://App Secrets/Reddex/SENTRY_AUTH_TOKEN
+          NEXT_PUBLIC_SENTRY_DSN: op://App Secrets/Reddex/NEXT_PUBLIC_SENTRY_DSN
+          MIXPANEL_TOKEN: op://App Secrets/Reddex/MIXPANEL_TOKEN
+          YOUTUBE_API_KEY: op://App Secrets/Reddex/YOUTUBE_API_KEY
+          NEXT_PUBLIC_MIXPANEL_TOKEN: op://App Secrets/Reddex/NEXT_PUBLIC_MIXPANEL_TOKEN
+          NEXT_PUBLIC_NODE_ENV: production
+          K8S_URL: op://App Secrets/Reddex/K8S_URL
       - name: Build application
         run: |
           docker build --secret id=env,src=.env -t ghcr.io/${{ github.repository_owner }}/reddex:latest .
@@ -43,6 +60,28 @@ jobs:
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/reddex
           cache-to: type=gha,mode=max
+          secrets: |
+            "FONTAWESOME_NPM_AUTH_TOKEN=${{ env.FONTAWESOME_NPM_AUTH_TOKEN }}"
+            "DATABASE_URL=${{ env.DATABASE_URL }}"
+            "NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}"
+            "NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}"
+            "NEXTAUTH_URL_INTERNAL=${{ env.NEXTAUTH_URL_INTERNAL }}"
+            "REDDIT_CLIENT_ID=${{ env.REDDIT_CLIENT_ID }}"
+            "REDDIT_CLIENT_SECRET=${{ env.REDDIT_CLIENT_SECRET }}"
+            "BUNNY_PASSWORD=${{ env.BUNNY_PASSWORD }}"
+            "STRIPE_TEST_KEY=${{ env.STRIPE_TEST_KEY }}"
+            "STRIPE_LIVE_KEY=${{ env.STRIPE_LIVE_KEY }}"
+            "STRIPE_WEBHOOK_SECRET=${{ env.STRIPE_WEBHOOK_SECRET }}"
+            "NEXT_URL=${{ env.NEXT_URL }}"
+            "SENDGRID_API_KEY=${{ env.SENDGRID_API_KEY }}"
+            "SENTRY_DSN=${{ env.SENTRY_DSN }}"
+            "SENTRY_AUTH_TOKEN=${{ env.SENTRY_AUTH_TOKEN }}"
+            "NEXT_PUBLIC_SENTRY_DSN=${{ env.NEXT_PUBLIC_SENTRY_DSN }}"
+            "MIXPANEL_TOKEN=${{ env.MIXPANEL_TOKEN }}"
+            "YOUTUBE_API_KEY=${{ env.YOUTUBE_API_KEY }}"
+            "NEXT_PUBLIC_MIXPANEL_TOKEN=${{ env.NEXT_PUBLIC_MIXPANEL_TOKEN }}"
+            "NEXT_PUBLIC_NODE_ENV=production"
+            "K8S_URL=${{env.K8S_URL}}"
 
   deploy:
     needs: [build-web]

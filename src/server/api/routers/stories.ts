@@ -226,33 +226,30 @@ export const storyRouter = createTRPCRouter({
         const url = new URL(input);
         const newUrl = `https://reddit.com${url.pathname}`;
 
-        const storyFromUrl = await axios
-          .get(`${newUrl}.json`, {
-            headers: {
-              "User-Agent": "Reddex/1.0",
-            },
-          })
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          .then((res) => res.data[0].data.children[0].data as PostFromReddit);
+        const storyResponse = await axios.get(`${newUrl}.json`);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const story = storyResponse.data[0].data.children[0]
+          .data as PostFromReddit;
 
         return await prisma.redditPost.create({
           data: {
-            content: storyFromUrl.selftext,
-            flair: storyFromUrl.link_flair_text ?? undefined,
+            content: story.selftext,
+            flair: story.link_flair_text ?? undefined,
             userId: ctx.session.user.id,
             permission: true,
             read: false,
-            story_length: storyFromUrl.selftext.length,
-            post_id: storyFromUrl.id,
-            reading_time: Math.round(storyFromUrl.selftext.length / 200),
-            author: storyFromUrl.author,
-            title: storyFromUrl.title,
-            ups: storyFromUrl.ups,
-            subreddit: storyFromUrl.subreddit,
-            url: storyFromUrl.url,
-            upvote_ratio: storyFromUrl.upvote_ratio,
-            num_comments: storyFromUrl.num_comments,
-            created: storyFromUrl.created_utc,
+            story_length: story.selftext.length,
+            post_id: story.id,
+            reading_time: Math.round(story.selftext.length / 200),
+            author: story.author,
+            title: story.title,
+            ups: story.ups,
+            subreddit: story.subreddit,
+            url: story.url,
+            upvote_ratio: story.upvote_ratio,
+            num_comments: story.num_comments,
+            created: story.created_utc,
           },
         });
       } catch (error) {

@@ -226,7 +226,16 @@ export const storyRouter = createTRPCRouter({
         const url = new URL(input);
         const newUrl = `https://reddit.com${url.pathname}`;
 
-        const storyResponse = await axios.get(`${newUrl}.json`);
+        const storyResponse = await axios
+          .get(`${newUrl}.json`)
+          .catch((error) => {
+            console.error(
+              `Error fetching story from Reddit: ${JSON.stringify(error)}`,
+            );
+
+            throw new Error("Error fetching story from Reddit");
+          })
+          .then((res) => res);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const story = storyResponse.data[0].data.children[0]

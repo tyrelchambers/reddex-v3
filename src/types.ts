@@ -202,3 +202,11 @@ export enum MixpanelEvents {
   "CREATE_SUBSCRIPTION_FAILED" = "CREATE_SUBSCRIPTION_FAILED",
   "ONBOARDING" = "ONBOARDING",
 }
+
+export interface RedditComposeResponse {
+  data: {
+    json: {
+      errors: unknown[];
+    };
+  };
+}

@@ -8,7 +8,7 @@ import { formatSubject } from "~/utils";
 import { refreshAccessToken } from "~/utils/getTokens";
 import { captureException } from "@sentry/nextjs";
 import { env } from "~/env";
-import { PostFromReddit } from "~/types";
+import { PostFromReddit, RedditComposeResponse } from "~/types";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { checkCache, setCache } from "~/lib/redis";
 import { fetchAiResponse } from "~/utils/openai-helpers";
@@ -101,19 +101,16 @@ export const storyRouter = createTRPCRouter({
               Authorization: `Bearer ${accessToken}`,
             },
           })
-          .then(async (res) => {
+          .then(async (res: RedditComposeResponse) => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (!res.data.success) {
+
+            if (res.data.json.errors.length > 0) {
               const dataStr = JSON.stringify(res.data);
 
               if (dataStr.includes("NOT_WHITELISTED_BY_USER_MESSAGE")) {
                 throw new Error(
                   `This user does not allow private messages: ${body.to}`,
                 );
-              }
-
-              if (res.data instanceof Error) {
-                throw new Error(`Failed to send message: ${res.data.message}`);
               }
               console.log(JSON.stringify(res.data));
 

@@ -25,6 +25,8 @@ jobs:
       - name: Load secret
         id: load_secrets
         uses: 1password/load-secrets-action@v3
+        with:
+          export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           FONTAWESOME_NPM_AUTH_TOKEN: op://App Secrets/Reddex/FONTAWESOME_NPM_AUTH_TOKEN
